@@ -1,0 +1,22 @@
+id: lesson_23
+title: "Subtraction: Level 2 ➖"
+level: 23
+objective: "Practice subtraction with bigger numbers."
+explanation: |
+  Nice work on Subtraction Level 1! The - sign works exactly the same way with bigger numbers too.
+example_code: |
+  print(9 - 4)
+starter_code: |
+  print(9 - 4)
+challenge: |
+  🎯 Challenge: You have 50 marbles and give away 18. Can you make Python print how many are left?
+expected_output: "32"
+hints:
+  - "Use - between the two numbers, like print(50 - 18)."
+  - "It should look like: print(50 - 18)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 2
+main_path: false

@@ -25,3 +25,5 @@ reward_stars: 4
 badge: null
 next_lesson_id: lesson_17
 graphical: true
+category: snake
+category_level: 1

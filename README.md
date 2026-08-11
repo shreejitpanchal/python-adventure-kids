@@ -4,15 +4,16 @@ A GUI-based Python learning app for kids, built with CustomTkinter.
 
 ## Status
 
-**Phases 1–6 in progress: 18 lessons complete.** First-run setup wizard,
-main dashboard, local progress storage, a PIN-gated parent area, and a
-full lesson flow (explain → example → code editor → run → friendly errors
-→ reward) work end to end for:
+**Phases 1–6 in progress: 28 lessons complete** (18 main-path + 10 bonus
+practice levels). First-run setup wizard, main dashboard, a category
+browser, local progress storage, a PIN-gated parent area, and a full
+lesson flow (explain → example → code editor → run → friendly errors →
+reward) work end to end for:
 
-- **Lessons 1–13**: Meet Python, Numbers, Addition, Subtraction,
-  Multiplication, Division ("Math Master" badge), Variables, Strings,
-  Input ("Python Explorer" badge), If/Else, Loops ("Loop Wizard" badge),
-  Functions, Lists.
+- **Lessons 1–13 (main path)**: Meet Python, Numbers, Addition,
+  Subtraction, Multiplication, Division ("Math Master" badge), Variables,
+  Strings, Input ("Python Explorer" badge), If/Else, Loops ("Loop Wizard"
+  badge), Functions, Lists.
 - **Lessons 14–15 (mini-games)**: Guess the Number and Rock, Paper,
   Scissors ("Game Creator" badge) — introduce `random`, and validate by
   pattern rather than exact output since the outcome is randomized.
@@ -20,6 +21,10 @@ full lesson flow (explain → example → code editor → run → friendly error
   game window, drawing the snake, and moving it with a self-scheduling
   function instead of a loop. Steps 4–13 (keyboard control, food,
   collisions, score, game over, customization) are still to come.
+- **Bonus practice levels**: Numbers, Addition, Subtraction,
+  Multiplication, and Division each get 2 extra levels (harder numbers,
+  chained operations), reachable only through the category browser — see
+  "Category browser" below.
 
 See "Graphical lessons" below for how Snake's execution model differs
 from the rest of the lessons.
@@ -47,12 +52,12 @@ app/
   config/    # settings persistence (%APPDATA%\PythonAdventure\settings.json)
   progress/  # SQLite-backed progress, stars, badges, streaks, activity log
   parent/    # PIN-gated parent area (summary + recent activity)
-  engine/    # lesson model + YAML-based lesson engine + output validator
+  engine/    # lesson model + YAML-based lesson engine + category logic + output validator
   sandbox/   # AST safety check, subprocess runner, restricted worker, error translator
   games/     # GameCanvas/GameWindow + in-process graphical runner (Snake's execution model)
 content/
   lessons/   # lesson content (YAML), kept separate from app code
-tests/       # pytest suite (121 tests)
+tests/       # pytest suite (167 tests)
 main.py      # entry point
 ```
 
@@ -64,6 +69,28 @@ not already completed, otherwise falls back to the first incomplete
 lesson in order, or the last lesson if everything is done. This keeps
 old progress data working even as lessons are added, removed, or
 reordered in content/lessons/.
+
+## Category browser
+
+Every lesson belongs to a `category` (e.g. `"addition"`) and a
+`category_level` (its position within that category, 1-based) — set in
+its YAML, grouped by `LessonEngine.categories()` /
+`lessons_in_category()`. From the dashboard's "🗺️ Categories" button, a
+child picks a topic and sees each level in it as completed (⭐ + replay),
+ready to play, or locked. `LessonEngine.is_unlocked()` unlocks a level
+once every earlier level in the same category is complete — no separate
+progress-tracking schema needed, it's derived entirely from
+`completed_lesson_ids`.
+
+This is a second, orthogonal way to reach lessons alongside the guided
+"Today's Mission" flow. A lesson's `main_path` flag (default `True`)
+controls whether it's part of that single guided sequence (chained via
+`next_lesson_id`, shown as "Today's Mission") or a bonus level only
+reachable through the category browser (`main_path: false`, no
+`next_lesson_id`). `next_after()` follows `next_lesson_id` only — no
+order-based fallback — specifically so bonus levels (which sort after
+lesson 18 by `level`) can never leak into the guided path just because
+they come later in file order.
 
 ## Code execution sandbox
 

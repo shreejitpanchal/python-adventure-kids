@@ -1,0 +1,24 @@
+id: lesson_20
+title: "Numbers: Level 3 🔢"
+level: 20
+objective: "Practice printing an even bigger number."
+explanation: |
+  You're getting really good at this! Python can handle numbers of any size — big or small.
+
+  Let's try a three-digit number this time.
+example_code: |
+  print(5)
+starter_code: |
+  print(5)
+challenge: |
+  🎯 Challenge: Can you make Python print the number 100?
+expected_output: "100"
+hints:
+  - "Change the 5 inside the parentheses to 100."
+  - "It should look like: print(100)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 3
+main_path: false

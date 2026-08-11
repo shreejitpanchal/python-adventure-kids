@@ -25,3 +25,5 @@ hints:
 reward_stars: 3
 badge: python_explorer
 next_lesson_id: lesson_10
+category: input
+category_level: 1

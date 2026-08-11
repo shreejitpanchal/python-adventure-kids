@@ -1,0 +1,24 @@
+id: lesson_24
+title: "Subtraction: Level 3 ➖"
+level: 24
+objective: "Subtract two numbers in a row, one after another."
+explanation: |
+  Just like addition, you can chain subtraction too.
+
+  print(20 - 5 - 3) takes 5 away from 20, then takes 3 more away.
+example_code: |
+  print(20 - 5 - 3)
+starter_code: |
+  print(20 - 5 - 3)
+challenge: |
+  🎯 Challenge: You have 30 candies. You give 12 to one friend and 5 to another. Can you make Python print how many are left?
+expected_output: "13"
+hints:
+  - "Use - twice, like print(30 - 12 - 5)."
+  - "It should look like: print(30 - 12 - 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 3
+main_path: false

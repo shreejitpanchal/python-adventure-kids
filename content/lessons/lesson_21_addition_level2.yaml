@@ -1,0 +1,24 @@
+id: lesson_21
+title: "Addition: Level 2 ➕"
+level: 21
+objective: "Practice addition with bigger numbers."
+explanation: |
+  Nice work on Addition Level 1! The + sign works exactly the same way, no matter how big the numbers are.
+
+  Let's add two bigger numbers this time.
+example_code: |
+  print(2 + 3)
+starter_code: |
+  print(2 + 3)
+challenge: |
+  🎯 Challenge: You have 15 stickers and get 27 more. Can you make Python print the total?
+expected_output: "42"
+hints:
+  - "Use + between the two numbers, like print(15 + 27)."
+  - "It should look like: print(15 + 27)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 2
+main_path: false

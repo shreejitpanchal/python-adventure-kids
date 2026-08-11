@@ -56,6 +56,16 @@ class App(ctk.CTk):
 
         self.show_frame(LessonScreen(self, lesson_id))
 
+    def show_category_map(self) -> None:
+        from app.ui.category_map import CategoryMapFrame
+
+        self.show_frame(CategoryMapFrame(self))
+
+    def show_category_levels(self, category: str) -> None:
+        from app.ui.category_levels import CategoryLevelsFrame
+
+        self.show_frame(CategoryLevelsFrame(self, category))
+
     def save_settings(self) -> None:
         save_settings(self.settings)
 

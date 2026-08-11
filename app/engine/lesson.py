@@ -30,3 +30,14 @@ class Lesson:
     graphical: bool = False
     """If true, the lesson runs in-process against a live game window instead
     of the sandboxed subprocess -- see app/games/."""
+    category: str = "basics"
+    """Groups lessons for the category browser (e.g. "addition"). See
+    app/engine/categories.py for display titles/icons."""
+    category_level: int = 1
+    """This lesson's position within its category (1-based). A level is
+    unlocked once every lower category_level in the same category is
+    completed."""
+    main_path: bool = True
+    """Whether this lesson is part of the single guided curriculum sequence
+    (shown as "Today's Mission" / chained via next_lesson_id) versus a bonus
+    practice level only reachable through the category browser."""

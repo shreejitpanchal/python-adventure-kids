@@ -1,0 +1,22 @@
+id: lesson_25
+title: "Multiplication: Level 2 ✖️"
+level: 25
+objective: "Practice multiplication with bigger numbers."
+explanation: |
+  Nice work on Multiplication Level 1! The * sign works exactly the same way with bigger numbers.
+example_code: |
+  print(5 * 6)
+starter_code: |
+  print(5 * 6)
+challenge: |
+  🎯 Challenge: You have 8 bags with 7 apples in each. Can you make Python print the total?
+expected_output: "56"
+hints:
+  - "Use * between the two numbers, like print(8 * 7)."
+  - "It should look like: print(8 * 7)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 2
+main_path: false

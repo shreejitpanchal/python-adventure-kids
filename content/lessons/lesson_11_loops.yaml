@@ -27,3 +27,5 @@ hints:
 reward_stars: 4
 badge: loop_wizard
 next_lesson_id: lesson_12
+category: loops
+category_level: 1

@@ -38,6 +38,12 @@ class DashboardFrame(ctk.CTkFrame):
             command=self._open_parent_area,
         ).pack(side="right")
 
+        ctk.CTkButton(
+            header, text="🗺️ Categories", font=theme.font_body(13), width=140, height=36,
+            fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
+            command=self._open_category_map,
+        ).pack(side="right", padx=(0, 10))
+
         name = self.app.settings.child_name or "Explorer"
         ctk.CTkLabel(
             parent, text=f"Welcome back, {name}!", font=theme.font_heading(20),
@@ -135,7 +141,7 @@ class DashboardFrame(ctk.CTkFrame):
                 text_color=theme.COLOR_TEXT_MUTED, wraplength=700, justify="left",
             ).pack(anchor="w", padx=32, pady=(0, 16))
 
-        total_lessons = max(len(engine), 1)
+        total_lessons = max(len(engine.main_path_lessons()), 1)
         progress_bar = ctk.CTkProgressBar(
             card, height=18, corner_radius=9, progress_color=theme.COLOR_STAR,
         )
@@ -170,3 +176,6 @@ class DashboardFrame(ctk.CTkFrame):
         from app.parent.dashboard import open_parent_area
 
         open_parent_area(self.app)
+
+    def _open_category_map(self) -> None:
+        self.app.show_category_map()

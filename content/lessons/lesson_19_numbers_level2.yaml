@@ -1,0 +1,24 @@
+id: lesson_19
+title: "Numbers: Level 2 🔢"
+level: 19
+objective: "Practice printing bigger numbers."
+explanation: |
+  Great job finishing Numbers Level 1! Let's practice with a bigger number this time.
+
+  Remember: numbers don't need quotes around them — just type the digits inside print(...).
+example_code: |
+  print(5)
+starter_code: |
+  print(5)
+challenge: |
+  🎯 Challenge: Can you make Python print the number 42?
+expected_output: "42"
+hints:
+  - "Change the 5 inside the parentheses to 42."
+  - "It should look like: print(42)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 2
+main_path: false

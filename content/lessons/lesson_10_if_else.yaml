@@ -30,3 +30,5 @@ hints:
 reward_stars: 3
 badge: null
 next_lesson_id: lesson_11
+category: conditionals
+category_level: 1

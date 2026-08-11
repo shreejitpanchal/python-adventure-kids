@@ -97,8 +97,8 @@ def test_resolve_current_finds_first_gap_even_without_a_stored_pointer():
     assert lesson.id == "lesson_03"
 
 
-def test_resolve_current_returns_last_lesson_when_everything_is_complete():
+def test_resolve_current_returns_last_main_path_lesson_when_everything_is_complete():
     engine = LessonEngine()
     all_ids = [lesson.id for lesson in engine.all_in_order()]
     lesson = engine.resolve_current(completed_ids=all_ids, stored_current_id=None)
-    assert lesson.id == engine.all_in_order()[-1].id
+    assert lesson.id == engine.main_path_lessons()[-1].id

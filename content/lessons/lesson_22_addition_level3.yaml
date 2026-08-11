@@ -1,0 +1,24 @@
+id: lesson_22
+title: "Addition: Level 3 ➕"
+level: 22
+objective: "Add three numbers together in one line."
+explanation: |
+  Python can add as many numbers as you want in one line — just keep using +.
+
+  print(1 + 2 + 3) adds all three numbers together, left to right.
+example_code: |
+  print(1 + 2 + 3)
+starter_code: |
+  print(1 + 2 + 3)
+challenge: |
+  🎯 Challenge: Can you make Python add 4, 6, and 9 all together?
+expected_output: "19"
+hints:
+  - "Use + between all three numbers, like print(4 + 6 + 9)."
+  - "It should look like: print(4 + 6 + 9)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 3
+main_path: false
