@@ -1,0 +1,27 @@
+id: lesson_17
+title: "Snake Project: Draw the Snake 🟩"
+level: 17
+objective: "Draw the snake's body using coordinates and shapes."
+explanation: |
+  Every shape on the screen needs coordinates — numbers that say exactly where it goes.
+
+  game.draw_rect(x, y, width, height, color) draws a colored rectangle. x and y say how far from the top-left corner it starts.
+
+  The rectangle you draw gets an ID number, so keep it in a variable — you'll need it later to move the snake!
+example_code: |
+  game.set_background("black")
+  snake = game.draw_rect(50, 50, 20, 20, "green")
+starter_code: |
+  game.set_background("black")
+  snake = game.draw_rect(50, 50, 20, 20, "green")
+challenge: |
+  🎯 Challenge: Press RUN to see your snake appear! Then try changing its color or starting position.
+expected_output: ""
+hints:
+  - "The first two numbers (x, y) are the snake's starting position."
+  - "Try game.draw_rect(100, 100, 20, 20, \"lime\") for a different spot and color."
+  - "Keep the snake = part — you'll need that name again in the next lesson!"
+reward_stars: 4
+badge: null
+next_lesson_id: lesson_18
+graphical: true

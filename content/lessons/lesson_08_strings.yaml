@@ -1,0 +1,26 @@
+id: lesson_08
+title: "Strings 🔤"
+level: 8
+objective: "Store text in a variable and print it."
+explanation: |
+  Text in Python is called a "string" — it goes inside quotes, like "Alex".
+
+  name = "Alex" puts the text Alex inside a box named "name".
+
+  print(name) shows what's inside the box.
+example_code: |
+  name = "Alex"
+  print(name)
+starter_code: |
+  name = "Alex"
+  print(name)
+challenge: |
+  🎯 Challenge: Can you store the name "Sam" in the name box and print it?
+expected_output: "Sam"
+hints:
+  - "Change \"Alex\" to \"Sam\", keeping the quotes."
+  - "Text always needs quotes around it in Python."
+  - "It should look like: name = \"Sam\", then print(name) on the next line."
+reward_stars: 3
+badge: null
+next_lesson_id: lesson_09

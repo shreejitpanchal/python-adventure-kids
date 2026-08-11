@@ -1,0 +1,24 @@
+id: lesson_01
+title: "Meet Python 🐍"
+level: 1
+objective: "Understand what a program is, and use print() for the first time."
+explanation: |
+  A computer program is just a list of instructions the computer follows, one by one.
+
+  Python is a language we use to write those instructions so the computer understands them.
+
+  The print() command tells the computer: "Show this on the screen!"
+example_code: |
+  print("Hello!")
+starter_code: |
+  print("Hello!")
+challenge: |
+  🎯 Challenge: Press RUN and see what Python says back to you!
+expected_output: "Hello!"
+hints:
+  - "Make sure you use print(...) with round brackets."
+  - "Text goes inside quotes, like \"Hello!\""
+  - "Don't change the words inside the quotes — just press RUN!"
+reward_stars: 3
+badge: first_program
+next_lesson_id: lesson_02

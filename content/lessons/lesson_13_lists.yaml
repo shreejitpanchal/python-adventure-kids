@@ -1,0 +1,26 @@
+id: lesson_13
+title: "Lists 🎒"
+level: 13
+objective: "Store several items in a list and access one by its position."
+explanation: |
+  A list is like a backpack that can hold many things at once.
+
+  fruits = ["apple", "banana", "orange"] packs three items into one backpack named fruits.
+
+  fruits[0] reaches into the backpack and grabs the FIRST item — Python starts counting from 0!
+example_code: |
+  fruits = ["apple", "banana", "orange"]
+  print(fruits[0])
+starter_code: |
+  fruits = ["apple", "banana", "orange"]
+  print(fruits[0])
+challenge: |
+  🎯 Challenge: Can you make Python print the SECOND fruit in the backpack — banana?
+expected_output: "banana"
+hints:
+  - "Python counts from 0, so the second item is at position 1."
+  - "Change fruits[0] to fruits[1]."
+  - "It should look like: print(fruits[1])"
+reward_stars: 4
+badge: null
+next_lesson_id: lesson_14

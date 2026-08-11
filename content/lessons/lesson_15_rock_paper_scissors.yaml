@@ -1,0 +1,59 @@
+id: lesson_15
+title: "Rock, Paper, Scissors ✂️"
+level: 15
+objective: "Use functions, random choice, and multiple conditions to build a classic game."
+explanation: |
+  Let's build Rock, Paper, Scissors! The computer needs to pick randomly, so we use random.choice(...) with a list of options.
+
+  get_computer_choice() is a function — a little machine that returns the computer's pick.
+
+  Then a chain of if / elif / else checks compares your choice to the computer's to decide who wins.
+example_code: |
+  import random
+
+  def get_computer_choice():
+      return random.choice(["rock", "paper", "scissors"])
+
+  player = input("Rock, paper, or scissors? ")
+  computer = get_computer_choice()
+
+  if player == computer:
+      print("It's a tie!")
+  elif player == "rock" and computer == "scissors":
+      print("You win!")
+  elif player == "paper" and computer == "rock":
+      print("You win!")
+  elif player == "scissors" and computer == "paper":
+      print("You win!")
+  else:
+      print("Computer wins!")
+starter_code: |
+  import random
+
+  def get_computer_choice():
+      return random.choice(["rock", "paper", "scissors"])
+
+  player = input("Rock, paper, or scissors? ")
+  computer = get_computer_choice()
+
+  if player == computer:
+      print("It's a tie!")
+  elif player == "rock" and computer == "scissors":
+      print("You win!")
+  elif player == "paper" and computer == "rock":
+      print("You win!")
+  elif player == "scissors" and computer == "paper":
+      print("You win!")
+  else:
+      print("Computer wins!")
+challenge: |
+  🎯 Challenge: Type rock, paper, or scissors in the box below, then press RUN to play against the computer!
+expected_output_pattern: "^Rock, paper, or scissors\\? (It's a tie!|You win!|Computer wins!)$"
+input_prompt: "Rock, paper, or scissors?"
+hints:
+  - "Type exactly rock, paper, or scissors (lowercase) in the answer box."
+  - "random.choice([...]) means Python secretly picks one item from the list."
+  - "Press RUN again to play another round — the computer picks fresh each time!"
+reward_stars: 4
+badge: game_creator
+next_lesson_id: lesson_16

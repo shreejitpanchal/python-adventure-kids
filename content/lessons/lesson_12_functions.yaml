@@ -1,0 +1,30 @@
+id: lesson_12
+title: "Functions ⚙️"
+level: 12
+objective: "Define a function and call it."
+explanation: |
+  A function is a little machine that performs a job whenever you ask it to.
+
+  def say_hello(): builds the machine and names it say_hello.
+
+  say_hello() switches the machine on and runs what's inside it.
+example_code: |
+  def say_hello():
+      print("Hello!")
+
+  say_hello()
+starter_code: |
+  def say_hello():
+      print("Hello!")
+
+  say_hello()
+challenge: |
+  🎯 Challenge: Can you build a function called greet that prints "Howdy!", then call it?
+expected_output: "Howdy!"
+hints:
+  - "Name your function greet instead of say_hello."
+  - "Don't forget to call it by writing greet() after you define it."
+  - "It should look like: def greet(): then print(\"Howdy!\") indented underneath, then greet() on its own line."
+reward_stars: 4
+badge: null
+next_lesson_id: lesson_13

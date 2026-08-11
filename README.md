@@ -1,0 +1,138 @@
+# Python Adventure
+
+A GUI-based Python learning app for kids, built with CustomTkinter.
+
+## Status
+
+**Phases 1–6 in progress: 18 lessons complete.** First-run setup wizard,
+main dashboard, local progress storage, a PIN-gated parent area, and a
+full lesson flow (explain → example → code editor → run → friendly errors
+→ reward) work end to end for:
+
+- **Lessons 1–13**: Meet Python, Numbers, Addition, Subtraction,
+  Multiplication, Division ("Math Master" badge), Variables, Strings,
+  Input ("Python Explorer" badge), If/Else, Loops ("Loop Wizard" badge),
+  Functions, Lists.
+- **Lessons 14–15 (mini-games)**: Guess the Number and Rock, Paper,
+  Scissors ("Game Creator" badge) — introduce `random`, and validate by
+  pattern rather than exact output since the outcome is randomized.
+- **Lessons 16–18 (Snake project, steps 1–3 of the incremental build)**:
+  game window, drawing the snake, and moving it with a self-scheduling
+  function instead of a loop. Steps 4–13 (keyboard control, food,
+  collisions, score, game over, customization) are still to come.
+
+See "Graphical lessons" below for how Snake's execution model differs
+from the rest of the lessons.
+
+## Running it
+
+```powershell
+.venv\Scripts\python.exe main.py
+```
+
+First run walks through a short setup wizard (child's name + an optional
+parent PIN), then lands on the dashboard.
+
+## Running the tests
+
+```powershell
+.venv\Scripts\python.exe -m pytest tests\ -v
+```
+
+## Project layout
+
+```
+app/
+  ui/        # screens: setup wizard, dashboard, lesson screen, code editor, shared theme
+  config/    # settings persistence (%APPDATA%\PythonAdventure\settings.json)
+  progress/  # SQLite-backed progress, stars, badges, streaks, activity log
+  parent/    # PIN-gated parent area (summary + recent activity)
+  engine/    # lesson model + YAML-based lesson engine + output validator
+  sandbox/   # AST safety check, subprocess runner, restricted worker, error translator
+  games/     # GameCanvas/GameWindow + in-process graphical runner (Snake's execution model)
+content/
+  lessons/   # lesson content (YAML), kept separate from app code
+tests/       # pytest suite (121 tests)
+main.py      # entry point
+```
+
+## Lesson resolution
+
+`LessonEngine.resolve_current()` decides which lesson a child lands on:
+trusts the stored "current lesson" pointer only if it's still valid and
+not already completed, otherwise falls back to the first incomplete
+lesson in order, or the last lesson if everything is done. This keeps
+old progress data working even as lessons are added, removed, or
+reordered in content/lessons/.
+
+## Code execution sandbox
+
+Child code runs through two layers before anything executes:
+1. **Static AST check** (`app/sandbox/safety.py`) — rejects imports and
+   dangerous builtins (`eval`, `exec`, `open`, dunder access, …) before any
+   process is spawned.
+2. **Isolated subprocess** (`app/sandbox/runner.py` + `worker.py`) — runs in
+   a separate `python -I` process with a restricted builtins set, a hard
+   timeout (default 5s, kills runaway loops), and no filesystem/network
+   access granted. The UI can cancel a run mid-flight via `RunHandle`.
+
+Errors are translated into friendly, kid-appropriate messages
+(`app/sandbox/errors.py`) with an optional "I'm curious" toggle to reveal
+the raw traceback.
+
+## Lessons that take input
+
+A lesson can set `input_prompt` in its YAML to show a labeled answer box
+in the lesson screen instead of a terminal-style prompt. Whatever the
+child types is piped to the sandboxed process's stdin, and
+`expected_output` can contain `{input}` as a placeholder so any answer is
+accepted as long as the child's program echoes it back correctly (see
+Lesson 9, "Ask a Question"). Code that never receives input closes stdin
+immediately, so an unexpected `input()` call fails fast with a friendly
+message instead of hanging until the timeout.
+
+## Games with randomness
+
+Lessons 14–15 introduce `random`, which is now allowlisted through both
+safety layers (`app/sandbox/safety.py`'s `ALLOWED_MODULES` and
+`worker.py`'s restricted `__import__` — everything else stays blocked).
+Because the outcome is genuinely random, these lessons validate with
+`expected_output_pattern` (a regex covering every valid outcome) instead
+of an exact string, via `validate_output()`'s new `expected_output_pattern`
+parameter.
+
+## Graphical lessons (the Snake project)
+
+Snake needs a live, continuously-updating window — something the
+subprocess-sandboxed model (built for one-shot "run code, capture
+stdout" exercises) can't provide. Tkinter widgets must also be created
+and touched from the main thread, so this is a deliberate second
+execution path with different tradeoffs, not a bug:
+
+- **`app/games/game_canvas.py`** — the only surface a graphical lesson's
+  code can touch: `set_title`, `set_background`, `draw_rect`,
+  `move_shape`, `set_shape_position`, `delete_shape`, `clear`, `after`
+  (schedule a callback without blocking), `on_key` (Up/Down/Left/Right/
+  space only). Not a general Tkinter passthrough.
+- **`app/games/game_window.py`** — owns the real `CTkToplevel` + `Canvas`
+  a lesson draws into; one live window per lesson screen, recreated on
+  each RUN.
+- **`app/games/graphical_runner.py`** — runs the lesson's code **in the
+  main process**, not a subprocess. It still applies the same AST safety
+  check and restricted builtins as defense in depth, **plus a `while`-loop
+  ban** (`check_code_safety(..., disallow_while=True)`), since there's no
+  OS-level timeout here to recover from a runaway loop. Lessons use
+  `game.after(ms, callback)` — a self-scheduling function — for animation
+  instead, which returns control to Tkinter's own event loop immediately
+  and never blocks.
+- Validation for graphical lessons is "ran without raising" — the visual
+  result in the game window *is* the feedback, matching the visual-first
+  philosophy used throughout the app.
+
+A lesson opts into this path with `graphical: true` in its YAML.
+
+## Data storage
+
+Everything lives locally and offline in `%APPDATA%\PythonAdventure\`:
+- `settings.json` — child name, parent PIN (salted+hashed), preferences
+- `progress.sqlite3` — level, stars, badges, completed lessons, activity log

@@ -1,0 +1,24 @@
+id: lesson_02
+title: "Numbers 🔢"
+level: 2
+objective: "Learn that Python can store and show numbers, not just text."
+explanation: |
+  Numbers work just like the words we printed before — but without quotes!
+
+  Try print(1), print(2), print(100)... Python understands numbers all on its own.
+
+  Let's change the number inside print() and see what happens.
+example_code: |
+  print(5)
+starter_code: |
+  print(5)
+challenge: |
+  🎯 Challenge: Can you make Python print the number 7?
+expected_output: "7"
+hints:
+  - "Change the 5 inside the parentheses to a 7."
+  - "Numbers don't need quotes around them like text does."
+  - "It should look like: print(7)"
+reward_stars: 3
+badge: null
+next_lesson_id: lesson_03

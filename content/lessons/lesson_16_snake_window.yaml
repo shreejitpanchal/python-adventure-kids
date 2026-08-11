@@ -1,0 +1,27 @@
+id: lesson_16
+title: "Snake Project: The Game Window 🖼️"
+level: 16
+objective: "Start your biggest project yet! Customize your game window with code."
+explanation: |
+  Welcome to your Snake Project! We're going to build this game one small piece at a time, just like the games you already made.
+
+  Your game window is already open for you, waiting in a variable called game.
+
+  game.set_title("...") changes the words at the top of the window. game.set_background("...") changes its color.
+example_code: |
+  game.set_title("My Snake Game")
+  game.set_background("black")
+starter_code: |
+  game.set_title("My Snake Game")
+  game.set_background("black")
+challenge: |
+  🎯 Challenge: Press RUN to open your game window and see it change color right in front of you!
+expected_output: ""
+hints:
+  - "You don't need to change anything yet — just press RUN and watch the window!"
+  - "Try changing \"black\" to another color, like \"darkgreen\" or \"navy\"."
+  - "game is your game window — every game.something(...) line controls it."
+reward_stars: 4
+badge: null
+next_lesson_id: lesson_17
+graphical: true

@@ -1,0 +1,24 @@
+id: lesson_03
+title: "Addition ➕"
+level: 3
+objective: "Use + to add two numbers together in Python."
+explanation: |
+  🍎 You have 2 apples. Your friend gives you 3 more.
+
+  How many apples do you have now? Python can figure that out with a plus sign (+).
+
+  print(2 + 3) tells Python: add 2 and 3, then show the answer.
+example_code: |
+  print(2 + 3)
+starter_code: |
+  print(2 + 3)
+challenge: |
+  🎯 Challenge: You have 7 apples and get 5 more. Can you make Python print how many you have in total?
+expected_output: "12"
+hints:
+  - "Use + between the two numbers, like print(7 + 5)."
+  - "Add the two amounts together to find the total."
+  - "It should look like: print(7 + 5)"
+reward_stars: 3
+badge: null
+next_lesson_id: lesson_04

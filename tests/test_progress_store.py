@@ -1,0 +1,108 @@
+import pytest
+
+from app.progress.store import ProgressStore
+
+
+@pytest.fixture
+def store(tmp_path):
+    s = ProgressStore(tmp_path / "progress.sqlite3")
+    yield s
+    s.close()
+
+
+def test_new_profile_starts_at_level_one_with_no_stars(store):
+    summary = store.get_summary()
+    assert summary.level == 1
+    assert summary.total_stars == 0
+    assert summary.lessons_completed == 0
+    assert summary.badges_earned == 0
+
+
+def test_complete_lesson_updates_stars_and_completion_count(store):
+    store.complete_lesson("lesson_01", stars_earned=3)
+
+    summary = store.get_summary()
+    assert summary.total_stars == 3
+    assert summary.lessons_completed == 1
+    assert store.is_lesson_completed("lesson_01") is True
+    assert store.is_lesson_completed("lesson_02") is False
+
+
+def test_get_stars_by_lesson(store):
+    store.complete_lesson("lesson_01", stars_earned=3)
+    store.complete_lesson("lesson_02", stars_earned=4)
+
+    assert store.get_stars_by_lesson() == {"lesson_01": 3, "lesson_02": 4}
+
+
+def test_get_stars_by_lesson_empty_when_nothing_completed(store):
+    assert store.get_stars_by_lesson() == {}
+
+
+def test_completing_same_lesson_again_keeps_best_star_count(store):
+    store.complete_lesson("lesson_01", stars_earned=1)
+    store.complete_lesson("lesson_01", stars_earned=3)
+    store.complete_lesson("lesson_01", stars_earned=2)
+
+    summary = store.get_summary()
+    assert summary.lessons_completed == 1
+    assert summary.total_stars == 3
+
+
+def test_award_badge_is_idempotent(store):
+    assert store.award_badge("first_program") is True
+    assert store.award_badge("first_program") is False
+
+    assert store.get_badge_ids() == ["first_program"]
+    assert store.get_summary().badges_earned == 1
+
+
+def test_record_play_today_builds_a_streak(store, monkeypatch):
+    import app.progress.store as store_module
+    from datetime import datetime, timezone
+
+    monkeypatch.setattr(
+        store_module, "_now", lambda: "2026-08-10T00:00:00+00:00"
+    )
+
+    class FixedDatetime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime(2026, 8, 10, tzinfo=timezone.utc)
+
+    monkeypatch.setattr(store_module, "datetime", FixedDatetime)
+    store.record_play_today()
+    assert store.get_summary().streak_days == 1
+
+    class NextDay(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime(2026, 8, 11, tzinfo=timezone.utc)
+
+    monkeypatch.setattr(store_module, "datetime", NextDay)
+    store.record_play_today()
+    assert store.get_summary().streak_days == 2
+
+
+def test_reset_progress_clears_everything(store):
+    store.complete_lesson("lesson_01", stars_earned=3)
+    store.award_badge("first_program")
+    store.set_level(3)
+
+    store.reset_progress()
+
+    summary = store.get_summary()
+    assert summary.level == 1
+    assert summary.total_stars == 0
+    assert summary.lessons_completed == 0
+    assert summary.badges_earned == 0
+    assert store.get_completed_lesson_ids() == []
+
+
+def test_log_event_recorded_in_activity(store):
+    store.log_event("lesson_01", "hint_used", "hint #1")
+
+    recent = store.get_recent_activity()
+    assert len(recent) == 1
+    assert recent[0]["event_type"] == "hint_used"
+    assert recent[0]["lesson_id"] == "lesson_01"

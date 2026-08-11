@@ -1,0 +1,27 @@
+id: lesson_09
+title: "Ask a Question 🙋"
+level: 9
+objective: "Use input() to ask a question and use the answer in your program."
+explanation: |
+  Python can ask YOU a question and use your answer! The input(...) command asks a question and waits for your reply.
+
+  name = input("What is your name? ") asks the question, then stores your answer in the name box.
+
+  print("Hello " + name) uses + to join the word "Hello " together with your answer.
+example_code: |
+  name = input("What is your name? ")
+  print("Hello " + name)
+starter_code: |
+  name = input("What is your name? ")
+  print("Hello " + name)
+challenge: |
+  🎯 Challenge: Type your name in the box below, then press RUN to see Python say hello to YOU!
+expected_output: "What is your name? Hello {input}"
+input_prompt: "What is your name?"
+hints:
+  - "Type your name in the answer box above the RUN button first."
+  - "The + joins two pieces of text together."
+  - "You don't need to change the code — just add your answer and press RUN!"
+reward_stars: 3
+badge: python_explorer
+next_lesson_id: lesson_10

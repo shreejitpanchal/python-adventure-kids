@@ -1,0 +1,32 @@
+id: lesson_10
+title: "Decisions 🚦"
+level: 10
+objective: "Use if/else to make Python choose between two outcomes."
+explanation: |
+  Python can make decisions, just like you do!
+
+  if age >= 8: checks whether age is 8 or more. If that's true, Python runs the line underneath it.
+
+  else: tells Python what to do instead, if the answer was no.
+example_code: |
+  age = 9
+  if age >= 8:
+      print("You can play!")
+  else:
+      print("You are too young!")
+starter_code: |
+  age = 9
+  if age >= 8:
+      print("You can play!")
+  else:
+      print("You are too young!")
+challenge: |
+  🎯 Challenge: Can you change age so Python decides you are too young to play?
+expected_output: "You are too young!"
+hints:
+  - "Try changing age = 9 to a smaller number, like age = 5."
+  - "The else: part only runs when the if condition is false."
+  - "Any age less than 8 should work."
+reward_stars: 3
+badge: null
+next_lesson_id: lesson_11

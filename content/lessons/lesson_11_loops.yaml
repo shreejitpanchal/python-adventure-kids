@@ -1,0 +1,29 @@
+id: lesson_11
+title: "Loops 🔁"
+level: 11
+objective: "Use a for loop with range() to repeat an instruction."
+explanation: |
+  Loops let Python repeat instructions without you writing them again and again.
+
+  for i in range(5): tells Python "do the next line 5 times".
+
+  Everything indented underneath the for line happens each time around.
+example_code: |
+  for i in range(5):
+      print("Hello")
+starter_code: |
+  for i in range(5):
+      print("Hello")
+challenge: |
+  🎯 Challenge: Can you make Python say "Hooray!" 3 times?
+expected_output: |
+  Hooray!
+  Hooray!
+  Hooray!
+hints:
+  - "Change range(5) to range(3) so it repeats 3 times."
+  - "Change \"Hello\" to \"Hooray!\" inside the print(...)."
+  - "It should look like: for i in range(3): then print(\"Hooray!\") indented underneath."
+reward_stars: 4
+badge: loop_wizard
+next_lesson_id: lesson_12

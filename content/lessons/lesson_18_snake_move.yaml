@@ -1,0 +1,39 @@
+id: lesson_18
+title: "Snake Project: Move the Snake 🐍"
+level: 18
+objective: "Make the snake move on its own using a repeating function instead of a loop."
+explanation: |
+  Games need to keep moving without freezing everything else. Instead of a loop, we use game.after(...) to say "do this again in a little while."
+
+  def move_snake(): builds a function that moves the snake a little, then calls game.after(300, move_snake) to schedule ITSELF again in 300 milliseconds.
+
+  That's how the snake keeps moving forever, a tiny step at a time — this trick is called a game loop.
+example_code: |
+  game.set_background("black")
+  snake = game.draw_rect(50, 50, 20, 20, "green")
+
+  def move_snake():
+      game.move_shape(snake, 10, 0)
+      game.after(300, move_snake)
+
+  move_snake()
+starter_code: |
+  game.set_background("black")
+  snake = game.draw_rect(50, 50, 20, 20, "green")
+
+  def move_snake():
+      game.move_shape(snake, 10, 0)
+      game.after(300, move_snake)
+
+  move_snake()
+challenge: |
+  🎯 Challenge: Press RUN and watch your snake crawl across the screen! Try changing 10 to a bigger number, or 300 to make it faster or slower.
+expected_output: ""
+hints:
+  - "game.move_shape(snake, 10, 0) moves it 10 pixels right and 0 pixels down/up each time."
+  - "Smaller numbers in game.after(300, ...) make the snake move faster."
+  - "Don't use a while loop here — game.after(...) calling itself IS the loop, and it won't freeze the window."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+graphical: true

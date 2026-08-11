@@ -1,0 +1,24 @@
+id: lesson_04
+title: "Subtraction ➖"
+level: 4
+objective: "Use - to subtract one number from another."
+explanation: |
+  🍬 You have 10 candies. You give 3 candies to a friend.
+
+  How many candies are left? Python uses a minus sign (-) to subtract.
+
+  print(10 - 3) tells Python: take 3 away from 10, then show the answer.
+example_code: |
+  print(10 - 3)
+starter_code: |
+  print(10 - 3)
+challenge: |
+  🎯 Challenge: You have 9 candies and eat 4 of them. Can you make Python print how many are left?
+expected_output: "5"
+hints:
+  - "Use - between the two numbers, like print(9 - 4)."
+  - "Subtract the smaller number from the bigger one."
+  - "It should look like: print(9 - 4)"
+reward_stars: 3
+badge: null
+next_lesson_id: lesson_05

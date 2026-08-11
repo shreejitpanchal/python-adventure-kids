@@ -1,0 +1,24 @@
+id: lesson_05
+title: "Multiplication ✖️"
+level: 5
+objective: "Use * to multiply numbers together."
+explanation: |
+  🎒 You have 3 bags. Each bag has 4 apples inside.
+
+  How many apples do you have altogether? Python uses a star (*) to multiply.
+
+  print(3 * 4) tells Python: multiply 3 by 4, then show the answer.
+example_code: |
+  print(3 * 4)
+starter_code: |
+  print(3 * 4)
+challenge: |
+  🎯 Challenge: You have 5 bags with 6 apples in each. Can you make Python print the total?
+expected_output: "30"
+hints:
+  - "Use * between the two numbers, like print(5 * 6)."
+  - "Multiplying means adding a number to itself many times."
+  - "It should look like: print(5 * 6)"
+reward_stars: 3
+badge: null
+next_lesson_id: lesson_06

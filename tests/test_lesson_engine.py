@@ -1,0 +1,104 @@
+from app.engine.lesson_engine import LessonEngine
+
+
+def test_loads_lesson_01_from_content_dir():
+    engine = LessonEngine()
+    assert engine.has("lesson_01")
+    lesson = engine.get("lesson_01")
+    assert lesson.title
+    assert lesson.expected_output == "Hello!"
+    assert lesson.starter_code.strip() == 'print("Hello!")'
+
+
+def test_first_lesson_is_lowest_level():
+    engine = LessonEngine()
+    assert engine.first().id == "lesson_01"
+
+
+def test_next_after_last_lesson_is_none():
+    engine = LessonEngine()
+    last = engine.all_in_order()[-1]
+    assert engine.next_after(last.id) is None
+
+
+def test_loading_from_custom_dir(tmp_path):
+    lesson_yaml = tmp_path / "lesson_a.yaml"
+    lesson_yaml.write_text(
+        """
+id: lesson_a
+title: "A"
+level: 1
+objective: "obj"
+explanation: "exp"
+example_code: "print(1)"
+starter_code: "print(1)"
+challenge: "go"
+expected_output: "1"
+hints: []
+reward_stars: 1
+badge: null
+next_lesson_id: lesson_b
+""",
+        encoding="utf-8",
+    )
+    lesson_yaml_b = tmp_path / "lesson_b.yaml"
+    lesson_yaml_b.write_text(
+        """
+id: lesson_b
+title: "B"
+level: 2
+objective: "obj"
+explanation: "exp"
+example_code: "print(2)"
+starter_code: "print(2)"
+challenge: "go"
+expected_output: "2"
+hints: []
+reward_stars: 1
+badge: null
+next_lesson_id: null
+""",
+        encoding="utf-8",
+    )
+
+    engine = LessonEngine(content_dir=tmp_path)
+    assert len(engine) == 2
+    assert engine.first().id == "lesson_a"
+    assert engine.next_after("lesson_a").id == "lesson_b"
+    assert engine.next_after("lesson_b") is None
+
+
+def test_resolve_current_with_no_progress_returns_first_lesson():
+    engine = LessonEngine()
+    assert engine.resolve_current(completed_ids=[], stored_current_id=None).id == "lesson_01"
+
+
+def test_resolve_current_trusts_a_valid_incomplete_stored_id():
+    engine = LessonEngine()
+    lesson = engine.resolve_current(completed_ids=["lesson_01"], stored_current_id="lesson_03")
+    assert lesson.id == "lesson_03"
+
+
+def test_resolve_current_ignores_a_stored_id_that_is_already_completed():
+    engine = LessonEngine()
+    lesson = engine.resolve_current(completed_ids=["lesson_01"], stored_current_id="lesson_01")
+    assert lesson.id == "lesson_02"
+
+
+def test_resolve_current_ignores_an_unknown_stored_id():
+    engine = LessonEngine()
+    lesson = engine.resolve_current(completed_ids=[], stored_current_id="does_not_exist")
+    assert lesson.id == "lesson_01"
+
+
+def test_resolve_current_finds_first_gap_even_without_a_stored_pointer():
+    engine = LessonEngine()
+    lesson = engine.resolve_current(completed_ids=["lesson_01", "lesson_02"], stored_current_id=None)
+    assert lesson.id == "lesson_03"
+
+
+def test_resolve_current_returns_last_lesson_when_everything_is_complete():
+    engine = LessonEngine()
+    all_ids = [lesson.id for lesson in engine.all_in_order()]
+    lesson = engine.resolve_current(completed_ids=all_ids, stored_current_id=None)
+    assert lesson.id == engine.all_in_order()[-1].id

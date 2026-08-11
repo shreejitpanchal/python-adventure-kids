@@ -1,0 +1,26 @@
+id: lesson_06
+title: "Division ➗"
+level: 6
+objective: "Use / to split numbers into equal groups."
+explanation: |
+  🍭 You have 12 candies to share equally between 3 friends.
+
+  How many candies does each friend get? Python uses a forward slash (/) to divide.
+
+  print(12 / 3) tells Python: split 12 into 3 equal groups, then show the answer.
+
+  Python shows division answers with a .0 at the end, like 4.0 — that just means "exactly 4", nothing extra and nothing missing.
+example_code: |
+  print(12 / 3)
+starter_code: |
+  print(12 / 3)
+challenge: |
+  🎯 Challenge: You have 20 candies to share between 4 friends. Can you make Python print how many candies each friend gets?
+expected_output: "5.0"
+hints:
+  - "Use / between the two numbers, like print(20 / 4)."
+  - "Division answers in Python end with .0 — that's normal!"
+  - "It should look like: print(20 / 4)"
+reward_stars: 4
+badge: math_master
+next_lesson_id: lesson_07

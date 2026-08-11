@@ -1,0 +1,41 @@
+id: lesson_14
+title: "Guess the Number 🎲"
+level: 14
+objective: "Combine variables, input, random numbers, and if/else into your first game."
+explanation: |
+  Time to build your first real game! Python can pick a secret random number using random.randint(1, 10).
+
+  random.randint(1, 10) picks a whole number between 1 and 10 — Python decides, not you!
+
+  Then your program compares your guess to the secret number with if/else, just like the Decisions lesson.
+example_code: |
+  import random
+
+  secret_number = random.randint(1, 10)
+  guess = int(input("Guess a number between 1 and 10: "))
+
+  if guess == secret_number:
+      print("You got it!")
+  else:
+      print("Not quite! The number was " + str(secret_number))
+starter_code: |
+  import random
+
+  secret_number = random.randint(1, 10)
+  guess = int(input("Guess a number between 1 and 10: "))
+
+  if guess == secret_number:
+      print("You got it!")
+  else:
+      print("Not quite! The number was " + str(secret_number))
+challenge: |
+  🎯 Challenge: Type a number between 1 and 10 in the box below, then press RUN to see if you guessed Python's secret number!
+expected_output_pattern: "^Guess a number between 1 and 10: (You got it!|Not quite! The number was \\d+)$"
+input_prompt: "Guess a number between 1 and 10:"
+hints:
+  - "Type any whole number from 1 to 10 in the answer box."
+  - "random.randint(1, 10) means Python secretly picks a number from 1 to 10."
+  - "Don't worry if you don't guess right — press RUN again for a brand new secret number!"
+reward_stars: 4
+badge: null
+next_lesson_id: lesson_15

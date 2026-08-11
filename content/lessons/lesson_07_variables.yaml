@@ -1,0 +1,26 @@
+id: lesson_07
+title: "Variables 📦"
+level: 7
+objective: "Store a value in a variable and print it."
+explanation: |
+  A variable is like a box with a name where we can keep something.
+
+  age = 9 puts the number 9 inside a box named "age".
+
+  print(age) opens the box and shows what's inside.
+example_code: |
+  age = 9
+  print(age)
+starter_code: |
+  age = 9
+  print(age)
+challenge: |
+  🎯 Challenge: Can you make Python remember that you are 10 years old, and print it?
+expected_output: "10"
+hints:
+  - "Change the number after age = to 10."
+  - "print(age) will show whatever is stored inside the age box."
+  - "It should look like: age = 10, then print(age) on the next line."
+reward_stars: 3
+badge: null
+next_lesson_id: lesson_08
