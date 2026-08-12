@@ -6,6 +6,7 @@ import customtkinter as ctk
 
 from app.engine.categories import get_category_meta
 from app.ui import theme
+from app.ui.color_utils import contrasting_text_color
 
 
 class CategoryLevelsFrame(ctk.CTkFrame):
@@ -35,11 +36,13 @@ class CategoryLevelsFrame(ctk.CTkFrame):
 
         ctk.CTkLabel(
             header, text=f"{meta.icon} {meta.title}", font=theme.font_title(26),
-            text_color=theme.COLOR_PRIMARY,
+            text_color=meta.color,
         ).pack(side="left", padx=20)
 
     def _build_levels(self) -> None:
         engine = self.app.lesson_engine
+        meta = get_category_meta(self.category)
+        badge_text_color = contrasting_text_color(meta.color)
         completed_ids = set(self.app.progress.get_completed_lesson_ids())
         stars_by_lesson = self.app.progress.get_stars_by_lesson()
         lessons = engine.lessons_in_category(self.category)
@@ -68,10 +71,20 @@ class CategoryLevelsFrame(ctk.CTkFrame):
             card = ctk.CTkFrame(self.body, fg_color=theme.COLOR_CARD, corner_radius=16)
             card.pack(fill="x", pady=8)
 
+            top_row = ctk.CTkFrame(card, fg_color="transparent")
+            top_row.pack(fill="x", padx=20, pady=(16, 2))
+
+            # A colored badge (the category's color) makes the level number
+            # recognizable by color alone, Scratch-block style.
             ctk.CTkLabel(
-                card, text=f"Level {lesson.category_level}: {lesson.title}",
-                font=theme.font_heading(18), text_color=theme.COLOR_TEXT,
-            ).pack(anchor="w", padx=20, pady=(16, 2))
+                top_row, text=str(lesson.category_level), font=theme.font_heading(16),
+                text_color=badge_text_color, fg_color=meta.color,
+                corner_radius=16, width=32, height=32,
+            ).pack(side="left", padx=(0, 10))
+
+            ctk.CTkLabel(
+                top_row, text=lesson.title, font=theme.font_heading(18), text_color=theme.COLOR_TEXT,
+            ).pack(side="left")
 
             ctk.CTkLabel(
                 card, text=status_text, font=theme.font_body(14), text_color=status_color,

@@ -5,6 +5,7 @@ import customtkinter as ctk
 
 from app.engine.categories import get_category_meta
 from app.ui import theme
+from app.ui.color_utils import contrasting_text_color, darken
 
 
 class CategoryMapFrame(ctk.CTkFrame):
@@ -46,13 +47,14 @@ class CategoryMapFrame(ctk.CTkFrame):
             all_done = completed_count == total
 
             status = "✅ All levels complete!" if all_done else f"{completed_count}/{total} levels complete"
+            text_color = contrasting_text_color(meta.color)
 
             ctk.CTkButton(
                 self.body,
                 text=f"{meta.icon}  {meta.title}\n{status}",
                 font=theme.font_heading(18), anchor="w", height=76, corner_radius=16,
-                fg_color=theme.COLOR_CARD, hover_color=theme.COLOR_PRIMARY_HOVER,
-                text_color=theme.COLOR_TEXT,
+                fg_color=meta.color, hover_color=darken(meta.color),
+                text_color=text_color,
                 command=lambda c=category: self._on_open_category(c),
             ).pack(fill="x", pady=8)
 

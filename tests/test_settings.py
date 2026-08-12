@@ -57,3 +57,58 @@ def test_load_settings_corrupt_file_returns_defaults(tmp_path, monkeypatch):
 
     loaded = settings_module.load_settings()
     assert loaded == settings_module.Settings()
+
+
+def test_get_data_dir_lives_inside_the_repo():
+    import app.config.settings as settings_module
+
+    data_dir = settings_module.get_data_dir()
+    assert data_dir == settings_module.get_repo_root() / "app-data"
+    assert data_dir.is_dir()
+
+
+def test_migrate_from_old_location_copies_settings_and_db(tmp_path, monkeypatch):
+    import app.config.settings as settings_module
+
+    old_dir = tmp_path / "old_appdata" / settings_module.APP_FOLDER_NAME
+    old_dir.mkdir(parents=True)
+    (old_dir / settings_module.SETTINGS_FILENAME).write_text('{"child_name": "Avyaan"}', encoding="utf-8")
+    (old_dir / settings_module.DB_FILENAME).write_bytes(b"fake sqlite bytes")
+
+    new_dir = tmp_path / "new_app_data"
+    new_dir.mkdir()
+
+    monkeypatch.setenv("APPDATA", str(tmp_path / "old_appdata"))
+    settings_module._migrate_from_old_location(new_dir)
+
+    assert (new_dir / settings_module.SETTINGS_FILENAME).read_text(encoding="utf-8") == '{"child_name": "Avyaan"}'
+    assert (new_dir / settings_module.DB_FILENAME).read_bytes() == b"fake sqlite bytes"
+
+
+def test_migrate_does_not_overwrite_existing_files_in_new_location(tmp_path, monkeypatch):
+    import app.config.settings as settings_module
+
+    old_dir = tmp_path / "old_appdata" / settings_module.APP_FOLDER_NAME
+    old_dir.mkdir(parents=True)
+    (old_dir / settings_module.SETTINGS_FILENAME).write_text('{"child_name": "OldName"}', encoding="utf-8")
+
+    new_dir = tmp_path / "new_app_data"
+    new_dir.mkdir()
+    (new_dir / settings_module.SETTINGS_FILENAME).write_text('{"child_name": "NewName"}', encoding="utf-8")
+
+    monkeypatch.setenv("APPDATA", str(tmp_path / "old_appdata"))
+    settings_module._migrate_from_old_location(new_dir)
+
+    assert (new_dir / settings_module.SETTINGS_FILENAME).read_text(encoding="utf-8") == '{"child_name": "NewName"}'
+
+
+def test_migrate_does_nothing_when_no_old_location_exists(tmp_path, monkeypatch):
+    import app.config.settings as settings_module
+
+    new_dir = tmp_path / "new_app_data"
+    new_dir.mkdir()
+
+    monkeypatch.setenv("APPDATA", str(tmp_path / "does_not_exist"))
+    settings_module._migrate_from_old_location(new_dir)  # should not raise
+
+    assert list(new_dir.iterdir()) == []

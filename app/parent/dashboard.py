@@ -8,6 +8,7 @@ from __future__ import annotations
 import customtkinter as ctk
 
 from app.ui import theme
+from app.ui.scroll_utils import install_fast_mousewheel_scrolling
 
 EVENT_ICONS = {
     "lesson_completed": "✅",
@@ -219,3 +220,5 @@ def _open_parent_window(app) -> None:
         fg_color=theme.COLOR_TEXT_MUTED,
         command=close_window,
     ).pack(pady=(4, 24))
+
+    install_fast_mousewheel_scrolling(win)

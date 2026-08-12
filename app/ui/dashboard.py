@@ -8,7 +8,10 @@ from __future__ import annotations
 
 import customtkinter as ctk
 
+from app.engine.categories import get_category_meta
 from app.ui import theme
+from app.ui.assets import make_ctk_icon
+from app.ui.color_utils import contrasting_text_color, darken
 
 
 class DashboardFrame(ctk.CTkFrame):
@@ -27,9 +30,11 @@ class DashboardFrame(ctk.CTkFrame):
         header = ctk.CTkFrame(parent, fg_color="transparent")
         header.pack(fill="x", padx=40, pady=(30, 10))
 
+        # Kept as an attribute so the underlying image isn't garbage-collected.
+        self.icon_image = make_ctk_icon(size=40)
         ctk.CTkLabel(
-            header, text="🐍 Python Adventure", font=theme.font_title(30),
-            text_color=theme.COLOR_PRIMARY,
+            header, text=" Python Adventure", image=self.icon_image, compound="left",
+            font=theme.font_title(30), text_color=theme.COLOR_PRIMARY,
         ).pack(side="left")
 
         ctk.CTkButton(
@@ -82,18 +87,22 @@ class DashboardFrame(ctk.CTkFrame):
             return
 
         # A plain frame, not another CTkScrollableFrame -- nesting scrollable
-        # frames confuses CTk's canvas sizing. The outer dashboard scroll
-        # (see __init__) handles overflow if there are many completed lessons.
+        # frames causes cross-talk in CTk's own wheel handling (even a
+        # correctly-isolated custom handler can't fully suppress it, since
+        # CTk's native per-frame handlers stay registered too). The outer
+        # dashboard scroll (see __init__) already reveals any overflow here,
+        # and its mousewheel binding now actually works.
         list_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
         list_frame.pack(fill="x", padx=8, pady=(0, 12))
 
         for lesson in completed_lessons:
             stars = stars_by_lesson.get(lesson.id, 0)
+            meta = get_category_meta(lesson.category)
             ctk.CTkButton(
                 list_frame, text=f"{lesson.title}\n{'⭐' * stars}",
                 font=theme.font_body(13), anchor="w",
-                fg_color=theme.COLOR_BG, hover_color=theme.COLOR_PRIMARY_HOVER,
-                text_color=theme.COLOR_TEXT, height=52, corner_radius=10,
+                fg_color=meta.color, hover_color=darken(meta.color),
+                text_color=contrasting_text_color(meta.color), height=52, corner_radius=10,
                 command=lambda lesson_id=lesson.id: self._on_replay(lesson_id),
             ).pack(fill="x", pady=4, padx=4)
 

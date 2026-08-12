@@ -3,25 +3,55 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import secrets
+import shutil
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 APP_FOLDER_NAME = "PythonAdventure"
 SETTINGS_FILENAME = "settings.json"
+DB_FILENAME = "progress.sqlite3"
+
+
+def get_repo_root() -> Path:
+    return Path(__file__).resolve().parent.parent.parent
 
 
 def get_data_dir() -> Path:
-    """Return the per-user app data directory, creating it if needed."""
-    base = os.environ.get("APPDATA") or str(Path.home())
-    data_dir = Path(base) / APP_FOLDER_NAME
+    """Return the app data directory, creating it if needed.
+
+    Lives inside the repo (app-data/, gitignored) rather than the OS's
+    per-user profile -- keeps settings.json/progress.sqlite3 right next to
+    the code during development. Note: a packaged/distributed build would
+    need a real per-user location again (this won't work without the
+    source tree present), so revisit before shipping to end users.
+    """
+    data_dir = get_repo_root() / "app-data"
     data_dir.mkdir(parents=True, exist_ok=True)
+    _migrate_from_old_location(data_dir)
     return data_dir
 
 
+def _migrate_from_old_location(data_dir: Path) -> None:
+    """One-time copy of any pre-existing %APPDATA%\\PythonAdventure\\ data, so
+    switching storage locations doesn't reset a child's progress."""
+    import os
+
+    base = os.environ.get("APPDATA")
+    if not base:
+        return
+    old_dir = Path(base) / APP_FOLDER_NAME
+    if old_dir == data_dir or not old_dir.is_dir():
+        return
+    for filename in (SETTINGS_FILENAME, DB_FILENAME):
+        old_file = old_dir / filename
+        new_file = data_dir / filename
+        if old_file.is_file() and not new_file.exists():
+            shutil.copy2(old_file, new_file)
+
+
 def get_db_path() -> Path:
-    return get_data_dir() / "progress.sqlite3"
+    return get_data_dir() / DB_FILENAME
 
 
 def get_settings_path() -> Path:

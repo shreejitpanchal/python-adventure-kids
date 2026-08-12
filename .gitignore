@@ -33,8 +33,9 @@ desktop.ini
 # Logs
 *.log
 
-# Local app data should never live in the repo -- the real app writes to
-# %APPDATA%\PythonAdventure\, but just in case anything lands here during
-# local testing:
+# Local app data -- settings.json, progress.sqlite3, a real child's name,
+# PIN hash, etc. Lives in the repo for dev convenience (see
+# app/config/settings.py) but must never be committed.
+/app-data/
 *.sqlite3
 *.sqlite3-journal

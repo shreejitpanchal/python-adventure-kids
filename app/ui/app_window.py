@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import customtkinter as ctk
+from PIL import ImageTk
 
 from app.config.settings import Settings, get_db_path, load_settings, save_settings
 from app.engine.lesson_engine import LessonEngine
 from app.progress.store import ProgressStore
 from app.ui import theme
+from app.ui.assets import load_icon_image
+from app.ui.scroll_utils import install_fast_mousewheel_scrolling
 
 
 class App(ctk.CTk):
@@ -18,6 +21,11 @@ class App(ctk.CTk):
         self.geometry(f"{theme.WINDOW_WIDTH}x{theme.WINDOW_HEIGHT}")
         self.minsize(800, 600)
         self.configure(fg_color=theme.COLOR_BG)
+
+        # Kept as an attribute -- iconphoto only keeps a weak reference, and
+        # the image would otherwise be garbage-collected and the icon vanish.
+        self._window_icon = ImageTk.PhotoImage(load_icon_image())
+        self.iconphoto(True, self._window_icon)
 
         self.settings: Settings = load_settings()
         self.progress = ProgressStore(get_db_path())
@@ -39,6 +47,7 @@ class App(ctk.CTk):
             self._current_frame.destroy()
         self._current_frame = frame
         frame.pack(fill="both", expand=True)
+        install_fast_mousewheel_scrolling(self)
 
     def show_setup_wizard(self) -> None:
         from app.ui.setup_wizard import SetupWizardFrame
