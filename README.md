@@ -2,13 +2,20 @@
 
 A GUI-based Python learning app for kids, built with CustomTkinter.
 
+## Look & feel
+
+| Dashboard | Lesson | Code editor |
+|---|---|---|
+| ![Dashboard](docs/app-screenshots/welcome-screen.png) | ![Lesson explanation](docs/app-screenshots/learn-python-1.png) | ![Code editor](docs/app-screenshots/learn-python-2.png) |
+
 ## Status
 
 **Phases 1–6 in progress: 28 lessons complete** (18 main-path + 10 bonus
 practice levels). First-run setup wizard, main dashboard, a category
-browser, local progress storage, a PIN-gated parent area, and a full
-lesson flow (explain → example → code editor → run → friendly errors →
-reward) work end to end for:
+browser, a settings screen with 6 selectable color themes (including two
+dark-mode options), local progress storage, a PIN-gated parent area, and
+a full lesson flow (explain → example → code editor → run → friendly
+errors → reward) work end to end for:
 
 - **Lessons 1–13 (main path)**: Meet Python, Numbers, Addition,
   Subtraction, Multiplication, Division ("Math Master" badge), Variables,
@@ -31,6 +38,14 @@ from the rest of the lessons.
 
 ## Running it
 
+**Easiest way (no terminal needed):** double-click `run.bat` (Windows) or
+run `./run.sh` (git-bash/macOS/Linux). First run sets up a virtual
+environment and installs dependencies automatically (takes a minute);
+every run after that just launches the app straight away, with no console
+window left open.
+
+Manually, if you prefer:
+
 ```powershell
 .venv\Scripts\python.exe main.py
 ```
@@ -48,8 +63,9 @@ parent PIN), then lands on the dashboard.
 
 ```
 app/
-  ui/        # screens: setup wizard, dashboard, lesson screen, code editor, shared theme
-  config/    # settings persistence (%APPDATA%\PythonAdventure\settings.json)
+  ui/        # screens: setup wizard, dashboard, lesson screen, code editor,
+             # category browser, settings/theme picker, shared theme + assets
+  config/    # settings persistence (app-data/settings.json)
   progress/  # SQLite-backed progress, stars, badges, streaks, activity log
   parent/    # PIN-gated parent area (summary + recent activity)
   engine/    # lesson model + YAML-based lesson engine + category logic + output validator
@@ -57,11 +73,20 @@ app/
   games/     # GameCanvas/GameWindow + in-process graphical runner (Snake's execution model)
 content/
   lessons/   # lesson content (YAML), kept separate from app code
-tests/       # pytest suite (167 tests)
+  images/    # app icon (main-icon.png / .ico)
+docs/
+  app-screenshots/  # images used in this README
+tests/       # pytest suite (194 tests)
+app-data/    # gitignored — child's settings + progress, created on first run
 main.py      # entry point
 ```
 
-## Lesson resolution
+## How it works
+
+Implementation notes for anyone digging into the code — skip this if you
+just want to run the app.
+
+### Lesson resolution
 
 `LessonEngine.resolve_current()` decides which lesson a child lands on:
 trusts the stored "current lesson" pointer only if it's still valid and
@@ -70,7 +95,7 @@ lesson in order, or the last lesson if everything is done. This keeps
 old progress data working even as lessons are added, removed, or
 reordered in content/lessons/.
 
-## Category browser
+### Category browser
 
 Every lesson belongs to a `category` (e.g. `"addition"`) and a
 `category_level` (its position within that category, 1-based) — set in
@@ -92,7 +117,7 @@ order-based fallback — specifically so bonus levels (which sort after
 lesson 18 by `level`) can never leak into the guided path just because
 they come later in file order.
 
-## Code execution sandbox
+### Code execution sandbox
 
 Child code runs through two layers before anything executes:
 1. **Static AST check** (`app/sandbox/safety.py`) — rejects imports and
@@ -107,7 +132,7 @@ Errors are translated into friendly, kid-appropriate messages
 (`app/sandbox/errors.py`) with an optional "I'm curious" toggle to reveal
 the raw traceback.
 
-## Lessons that take input
+### Lessons that take input
 
 A lesson can set `input_prompt` in its YAML to show a labeled answer box
 in the lesson screen instead of a terminal-style prompt. Whatever the
@@ -118,7 +143,7 @@ Lesson 9, "Ask a Question"). Code that never receives input closes stdin
 immediately, so an unexpected `input()` call fails fast with a friendly
 message instead of hanging until the timeout.
 
-## Games with randomness
+### Games with randomness
 
 Lessons 14–15 introduce `random`, which is now allowlisted through both
 safety layers (`app/sandbox/safety.py`'s `ALLOWED_MODULES` and
@@ -128,7 +153,7 @@ Because the outcome is genuinely random, these lessons validate with
 of an exact string, via `validate_output()`'s new `expected_output_pattern`
 parameter.
 
-## Graphical lessons (the Snake project)
+### Graphical lessons (the Snake project)
 
 Snake needs a live, continuously-updating window — something the
 subprocess-sandboxed model (built for one-shot "run code, capture
@@ -160,6 +185,14 @@ A lesson opts into this path with `graphical: true` in its YAML.
 
 ## Data storage
 
-Everything lives locally and offline in `%APPDATA%\PythonAdventure\`:
-- `settings.json` — child name, parent PIN (salted+hashed), preferences
+Everything lives locally and offline — no cloud, no accounts, no network
+access at all. Data is kept in `app-data/` at the repo root (gitignored,
+since it's the child's personal progress, not code):
+- `settings.json` — child name, parent PIN (salted + hashed), selected
+  theme, other preferences
 - `progress.sqlite3` — level, stars, badges, completed lessons, activity log
+
+On first run, `get_data_dir()` (`app/config/settings.py`) creates
+`app-data/` and, if it finds data from an older version of the app at
+`%APPDATA%\PythonAdventure\`, copies it over automatically — so upgrading
+never resets a child's progress.

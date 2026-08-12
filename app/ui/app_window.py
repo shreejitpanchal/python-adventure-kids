@@ -2,32 +2,32 @@
 from __future__ import annotations
 
 import customtkinter as ctk
-from PIL import ImageTk
 
 from app.config.settings import Settings, get_db_path, load_settings, save_settings
 from app.engine.lesson_engine import LessonEngine
 from app.progress.store import ProgressStore
 from app.ui import theme
-from app.ui.assets import load_icon_image
+from app.ui.assets import apply_window_icon, ensure_windows_app_id
 from app.ui.scroll_utils import install_fast_mousewheel_scrolling
 
 
 class App(ctk.CTk):
     def __init__(self) -> None:
+        ensure_windows_app_id()  # must happen before the first window is shown
+
         super().__init__()
         theme.apply_base_theme()
+
+        self.settings: Settings = load_settings()
+        theme.apply_theme(self.settings.theme)
 
         self.title("Python Adventure")
         self.geometry(f"{theme.WINDOW_WIDTH}x{theme.WINDOW_HEIGHT}")
         self.minsize(800, 600)
         self.configure(fg_color=theme.COLOR_BG)
 
-        # Kept as an attribute -- iconphoto only keeps a weak reference, and
-        # the image would otherwise be garbage-collected and the icon vanish.
-        self._window_icon = ImageTk.PhotoImage(load_icon_image())
-        self.iconphoto(True, self._window_icon)
+        apply_window_icon(self)
 
-        self.settings: Settings = load_settings()
         self.progress = ProgressStore(get_db_path())
         self.lesson_engine = LessonEngine()
 
@@ -74,6 +74,17 @@ class App(ctk.CTk):
         from app.ui.category_levels import CategoryLevelsFrame
 
         self.show_frame(CategoryLevelsFrame(self, category))
+
+    def show_settings(self) -> None:
+        from app.ui.settings_screen import SettingsFrame
+
+        self.show_frame(SettingsFrame(self))
+
+    def apply_and_persist_theme(self, theme_key: str) -> None:
+        theme.apply_theme(theme_key)
+        self.configure(fg_color=theme.COLOR_BG)
+        self.settings.theme = theme_key
+        self.save_settings()
 
     def save_settings(self) -> None:
         save_settings(self.settings)

@@ -44,6 +44,12 @@ class DashboardFrame(ctk.CTkFrame):
         ).pack(side="right")
 
         ctk.CTkButton(
+            header, text="⚙️ Settings", font=theme.font_body(13), width=120, height=36,
+            fg_color=theme.COLOR_TEXT_MUTED, hover_color=theme.COLOR_TEXT,
+            command=self._open_settings,
+        ).pack(side="right", padx=(0, 10))
+
+        ctk.CTkButton(
             header, text="🗺️ Categories", font=theme.font_body(13), width=140, height=36,
             fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
             command=self._open_category_map,
@@ -188,3 +194,6 @@ class DashboardFrame(ctk.CTkFrame):
 
     def _open_category_map(self) -> None:
         self.app.show_category_map()
+
+    def _open_settings(self) -> None:
+        self.app.show_settings()
