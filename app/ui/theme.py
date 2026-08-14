@@ -80,7 +80,7 @@ THEME_PRESETS: dict[str, ThemePreset] = {
     ),
 }
 
-DEFAULT_THEME_KEY = "sunny_light"
+DEFAULT_THEME_KEY = "midnight_dark"
 CURRENT_THEME_KEY = DEFAULT_THEME_KEY
 
 # Populated by apply_theme() below -- these are the names every screen

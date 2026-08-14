@@ -6,6 +6,7 @@ from typing import Callable
 import customtkinter as ctk
 
 from app.ui import theme
+from app.ui.assets import make_ctk_icon
 
 
 class SetupWizardFrame(ctk.CTkFrame):
@@ -28,9 +29,11 @@ class SetupWizardFrame(ctk.CTkFrame):
     def _show_welcome_step(self) -> None:
         self._clear_body()
 
+        # Kept as an attribute so the underlying image isn't garbage-collected.
+        self.welcome_icon_image = make_ctk_icon(size=44)
         ctk.CTkLabel(
-            self._body, text="🐍 Welcome to Python Adventure!", font=theme.font_title(),
-            text_color=theme.COLOR_PRIMARY,
+            self._body, text=" Welcome to Python Adventure!", image=self.welcome_icon_image,
+            compound="left", font=theme.font_title(), text_color=theme.COLOR_PRIMARY,
         ).pack(pady=(40, 10))
 
         ctk.CTkLabel(

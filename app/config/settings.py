@@ -64,7 +64,7 @@ class Settings:
     sound_enabled: bool = True
     animations_enabled: bool = True
     reduced_motion: bool = False
-    theme: str = "sunny_light"
+    theme: str = "midnight_dark"
     parent_pin_salt: str = ""
     parent_pin_hash: str = ""
     setup_complete: bool = False

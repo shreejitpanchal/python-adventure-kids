@@ -11,9 +11,9 @@ def _restore_default_theme():
     theme.apply_theme(theme.DEFAULT_THEME_KEY)
 
 
-def test_default_theme_is_sunny_light():
-    assert theme.CURRENT_THEME_KEY == theme.DEFAULT_THEME_KEY == "sunny_light"
-    assert theme.get_current_preset().key == "sunny_light"
+def test_default_theme_is_midnight_dark():
+    assert theme.CURRENT_THEME_KEY == theme.DEFAULT_THEME_KEY == "midnight_dark"
+    assert theme.get_current_preset().key == "midnight_dark"
 
 
 def test_every_preset_key_matches_its_dict_key():
