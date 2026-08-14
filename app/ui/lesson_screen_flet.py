@@ -76,7 +76,7 @@ class _LessonController:
         header = ft.Row(
             [
                 ft.Button(
-                    "🏠 Menu", on_click=self._on_menu,
+                    "🏠 Menu", on_click=self._on_menu, height=48,
                     style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
                 ),
                 ft.Text(lesson.title, size=22, weight=ft.FontWeight.BOLD, color=theme.primary),
@@ -143,19 +143,19 @@ class _LessonController:
             )
 
         self.run_button = ft.Button(
-            "▶ RUN", on_click=self._on_run,
+            "▶ RUN", on_click=self._on_run, height=52,
             style=ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF"),
         )
         self.stop_button = ft.Button(
-            "⏹ STOP", on_click=self._on_stop, disabled=True,
+            "⏹ STOP", on_click=self._on_stop, disabled=True, height=52,
             style=ft.ButtonStyle(bgcolor=theme.danger, color="#FFFFFF"),
         )
         reset_button = ft.Button(
-            "↺ Reset", on_click=self._on_reset,
+            "↺ Reset", on_click=self._on_reset, height=48,
             style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
         )
         self.hint_button = ft.Button(
-            "💡 Hint", on_click=self._on_hint, disabled=not lesson.hints,
+            "💡 Hint", on_click=self._on_hint, disabled=not lesson.hints, height=48,
             style=ft.ButtonStyle(bgcolor=theme.warning, color="#FFFFFF"),
         )
         children.append(
@@ -234,7 +234,7 @@ class _LessonController:
                     self.reward_text,
                     self.badge_text,
                     ft.Button(
-                        "CONTINUE ➜", on_click=self._on_continue,
+                        "CONTINUE ➜", on_click=self._on_continue, height=56,
                         style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
                     ),
                 ],

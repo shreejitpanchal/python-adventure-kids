@@ -53,7 +53,7 @@ def build_category_levels_view(page: ft.Page, state: AppState, category: str) ->
                                spacing=10),
                         ft.Text(status_text, size=14, color=status_color),
                         ft.Button(
-                            button_text, width=160, height=44, disabled=not enabled,
+                            button_text, width=160, height=48, disabled=not enabled,
                             on_click=lambda _e, lesson_id=lesson.id: page.go(f"/lesson/{lesson_id}"),
                             style=ft.ButtonStyle(
                                 bgcolor=theme.success if enabled else theme.text_muted, color="#FFFFFF",
@@ -69,7 +69,7 @@ def build_category_levels_view(page: ft.Page, state: AppState, category: str) ->
     header = ft.Row(
         [
             ft.Button(
-                "🗺️ Categories", on_click=lambda _e: page.go("/categories"),
+                "🗺️ Categories", on_click=lambda _e: page.go("/categories"), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
             ft.Text(f"{meta.icon} {meta.title}", size=26, weight=ft.FontWeight.BOLD, color=meta.color),

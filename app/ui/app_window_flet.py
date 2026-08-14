@@ -25,6 +25,9 @@ def main(page: ft.Page) -> None:
     page.window.height = 700
     page.window.icon = "main-icon.png"
     page.padding = 0
+    page.fonts = {"Baloo 2": "fonts/Baloo2-Regular.ttf"}
+    page.theme = ft.Theme(font_family="Baloo 2")
+    page.dark_theme = ft.Theme(font_family="Baloo 2")
 
     state = AppState()
 

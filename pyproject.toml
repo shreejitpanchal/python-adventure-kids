@@ -1,0 +1,10 @@
+[project]
+name = "python-adventure"
+version = "1.0.0"
+description = "A gamified Python-learning adventure for kids"
+
+[tool.flet]
+product = "Python Adventure"
+org = "com.shreejitpanchal"
+company = "Shreejit Panchal"
+copyright = "Copyright (C) 2026 Shreejit Panchal"

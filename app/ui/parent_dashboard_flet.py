@@ -69,7 +69,7 @@ class _ParentController:
     def _menu_row(self) -> ft.Control:
         return ft.Row(
             [ft.Button(
-                "🏠 Menu", on_click=self._on_menu,
+                "🏠 Menu", on_click=self._on_menu, height=48,
                 style=ft.ButtonStyle(bgcolor=self.theme.text_muted, color="#FFFFFF"),
             )],
         )
@@ -86,22 +86,24 @@ class _ParentController:
 
         self._set([
             self._menu_row(),
-            ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Text("🔒 Parent Area", size=22, weight=ft.FontWeight.BOLD, color=theme.text),
-                        ft.Text("Enter the 4-digit PIN", size=14, color=theme.text_muted),
-                        self.pin_field,
-                        self.pin_error_text,
-                        ft.Button(
-                            "Unlock", on_click=self._submit_pin,
-                            style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
-                        ),
-                    ],
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
+            ft.Row([
+                ft.Container(
+                    content=ft.Column(
+                        [
+                            ft.Text("🔒 Parent Area", size=22, weight=ft.FontWeight.BOLD, color=theme.text),
+                            ft.Text("Enter the 4-digit PIN", size=14, color=theme.text_muted),
+                            self.pin_field,
+                            self.pin_error_text,
+                            ft.Button(
+                                "Unlock", on_click=self._submit_pin, height=48,
+                                style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+                            ),
+                        ],
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
+                    ),
+                    bgcolor=theme.card, border_radius=18, padding=40, width=380,
                 ),
-                bgcolor=theme.card, border_radius=18, padding=40, width=380,
-            ),
+            ], alignment=ft.MainAxisAlignment.CENTER),
         ])
 
     def _submit_pin(self, e=None) -> None:
@@ -156,7 +158,7 @@ class _ParentController:
         controls: list[ft.Control] = [
             self._menu_row(),
             ft.Text("👋 Parent Area", size=22, weight=ft.FontWeight.BOLD, color=theme.text),
-            summary_card,
+            ft.Row([summary_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Text("Recent Activity", size=16, weight=ft.FontWeight.BOLD, color=theme.text),
             activity_card,
         ]
@@ -169,7 +171,7 @@ class _ParentController:
         controls.append(self.status_text)
         controls.append(
             ft.Button(
-                "Reset Progress", on_click=self._confirm_reset,
+                "Reset Progress", on_click=self._confirm_reset, height=48,
                 style=ft.ButtonStyle(bgcolor=theme.danger, color="#FFFFFF"),
             )
         )

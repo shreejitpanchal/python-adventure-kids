@@ -18,7 +18,7 @@ def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
     header = ft.Row(
         [
             ft.Button(
-                "🏠 Menu", on_click=lambda _e: page.go("/dashboard"),
+                "🏠 Menu", on_click=lambda _e: page.go("/dashboard"), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
             ft.Text("⚙️ Settings", size=26, weight=ft.FontWeight.BOLD, color=theme.primary),
@@ -80,7 +80,7 @@ def _build_theme_option(page: ft.Page, state: AppState, preset: ThemePreset, is_
                 swatches,
                 ft.Button(
                     "✅ Selected" if is_selected else "Select",
-                    disabled=is_selected, on_click=select,
+                    disabled=is_selected, on_click=select, height=48,
                     style=ft.ButtonStyle(bgcolor=preset.primary, color="#FFFFFF"),
                 ),
             ],

@@ -53,15 +53,15 @@ def _build_header(page: ft.Page, state: AppState) -> ft.Control:
             ft.Row(
                 [
                     ft.Button(
-                        "🗺️ Categories", on_click=lambda _e: page.go("/categories"),
+                        "🗺️ Categories", on_click=lambda _e: page.go("/categories"), height=48,
                         style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
                     ),
                     ft.Button(
-                        "⚙️ Settings", on_click=lambda _e: page.go("/settings"),
+                        "⚙️ Settings", on_click=lambda _e: page.go("/settings"), height=48,
                         style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
                     ),
                     ft.Button(
-                        "👋 Parent Area", on_click=lambda _e: page.go("/parent"),
+                        "👋 Parent Area", on_click=lambda _e: page.go("/parent"), height=48,
                         style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
                     ),
                 ],

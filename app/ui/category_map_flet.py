@@ -41,7 +41,7 @@ def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
     header = ft.Row(
         [
             ft.Button(
-                "🏠 Menu", on_click=lambda _e: page.go("/dashboard"),
+                "🏠 Menu", on_click=lambda _e: page.go("/dashboard"), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
             ft.Text("🗺️ Practice by Category", size=26, weight=ft.FontWeight.BOLD, color=theme.primary),

@@ -32,7 +32,7 @@ expected_output: ""
 hints:
   - "game.move_shape(snake, 10, 0) moves it 10 pixels right and 0 pixels down/up each time."
   - "Smaller numbers in game.after(300, ...) make the snake move faster."
-  - "Don't use a while loop here — game.after(...) calling itself IS the loop, and it won't freeze the window."
+  - "Don't use a while loop here — game.after(...) calling itself IS the loop, and it won't freeze the game screen."
 reward_stars: 5
 badge: null
 next_lesson_id: null

@@ -8,9 +8,10 @@ Flet UI reaches full feature parity and app/ui/theme.py is deleted, this
 file loses its "_flet" suffix and becomes the only copy.
 
 Font note: the CTk app uses "Comic Sans MS", a Windows-installed font that
-won't exist on Android. Bundling a replacement font asset is deferred to
-the touch/mobile UX pass (a later phase); this file intentionally doesn't
-set a font family yet.
+won't exist on Android. The Flet app instead bundles "Baloo 2" (Google
+Fonts, SIL Open Font License) at assets/fonts/Baloo2-Regular.ttf, registered
+and applied globally via page.theme/page.dark_theme in app_window_flet.py's
+main() -- so it's set once for the whole app, not per-preset here.
 """
 from __future__ import annotations
 
