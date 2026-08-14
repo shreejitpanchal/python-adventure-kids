@@ -10,6 +10,13 @@ A GUI-based Python learning app for kids, built with CustomTkinter.
 
 ## Status
 
+A Windows-to-Android re-platform onto [Flet](https://flet.dev) is
+underway in the background (one Python codebase targeting both), starting
+with the sandbox/execution layer — see "Code execution sandbox" below.
+The app described in this README, screenshots included, is the current
+CustomTkinter build, which keeps working unaffected until that migration
+reaches the UI.
+
 **Phases 1–6 in progress: 28 lessons complete** (18 main-path + 10 bonus
 practice levels). First-run setup wizard, main dashboard, a category
 browser, a settings screen with 6 selectable color themes (including two
@@ -65,19 +72,20 @@ parent PIN), then lands on the dashboard.
 app/
   ui/        # screens: setup wizard, dashboard, lesson screen, code editor,
              # category browser, settings/theme picker, shared theme + assets
-  config/    # settings persistence (app-data/settings.json)
+  config/    # settings persistence + platform-appropriate data directory
   progress/  # SQLite-backed progress, stars, badges, streaks, activity log
   parent/    # PIN-gated parent area (summary + recent activity)
   engine/    # lesson model + YAML-based lesson engine + category logic + output validator
-  sandbox/   # AST safety check, subprocess runner, restricted worker, error translator
+  sandbox/   # AST safety check + two execution engines (see "Code execution
+             # sandbox" below for why there are currently two)
   games/     # GameCanvas/GameWindow + in-process graphical runner (Snake's execution model)
 content/
   lessons/   # lesson content (YAML), kept separate from app code
   images/    # app icon (main-icon.png / .ico)
 docs/
   app-screenshots/  # images used in this README
-tests/       # pytest suite (194 tests)
-app-data/    # gitignored — child's settings + progress, created on first run
+tests/       # pytest suite (230 tests)
+app-data/    # gitignored, legacy dev-only location — see "Data storage" below
 main.py      # entry point
 ```
 
@@ -131,6 +139,19 @@ Child code runs through two layers before anything executes:
 Errors are translated into friendly, kid-appropriate messages
 (`app/sandbox/errors.py`) with an optional "I'm curious" toggle to reveal
 the raw traceback.
+
+**Currently in transition**: an Android port is underway (see Status above
+— the shipping app today is still Windows-only CustomTkinter). Android
+doesn't allow a sandboxed app to spawn a sibling OS process, so
+`app/sandbox/inprocess_runner.py` + `app/sandbox/watchdog.py` implement a
+second engine that runs child code in-process instead, using a cooperative
+watchdog (an AST transform injects a cheap check at the top of every loop
+body) in place of the OS-level process kill. It also folds in what
+`app/games/graphical_runner.py` does for Snake, so eventually there's one
+engine instead of two. The old subprocess engine stays live and in use
+until the Flet rewrite of the lesson screen actually switches over to the
+new one — at that point `runner.py`, `worker.py`, and
+`graphical_runner.py` get deleted.
 
 ### Lessons that take input
 
@@ -186,13 +207,15 @@ A lesson opts into this path with `graphical: true` in its YAML.
 ## Data storage
 
 Everything lives locally and offline — no cloud, no accounts, no network
-access at all. Data is kept in `app-data/` at the repo root (gitignored,
-since it's the child's personal progress, not code):
-- `settings.json` — child name, parent PIN (salted + hashed), selected
-  theme, other preferences
-- `progress.sqlite3` — level, stars, badges, completed lessons, activity log
+access at all. `settings.json` (child name, parent PIN salted + hashed,
+selected theme, other preferences) and `progress.sqlite3` (level, stars,
+badges, completed lessons, activity log) live in `%APPDATA%\PythonAdventure\`
+on Windows.
 
-On first run, `get_data_dir()` (`app/config/settings.py`) creates
-`app-data/` and, if it finds data from an older version of the app at
-`%APPDATA%\PythonAdventure\`, copies it over automatically — so upgrading
-never resets a child's progress.
+The actual OS-appropriate location is resolved by
+`resolve_platform_data_dir()` (`app/config/platform_paths.py`), kept
+separate from `app/config/settings.py` so it can also target Android's
+app-sandboxed storage directory without touching anything else. On first
+run, `get_data_dir()` (`app/config/settings.py`) copies forward any data
+left in this repo's old dev-convenience `app-data/` location — so moving
+where data lives never resets a child's progress.

@@ -8,9 +8,16 @@ import shutil
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
+from app.config.platform_paths import resolve_platform_data_dir
+
 APP_FOLDER_NAME = "PythonAdventure"
 SETTINGS_FILENAME = "settings.json"
 DB_FILENAME = "progress.sqlite3"
+
+# The dev-convenience location used before this app moved to a proper
+# per-user OS directory (see app.config.platform_paths). Kept only so
+# get_data_dir() can migrate anything left there forward one time.
+REPO_LOCAL_DATA_DIRNAME = "app-data"
 
 
 def get_repo_root() -> Path:
@@ -20,27 +27,22 @@ def get_repo_root() -> Path:
 def get_data_dir() -> Path:
     """Return the app data directory, creating it if needed.
 
-    Lives inside the repo (app-data/, gitignored) rather than the OS's
-    per-user profile -- keeps settings.json/progress.sqlite3 right next to
-    the code during development. Note: a packaged/distributed build would
-    need a real per-user location again (this won't work without the
-    source tree present), so revisit before shipping to end users.
+    The actual OS-appropriate location comes from
+    app.config.platform_paths.resolve_platform_data_dir() -- a proper
+    per-user directory on Windows, Flet's app-sandboxed storage directory
+    on Android. Anything left over in this repo's old app-data/
+    dev-convenience location is copied forward automatically, so moving
+    where data lives never resets a child's progress.
     """
-    data_dir = get_repo_root() / "app-data"
-    data_dir.mkdir(parents=True, exist_ok=True)
-    _migrate_from_old_location(data_dir)
+    data_dir = resolve_platform_data_dir()
+    _migrate_from_repo_local_dir(data_dir)
     return data_dir
 
 
-def _migrate_from_old_location(data_dir: Path) -> None:
-    """One-time copy of any pre-existing %APPDATA%\\PythonAdventure\\ data, so
-    switching storage locations doesn't reset a child's progress."""
-    import os
-
-    base = os.environ.get("APPDATA")
-    if not base:
-        return
-    old_dir = Path(base) / APP_FOLDER_NAME
+def _migrate_from_repo_local_dir(data_dir: Path) -> None:
+    """One-time copy from the repo-local app-data/ folder. Never overwrites
+    a file that already exists at the destination."""
+    old_dir = get_repo_root() / REPO_LOCAL_DATA_DIRNAME
     if old_dir == data_dir or not old_dir.is_dir():
         return
     for filename in (SETTINGS_FILENAME, DB_FILENAME):

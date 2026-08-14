@@ -63,27 +63,47 @@ def test_load_settings_corrupt_file_returns_defaults(tmp_path, monkeypatch):
     assert loaded == settings_module.Settings()
 
 
-def test_get_data_dir_lives_inside_the_repo():
+def test_get_data_dir_delegates_to_platform_paths(tmp_path, monkeypatch):
     import app.config.settings as settings_module
+
+    monkeypatch.setattr(settings_module, "resolve_platform_data_dir", lambda: tmp_path)
+    assert settings_module.get_data_dir() == tmp_path
+
+
+def test_get_data_dir_migrates_forward_from_repo_local_app_data(tmp_path, monkeypatch):
+    import app.config.settings as settings_module
+
+    fake_repo_root = tmp_path / "repo"
+    repo_local_dir = fake_repo_root / settings_module.REPO_LOCAL_DATA_DIRNAME
+    repo_local_dir.mkdir(parents=True)
+    (repo_local_dir / settings_module.SETTINGS_FILENAME).write_text('{"child_name": "Avyaan"}', encoding="utf-8")
+
+    platform_dir = tmp_path / "platform_data"
+    platform_dir.mkdir()
+
+    monkeypatch.setattr(settings_module, "get_repo_root", lambda: fake_repo_root)
+    monkeypatch.setattr(settings_module, "resolve_platform_data_dir", lambda: platform_dir)
 
     data_dir = settings_module.get_data_dir()
-    assert data_dir == settings_module.get_repo_root() / "app-data"
-    assert data_dir.is_dir()
+
+    assert data_dir == platform_dir
+    assert (data_dir / settings_module.SETTINGS_FILENAME).read_text(encoding="utf-8") == '{"child_name": "Avyaan"}'
 
 
-def test_migrate_from_old_location_copies_settings_and_db(tmp_path, monkeypatch):
+def test_migrate_from_repo_local_dir_copies_settings_and_db(tmp_path, monkeypatch):
     import app.config.settings as settings_module
 
-    old_dir = tmp_path / "old_appdata" / settings_module.APP_FOLDER_NAME
-    old_dir.mkdir(parents=True)
-    (old_dir / settings_module.SETTINGS_FILENAME).write_text('{"child_name": "Avyaan"}', encoding="utf-8")
-    (old_dir / settings_module.DB_FILENAME).write_bytes(b"fake sqlite bytes")
+    fake_repo_root = tmp_path / "repo"
+    repo_local_dir = fake_repo_root / settings_module.REPO_LOCAL_DATA_DIRNAME
+    repo_local_dir.mkdir(parents=True)
+    (repo_local_dir / settings_module.SETTINGS_FILENAME).write_text('{"child_name": "Avyaan"}', encoding="utf-8")
+    (repo_local_dir / settings_module.DB_FILENAME).write_bytes(b"fake sqlite bytes")
 
-    new_dir = tmp_path / "new_app_data"
+    new_dir = tmp_path / "new_data_dir"
     new_dir.mkdir()
 
-    monkeypatch.setenv("APPDATA", str(tmp_path / "old_appdata"))
-    settings_module._migrate_from_old_location(new_dir)
+    monkeypatch.setattr(settings_module, "get_repo_root", lambda: fake_repo_root)
+    settings_module._migrate_from_repo_local_dir(new_dir)
 
     assert (new_dir / settings_module.SETTINGS_FILENAME).read_text(encoding="utf-8") == '{"child_name": "Avyaan"}'
     assert (new_dir / settings_module.DB_FILENAME).read_bytes() == b"fake sqlite bytes"
@@ -92,27 +112,28 @@ def test_migrate_from_old_location_copies_settings_and_db(tmp_path, monkeypatch)
 def test_migrate_does_not_overwrite_existing_files_in_new_location(tmp_path, monkeypatch):
     import app.config.settings as settings_module
 
-    old_dir = tmp_path / "old_appdata" / settings_module.APP_FOLDER_NAME
-    old_dir.mkdir(parents=True)
-    (old_dir / settings_module.SETTINGS_FILENAME).write_text('{"child_name": "OldName"}', encoding="utf-8")
+    fake_repo_root = tmp_path / "repo"
+    repo_local_dir = fake_repo_root / settings_module.REPO_LOCAL_DATA_DIRNAME
+    repo_local_dir.mkdir(parents=True)
+    (repo_local_dir / settings_module.SETTINGS_FILENAME).write_text('{"child_name": "OldName"}', encoding="utf-8")
 
-    new_dir = tmp_path / "new_app_data"
+    new_dir = tmp_path / "new_data_dir"
     new_dir.mkdir()
     (new_dir / settings_module.SETTINGS_FILENAME).write_text('{"child_name": "NewName"}', encoding="utf-8")
 
-    monkeypatch.setenv("APPDATA", str(tmp_path / "old_appdata"))
-    settings_module._migrate_from_old_location(new_dir)
+    monkeypatch.setattr(settings_module, "get_repo_root", lambda: fake_repo_root)
+    settings_module._migrate_from_repo_local_dir(new_dir)
 
     assert (new_dir / settings_module.SETTINGS_FILENAME).read_text(encoding="utf-8") == '{"child_name": "NewName"}'
 
 
-def test_migrate_does_nothing_when_no_old_location_exists(tmp_path, monkeypatch):
+def test_migrate_does_nothing_when_no_repo_local_dir_exists(tmp_path, monkeypatch):
     import app.config.settings as settings_module
 
-    new_dir = tmp_path / "new_app_data"
+    new_dir = tmp_path / "new_data_dir"
     new_dir.mkdir()
 
-    monkeypatch.setenv("APPDATA", str(tmp_path / "does_not_exist"))
-    settings_module._migrate_from_old_location(new_dir)  # should not raise
+    monkeypatch.setattr(settings_module, "get_repo_root", lambda: tmp_path / "repo_that_does_not_exist")
+    settings_module._migrate_from_repo_local_dir(new_dir)  # should not raise
 
     assert list(new_dir.iterdir()) == []
