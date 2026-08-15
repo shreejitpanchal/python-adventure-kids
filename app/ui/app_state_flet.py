@@ -17,6 +17,11 @@ class AppState:
         self.progress = ProgressStore(get_db_path())
         self.lesson_engine = LessonEngine()
         self.quiz_engine = QuizEngine()
+        # Set once by app_window_flet.main() after a real ft.Page exists --
+        # stays None here and in every test that constructs AppState
+        # directly, so sound-playing call sites must guard for that (see
+        # app/ui/lesson_screen_flet.py's _play_success_sounds()).
+        self.sound_player = None
 
     @property
     def theme(self) -> ThemePreset:

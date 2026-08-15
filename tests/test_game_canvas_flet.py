@@ -291,6 +291,144 @@ def test_cancel_pending_stops_a_scheduled_callback():
     assert calls == []
 
 
+# -- Robot Adventure: grid world ------------------------------------------
+def test_place_robot_starts_at_the_given_cell_facing_the_given_direction():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 3)
+    gc.place_robot(1, 2, "N")
+    assert (gc._robot_col, gc._robot_row) == (1, 2)
+    assert gc._robot_facing == "N"
+    # A body rect + a facing "nose" circle, drawn on top of the gridlines.
+    assert gc._robot_body_id is not None
+    assert gc._robot_nose_id is not None
+
+
+def test_robot_forward_moves_one_cell_in_the_facing_direction():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 3)
+    gc.place_robot(0, 0, "E")
+    moved = gc.robot_forward()
+    assert moved is True
+    assert (gc._robot_col, gc._robot_row) == (1, 0)
+
+
+def test_robot_forward_is_blocked_at_the_grid_edge():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(2, 2)
+    gc.place_robot(1, 0, "E")
+    assert gc.robot_wall_ahead() is True
+    assert gc.robot_forward() is False
+    assert (gc._robot_col, gc._robot_row) == (1, 0)
+
+
+def test_robot_forward_is_blocked_by_an_obstacle():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 1)
+    gc.place_obstacle(1, 0)
+    gc.place_robot(0, 0, "E")
+    assert gc.robot_wall_ahead() is True
+    assert gc.robot_forward() is False
+
+
+def test_robot_forward_is_blocked_by_a_placed_wall_from_either_side():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 1)
+    gc.place_wall(0, 0, "E")
+    gc.place_robot(0, 0, "E")
+    assert gc.robot_wall_ahead() is True
+
+    gc.place_robot(1, 0, "W")
+    assert gc.robot_wall_ahead() is True
+
+
+def test_robot_forward_is_not_blocked_by_an_unrelated_wall():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 1)
+    gc.place_wall(1, 0, "E")  # blocks (1,0)<->(2,0), not (0,0)<->(1,0)
+    gc.place_robot(0, 0, "E")
+    assert gc.robot_wall_ahead() is False
+    assert gc.robot_forward() is True
+
+
+def test_robot_turn_right_cycles_clockwise():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 3)
+    gc.place_robot(1, 1, "N")
+    order = []
+    for _ in range(4):
+        order.append(gc._robot_facing)
+        gc.robot_turn_right()
+    assert order == ["N", "E", "S", "W"]
+
+
+def test_robot_turn_left_cycles_counterclockwise():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 3)
+    gc.place_robot(1, 1, "N")
+    order = []
+    for _ in range(4):
+        order.append(gc._robot_facing)
+        gc.robot_turn_left()
+    assert order == ["N", "W", "S", "E"]
+
+
+def test_robot_at_goal_true_only_once_the_robot_reaches_it():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 1)
+    gc.place_goal(2, 0)
+    gc.place_robot(0, 0, "E")
+    assert gc.robot_at_goal() is False
+    gc.robot_forward()
+    assert gc.robot_at_goal() is False
+    gc.robot_forward()
+    assert gc.robot_at_goal() is True
+
+
+def test_robot_at_goal_false_with_no_goal_placed():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 1)
+    gc.place_robot(0, 0, "E")
+    assert gc.robot_at_goal() is False
+
+
+def test_coins_are_collected_automatically_on_arrival():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 1)
+    gc.place_coin(1, 0)
+    gc.place_coin(2, 0)
+    gc.place_robot(0, 0, "E")
+    assert gc.coins_collected() == 0
+    gc.robot_forward()
+    assert gc.coins_collected() == 1
+    gc.robot_forward()
+    assert gc.coins_collected() == 2
+
+
+def test_a_coin_is_only_collected_once():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 1)
+    gc.place_coin(1, 0)
+    gc.place_robot(0, 0, "E")
+    gc.robot_forward()
+    assert gc.coins_collected() == 1
+    gc.robot_turn_right()
+    gc.robot_turn_right()
+    gc.robot_forward()  # back to (0,0)
+    gc.robot_turn_right()
+    gc.robot_turn_right()
+    gc.robot_forward()  # (1,0) again -- coin already gone
+    assert gc.coins_collected() == 1
+
+
+def test_robot_turning_does_not_move_it():
+    gc, canvas, container, title_text = make_canvas()
+    gc.create_grid(3, 3)
+    gc.place_robot(1, 1, "N")
+    gc.robot_turn_right()
+    gc.robot_turn_left()
+    assert (gc._robot_col, gc._robot_row) == (1, 1)
+
+
 def test_self_rescheduling_after_call_pattern_works():
     """Mirrors the Snake lesson's move_snake() self-scheduling pattern."""
     gc, canvas, container, title_text = make_canvas()

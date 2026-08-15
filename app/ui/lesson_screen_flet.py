@@ -24,6 +24,7 @@ import asyncio
 import flet as ft
 import flet.canvas as cv
 
+from app.audio.player import success_sound_for
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_canvas_flet import GameCanvas
@@ -403,6 +404,18 @@ class _LessonController:
             self.page.update()
             return
 
+        mission_ok = True
+        if self.lesson.requires_goal_reached:
+            mission_ok = bool(getattr(self.game_canvas, "robot_at_goal", lambda: True)())
+        if not mission_ok:
+            self._show_output(
+                "🤖 Your code ran, but the robot didn't reach the goal yet — try again!",
+                self.theme.warning,
+            )
+            self._codey.set_state(CodeyState.WARNING)
+            self.page.update()
+            return
+
         self._show_output("🎮 Your game is running! Check it out above.", self.theme.success)
         self._codey.set_state(CodeyState.SUCCESS)
         self._on_lesson_success()
@@ -460,10 +473,16 @@ class _LessonController:
         self._lesson_passed = True
 
         progress = self.state.progress
+        level_before = progress.get_player_level().level
         progress.complete_lesson(self.lesson.id, self.lesson.reward_stars)
         badge_newly_awarded = False
         if self.lesson.badge:
             badge_newly_awarded = progress.award_badge(self.lesson.badge)
+        leveled_up = progress.get_player_level().level > level_before
+
+        if self.state.sound_player is not None:
+            for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_newly_awarded):
+                self.state.sound_player.play(sound_name, self.state.settings)
 
         next_lesson = self.state.lesson_engine.next_after(self.lesson.id)
         if next_lesson:

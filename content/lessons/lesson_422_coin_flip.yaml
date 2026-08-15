@@ -1,0 +1,44 @@
+id: lesson_422
+title: "Coin Flip Challenge 🪙"
+level: 422
+objective: "Compare your guess to a random coin flip using .lower() for a case-insensitive match."
+explanation: |
+  Time for a coin flip challenge! You guess Heads or Tails, then Python flips a coin with random.choice(["Heads", "Tails"]) — just like random.choice(...) picking a move in Rock, Paper, Scissors.
+
+  guess.lower() == result.lower() compares your guess to the coin flip. .lower() turns both into lowercase first, so it doesn't matter if you type "heads", "Heads", or "HEADS" — they all match the same way.
+
+  Then if / else decides whether you called it right or not.
+example_code: |
+  import random
+
+  guess = input("Heads or Tails? ")
+  result = random.choice(["Heads", "Tails"])
+
+  if guess.lower() == result.lower():
+      print("You called it! It's " + result + "!")
+  else:
+      print("Not quite! It's " + result + "!")
+starter_code: |
+  import random
+
+  guess = input("Heads or Tails? ")
+  result = random.choice(["Heads", "Tails"])
+
+  if guess.lower() == result.lower():
+      print("You called it! It's " + result + "!")
+  else:
+      print("Not quite! It's " + result + "!")
+challenge: |
+  🎯 Challenge: Type Heads or Tails in the box below, then press RUN to see if you called the flip!
+expected_output_pattern: "^Heads or Tails\\? (You called it! It's (Heads|Tails)!|Not quite! It's (Heads|Tails)!)$"
+input_prompt: "Heads or Tails?"
+hints:
+  - "Type Heads or Tails (any capitalization works!) in the answer box."
+  - ".lower() makes your guess and the coin flip match even if the capitals are different."
+  - "Press RUN again for a brand new coin flip each time!"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: games
+category_level: 5
+main_path: false

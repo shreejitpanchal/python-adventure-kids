@@ -33,6 +33,13 @@ VALID_KEYS = {"Up", "Down", "Left", "Right", "space"}
 _TURTLE_START_X = 50.0
 _TURTLE_START_Y = 50.0
 
+# Robot Adventure: grid directions as (delta_col, delta_row), and the
+# left/right 90-degree turn tables -- a fixed cardinal-direction snap,
+# distinct from the turtle's continuous-degree heading above.
+_DIRECTION_DELTA = {"N": (0, -1), "E": (1, 0), "S": (0, 1), "W": (-1, 0)}
+_LEFT_TURN = {"N": "W", "W": "S", "S": "E", "E": "N"}
+_RIGHT_TURN = {"N": "E", "E": "S", "S": "W", "W": "N"}
+
 
 class _Updatable(Protocol):
     def update(self) -> None: ...
@@ -58,6 +65,22 @@ class GameCanvas:
         # increasing heading turns clockwise as drawn -- exactly what
         # turn_right should do.
         self._turtle_heading = 0.0
+
+        # Robot Adventure grid-world state -- all None/empty until
+        # create_grid()/place_robot() are called by a lesson.
+        self._grid_cols = 0
+        self._grid_rows = 0
+        self._cell_size = 50
+        self._walls: set[tuple[tuple[int, int], tuple[int, int]]] = set()
+        self._obstacles: set[tuple[int, int]] = set()
+        self._goal: Optional[tuple[int, int]] = None
+        self._coin_shapes: dict[tuple[int, int], int] = {}
+        self._coins_collected = 0
+        self._robot_col = 0
+        self._robot_row = 0
+        self._robot_facing = "E"
+        self._robot_body_id: Optional[int] = None
+        self._robot_nose_id: Optional[int] = None
 
     # -- window-ish -------------------------------------------------------------
     def set_title(self, title: str) -> None:
@@ -202,6 +225,145 @@ class GameCanvas:
         self._canvas.shapes.append(line)
         self._page.update()
         return shape_id
+
+    # -- Robot Adventure: grid world -----------------------------------------------
+    def create_grid(self, cols: int, rows: int, cell_size: int = 50) -> None:
+        """Sets up a cols x rows grid the robot moves around on, drawing
+        faint gridlines. Call once, before place_robot()/place_wall()/etc."""
+        self._grid_cols = cols
+        self._grid_rows = rows
+        self._cell_size = cell_size
+        width, height = cols * cell_size, rows * cell_size
+        for row in range(rows + 1):
+            y = row * cell_size
+            self.draw_line(0, y, width, y, "#3A3A4E")
+        for col in range(cols + 1):
+            x = col * cell_size
+            self.draw_line(x, 0, x, height, "#3A3A4E")
+
+    def place_robot(self, col: int, row: int, facing: str = "E") -> None:
+        """Places the robot at (col, row), facing one of N/E/S/W. Drawn as
+        a colored square body plus a small circle "nose" on the leading
+        edge to show facing direction -- this canvas has no rotatable
+        sprite, so a rotating body isn't an option."""
+        self._robot_col, self._robot_row = col, row
+        self._robot_facing = facing
+        cell = self._cell_size
+        self._robot_body_id = self.draw_rect(
+            col * cell + 8, row * cell + 8, cell - 16, cell - 16, "#00E5FF",
+        )
+        nose_x, nose_y = self._nose_position()
+        self._robot_nose_id = self.draw_circle(nose_x, nose_y, 5, "white")
+
+    def _nose_position(self) -> tuple[float, float]:
+        cell = self._cell_size
+        cx = self._robot_col * cell + cell / 2
+        cy = self._robot_row * cell + cell / 2
+        offset = cell / 2 - 6
+        dcol, drow = _DIRECTION_DELTA[self._robot_facing]
+        return cx + dcol * offset, cy + drow * offset
+
+    def _sync_robot_shapes(self) -> None:
+        cell = self._cell_size
+        if self._robot_body_id is not None:
+            self.set_shape_position(self._robot_body_id, self._robot_col * cell + 8, self._robot_row * cell + 8)
+        if self._robot_nose_id is not None:
+            nose_x, nose_y = self._nose_position()
+            self.set_shape_position(self._robot_nose_id, nose_x, nose_y)
+
+    def robot_forward(self) -> bool:
+        """Moves the robot one cell in the direction it's facing, if
+        nothing blocks the way. Returns whether it actually moved -- a
+        blocked move is a silent no-op, not an error, matching this app's
+        forgiving-by-default philosophy elsewhere (e.g. trigger_key on an
+        unregistered key)."""
+        if self.robot_wall_ahead():
+            return False
+        dcol, drow = _DIRECTION_DELTA[self._robot_facing]
+        self._robot_col += dcol
+        self._robot_row += drow
+        self._sync_robot_shapes()
+        self._maybe_collect_coin()
+        return True
+
+    def robot_turn_left(self) -> None:
+        """Rotates the robot's facing 90 degrees counter-clockwise
+        (N->W->S->E->N). A fixed grid-snapped turn -- see turn_left() for
+        the turtle's separate continuous-degree turning."""
+        self._robot_facing = _LEFT_TURN[self._robot_facing]
+        self._sync_robot_shapes()
+
+    def robot_turn_right(self) -> None:
+        """Rotates the robot's facing 90 degrees clockwise (N->E->S->W->N)."""
+        self._robot_facing = _RIGHT_TURN[self._robot_facing]
+        self._sync_robot_shapes()
+
+    def robot_wall_ahead(self) -> bool:
+        """True if the cell the robot is facing is blocked -- a wall, an
+        obstacle, or the edge of the grid -- without moving."""
+        dcol, drow = _DIRECTION_DELTA[self._robot_facing]
+        new_col, new_row = self._robot_col + dcol, self._robot_row + drow
+        if not (0 <= new_col < self._grid_cols and 0 <= new_row < self._grid_rows):
+            return True
+        if (new_col, new_row) in self._obstacles:
+            return True
+        edge = self._normalize_edge((self._robot_col, self._robot_row), (new_col, new_row))
+        return edge in self._walls
+
+    @staticmethod
+    def _normalize_edge(a: tuple[int, int], b: tuple[int, int]) -> tuple[tuple[int, int], tuple[int, int]]:
+        return (a, b) if a <= b else (b, a)
+
+    def place_wall(self, col: int, row: int, side: str) -> None:
+        """Blocks movement between (col, row) and its neighbor on `side`
+        (N/E/S/W), and draws a visible wall segment there."""
+        dcol, drow = _DIRECTION_DELTA[side]
+        other = (col + dcol, row + drow)
+        self._walls.add(self._normalize_edge((col, row), other))
+
+        cell = self._cell_size
+        x0, y0 = col * cell, row * cell
+        if side == "N":
+            self.draw_line(x0, y0, x0 + cell, y0, "#FF6B6B")
+        elif side == "S":
+            self.draw_line(x0, y0 + cell, x0 + cell, y0 + cell, "#FF6B6B")
+        elif side == "W":
+            self.draw_line(x0, y0, x0, y0 + cell, "#FF6B6B")
+        elif side == "E":
+            self.draw_line(x0 + cell, y0, x0 + cell, y0 + cell, "#FF6B6B")
+
+    def place_obstacle(self, col: int, row: int) -> None:
+        """Marks (col, row) as blocked and draws a gray block there."""
+        self._obstacles.add((col, row))
+        cell = self._cell_size
+        self.draw_rect(col * cell + 4, row * cell + 4, cell - 8, cell - 8, "#555555")
+
+    def place_goal(self, col: int, row: int) -> None:
+        """Marks (col, row) as the mission's target and draws a gold marker."""
+        self._goal = (col, row)
+        cell = self._cell_size
+        cx, cy = col * cell + cell / 2, row * cell + cell / 2
+        self.draw_circle(cx, cy, cell / 3, "gold")
+
+    def robot_at_goal(self) -> bool:
+        return (self._robot_col, self._robot_row) == self._goal
+
+    def place_coin(self, col: int, row: int) -> None:
+        """Adds a collectible coin at (col, row) -- auto-collected (and
+        removed) the moment the robot moves onto that cell."""
+        cell = self._cell_size
+        cx, cy = col * cell + cell / 2, row * cell + cell / 2
+        shape_id = self.draw_circle(cx, cy, cell / 5, "yellow")
+        self._coin_shapes[(col, row)] = shape_id
+
+    def _maybe_collect_coin(self) -> None:
+        shape_id = self._coin_shapes.pop((self._robot_col, self._robot_row), None)
+        if shape_id is not None:
+            self.delete_shape(shape_id)
+            self._coins_collected += 1
+
+    def coins_collected(self) -> int:
+        return self._coins_collected
 
     # -- animation / input --------------------------------------------------------
     def after(self, ms: int, callback: Callable[[], None]) -> None:

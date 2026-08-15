@@ -48,3 +48,7 @@ class Lesson:
     For lessons where matching output alone isn't enough to confirm the
     child used the taught construct (e.g. "Code Crackers" debugging
     exercises)."""
+    requires_goal_reached: bool = False
+    """If true (graphical lessons only), the lesson also requires
+    game.robot_at_goal() to be True after running -- not just "ran without
+    raising" -- see app/ui/lesson_screen_flet.py's _on_run_graphical()."""

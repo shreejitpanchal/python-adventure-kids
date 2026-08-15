@@ -31,7 +31,31 @@ def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
         bgcolor=theme.bg,
         scroll=ft.ScrollMode.AUTO,
         padding=24,
-        controls=[header, _build_theme_card(page, state)],
+        controls=[header, _build_sound_card(page, state), _build_theme_card(page, state)],
+    )
+
+
+def _build_sound_card(page: ft.Page, state: AppState) -> ft.Control:
+    theme = state.theme
+
+    def on_toggle(e: ft.ControlEvent) -> None:
+        state.settings.sound_enabled = e.control.value
+        state.save_settings()
+
+    # Not expand=True + MainAxisAlignment.SPACE_BETWEEN to push the switch
+    # to the far edge -- see dashboard_flet.py's module docstring and the
+    # parent dashboard's summary-row code for why both of those layout
+    # tricks are unreliable in this Flet version; a plain spaced Row is
+    # the pattern already proven to work everywhere else in this app.
+    return ft.Container(
+        content=ft.Row(
+            [
+                ft.Text("🔊 Sound Effects", size=20, weight=ft.FontWeight.BOLD, color=theme.text),
+                ft.Switch(value=state.settings.sound_enabled, on_change=on_toggle, active_color=theme.primary),
+            ],
+            spacing=16,
+        ),
+        bgcolor=theme.card, border_radius=20, padding=24,
     )
 
 

@@ -115,3 +115,15 @@ class LessonEngine:
             if lesson.id not in completed and self.is_unlocked(lesson, completed):
                 return lesson
         return None
+
+    def category_completion(self, completed_ids: Collection[str]) -> dict[str, tuple[int, int]]:
+        """category -> (completed_count, total_count), in categories()
+        order -- the shared "mastery per category" calculation for the
+        parent dashboard, so CTk and Flet don't each reimplement it."""
+        completed = set(completed_ids)
+        result: dict[str, tuple[int, int]] = {}
+        for category in self.categories():
+            lessons = self.lessons_in_category(category)
+            done = sum(1 for lesson in lessons if lesson.id in completed)
+            result[category] = (done, len(lessons))
+        return result

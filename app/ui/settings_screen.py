@@ -16,7 +16,34 @@ class SettingsFrame(ctk.CTkFrame):
         self.body = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self.body.pack(fill="both", expand=True, padx=30, pady=(0, 20))
 
+        self._build_sound_card()
         self._build_theme_card()
+
+    def _build_sound_card(self) -> None:
+        card = ctk.CTkFrame(self.body, fg_color=theme.COLOR_CARD, corner_radius=20)
+        card.pack(fill="x", pady=(0, 20))
+
+        row = ctk.CTkFrame(card, fg_color="transparent")
+        row.pack(fill="x", padx=24, pady=20)
+
+        ctk.CTkLabel(
+            row, text="🔊 Sound Effects", font=theme.font_heading(20),
+            text_color=theme.COLOR_TEXT,
+        ).pack(side="left")
+
+        self._sound_switch = ctk.CTkSwitch(
+            row, text="", onvalue=True, offvalue=False,
+            progress_color=theme.COLOR_PRIMARY, command=self._on_toggle_sound,
+        )
+        self._sound_switch.pack(side="right")
+        if self.app.settings.sound_enabled:
+            self._sound_switch.select()
+        else:
+            self._sound_switch.deselect()
+
+    def _on_toggle_sound(self) -> None:
+        self.app.settings.sound_enabled = bool(self._sound_switch.get())
+        self.app.save_settings()
 
     def _build_header(self) -> None:
         header = ctk.CTkFrame(self, fg_color="transparent")

@@ -163,3 +163,58 @@ def test_menu_navigates_to_dashboard(state):
     controller._on_menu(None)
 
     assert controller.page.routes_visited == ["/dashboard"]
+
+
+# -- This Week / Category Mastery cards --------------------------------------
+def test_weekly_card_reflects_recent_activity(state):
+    state.progress.complete_lesson("lesson_01", 3)
+    state.progress.award_badge("first_program")
+    state.progress.record_quiz_attempt(9, 10)
+
+    controller = _ParentController(FakePage(), state)
+    controller.build_view()
+
+    assert controller.weekly_value_texts["lessons"].value == "1"
+    assert controller.weekly_value_texts["stars"].value == "⭐ 3"
+    assert controller.weekly_value_texts["quizzes"].value == "1"
+    assert controller.weekly_value_texts["badges"].value == "1"
+    assert controller.weekly_value_texts["active_days"].value == "1/7"
+
+
+def test_weekly_card_is_zeroed_with_no_activity(state):
+    controller = _ParentController(FakePage(), state)
+    controller.build_view()
+
+    assert controller.weekly_value_texts["lessons"].value == "0"
+    assert controller.weekly_value_texts["active_days"].value == "0/7"
+
+
+def test_mastery_card_has_a_row_for_every_category(state):
+    controller = _ParentController(FakePage(), state)
+    controller.build_view()
+
+    assert set(controller.mastery_texts) == set(state.lesson_engine.categories())
+    assert controller.mastery_texts["basics"].value == "0/1"
+    assert controller.mastery_bars["basics"].value == 0.0
+
+
+def test_mastery_card_reflects_completed_lessons(state):
+    state.progress.complete_lesson("lesson_01", 3)
+
+    controller = _ParentController(FakePage(), state)
+    controller.build_view()
+
+    assert controller.mastery_texts["basics"].value == "1/1"
+    assert controller.mastery_bars["basics"].value == 1.0
+
+
+def test_reset_zeroes_the_weekly_and_mastery_cards(state):
+    state.progress.complete_lesson("lesson_01", 3)
+    controller = _ParentController(FakePage(), state)
+    controller.build_view()
+
+    controller._do_reset()
+
+    assert controller.weekly_value_texts["lessons"].value == "0"
+    assert controller.mastery_texts["basics"].value == "0/1"
+    assert controller.mastery_bars["basics"].value == 0.0

@@ -1,5 +1,8 @@
+from datetime import datetime, timedelta, timezone
+
 import pytest
 
+import app.progress.store as store_module
 from app.progress.store import ProgressStore
 
 
@@ -192,3 +195,72 @@ def test_reset_progress_clears_xp(store):
     player = store.get_player_level()
     assert player.total_xp == 0
     assert player.level == 1
+
+
+# -- weekly summary / activity-since (parent dashboard) -------------------
+def test_get_activity_since_excludes_rows_before_the_cutoff(store, monkeypatch):
+    now = datetime.now(timezone.utc)
+    monkeypatch.setattr(store_module, "_now", lambda: (now - timedelta(days=5)).isoformat())
+    store.log_event(None, "lesson_completed", "stars=1")
+
+    monkeypatch.setattr(store_module, "_now", lambda: (now - timedelta(days=1)).isoformat())
+    store.log_event(None, "lesson_completed", "stars=2")
+
+    cutoff = (now - timedelta(days=3)).isoformat()
+    rows = store.get_activity_since(cutoff)
+
+    assert len(rows) == 1
+    assert rows[0]["detail"] == "stars=2"
+
+
+def test_weekly_summary_is_all_zero_with_no_activity(store):
+    summary = store.get_weekly_summary()
+    assert summary.lessons_completed == 0
+    assert summary.stars_earned == 0
+    assert summary.quiz_attempts == 0
+    assert summary.badges_earned == 0
+    assert summary.active_days == 0
+
+
+def test_weekly_summary_excludes_activity_older_than_7_days(store, monkeypatch):
+    now = datetime.now(timezone.utc)
+
+    monkeypatch.setattr(store_module, "_now", lambda: (now - timedelta(days=10)).isoformat())
+    store.complete_lesson("lesson_old", 5)  # outside the 7-day window
+
+    monkeypatch.setattr(store_module, "_now", lambda: (now - timedelta(hours=1)).isoformat())
+    store.complete_lesson("lesson_new", 2)
+    store.award_badge("first_program")
+    store.record_quiz_attempt(9, 10)
+
+    summary = store.get_weekly_summary()
+    assert summary.lessons_completed == 1
+    assert summary.stars_earned == 2
+    assert summary.quiz_attempts == 1
+    assert summary.badges_earned == 1
+    assert summary.active_days == 1
+
+
+def test_weekly_summary_sums_stars_across_multiple_completions(store, monkeypatch):
+    now = datetime.now(timezone.utc)
+    monkeypatch.setattr(store_module, "_now", lambda: (now - timedelta(hours=2)).isoformat())
+    store.complete_lesson("lesson_a", 3)
+    monkeypatch.setattr(store_module, "_now", lambda: (now - timedelta(hours=1)).isoformat())
+    store.complete_lesson("lesson_b", 4)
+
+    summary = store.get_weekly_summary()
+    assert summary.lessons_completed == 2
+    assert summary.stars_earned == 7
+
+
+def test_weekly_summary_active_days_counts_distinct_calendar_dates(store, monkeypatch):
+    now = datetime.now(timezone.utc)
+    monkeypatch.setattr(store_module, "_now", lambda: (now - timedelta(days=2)).isoformat())
+    store.complete_lesson("lesson_a", 1)
+    store.complete_lesson("lesson_b", 1)  # same day as lesson_a
+
+    monkeypatch.setattr(store_module, "_now", lambda: now.isoformat())
+    store.complete_lesson("lesson_c", 1)  # a different day
+
+    summary = store.get_weekly_summary()
+    assert summary.active_days == 2

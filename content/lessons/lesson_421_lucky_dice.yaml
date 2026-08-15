@@ -1,0 +1,43 @@
+id: lesson_421
+title: "Lucky Dice 🎲"
+level: 421
+objective: "Roll two random dice with random.randint() and use if to check for a match."
+explanation: |
+  Let's roll some dice! random.randint(1, 6) picks a whole number from 1 to 6 — just like a real six-sided die — and we do it twice to roll two dice.
+
+  roll1 and roll2 store the two rolls, and we print them both.
+
+  Then if roll1 == roll2: checks whether the two dice match. If they do, that's called "doubles," and we print an extra line to celebrate!
+example_code: |
+  import random
+
+  roll1 = random.randint(1, 6)
+  roll2 = random.randint(1, 6)
+
+  print("You rolled a " + str(roll1) + " and a " + str(roll2) + "!")
+
+  if roll1 == roll2:
+      print("Doubles!")
+starter_code: |
+  import random
+
+  roll1 = random.randint(1, 6)
+  roll2 = random.randint(1, 6)
+
+  print("You rolled a " + str(roll1) + " and a " + str(roll2) + "!")
+
+  if roll1 == roll2:
+      print("Doubles!")
+challenge: |
+  🎯 Challenge: Press RUN to roll two dice — see if you can land on doubles!
+expected_output_pattern: "^You rolled a ([1-6]) and a (?:\\1!\\nDoubles!|(?!\\1)[1-6]!)$"
+hints:
+  - "Just press RUN — the dice roll on their own, no typing needed!"
+  - "random.randint(1, 6) means Python secretly picks a number from 1 to 6, just like a real die."
+  - "Press RUN again and again — you'll eventually roll doubles!"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: games
+category_level: 4
+main_path: false

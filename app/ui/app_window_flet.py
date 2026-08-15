@@ -12,6 +12,7 @@ import flet as ft
 from app.ui.app_state_flet import AppState
 from app.ui.category_levels_flet import build_category_levels_view
 from app.ui.category_map_flet import build_category_map_view
+from app.ui.components.sound_player_flet import SoundPlayerFlet
 from app.ui.dashboard_flet import build_dashboard_view
 from app.ui.lesson_screen_flet import build_lesson_view
 from app.ui.parent_dashboard_flet import build_parent_view
@@ -32,6 +33,7 @@ def main(page: ft.Page) -> None:
     page.dark_theme = ft.Theme(font_family="Baloo 2")
 
     state = AppState()
+    state.sound_player = SoundPlayerFlet(page)
 
     def route_change(_e: ft.RouteChangeEvent) -> None:
         page.views.clear()

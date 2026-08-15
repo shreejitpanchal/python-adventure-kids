@@ -102,3 +102,37 @@ def test_resolve_current_returns_last_main_path_lesson_when_everything_is_comple
     all_ids = [lesson.id for lesson in engine.all_in_order()]
     lesson = engine.resolve_current(completed_ids=all_ids, stored_current_id=None)
     assert lesson.id == engine.main_path_lessons()[-1].id
+
+
+# -- category_completion() (parent dashboard mastery card) ------------------
+def test_category_completion_covers_every_category_with_no_completions():
+    engine = LessonEngine()
+    completion = engine.category_completion(completed_ids=[])
+    assert set(completion) == set(engine.categories())
+    for done, total in completion.values():
+        assert done == 0
+        assert total > 0
+
+
+def test_category_completion_counts_only_lessons_in_that_category():
+    engine = LessonEngine()
+    completion = engine.category_completion(completed_ids=["lesson_01", "lesson_08"])
+    assert completion["basics"] == (1, 1)
+    assert completion["strings"][0] == 1
+    assert completion["strings"][1] == len(engine.lessons_in_category("strings"))
+    assert completion["numbers"] == (0, len(engine.lessons_in_category("numbers")))
+
+
+def test_category_completion_is_fully_done_when_every_lesson_in_it_is_completed():
+    engine = LessonEngine()
+    strings_ids = [lesson.id for lesson in engine.lessons_in_category("strings")]
+    completion = engine.category_completion(completed_ids=strings_ids)
+    done, total = completion["strings"]
+    assert done == total == 20
+
+
+def test_category_completion_ignores_unrelated_completed_ids():
+    engine = LessonEngine()
+    completion = engine.category_completion(completed_ids=["not_a_real_lesson_id"])
+    for done, _total in completion.values():
+        assert done == 0

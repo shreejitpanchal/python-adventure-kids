@@ -1,0 +1,58 @@
+id: lesson_420
+title: "Magic 8-Ball 🎱"
+level: 420
+objective: "Use input() and random.choice() together to build a fortune-telling toy."
+explanation: |
+  Let's build a Magic 8-Ball! You ask it a yes-or-no question, and it gives you a random fortune.
+
+  fortunes = [...] is a list of possible answers. random.choice(fortunes) picks one of them at random, the same way random.choice(...) picked a move in Rock, Paper, Scissors.
+
+  Here's the fun part: question = input(...) asks for your question and stores it — but the program never uses the question variable again! Python still needs you to type something into the input() box, it just doesn't read what you typed. The Magic 8-Ball answers on its own, no matter what you ask.
+example_code: |
+  import random
+
+  fortunes = [
+      "It is certain",
+      "Without a doubt",
+      "Yes, definitely",
+      "Ask again later",
+      "Cannot predict now",
+      "Don't count on it",
+      "My reply is no",
+      "Outlook not so good",
+  ]
+
+  question = input("Ask the Magic 8-Ball a yes or no question: ")
+  answer = random.choice(fortunes)
+  print(answer)
+starter_code: |
+  import random
+
+  fortunes = [
+      "It is certain",
+      "Without a doubt",
+      "Yes, definitely",
+      "Ask again later",
+      "Cannot predict now",
+      "Don't count on it",
+      "My reply is no",
+      "Outlook not so good",
+  ]
+
+  question = input("Ask the Magic 8-Ball a yes or no question: ")
+  answer = random.choice(fortunes)
+  print(answer)
+challenge: |
+  🎯 Challenge: Type a yes-or-no question in the box below, then press RUN to see what the Magic 8-Ball says!
+expected_output_pattern: "^Ask the Magic 8-Ball a yes or no question: (It is certain|Without a doubt|Yes, definitely|Ask again later|Cannot predict now|Don't count on it|My reply is no|Outlook not so good)$"
+input_prompt: "Ask the Magic 8-Ball a yes or no question:"
+hints:
+  - "Type any yes-or-no question in the answer box — the Magic 8-Ball doesn't actually read it!"
+  - "random.choice(fortunes) means Python secretly picks one answer from the list."
+  - "Press RUN again for a brand new fortune each time!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: games
+category_level: 3
+main_path: false

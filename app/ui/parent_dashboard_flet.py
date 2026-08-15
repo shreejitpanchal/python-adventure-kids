@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import flet as ft
 
+from app.engine.categories import get_category_meta
 from app.ui.app_state_flet import AppState
 
 EVENT_ICONS = {
@@ -147,6 +148,9 @@ class _ParentController:
             bgcolor=theme.card, border_radius=16, padding=20, width=380,
         )
 
+        weekly_card = self._build_weekly_card()
+        mastery_card = self._build_mastery_card()
+
         self.activity_column = ft.Column(spacing=4, scroll=ft.ScrollMode.AUTO)
         self._refresh_activity()
         activity_card = ft.Container(
@@ -159,6 +163,8 @@ class _ParentController:
             self._menu_row(),
             ft.Text("👋 Parent Area", size=22, weight=ft.FontWeight.BOLD, color=theme.text),
             ft.Row([summary_card], alignment=ft.MainAxisAlignment.CENTER),
+            ft.Row([weekly_card], alignment=ft.MainAxisAlignment.CENTER),
+            ft.Row([mastery_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Text("Recent Activity", size=16, weight=ft.FontWeight.BOLD, color=theme.text),
             activity_card,
         ]
@@ -177,6 +183,84 @@ class _ParentController:
         )
 
         self._set(controls)
+
+    def _build_weekly_card(self) -> ft.Control:
+        theme = self.theme
+        weekly = self.state.progress.get_weekly_summary()
+
+        rows = [
+            ("lessons", "Lessons completed", str(weekly.lessons_completed)),
+            ("stars", "Stars earned", f"⭐ {weekly.stars_earned}"),
+            ("quizzes", "Quiz attempts", str(weekly.quiz_attempts)),
+            ("badges", "Badges earned", str(weekly.badges_earned)),
+            ("active_days", "Active days", f"{weekly.active_days}/7"),
+        ]
+        self.weekly_value_texts = {}
+        weekly_rows: list[ft.Control] = []
+        for key, label, value in rows:
+            value_text = ft.Text(value, size=15, color=theme.text)
+            self.weekly_value_texts[key] = value_text
+            weekly_rows.append(
+                ft.Row([ft.Text(label, size=15, color=theme.text_muted, width=180), value_text])
+            )
+
+        return ft.Container(
+            content=ft.Column(
+                [ft.Text("📅 This Week", size=18, weight=ft.FontWeight.BOLD, color=theme.text), *weekly_rows],
+                spacing=10,
+            ),
+            bgcolor=theme.card, border_radius=16, padding=20, width=380,
+        )
+
+    def _build_mastery_card(self) -> ft.Control:
+        theme = self.theme
+        engine = self.state.lesson_engine
+        completion = engine.category_completion(self.state.progress.get_completed_lesson_ids())
+
+        self.mastery_bars: dict[str, ft.ProgressBar] = {}
+        self.mastery_texts: dict[str, ft.Text] = {}
+        category_rows: list[ft.Control] = []
+        for category, (done, total) in completion.items():
+            meta = get_category_meta(category)
+            ratio = done / total if total else 0.0
+            count_text = ft.Text(f"{done}/{total}", size=13, color=theme.text_muted)
+            bar = ft.ProgressBar(value=ratio, color=meta.color, bgcolor=theme.bg, height=8, border_radius=4)
+            self.mastery_texts[category] = count_text
+            self.mastery_bars[category] = bar
+            category_rows.append(
+                ft.Column(
+                    [
+                        ft.Row([ft.Text(f"{meta.icon} {meta.title}", size=13, color=theme.text, width=200), count_text]),
+                        bar,
+                    ],
+                    spacing=4,
+                )
+            )
+
+        return ft.Container(
+            content=ft.Column(
+                [
+                    ft.Text("📊 Category Mastery", size=18, weight=ft.FontWeight.BOLD, color=theme.text),
+                    ft.Column(category_rows, spacing=12, scroll=ft.ScrollMode.AUTO),
+                ],
+                spacing=10,
+            ),
+            bgcolor=theme.card, border_radius=16, padding=20, width=380, height=320,
+        )
+
+    def _refresh_weekly_and_mastery(self) -> None:
+        weekly = self.state.progress.get_weekly_summary()
+        self.weekly_value_texts["lessons"].value = str(weekly.lessons_completed)
+        self.weekly_value_texts["stars"].value = f"⭐ {weekly.stars_earned}"
+        self.weekly_value_texts["quizzes"].value = str(weekly.quiz_attempts)
+        self.weekly_value_texts["badges"].value = str(weekly.badges_earned)
+        self.weekly_value_texts["active_days"].value = f"{weekly.active_days}/7"
+
+        completion = self.state.lesson_engine.category_completion(self.state.progress.get_completed_lesson_ids())
+        for category, (done, total) in completion.items():
+            ratio = done / total if total else 0.0
+            self.mastery_texts[category].value = f"{done}/{total}"
+            self.mastery_bars[category].value = ratio
 
     def _refresh_activity(self) -> None:
         theme = self.theme
@@ -227,6 +311,7 @@ class _ParentController:
     def _do_reset(self, e=None) -> None:
         self.state.progress.reset_progress()
         self._refresh_summary_values()
+        self._refresh_weekly_and_mastery()
         self._refresh_activity()
         self.status_text.value = "Progress has been reset."
         self.page.pop_dialog()

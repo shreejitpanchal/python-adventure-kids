@@ -42,6 +42,14 @@ def controller(state):
     return _LessonController(FakePage(), state, lesson)
 
 
+class FakeSoundPlayer:
+    def __init__(self) -> None:
+        self.calls: list[str] = []
+
+    def play(self, name: str, settings) -> None:
+        self.calls.append(name)
+
+
 def test_view_builds_with_starter_code_preloaded(controller):
     view = controller.build_view()
     assert view.route == "/lesson/lesson_01"
@@ -63,6 +71,53 @@ def test_correct_code_completes_the_lesson(controller, state):
     assert "lesson_01" in state.progress.get_completed_lesson_ids()
     assert "first_program" in state.progress.get_badge_ids()
     assert state.progress.get_summary().current_lesson_id == "lesson_02"
+
+
+# -- sound effects on lesson success ---------------------------------------
+def test_plain_success_plays_only_the_success_chime(state):
+    fake_player = FakeSoundPlayer()
+    state.sound_player = fake_player
+    lesson = state.lesson_engine.get("lesson_02")  # badge: null, no level-up from one small completion
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    controller.editor.value = "print(7)"
+
+    asyncio.run(controller._on_run(None))
+
+    assert fake_player.calls == ["success_chime"]
+
+
+def test_badge_award_plays_the_badge_unlock_sound_alongside_success(controller, state):
+    fake_player = FakeSoundPlayer()
+    state.sound_player = fake_player
+    controller.build_view()  # lesson_01 awards the first_program badge
+
+    asyncio.run(controller._on_run(None))
+
+    assert fake_player.calls == ["success_chime", "badge_unlock"]
+
+
+def test_leveling_up_plays_the_level_up_sound_instead_of_the_plain_chime(state):
+    fake_player = FakeSoundPlayer()
+    state.sound_player = fake_player
+    state.progress.add_xp(95)  # 5 XP short of the level 1->2 boundary (100)
+    lesson = state.lesson_engine.get("lesson_02")  # badge: null, isolates the level-up sound
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    controller.editor.value = "print(7)"
+
+    asyncio.run(controller._on_run(None))
+
+    assert fake_player.calls == ["level_up"]
+
+
+def test_no_sound_player_attached_does_not_crash_on_success(controller, state):
+    assert state.sound_player is None  # default in every test that doesn't attach one
+    controller.build_view()
+
+    asyncio.run(controller._on_run(None))  # should not raise
+
+    assert "lesson_01" in state.progress.get_completed_lesson_ids()
 
 
 def test_syntax_error_shows_friendly_message_with_line_number(controller, state):
@@ -275,6 +330,50 @@ def test_unmapped_key_is_ignored_by_key_down_and_key_up(graphical_controller):
     asyncio.run(graphical_controller._on_run(None))
     graphical_controller._on_key_down(ft.KeyDownEvent(name="key_down", control=None, key="Enter"))
     graphical_controller._on_key_up(ft.KeyUpEvent(name="key_up", control=None, key="Enter"))  # should not raise
+
+
+# -- Robot Adventure: requires_goal_reached ----------------------------------
+@pytest.fixture
+def robot_controller(state):
+    lesson = state.lesson_engine.get("lesson_440")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    return controller
+
+
+def test_reaching_the_goal_completes_the_lesson(robot_controller, state):
+    asyncio.run(robot_controller._on_run(None))
+
+    assert robot_controller.output_text.color == state.theme.success
+    assert robot_controller.reward_card.visible is True
+    assert "lesson_440" in state.progress.get_completed_lesson_ids()
+
+
+def test_running_without_reaching_the_goal_shows_a_warning_and_does_not_complete(robot_controller, state):
+    # Passes ast_contains (still calls create_grid/place_robot/robot_forward)
+    # but only moves one square, short of the goal at column 2.
+    robot_controller.editor.value = (
+        'game.set_background("black")\n'
+        "game.create_grid(3, 1)\n"
+        "game.place_goal(2, 0)\n"
+        'game.place_robot(0, 0, "E")\n'
+        "game.robot_forward()\n"
+    )
+    asyncio.run(robot_controller._on_run(None))
+
+    assert "didn't reach the goal" in robot_controller.output_text.value
+    assert robot_controller.output_text.color == state.theme.warning
+    assert robot_controller.reward_card.visible is False
+    assert "lesson_440" not in state.progress.get_completed_lesson_ids()
+
+
+def test_a_lesson_without_requires_goal_reached_ignores_robot_state(graphical_controller):
+    """lesson_17 (Snake) has requires_goal_reached=False (the default) --
+    confirms the new mission_ok check doesn't affect non-Robot-Adventure
+    graphical lessons at all."""
+    assert graphical_controller.lesson.requires_goal_reached is False
+    asyncio.run(graphical_controller._on_run(None))
+    assert graphical_controller.reward_card.visible is True
 
 
 # -- Codey avatar wiring (phase 8) --------------------------------------------

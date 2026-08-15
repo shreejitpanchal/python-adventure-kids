@@ -1,0 +1,49 @@
+id: lesson_445
+title: "Robot Adventure: Sense the Wall 🤖"
+level: 445
+objective: "Combine a loop, an if, and game.robot_wall_ahead() to navigate automatically."
+explanation: |
+  This is the big one — instead of plotting every single move by hand, the robot can
+  FEEL its way to the goal using game.robot_wall_ahead(), which tells you True or False
+  without moving the robot.
+
+  Every time through the loop, the robot checks: is something blocking the way ahead? If
+  so, it turns right first. Either way, it then drives forward. Repeating that a few
+  times gets it all the way to the goal, around the corner, completely on its own.
+example_code: |
+  game.set_background("black")
+  game.create_grid(3, 3)
+  game.place_goal(2, 2)
+  game.place_robot(0, 0, "E")
+
+  for step in range(4):
+      if game.robot_wall_ahead():
+          game.robot_turn_right()
+      game.robot_forward()
+starter_code: |
+  game.set_background("black")
+  game.create_grid(3, 3)
+  game.place_goal(2, 2)
+  game.place_robot(0, 0, "E")
+
+  for step in range(4):
+      if game.robot_wall_ahead():
+          game.robot_turn_right()
+      game.robot_forward()
+challenge: |
+  🎯 Challenge: Press RUN and watch the robot sense the edge of the grid, turn by itself,
+  and finish the journey to the goal!
+expected_output: ""
+ast_contains: ["for", "if", "robot_wall_ahead"]
+requires_goal_reached: true
+hints:
+  - "game.robot_wall_ahead() returns True or False — it's perfect inside an if."
+  - "The robot drives East until it hits the edge of the grid, turns right automatically, then drives South to the goal."
+  - "You built a robot that makes its own decisions — that's a huge Python Adventure milestone!"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+graphical: true
+category: robot_adventure
+category_level: 6
+main_path: false

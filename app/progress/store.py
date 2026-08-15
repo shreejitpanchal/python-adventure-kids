@@ -4,7 +4,7 @@ from __future__ import annotations
 import sqlite3
 from contextlib import closing
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -92,6 +92,18 @@ class PlayerLevel:
     xp_into_level: int
     xp_needed_for_level: int
     total_xp: int
+
+
+@dataclass
+class WeeklySummary:
+    lessons_completed: int
+    stars_earned: int
+    quiz_attempts: int
+    badges_earned: int
+    active_days: int
+    """Distinct calendar dates (UTC) with at least one logged activity
+    event in the window -- not the same as streak_days, which tracks
+    *consecutive* days going back from today regardless of window size."""
 
 
 class ProgressStore:
@@ -295,6 +307,58 @@ class ProgressStore:
             rows = cur.fetchall()
         conn.row_factory = None
         return rows
+
+    def get_activity_since(self, cutoff_iso: str) -> list[sqlite3.Row]:
+        """Activity log rows at or after cutoff_iso (an ISO-8601 timestamp
+        string, same format _now() produces -- lexically comparable since
+        both are UTC), newest first."""
+        conn = self._conn
+        conn.row_factory = sqlite3.Row
+        with closing(conn.cursor()) as cur:
+            cur.execute(
+                "SELECT * FROM activity_log WHERE timestamp >= ? ORDER BY id DESC", (cutoff_iso,)
+            )
+            rows = cur.fetchall()
+        conn.row_factory = None
+        return rows
+
+    def get_weekly_summary(self) -> WeeklySummary:
+        """Activity in the last 7 days, for the parent dashboard's "This
+        Week" card. detail's "stars=N" shape (see complete_lesson()) is
+        parsed here rather than given its own column -- it's the same
+        free-text detail field every other event_type already uses."""
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
+        rows = self.get_activity_since(cutoff)
+
+        lessons_completed = 0
+        stars_earned = 0
+        quiz_attempts = 0
+        badges_earned = 0
+        active_dates: set[str] = set()
+
+        for row in rows:
+            event_type = row["event_type"]
+            active_dates.add(row["timestamp"][:10])
+            if event_type == "lesson_completed":
+                lessons_completed += 1
+                detail = row["detail"] or ""
+                if detail.startswith("stars="):
+                    try:
+                        stars_earned += int(detail.split("=", 1)[1])
+                    except ValueError:
+                        pass
+            elif event_type == "quiz_completed":
+                quiz_attempts += 1
+            elif event_type == "badge_earned":
+                badges_earned += 1
+
+        return WeeklySummary(
+            lessons_completed=lessons_completed,
+            stars_earned=stars_earned,
+            quiz_attempts=quiz_attempts,
+            badges_earned=badges_earned,
+            active_days=len(active_dates),
+        )
 
     # -- Parent controls ---------------------------------------------------
     def reset_progress(self) -> None:

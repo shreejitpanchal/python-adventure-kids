@@ -5,6 +5,7 @@ import threading
 
 import customtkinter as ctk
 
+from app.audio.player import play_sound_ctk, success_sound_for
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_window import GameWindow
@@ -385,10 +386,15 @@ class LessonScreen(ctk.CTkFrame):
         self._lesson_passed = True
 
         progress = self.app.progress
+        level_before = progress.get_player_level().level
         progress.complete_lesson(self.lesson.id, self.lesson.reward_stars)
         badge_newly_awarded = False
         if self.lesson.badge:
             badge_newly_awarded = progress.award_badge(self.lesson.badge)
+        leveled_up = progress.get_player_level().level > level_before
+
+        for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_newly_awarded):
+            play_sound_ctk(sound_name, self.app.settings)
 
         next_lesson = self.app.lesson_engine.next_after(self.lesson.id)
         if next_lesson:

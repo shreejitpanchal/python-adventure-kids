@@ -1,0 +1,43 @@
+id: lesson_440
+title: "Robot Adventure: First Steps 🤖"
+level: 440
+objective: "Use game.robot_forward() to drive a robot to a goal on a grid."
+explanation: |
+  Welcome to Robot Adventure! Instead of drawing lines like the turtle, this robot moves
+  around a grid, one square at a time.
+
+  game.create_grid(3, 1) builds a 3-square-wide grid. game.place_goal(2, 0) marks the
+  target square with a gold circle. game.place_robot(0, 0, "E") puts the robot in the
+  first square, facing East (right).
+
+  game.robot_forward() moves the robot one square in the direction it's facing.
+example_code: |
+  game.set_background("black")
+  game.create_grid(3, 1)
+  game.place_goal(2, 0)
+  game.place_robot(0, 0, "E")
+  game.robot_forward()
+  game.robot_forward()
+starter_code: |
+  game.set_background("black")
+  game.create_grid(3, 1)
+  game.place_goal(2, 0)
+  game.place_robot(0, 0, "E")
+  game.robot_forward()
+  game.robot_forward()
+challenge: |
+  🎯 Challenge: Press RUN and watch your robot drive to the gold goal!
+expected_output: ""
+ast_contains: ["create_grid", "place_robot", "robot_forward"]
+requires_goal_reached: true
+hints:
+  - "game.robot_forward() moves the robot one square forward each time you call it."
+  - "The robot starts 2 squares away from the goal, so it needs game.robot_forward() twice."
+  - "Watch the grid above after you press RUN — the robot glides forward each call."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+graphical: true
+category: robot_adventure
+category_level: 1
+main_path: false
