@@ -30,10 +30,9 @@ from app.games.game_canvas_flet import GameCanvas
 from app.sandbox.errors import extract_error_line_number, translate_error
 from app.sandbox.inprocess_runner import ExecutionResult, RunHandle, run_code
 from app.ui.app_state_flet import AppState
-from app.ui.code_editor_flet import make_read_only_code_block
+from app.ui.code_editor_flet import make_code_editor, make_read_only_code_block
 from app.ui.components.codey_avatar_flet import CodeyState, build_codey_avatar
 from app.ui.components.macro_toolbar_flet import build_macro_toolbar
-from app.ui.components.rich_code_editor_flet import RichCodeEditor
 from app.ui.components.victory_overlay_flet import build_victory_overlay
 
 _KEY_NAME_MAP = {
@@ -144,9 +143,9 @@ class _LessonController:
 
         self._codey = build_codey_avatar(theme)
 
-        self.editor = RichCodeEditor(self.page, theme, lesson.starter_code.strip())
+        self.editor = make_code_editor(lesson.starter_code.strip())
         self.macro_toolbar = build_macro_toolbar(self.editor, self.page, theme)
-        children: list[ft.Control] = [self._codey.control, self.editor.control, self.macro_toolbar]
+        children: list[ft.Control] = [self._codey.control, self.editor, self.macro_toolbar]
 
         if lesson.input_prompt:
             self.input_field = ft.TextField(hint_text="Type your answer...", width=240)
@@ -270,7 +269,6 @@ class _LessonController:
         self.run_button.disabled = True
         self.stop_button.disabled = False
         self._hide_details()
-        self.editor.clear_error_highlight()
         self.output_text.value = "⏳ Running your code..."
         self.output_text.color = self.theme.text_muted
         self._codey.set_state(CodeyState.RUNNING)
@@ -318,7 +316,6 @@ class _LessonController:
             line = extract_error_line_number(result.stderr)
             if line:
                 friendly = f"{friendly} (near line {line})"
-                self.editor.highlight_error_line(line)
             self._show_output(f"{friendly}\n\n💡 {hint}", self.theme.danger, raw=result.stderr)
             self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
@@ -371,7 +368,6 @@ class _LessonController:
         )
 
         self._hide_details()
-        self.editor.clear_error_highlight()
         self._codey.set_state(CodeyState.RUNNING)
         code = self.editor.value or ""
 
@@ -389,7 +385,6 @@ class _LessonController:
             line = extract_error_line_number(result.stderr)
             if line:
                 friendly = f"{friendly} (near line {line})"
-                self.editor.highlight_error_line(line)
             self._show_output(f"{friendly}\n\n💡 {hint}", self.theme.danger, raw=result.stderr)
             self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
@@ -419,7 +414,6 @@ class _LessonController:
 
     def _on_reset(self, e) -> None:
         self.editor.value = self.lesson.starter_code.strip()
-        self.editor.clear_error_highlight()
         if self.input_field is not None:
             self.input_field.value = ""
         if self.game_canvas is not None:

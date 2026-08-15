@@ -45,10 +45,7 @@ class _CursorTracker:
     position: int = 0
 
 
-def build_macro_toolbar(editor, page: ft.Page, theme) -> ft.Control:
-    """`editor` is duck-typed: a plain ft.TextField or anything exposing the
-    same .value/.selection/.on_selection_change surface, e.g.
-    rich_code_editor_flet.RichCodeEditor."""
+def build_macro_toolbar(editor: ft.TextField, page: ft.Page, theme) -> ft.Control:
     tracker = _CursorTracker(position=len(editor.value or ""))
 
     def on_selection_change(e: ft.TextSelectionChangeEvent) -> None:
