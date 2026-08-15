@@ -1,5 +1,6 @@
-"""The Quiz category: a randomized multiple-choice run through the whole
-question bank, one question at a time, ending in a score summary.
+"""The Quiz category: pick how many questions to answer, then a randomized
+multiple-choice run through that many, one question at a time, ending in a
+score summary scored out of however many were picked.
 
 Ported from app/ui/quiz_screen_flet.py -- same controller shape (build
 every control once, mutate it in place on each event), just CTk's
@@ -14,6 +15,7 @@ from app.ui.color_utils import contrasting_text_color
 
 _OPTION_COUNT = 4
 _RESULTS_CARD_COLOR = "#FFF3D0"
+_COUNT_CHOICES = [5, 10, 15, 20, 25, 30, 50]
 
 
 class QuizScreen(ctk.CTkFrame):
@@ -21,8 +23,10 @@ class QuizScreen(ctk.CTkFrame):
         super().__init__(app, fg_color=theme.COLOR_BG)
         self.app = app
 
-        self.questions = app.quiz_engine.start_session()
-        self.total = len(self.questions)
+        # The question count is picked on the setup card before a session
+        # starts -- see _on_pick_count().
+        self.questions = []
+        self.total = 0
         self.index = 0
         self.score = 0
         self.answered = False
@@ -32,10 +36,10 @@ class QuizScreen(ctk.CTkFrame):
         self.body = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self.body.pack(fill="both", expand=True, padx=30, pady=(0, 20))
 
+        self._build_setup_card()
         self._build_question_card()
+        self.question_card.pack_forget()
         self._build_results_card()
-
-        self._render_question()
 
     # -- header ---------------------------------------------------------------
     def _build_header(self) -> None:
@@ -62,6 +66,27 @@ class QuizScreen(ctk.CTkFrame):
         return card
 
     # -- sections ---------------------------------------------------------------
+    def _build_setup_card(self) -> None:
+        self.setup_card = self._card("❓ How many questions?")
+        available = len(self.app.quiz_engine)
+
+        ctk.CTkLabel(
+            self.setup_card, text=f"{available} questions available -- pick how many to answer:",
+            font=theme.font_body(13), text_color=theme.COLOR_TEXT_MUTED,
+        ).pack(anchor="w", padx=24, pady=(0, 10))
+
+        button_row = ctk.CTkFrame(self.setup_card, fg_color="transparent")
+        button_row.pack(anchor="w", padx=24, pady=(0, 20))
+
+        for n in _COUNT_CHOICES:
+            if n > available:
+                continue
+            ctk.CTkButton(
+                button_row, text=str(n), font=theme.font_button(16), width=70, height=48,
+                fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
+                command=lambda n=n: self._on_pick_count(n),
+            ).pack(side="left", padx=(0, 8))
+
     def _build_question_card(self) -> None:
         self.question_card = self._card("❓ Question")
 
@@ -128,6 +153,16 @@ class QuizScreen(ctk.CTkFrame):
             command=self._on_menu,
         ).pack(side="left")
 
+    # -- setup ------------------------------------------------------------------
+    def _on_pick_count(self, count: int) -> None:
+        self.questions = self.app.quiz_engine.start_session(count)
+        self.total = len(self.questions)
+        self.index = 0
+        self.score = 0
+        self.setup_card.pack_forget()
+        self.question_card.pack(fill="x", pady=10)
+        self._render_question()
+
     # -- question flow ------------------------------------------------------
     def _render_question(self) -> None:
         question = self.questions[self.index]
@@ -187,12 +222,10 @@ class QuizScreen(ctk.CTkFrame):
         self.results_card.pack(fill="x", pady=10)
 
     def _on_play_again(self) -> None:
-        self.questions = self.app.quiz_engine.start_session()
-        self.index = 0
-        self.score = 0
+        # Back to the setup card rather than silently reusing the last
+        # question count -- lets the child pick a different length next time.
         self.results_card.pack_forget()
-        self.question_card.pack(fill="x", pady=10)
-        self._render_question()
+        self.setup_card.pack(fill="x", pady=10)
 
     def _on_menu(self) -> None:
         self.app.show_dashboard()

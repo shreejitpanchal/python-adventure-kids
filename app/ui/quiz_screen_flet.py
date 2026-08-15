@@ -1,5 +1,6 @@
-"""The Quiz category: a randomized multiple-choice run through the whole
-question bank, one question at a time, ending in a score summary.
+"""The Quiz category: pick how many questions to answer, then a randomized
+multiple-choice run through that many, one question at a time, ending in a
+score summary scored out of however many were picked.
 
 Every question has exactly 4 options (content/quiz/quiz_questions.yaml),
 so the option buttons are built once and reused across questions rather
@@ -15,6 +16,7 @@ from app.ui.color_utils import contrasting_text_color
 
 _OPTION_COUNT = 4
 _RESULTS_CARD_COLOR = "#FFF3D0"
+_COUNT_CHOICES = [5, 10, 15, 20, 25, 30, 50]
 
 
 def build_quiz_view(page: ft.Page, state: AppState) -> ft.View:
@@ -27,8 +29,10 @@ class _QuizController:
         self.state = state
         self.theme = state.theme
 
-        self.questions = state.quiz_engine.start_session()
-        self.total = len(self.questions)
+        # The question count is picked on the setup card before a session
+        # starts -- see _on_pick_count().
+        self.questions: list = []
+        self.total = 0
         self.index = 0
         self.score = 0
         self.answered = False
@@ -48,6 +52,8 @@ class _QuizController:
             spacing=16,
         )
 
+        self.setup_card = self._build_setup_card()
+
         self.progress_text = ft.Text("", size=14, color=theme.text_muted)
         self.question_text = ft.Text("", size=18, weight=ft.FontWeight.BOLD, color=theme.text)
         self.option_labels: list[ft.Text] = []
@@ -66,6 +72,7 @@ class _QuizController:
             self.feedback_text,
             self.next_button,
         ])
+        self.question_card.visible = False
 
         # The results card's cream background is fixed regardless of the
         # active theme (a deliberate always-celebratory look), so its text
@@ -97,15 +104,28 @@ class _QuizController:
             bgcolor=_RESULTS_CARD_COLOR, border_radius=18, padding=24, visible=False,
         )
 
-        self._render_question()
-
         return ft.View(
             route="/quiz",
             bgcolor=theme.bg,
             scroll=ft.ScrollMode.AUTO,
             padding=24,
-            controls=[header, self.question_card, self.results_card],
+            controls=[header, self.setup_card, self.question_card, self.results_card],
         )
+
+    def _build_setup_card(self) -> ft.Control:
+        available = len(self.state.quiz_engine)
+        buttons = [
+            ft.Button(
+                f"{n}", on_click=lambda _e, n=n: self._on_pick_count(n), width=90, height=56,
+                style=ft.ButtonStyle(bgcolor=self.theme.primary, color="#FFFFFF"),
+            )
+            for n in _COUNT_CHOICES
+            if n <= available
+        ]
+        return self._card("❓ How many questions?", [
+            ft.Text(f"{available} questions available -- pick how many to answer:", size=13, color=self.theme.text_muted),
+            ft.Row(buttons, wrap=True, spacing=10, run_spacing=10),
+        ])
 
     def _card(self, title: str, children: list[ft.Control]) -> ft.Control:
         return ft.Container(
@@ -128,6 +148,16 @@ class _QuizController:
             content=label, on_click=lambda _e, i=index: self._on_select(i), height=56, width=560,
             style=ft.ButtonStyle(bgcolor=self.theme.bg),
         )
+
+    # -- setup ----------------------------------------------------------------
+    def _on_pick_count(self, count: int) -> None:
+        self.questions = self.state.quiz_engine.start_session(count)
+        self.total = len(self.questions)
+        self.index = 0
+        self.score = 0
+        self.setup_card.visible = False
+        self.question_card.visible = True
+        self._render_question()
 
     # -- question flow ------------------------------------------------------
     def _render_question(self) -> None:
@@ -193,12 +223,11 @@ class _QuizController:
         self.page.update()
 
     def _on_play_again(self, e) -> None:
-        self.questions = self.state.quiz_engine.start_session()
-        self.index = 0
-        self.score = 0
+        # Back to the setup card rather than silently reusing the last
+        # question count -- lets the child pick a different length next time.
         self.results_card.visible = False
-        self.question_card.visible = True
-        self._render_question()
+        self.setup_card.visible = True
+        self.page.update()
 
     def _on_menu(self, e) -> None:
         self.page.go("/dashboard")

@@ -22,15 +22,24 @@ class QuizEngine:
     def __len__(self) -> int:
         return len(self._questions)
 
-    def start_session(self) -> list[QuizQuestion]:
-        """A freshly shuffled copy of every question for one quiz playthrough.
+    def start_session(self, count: int | None = None) -> list[QuizQuestion]:
+        """A freshly randomized set of questions for one quiz playthrough.
 
-        Both the question order and each question's own option order are
-        re-randomized here, so the correct answer isn't always in the same
-        position and no two playthroughs look the same.
+        `count` picks how many questions to include, as a random subset
+        with no repeats -- pass None, or a value >= the full bank size, to
+        use every question. Either way, both which questions are picked
+        and each picked question's own option order are re-randomized
+        here, so no two playthroughs look the same and the correct answer
+        isn't always in the same position.
         """
+        if count is not None and 0 < count < len(self._questions):
+            pool = random.sample(self._questions, count)
+        else:
+            pool = list(self._questions)
+            random.shuffle(pool)
+
         session: list[QuizQuestion] = []
-        for question in self._questions:
+        for question in pool:
             paired = list(enumerate(question.options))
             random.shuffle(paired)
             new_options = [text for _, text in paired]
@@ -42,5 +51,4 @@ class QuizEngine:
                 correct=new_correct,
                 explanation=question.explanation,
             ))
-        random.shuffle(session)
         return session

@@ -3,8 +3,7 @@ from app.engine.quiz_engine import QuizEngine
 
 def test_loads_questions_from_content_dir():
     engine = QuizEngine()
-    assert len(engine) >= 50
-    assert len(engine) <= 60
+    assert len(engine) == 300
 
 
 def test_every_question_has_four_options_and_a_valid_correct_index():
@@ -56,3 +55,37 @@ questions:
     assert len(engine) == 1
     session = engine.start_session()
     assert session[0].options[session[0].correct] == "2"
+
+
+# -- count-limited sessions --------------------------------------------------
+def test_start_session_with_count_returns_exactly_that_many():
+    engine = QuizEngine()
+    session = engine.start_session(count=5)
+    assert len(session) == 5
+
+    session = engine.start_session(count=20)
+    assert len(session) == 20
+
+
+def test_start_session_with_count_picks_distinct_questions():
+    engine = QuizEngine()
+    session = engine.start_session(count=10)
+    assert len({q.id for q in session}) == 10
+
+
+def test_start_session_with_count_varies_which_questions_are_picked():
+    engine = QuizEngine()
+    picks = {tuple(sorted(q.id for q in engine.start_session(count=5))) for _ in range(10)}
+    assert len(picks) > 1, "10 five-question sessions picked the exact same 5 questions every time"
+
+
+def test_start_session_count_none_or_over_pool_size_uses_every_question():
+    engine = QuizEngine()
+    assert len(engine.start_session(count=None)) == len(engine)
+    assert len(engine.start_session(count=len(engine) + 50)) == len(engine)
+
+
+def test_start_session_count_zero_or_negative_falls_back_to_full_set():
+    engine = QuizEngine()
+    assert len(engine.start_session(count=0)) == len(engine)
+    assert len(engine.start_session(count=-3)) == len(engine)

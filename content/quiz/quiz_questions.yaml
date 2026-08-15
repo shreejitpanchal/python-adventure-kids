@@ -1,330 +1,2809 @@
 questions:
-  - id: q001
-    question: "Which function displays text on the screen?"
-    options: ["print()", "show()", "display()", "echo()"]
-    correct: 0
-    explanation: "print() is Python's built-in function for showing output."
+- id: q001
+  question: Which function displays text on the screen?
+  options:
+  - print()
+  - show()
+  - display()
+  - echo()
+  correct: 0
+  explanation: print() is Python's built-in function for showing output.
+- id: q002
+  question: What will print("Hello!") display?
+  options:
+  - Hello!
+  - '"Hello!"'
+  - print
+  - Nothing
+  correct: 0
+  explanation: print() shows the text inside the quotes, without the quote marks themselves.
+- id: q003
+  question: Which of these correctly prints the word Welcome?
+  options:
+  - print("Welcome")
+  - print(Welcome)
+  - Print("Welcome")
+  - print(Welcome);
+  correct: 0
+  explanation: Text needs quote marks, and Python's print function is always lowercase.
+- id: q004
+  question: What symbol starts a comment in Python?
+  options:
+  - '#'
+  - //
+  - <!--
+  - '**'
+  correct: 0
+  explanation: 'A # tells Python to ignore the rest of that line -- it''s just a note for humans.'
+- id: q005
+  question: Which quote marks can you use around text in Python?
+  options:
+  - Either single ' or double "
+  - Only double "
+  - Only single '
+  - Curly quotes like “ ”
+  correct: 0
+  explanation: Python accepts single or double quotes for text, as long as you use the same kind on both ends.
+- id: q006
+  question: What kind of value is "Hello" in Python?
+  options:
+  - A string (text)
+  - A number
+  - A variable
+  - A function
+  correct: 0
+  explanation: Text wrapped in quotes is called a string.
+- id: q007
+  question: What does age = 9 do?
+  options:
+  - Stores the number 9 in a variable named age
+  - Prints the number 9
+  - Compares age to 9
+  - Creates a function named age
+  correct: 0
+  explanation: The = sign stores a value in a variable -- it does not compare or print anything.
+- id: q008
+  question: After age = 9 and then age = 10, what does age hold?
+  options:
+  - '10'
+  - '9'
+  - Both 9 and 10
+  - Nothing, that's an error
+  correct: 0
+  explanation: Assigning a new value replaces the old one -- a variable only holds its most recent value.
+- id: q009
+  question: Which variable name is allowed in Python?
+  options:
+  - high_score
+  - 2ndPlace
+  - high-score
+  - class
+  correct: 0
+  explanation: Variable names can use letters, numbers, and underscores, but can't start with a number, contain a dash, or reuse a reserved word like class.
+- id: q010
+  question: If age = 9, what does print(age) do?
+  options:
+  - Shows 9
+  - Shows the word age
+  - Shows "age = 9"
+  - Causes an error
+  correct: 0
+  explanation: print(age) shows whatever value is stored inside the age box, not the word "age" itself.
+- id: q011
+  question: 'What does this print?
 
-  - id: q002
-    question: "What will print(\"Hello!\") display?"
-    options: ["Hello!", "\"Hello!\"", "print", "Nothing"]
-    correct: 0
-    explanation: "print() shows the text inside the quotes, without the quote marks themselves."
+    score = 5
 
-  - id: q003
-    question: "Which of these correctly prints the word Welcome?"
-    options: ["print(\"Welcome\")", "print(Welcome)", "Print(\"Welcome\")", "print(Welcome);"]
-    correct: 0
-    explanation: "Text needs quote marks, and Python's print function is always lowercase."
+    score = score + 1
 
-  - id: q004
-    question: "What symbol starts a comment in Python?"
-    options: ["#", "//", "<!--", "**"]
-    correct: 0
-    explanation: "A # tells Python to ignore the rest of that line -- it's just a note for humans."
+    print(score)'
+  options:
+  - '6'
+  - '5'
+  - '1'
+  - score + 1
+  correct: 0
+  explanation: score + 1 is calculated first (5 + 1 = 6), then stored back into score.
+- id: q012
+  question: Which line correctly stores your name in a variable called name?
+  options:
+  - name = "Alex"
+  - name == "Alex"
+  - '"Alex" = name'
+  - name := "Alex";
+  correct: 0
+  explanation: A single = assigns a value to a variable.
+- id: q013
+  question: What does print(3 + 4) show?
+  options:
+  - '7'
+  - 3 + 4
+  - '34'
+  - Error
+  correct: 0
+  explanation: + adds numbers together, so 3 + 4 becomes 7.
+- id: q014
+  question: What symbol does Python use for multiplication?
+  options:
+  - '*'
+  - x
+  - ×
+  - ^
+  correct: 0
+  explanation: Python uses * for multiplication, not x or ×.
+- id: q015
+  question: What does print(10 / 3) show?
+  options:
+  - '3.3333333333333335'
+  - '3'
+  - '3.3'
+  - '1'
+  correct: 0
+  explanation: / always gives a decimal (float) answer in Python, even when it doesn't divide evenly.
+- id: q016
+  question: What does // do in Python?
+  options:
+  - Divides and drops the leftover decimal (floor division)
+  - Divides and keeps the decimal
+  - Multiplies two numbers
+  - Starts a comment
+  correct: 0
+  explanation: // is floor division -- it divides and rounds down to a whole number.
+- id: q017
+  question: What does print(10 % 3) show?
+  options:
+  - '1'
+  - '3'
+  - '3.33'
+  - '10'
+  correct: 0
+  explanation: '% gives the remainder after dividing -- 10 divided by 3 is 3 with 1 left over.'
+- id: q018
+  question: What does print(2 ** 3) show?
+  options:
+  - '8'
+  - '6'
+  - '5'
+  - '9'
+  correct: 0
+  explanation: '** means "to the power of" -- 2 to the power of 3 is 2 x 2 x 2 = 8.'
+- id: q019
+  question: What does print("cat" + "fish") show?
+  options:
+  - catfish
+  - cat fish
+  - cat + fish
+  - Error
+  correct: 0
+  explanation: + joins (concatenates) two strings together with no space added automatically.
+- id: q020
+  question: How do you find how many letters are in a string called word?
+  options:
+  - len(word)
+  - word.length
+  - count(word)
+  - size(word)
+  correct: 0
+  explanation: len() tells you the length of a string (or list).
+- id: q021
+  question: What does print("hi" * 3) show?
+  options:
+  - hihihi
+  - hi3
+  - hi hi hi
+  - Error
+  correct: 0
+  explanation: Multiplying a string by a number repeats it that many times.
+- id: q022
+  question: What will print("Python".upper()) show?
+  options:
+  - PYTHON
+  - python
+  - Python
+  - Error
+  correct: 0
+  explanation: .upper() converts every letter in a string to uppercase.
+- id: q023
+  question: What data type is the value True?
+  options:
+  - A boolean
+  - A string
+  - A number
+  - A list
+  correct: 0
+  explanation: True and False are boolean values -- they represent yes/no or on/off.
+- id: q024
+  question: What does str(5) do?
+  options:
+  - Converts the number 5 into the text "5"
+  - Converts text into a number
+  - Prints 5
+  - Adds 5 to a string
+  correct: 0
+  explanation: str() converts a value into a string, which is often needed before joining it with other text using +.
+- id: q025
+  question: What does input() do?
+  options:
+  - Pauses the program and waits for the player to type something
+  - Prints text to the screen
+  - Runs a loop
+  - Creates a variable automatically
+  correct: 0
+  explanation: input() waits for the player to type an answer and press Enter.
+- id: q026
+  question: What type of value does input() always return, even if the player types a number?
+  options:
+  - A string (text)
+  - An integer
+  - A float
+  - A boolean
+  correct: 0
+  explanation: input() always gives back text -- you need int() or float() to use it as a number.
+- id: q027
+  question: How do you turn what the player typed into a whole number?
+  options:
+  - int(input())
+  - str(input())
+  - input(int())
+  - number(input())
+  correct: 0
+  explanation: Wrapping input() in int() converts the typed text into a whole number.
+- id: q028
+  question: 'What does this print if the player types Sam?
 
-  - id: q005
-    question: "Which quote marks can you use around text in Python?"
-    options: ["Either single ' or double \"", "Only double \"", "Only single '", "Curly quotes like “ ”"]
-    correct: 0
-    explanation: "Python accepts single or double quotes for text, as long as you use the same kind on both ends."
+    name = input("Name? ")
 
-  - id: q006
-    question: "What kind of value is \"Hello\" in Python?"
-    options: ["A string (text)", "A number", "A variable", "A function"]
-    correct: 0
-    explanation: "Text wrapped in quotes is called a string."
+    print("Hi " + name)'
+  options:
+  - Hi Sam
+  - Hi name
+  - name
+  - Error
+  correct: 0
+  explanation: The name variable now holds "Sam", so joining it with "Hi " prints "Hi Sam".
+- id: q029
+  question: What does 5 > 3 evaluate to?
+  options:
+  - 'True'
+  - 'False'
+  - '2'
+  - Error
+  correct: 0
+  explanation: 5 is greater than 3, so the comparison is True.
+- id: q030
+  question: Which symbol checks if two values are equal in Python?
+  options:
+  - ==
+  - '='
+  - =>
+  - '!='
+  correct: 0
+  explanation: A single = assigns a value, but a double == checks if two things are equal.
+- id: q031
+  question: What does != mean?
+  options:
+  - Not equal to
+  - Equal to
+  - Not greater than
+  - Divides
+  correct: 0
+  explanation: '!= checks whether two values are different from each other.'
+- id: q032
+  question: "What will this print?\nif 7 > 3:\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+  options:
+  - 'Yes'
+  - 'No'
+  - Both
+  - Nothing
+  correct: 0
+  explanation: 7 is greater than 3, so the condition is True and the if block runs.
+- id: q033
+  question: What must come right after the condition in an if statement?
+  options:
+  - 'A colon :'
+  - A semicolon ;
+  - A period .
+  - Nothing
+  correct: 0
+  explanation: Python requires a colon at the end of an if line, before the indented block.
+- id: q034
+  question: How does Python know which lines belong inside an if block?
+  options:
+  - They're indented (spaced in)
+  - They're in ALL CAPS
+  - They end in a semicolon
+  - They're wrapped in curly braces {}
+  correct: 0
+  explanation: Python uses indentation (spacing), not braces, to group lines together.
+- id: q035
+  question: How many times does the loop body repeat for `for i in range(5):`?
+  options:
+  - 5 times
+  - 4 times
+  - 6 times
+  - Forever
+  correct: 0
+  explanation: range(5) produces 0, 1, 2, 3, 4 -- five numbers, so the loop runs 5 times.
+- id: q036
+  question: What does a while loop do?
+  options:
+  - Repeats as long as its condition stays True
+  - Runs exactly once
+  - Runs a fixed number of times only
+  - Stops the program
+  correct: 0
+  explanation: A while loop keeps repeating until its condition becomes False.
+- id: q037
+  question: What could cause a loop to run forever by mistake?
+  options:
+  - Forgetting to change the condition inside the loop
+  - Using range() instead of while
+  - Using print() inside the loop
+  - Adding a colon at the end
+  correct: 0
+  explanation: If nothing inside a while loop ever makes its condition False, the loop never stops.
+- id: q038
+  question: "What will this print?\nfor i in range(3):\n    print(i)"
+  options:
+  - 0, 1, 2 on separate lines
+  - 1, 2, 3
+  - 3, 3, 3
+  - 0, 1, 2, 3
+  correct: 0
+  explanation: range(3) counts 0, 1, 2 -- Python starts counting at 0 by default.
+- id: q039
+  question: How many times does `for i in range(1, 4):` run?
+  options:
+  - 3 times (1, 2, 3)
+  - 4 times
+  - 2 times
+  - 1 time
+  correct: 0
+  explanation: range(1, 4) starts at 1 and stops before 4, giving 1, 2, 3.
+- id: q040
+  question: What keyword immediately exits a loop early?
+  options:
+  - break
+  - stop
+  - end
+  - exit
+  correct: 0
+  explanation: break immediately stops the loop, skipping any remaining repeats.
+- id: q041
+  question: What keyword do you use to create your own function?
+  options:
+  - def
+  - func
+  - function
+  - define
+  correct: 0
+  explanation: 'def starts a function definition in Python, e.g. def greet():'
+- id: q042
+  question: What does return do inside a function?
+  options:
+  - Sends a value back out of the function
+  - Prints a value
+  - Stops the whole program
+  - Repeats the function
+  correct: 0
+  explanation: return hands a result back to whatever called the function, so it can be used elsewhere.
+- id: q043
+  question: "What does this print?\ndef double(x):\n    return x * 2\nprint(double(4))"
+  options:
+  - '8'
+  - '4'
+  - '42'
+  - Error
+  correct: 0
+  explanation: double(4) runs the function with x = 4, returning 4 * 2 = 8.
+- id: q044
+  question: In def greet(name):, what is name called?
+  options:
+  - A parameter
+  - A return value
+  - A loop
+  - A comment
+  correct: 0
+  explanation: name is a parameter -- a placeholder for whatever value gets passed in when the function is called.
+- id: q045
+  question: How do you call (run) a function named say_hi?
+  options:
+  - say_hi()
+  - call say_hi
+  - run(say_hi)
+  - say_hi
+  correct: 0
+  explanation: Parentheses after the function name is what actually runs it -- just typing the name alone does not call it.
+- id: q046
+  question: Why do functions help organize code?
+  options:
+  - They let you reuse the same steps without retyping them
+  - They make the program run slower
+  - They delete unused variables
+  - They only work with numbers
+  correct: 0
+  explanation: A function packages up steps once so you can reuse them anywhere by calling its name.
+- id: q047
+  question: How do you create a list of three fruits in Python?
+  options:
+  - fruits = ["apple", "banana", "cherry"]
+  - fruits = ("apple", "banana", "cherry")
+  - fruits = {apple, banana, cherry}
+  - fruits = apple, banana, cherry
+  correct: 0
+  explanation: Square brackets with items separated by commas create a list.
+- id: q048
+  question: If fruits = ["apple", "banana", "cherry"], what does fruits[0] give you?
+  options:
+  - apple
+  - banana
+  - cherry
+  - Error
+  correct: 0
+  explanation: Python lists start counting from index 0, so fruits[0] is the first item, "apple".
+- id: q049
+  question: How do you add "grape" to the end of a list called fruits?
+  options:
+  - fruits.append("grape")
+  - fruits.add("grape")
+  - fruits + "grape"
+  - fruits[grape]
+  correct: 0
+  explanation: .append() adds a new item onto the end of a list.
+- id: q050
+  question: What does len(fruits) return if fruits has 3 items?
+  options:
+  - '3'
+  - '2'
+  - '0'
+  - The last item
+  correct: 0
+  explanation: len() counts how many items are in the list.
+- id: q051
+  question: If fruits = ["apple", "banana", "cherry"], what will print(fruits[1]) show?
+  options:
+  - banana
+  - apple
+  - cherry
+  - Error
+  correct: 0
+  explanation: Index 1 is the second item, since counting starts at 0.
+- id: q052
+  question: Which module do you import to generate a random number?
+  options:
+  - random
+  - math
+  - numbers
+  - games
+  correct: 0
+  explanation: import random gives access to functions like randint() for generating random numbers.
+- id: q053
+  question: What does random.randint(1, 10) give you?
+  options:
+  - A random whole number between 1 and 10 (inclusive)
+  - Always the number 10
+  - A random decimal
+  - The number 1
+  correct: 0
+  explanation: randint(a, b) picks a random whole number, including both a and b as possible results.
+- id: q054
+  question: In the Snake project, what do you use instead of a while loop for animation?
+  options:
+  - game.after(ms, callback) to schedule the next step
+  - A for loop that never ends
+  - print() in a loop
+  - input() repeated forever
+  correct: 0
+  explanation: Graphical lessons ban while loops, so animation uses self-scheduling with game.after() instead.
+- id: q055
+  question: Why might code that runs with no errors still fail a lesson's challenge?
+  options:
+  - Its output doesn't exactly match what the challenge expects
+  - Python only allows one program per day
+  - The code editor deletes wrong answers
+  - Lessons never check output
+  correct: 0
+  explanation: A lesson checks whether your program's output matches the expected result -- code can run fine and still print the wrong thing.
+- id: q056
+  question: Why do programmers write comments in their code?
+  options:
+  - To leave notes for humans that Python won't run
+  - To make the program run faster
+  - To fix errors automatically
+  - To print extra text on the screen
+  correct: 0
+  explanation: Comments explain code to people reading it -- Python skips over them completely when it runs the program.
+- id: q057
+  question: 'What happens when Python reaches a line that starts with #?'
+  options:
+  - It skips that whole line
+  - It prints the line as text
+  - It stops the program
+  - It runs the line twice
+  correct: 0
+  explanation: 'Python treats a line starting with # as a comment and ignores it entirely.'
+- id: q058
+  question: 'What does this print?
 
-  - id: q007
-    question: "What does age = 9 do?"
-    options: ["Stores the number 9 in a variable named age", "Prints the number 9", "Compares age to 9", "Creates a function named age"]
-    correct: 0
-    explanation: "The = sign stores a value in a variable -- it does not compare or print anything."
+    # print("Hi")
 
-  - id: q008
-    question: "After age = 9 and then age = 10, what does age hold?"
-    options: ["10", "9", "Both 9 and 10", "Nothing, that's an error"]
-    correct: 0
-    explanation: "Assigning a new value replaces the old one -- a variable only holds its most recent value."
+    print("Bye")'
+  options:
+  - Bye
+  - Hi
+  - 'Hi
 
-  - id: q009
-    question: "Which variable name is allowed in Python?"
-    options: ["high_score", "2ndPlace", "high-score", "class"]
-    correct: 0
-    explanation: "Variable names can use letters, numbers, and underscores, but can't start with a number, contain a dash, or reuse a reserved word like class."
+    Bye'
+  - Nothing
+  correct: 0
+  explanation: The first line is a comment, so Python never runs it -- only print("Bye") actually executes.
+- id: q059
+  question: 'Is it allowed to put a comment after real code on the same line, like print("Hi")  # says hello?'
+  options:
+  - 'Yes, everything after # on that line is ignored'
+  - No, comments must be on their own line
+  - Yes, but only at the top of the file
+  - No, that causes a SyntaxError
+  correct: 0
+  explanation: 'A # can appear anywhere on a line -- Python ignores everything from that # to the end of the line.'
+- id: q060
+  question: 'In print("Price: #1"), does the # start a comment?'
+  options:
+  - No -- it's just part of the text since it's inside quotes
+  - Yes -- Python ignores everything after it
+  - Yes, but only because there's a space before it
+  - No, but it causes an error
+  correct: 0
+  explanation: 'A # only starts a comment outside of quotes -- inside a string it''s simply a regular character.'
+- id: q061
+  question: What happens if you write print("Hello') with a double quote at the start and a single quote at the end?
+  options:
+  - Python raises a SyntaxError
+  - Python prints Hello
+  - Python prints Hello with a stray quote
+  - Python ignores the mismatched quote
+  correct: 0
+  explanation: Quotes must match -- starting with " and ending with ' leaves the string unterminated, which Python can't understand.
+- id: q062
+  question: Which line correctly prints the word don't, apostrophe and all?
+  options:
+  - print("don't")
+  - print('don't')
+  - print(don't)
+  - print("don't')
+  correct: 0
+  explanation: Wrapping the text in double quotes lets the apostrophe appear safely inside without confusing Python.
+- id: q063
+  question: How can you write a string that spans several lines, like a whole paragraph?
+  options:
+  - Wrap it in triple quotes, like """..."""
+  - Use five quote marks in a row
+  - 'Put a # at the start of each line'
+  - Python strings can never span multiple lines
+  correct: 0
+  explanation: Triple quotes let a string continue across multiple lines exactly as typed.
+- id: q064
+  question: How do you include a double quote character inside a string that's also wrapped in double quotes?
+  options:
+  - Put a backslash before it, like \"
+  - Just type it normally
+  - Use two double quotes in a row
+  - It can't be done
+  correct: 0
+  explanation: A backslash before a quote tells Python to treat it as a regular character instead of ending the string.
+- id: q065
+  question: What does \n do when it appears inside a string?
+  options:
+  - Starts a new line
+  - Adds a tab space
+  - Prints the letter n
+  - Deletes the next character
+  correct: 0
+  explanation: \n is a special escape sequence that means "move to the next line" when printed.
+- id: q066
+  question: What does print() with nothing inside the parentheses do?
+  options:
+  - Prints a blank line
+  - Causes an error
+  - Does nothing at all
+  - Prints the word None
+  correct: 0
+  explanation: Even with no arguments, print() still moves output to a new line, showing up as a blank line.
+- id: q067
+  question: What does print("Hi", "There") display?
+  options:
+  - Hi There
+  - HiThere
+  - Hi, There
+  - Error, too many arguments
+  correct: 0
+  explanation: print() automatically puts a single space between items separated by commas.
+- id: q068
+  question: In print("a", "b", sep="-"), what does sep control?
+  options:
+  - What goes between the printed items
+  - What goes at the very end
+  - Whether the text is uppercase
+  - How many times it prints
+  correct: 0
+  explanation: sep sets the separator placed between multiple items, replacing the default single space.
+- id: q069
+  question: In print("Hi", end=""), what does end control?
+  options:
+  - What's added after the output instead of a new line
+  - What's added before the output
+  - The maximum length of the text
+  - Whether the text is bold
+  correct: 0
+  explanation: end sets what print() adds after the output -- normally a new line, but it can be changed or removed.
+- id: q070
+  question: If you run print("A") and then print("B") right after, what shows on screen?
+  options:
+  - A and B on separate lines
+  - AB on one line
+  - A B with a space between
+  - Only B, since it overwrites A
+  correct: 0
+  explanation: Each print() call ends with a new line by default, so the next output starts fresh underneath.
+- id: q071
+  question: print(5) and print("5") both show 5 on screen. What's actually different about them?
+  options:
+  - One is a number, the other is text
+  - Nothing, they are identical in every way
+  - print("5") is faster
+  - print(5) causes an error
+  correct: 0
+  explanation: The quotes make "5" a string, while 5 without quotes is a number -- they look the same on screen but behave differently in code.
+- id: q072
+  question: What does the type() function tell you about a value?
+  options:
+  - What kind of data it is, like int or str
+  - Its exact numeric value
+  - How many characters it has
+  - Whether it will cause an error
+  correct: 0
+  explanation: type() reports the category of a value, such as int, float, str, or bool.
+- id: q073
+  question: What does Python report as the type of the value 5.5?
+  options:
+  - float
+  - int
+  - str
+  - bool
+  correct: 0
+  explanation: Numbers with a decimal point are floats, while whole numbers without a decimal point are ints.
+- id: q074
+  question: What data type is the value False?
+  options:
+  - A boolean
+  - A string
+  - A number
+  - A list
+  correct: 0
+  explanation: False, like True, is a boolean value representing one of two states.
+- id: q075
+  question: What happens if you type Print("Hi") with a capital P instead of print?
+  options:
+  - Python raises an error, since Print is not defined
+  - It works exactly the same as print
+  - It prints Hi in capital letters
+  - It only works inside comments
+  correct: 0
+  explanation: Python is case-sensitive, so Print and print are treated as completely different names.
+- id: q076
+  question: What happens if you write true instead of True in your code?
+  options:
+  - Python raises an error, since true is not defined
+  - It works exactly the same as True
+  - It becomes the number 1
+  - It becomes an empty string
+  correct: 0
+  explanation: Python's boolean values must start with a capital letter -- lowercase true isn't recognized as anything.
+- id: q077
+  question: 'What happens when you run print("Score: " + 5)?'
+  options:
+  - An error, because you can't join text and a number with +
+  - 'It prints Score: 5'
+  - 'It prints Score: + 5'
+  - It prints just 5
+  correct: 0
+  explanation: + only joins two strings together -- mixing a string with a plain number causes a TypeError.
+- id: q078
+  question: Which of these lines has a syntax error?
+  options:
+  - print("Hi)
+  - print("Hi")
+  - print( "Hi" )
+  - print("Hi" )
+  correct: 0
+  explanation: That line is missing its closing quote, so Python can't tell where the text ends.
+- id: q079
+  question: What does print(10 / 2) show?
+  options:
+  - '5.0'
+  - '5'
+  - 10/2
+  - Error
+  correct: 0
+  explanation: The / operator always produces a decimal (float) result in Python, even when the numbers divide evenly.
+- id: q080
+  question: What does len("") return for an empty string?
+  options:
+  - '0'
+  - '1'
+  - None
+  - Error
+  correct: 0
+  explanation: An empty string has no characters in it, so its length is 0.
+- id: q081
+  question: Is an empty string "" treated as True or False when used as a yes/no condition?
+  options:
+  - 'False'
+  - 'True'
+  - It causes an error
+  - Neither -- it's ignored
+  correct: 0
+  explanation: Python treats empty text as False, while any text with at least one character counts as True.
+- id: q082
+  question: What's the main difference between an int and a float in Python?
+  options:
+  - An int is a whole number; a float has a decimal point
+  - An int is text; a float is a number
+  - A float can only be negative
+  - There is no difference
+  correct: 0
+  explanation: int stores whole numbers like 7, while float stores numbers with a decimal part like 7.5.
+- id: q083
+  question: Which of these values is stored as a string, not a number?
+  options:
+  - '"7"'
+  - '7'
+  - '7.0'
+  - 'True'
+  correct: 0
+  explanation: Quote marks make a value text, even if the text happens to look like a number.
+- id: q084
+  question: According to how the app describes it, what is a computer program at its core?
+  options:
+  - A list of instructions the computer follows, one by one
+  - A picture the computer displays
+  - A single command that runs forever
+  - A file that only contains numbers
+  correct: 0
+  explanation: A program is simply a sequence of steps written so the computer can carry them out in order.
+- id: q085
+  question: Why does print need parentheses () right after it, like print("Hi")?
+  options:
+  - The parentheses hold what you want print to show
+  - They make the text bold
+  - They are optional and can be left out
+  - They tell Python to save the text instead of showing it
+  correct: 0
+  explanation: Parentheses after a function name hold the information you're handing it -- here, the text to display.
+- id: q086
+  question: Does adding a blank line between two print() statements cause an error?
+  options:
+  - No, blank lines are simply ignored
+  - Yes, Python requires code on every line
+  - Yes, unless the blank line has a comment
+  - No, but it skips the next print() call
+  correct: 0
+  explanation: Python skips over empty lines -- they don't affect how the program runs.
+- id: q087
+  question: What does print("5" + "5") show?
+  options:
+  - '55'
+  - '10'
+  - 5 5
+  - Error
+  correct: 0
+  explanation: Since both values are strings, + joins them as text instead of adding them as numbers.
+- id: q088
+  question: Which of these is written as a comment on its own line?
+  options:
+  - '# reminder to self'
+  - print(# reminder to self)
+  - '"# reminder to self"'
+  - -- reminder to self
+  correct: 0
+  explanation: 'A line that starts with # is a comment -- Python won''t try to run it as code.'
+- id: q089
+  question: After age = 9 and name = "9", are age and name storing the same kind of value?
+  options:
+  - No -- age holds a number, name holds text
+  - Yes, both hold the exact same thing
+  - No, age holds text and name holds a number
+  - Yes, because 9 always means a number
+  correct: 0
+  explanation: Even though they look similar, the quotes around "9" make it a string, while age = 9 stores a plain number.
+- id: q090
+  question: What does print("Hello" == "hello") show?
+  options:
+  - 'False'
+  - 'True'
+  - Hello
+  - Error
+  correct: 0
+  explanation: Python treats uppercase and lowercase letters as different characters, so the two strings aren't equal.
+- id: q091
+  question: Which best describes what a variable is in Python?
+  options:
+  - A named place that stores a value so you can use or change it later
+  - A type of loop that repeats code
+  - A function that always prints something
+  - A value that can never change once written
+  correct: 0
+  explanation: A variable is a name you give to a value so your program can remember and reuse it.
+- id: q092
+  question: In Python, why is = called an assignment operator instead of "equals"?
+  options:
+  - It stores a value in a variable, rather than comparing two values
+  - It always compares two numbers for equality
+  - It only works with text, never numbers
+  - It deletes whatever a variable was holding
+  correct: 0
+  explanation: = assigns (stores) a value in a variable -- checking whether two things are equal is what == is for.
+- id: q093
+  question: 'What does this print?
 
-  - id: q010
-    question: "If age = 9, what does print(age) do?"
-    options: ["Shows 9", "Shows the word age", "Shows \"age = 9\"", "Causes an error"]
-    correct: 0
-    explanation: "print(age) shows whatever value is stored inside the age box, not the word \"age\" itself."
+    x = 5
 
-  - id: q011
-    question: "What does this print?\nscore = 5\nscore = score + 1\nprint(score)"
-    options: ["6", "5", "1", "score + 1"]
-    correct: 0
-    explanation: "score + 1 is calculated first (5 + 1 = 6), then stored back into score."
+    y = x
 
-  - id: q012
-    question: "Which line correctly stores your name in a variable called name?"
-    options: ["name = \"Alex\"", "name == \"Alex\"", "\"Alex\" = name", "name := \"Alex\";"]
-    correct: 0
-    explanation: "A single = assigns a value to a variable."
+    print(y)'
+  options:
+  - '5'
+  - x
+  - y
+  - Error
+  correct: 0
+  explanation: y = x copies whatever value x currently holds into y, so y also becomes 5.
+- id: q094
+  question: Which variable name is NOT allowed in Python?
+  options:
+  - 3rd_place
+  - third_place
+  - thirdPlace
+  - _third
+  correct: 0
+  explanation: A variable name can't start with a digit -- Python would try to read 3rd as a number and get confused.
+- id: q095
+  question: Does Python treat score and Score as the same variable?
+  options:
+  - No -- Python variable names are case-sensitive
+  - Yes -- capitalization never matters
+  - Only if they were given the same value
+  - Only inside a function
+  correct: 0
+  explanation: Python is case-sensitive, so score and Score are two completely separate variables.
+- id: q096
+  question: Which of these can't be used as a variable name, because it's a reserved Python keyword?
+  options:
+  - for
+  - for_count
+  - forward
+  - before
+  correct: 0
+  explanation: for is reserved for writing loops, so Python won't let you use it as a variable name.
+- id: q097
+  question: Can a variable name contain a space, like high score?
+  options:
+  - No -- use an underscore instead, like high_score
+  - Yes, spaces are always fine in names
+  - Only if the variable holds text
+  - Only if it's the very first variable in the program
+  correct: 0
+  explanation: Python variable names can't contain spaces, so an underscore is used to join words instead.
+- id: q098
+  question: 'What does this print?
 
-  - id: q013
-    question: "What does print(3 + 4) show?"
-    options: ["7", "3 + 4", "34", "Error"]
-    correct: 0
-    explanation: "+ adds numbers together, so 3 + 4 becomes 7."
+    a, b = 1, 2
 
-  - id: q014
-    question: "What symbol does Python use for multiplication?"
-    options: ["*", "x", "×", "^"]
-    correct: 0
-    explanation: "Python uses * for multiplication, not x or ×."
+    print(a, b)'
+  options:
+  - 1 2
+  - 2 1
+  - a b
+  - Error
+  correct: 0
+  explanation: Multiple assignment matches values to names in order, so a gets 1 and b gets 2.
+- id: q099
+  question: 'What does this print?
 
-  - id: q015
-    question: "What does print(10 / 3) show?"
-    options: ["3.3333333333333335", "3", "3.3", "1"]
-    correct: 0
-    explanation: "/ always gives a decimal (float) answer in Python, even when it doesn't divide evenly."
+    a = b = 5
 
-  - id: q016
-    question: "What does // do in Python?"
-    options: ["Divides and drops the leftover decimal (floor division)", "Divides and keeps the decimal", "Multiplies two numbers", "Starts a comment"]
-    correct: 0
-    explanation: "// is floor division -- it divides and rounds down to a whole number."
+    print(a, b)'
+  options:
+  - 5 5
+  - 5 0
+  - a b
+  - Error
+  correct: 0
+  explanation: Chaining = together assigns the same value, 5, to both variables in one line.
+- id: q100
+  question: 'What does this print?
 
-  - id: q017
-    question: "What does print(10 % 3) show?"
-    options: ["1", "3", "3.33", "10"]
-    correct: 0
-    explanation: "% gives the remainder after dividing -- 10 divided by 3 is 3 with 1 left over."
+    x, y = 10, 20
 
-  - id: q018
-    question: "What does print(2 ** 3) show?"
-    options: ["8", "6", "5", "9"]
-    correct: 0
-    explanation: "** means \"to the power of\" -- 2 to the power of 3 is 2 x 2 x 2 = 8."
+    print(y, x)'
+  options:
+  - 20 10
+  - 10 20
+  - x y
+  - Error
+  correct: 0
+  explanation: x and y keep the values they were assigned -- printing y before x just changes the display order.
+- id: q101
+  question: 'What does this print?
 
-  - id: q019
-    question: "What does print(\"cat\" + \"fish\") show?"
-    options: ["catfish", "cat fish", "cat + fish", "Error"]
-    correct: 0
-    explanation: "+ joins (concatenates) two strings together with no space added automatically."
+    a, b = 3, 7
 
-  - id: q020
-    question: "How do you find how many letters are in a string called word?"
-    options: ["len(word)", "word.length", "count(word)", "size(word)"]
-    correct: 0
-    explanation: "len() tells you the length of a string (or list)."
+    a, b = b, a
 
-  - id: q021
-    question: "What does print(\"hi\" * 3) show?"
-    options: ["hihihi", "hi3", "hi hi hi", "Error"]
-    correct: 0
-    explanation: "Multiplying a string by a number repeats it that many times."
+    print(a, b)'
+  options:
+  - 7 3
+  - 3 7
+  - 7 7
+  - Error
+  correct: 0
+  explanation: a, b = b, a swaps the two values in one line, so a becomes 7 and b becomes 3.
+- id: q102
+  question: Why is writing a, b = b, a useful?
+  options:
+  - It swaps two variables' values without needing a separate temporary variable
+  - It adds a and b together
+  - It compares a and b to see which is bigger
+  - It deletes both a and b
+  correct: 0
+  explanation: Python figures out both values on the right side first, so it can swap them directly in a single line.
+- id: q103
+  question: What does type(5) return?
+  options:
+  - <class 'int'>
+  - <class 'float'>
+  - <class 'str'>
+  - '5'
+  correct: 0
+  explanation: type() tells you what kind of value something is -- 5 is a whole number, so its type is int.
+- id: q104
+  question: What does type(5.0) return?
+  options:
+  - <class 'float'>
+  - <class 'int'>
+  - <class 'str'>
+  - '5.0'
+  correct: 0
+  explanation: A number written with a decimal point, even .0, is a float in Python.
+- id: q105
+  question: If word = "cat", what does type(word) return?
+  options:
+  - <class 'str'>
+  - <class 'int'>
+  - <class 'bool'>
+  - cat
+  correct: 0
+  explanation: Text stored in a variable is a string, so type() reports str.
+- id: q106
+  question: What does the type() function help you do?
+  options:
+  - Check what kind of value, like int, float, str, or bool, a variable holds
+  - Change a variable's value
+  - Print a variable's value to the screen
+  - Delete a variable you no longer need
+  correct: 0
+  explanation: type() looks at a value and tells you which category, like int or str, it belongs to.
+- id: q107
+  question: 'What does this print?
 
-  - id: q022
-    question: "What will print(\"Python\".upper()) show?"
-    options: ["PYTHON", "python", "Python", "Error"]
-    correct: 0
-    explanation: ".upper() converts every letter in a string to uppercase."
+    is_ready = True
 
-  - id: q023
-    question: "What data type is the value True?"
-    options: ["A boolean", "A string", "A number", "A list"]
-    correct: 0
-    explanation: "True and False are boolean values -- they represent yes/no or on/off."
+    print(type(is_ready))'
+  options:
+  - <class 'bool'>
+  - <class 'str'>
+  - <class 'int'>
+  - 'True'
+  correct: 0
+  explanation: True and False are boolean values, so type() reports bool.
+- id: q108
+  question: What does int("5") do?
+  options:
+  - Converts the text "5" into the whole number 5
+  - Converts the number 5 into the text "5"
+  - Prints "5" to the screen
+  - Causes an error, since "5" is text
+  correct: 0
+  explanation: int() can turn text that looks like a whole number into an actual number Python can do math with.
+- id: q109
+  question: What does float("3.14") do?
+  options:
+  - Converts the text "3.14" into the decimal number 3.14
+  - Rounds 3.14 down to 3
+  - Converts the number 3.14 into text
+  - Causes an error, because of the decimal point
+  correct: 0
+  explanation: float() converts text into a decimal number, as long as the text looks like a valid number.
+- id: q110
+  question: Why would you write str(score) before joining score with other text using +?
+  options:
+  - Because + can't directly join a number and a string -- both sides need to be strings
+  - Because str() deletes the number from score
+  - Because + only works between two numbers
+  - Because score is already stored as text
+  correct: 0
+  explanation: Trying to + a number and text raises an error -- str() turns the number into text first so they can join.
+- id: q111
+  question: What does int(3.9) give you?
+  options:
+  - '3'
+  - '4'
+  - '3.9'
+  - Error
+  correct: 0
+  explanation: int() converts a float by cutting off everything after the decimal point, not by rounding.
+- id: q112
+  question: What does bool(0) evaluate to?
+  options:
+  - 'False'
+  - 'True'
+  - '0'
+  - Error
+  correct: 0
+  explanation: 0 is treated as False when converted to a boolean -- every other number converts to True.
+- id: q113
+  question: What does int(True) give you?
+  options:
+  - '1'
+  - '0'
+  - 'True'
+  - Error
+  correct: 0
+  explanation: Booleans are secretly numbers underneath -- True converts to 1 and False converts to 0.
+- id: q114
+  question: What happens if you run int("hello")?
+  options:
+  - An error, because "hello" doesn't look like a valid number
+  - It becomes 0
+  - It becomes 5, the number of letters
+  - Nothing happens, and hello is printed
+  correct: 0
+  explanation: int() can only convert text that actually looks like a whole number -- other text raises an error.
+- id: q115
+  question: 'What does this print?
 
-  - id: q024
-    question: "What does str(5) do?"
-    options: ["Converts the number 5 into the text \"5\"", "Converts text into a number", "Prints 5", "Adds 5 to a string"]
-    correct: 0
-    explanation: "str() converts a value into a string, which is often needed before joining it with other text using +."
+    x = 5
 
-  - id: q025
-    question: "What does input() do?"
-    options: ["Pauses the program and waits for the player to type something", "Prints text to the screen", "Runs a loop", "Creates a variable automatically"]
-    correct: 0
-    explanation: "input() waits for the player to type an answer and press Enter."
+    x = "five"
 
-  - id: q026
-    question: "What type of value does input() always return, even if the player types a number?"
-    options: ["A string (text)", "An integer", "A float", "A boolean"]
-    correct: 0
-    explanation: "input() always gives back text -- you need int() or float() to use it as a number."
+    print(x)'
+  options:
+  - five
+  - '5'
+  - Error, because x already held a number
+  - 5five
+  correct: 0
+  explanation: Python lets a variable be reassigned to a completely different type -- the newest value always wins.
+- id: q116
+  question: After x = 5 and then x = "five", what does type(x) report?
+  options:
+  - <class 'str'>
+  - <class 'int'>
+  - Both int and str at once
+  - Error
+  correct: 0
+  explanation: A variable's type is whatever its current value is -- reassigning it to text makes it a string now.
+- id: q117
+  question: Can the same variable hold a number at one point in a program and text later on?
+  options:
+  - Yes -- Python variables can be reassigned to any type at any time
+  - No -- once a variable is a number, it must always stay a number
+  - Only if you use int() first
+  - Only if the variable is inside a function
+  correct: 0
+  explanation: Python doesn't lock a variable to one type -- reassigning it can change both its value and its type.
+- id: q118
+  question: 'What does this print?
 
-  - id: q027
-    question: "How do you turn what the player typed into a whole number?"
-    options: ["int(input())", "str(input())", "input(int())", "number(input())"]
-    correct: 0
-    explanation: "Wrapping input() in int() converts the typed text into a whole number."
+    count = 1
 
-  - id: q028
-    question: "What does this print if the player types Sam?\nname = input(\"Name? \")\nprint(\"Hi \" + name)"
-    options: ["Hi Sam", "Hi name", "name", "Error"]
-    correct: 0
-    explanation: "The name variable now holds \"Sam\", so joining it with \"Hi \" prints \"Hi Sam\"."
+    count = 2
 
-  - id: q029
-    question: "What does 5 > 3 evaluate to?"
-    options: ["True", "False", "2", "Error"]
-    correct: 0
-    explanation: "5 is greater than 3, so the comparison is True."
+    count = 3
 
-  - id: q030
-    question: "Which symbol checks if two values are equal in Python?"
-    options: ["==", "=", "=>", "!="]
-    correct: 0
-    explanation: "A single = assigns a value, but a double == checks if two things are equal."
+    print(count)'
+  options:
+  - '3'
+  - '1'
+  - '6'
+  - 1 2 3
+  correct: 0
+  explanation: Each reassignment replaces the value before it, so only the final one, 3, is left when count is printed.
+- id: q119
+  question: What is an augmented assignment operator like += used for?
+  options:
+  - Combining a math operation and an assignment into a single step
+  - Comparing two variables to see if they're equal
+  - Declaring a brand-new function
+  - Deleting a variable from memory
+  correct: 0
+  explanation: Operators like += do the math and store the result back into the variable, all in one line.
+- id: q120
+  question: What does the /= operator do?
+  options:
+  - Divides the variable by a value and stores the result back in the variable
+  - Multiplies the variable by a value
+  - Checks whether two variables are equal
+  - Divides and always rounds down to a whole number
+  correct: 0
+  explanation: score /= 2 is shorthand for score = score / 2.
+- id: q121
+  question: 'What does this print?
 
-  - id: q031
-    question: "What does != mean?"
-    options: ["Not equal to", "Equal to", "Not greater than", "Divides"]
-    correct: 0
-    explanation: "!= checks whether two values are different from each other."
+    score = 100
 
-  - id: q032
-    question: "What will this print?\nif 7 > 3:\n    print(\"Yes\")\nelse:\n    print(\"No\")"
-    options: ["Yes", "No", "Both", "Nothing"]
-    correct: 0
-    explanation: "7 is greater than 3, so the condition is True and the if block runs."
+    score /= 4
 
-  - id: q033
-    question: "What must come right after the condition in an if statement?"
-    options: ["A colon :", "A semicolon ;", "A period .", "Nothing"]
-    correct: 0
-    explanation: "Python requires a colon at the end of an if line, before the indented block."
+    print(score)'
+  options:
+  - '25.0'
+  - '25'
+  - '400'
+  - '4.0'
+  correct: 0
+  explanation: / always produces a decimal (float) result, even when the numbers divide evenly, so /= does too.
+- id: q122
+  question: 'What does this print?
 
-  - id: q034
-    question: "How does Python know which lines belong inside an if block?"
-    options: ["They're indented (spaced in)", "They're in ALL CAPS", "They end in a semicolon", "They're wrapped in curly braces {}"]
-    correct: 0
-    explanation: "Python uses indentation (spacing), not braces, to group lines together."
+    x = 10
 
-  - id: q035
-    question: "How many times does the loop body repeat for `for i in range(5):`?"
-    options: ["5 times", "4 times", "6 times", "Forever"]
-    correct: 0
-    explanation: "range(5) produces 0, 1, 2, 3, 4 -- five numbers, so the loop runs 5 times."
+    x *= 3
 
-  - id: q036
-    question: "What does a while loop do?"
-    options: ["Repeats as long as its condition stays True", "Runs exactly once", "Runs a fixed number of times only", "Stops the program"]
-    correct: 0
-    explanation: "A while loop keeps repeating until its condition becomes False."
+    x -= 5
 
-  - id: q037
-    question: "What could cause a loop to run forever by mistake?"
-    options: ["Forgetting to change the condition inside the loop", "Using range() instead of while", "Using print() inside the loop", "Adding a colon at the end"]
-    correct: 0
-    explanation: "If nothing inside a while loop ever makes its condition False, the loop never stops."
+    print(x)'
+  options:
+  - '25'
+  - '30'
+  - '5'
+  - Error
+  correct: 0
+  explanation: 'The operators run in order: 10 * 3 makes 30, then 30 - 5 makes 25.'
+- id: q123
+  question: What is the shortcut form of lives = lives - 1?
+  options:
+  - lives -= 1
+  - lives =- 1
+  - lives — 1
+  - lives .- 1
+  correct: 0
+  explanation: -= subtracts a value from the variable and saves the result straight back into it.
+- id: q124
+  question: If you accidentally write x =+ 5 instead of x += 5, what happens?
+  options:
+  - x is simply set to 5, not increased by 5 -- =+ is just = followed by a positive sign
+  - It behaves exactly like x += 5
+  - Python refuses to run and shows a syntax error
+  - x is decreased by 5 instead
+  correct: 0
+  explanation: =+ isn't a real operator -- Python reads it as = followed by the number +5, so x just becomes 5.
+- id: q125
+  question: 'What does this print?
 
-  - id: q038
-    question: "What will this print?\nfor i in range(3):\n    print(i)"
-    options: ["0, 1, 2 on separate lines", "1, 2, 3", "3, 3, 3", "0, 1, 2, 3"]
-    correct: 0
-    explanation: "range(3) counts 0, 1, 2 -- Python starts counting at 0 by default."
+    score = 3
 
-  - id: q039
-    question: "How many times does `for i in range(1, 4):` run?"
-    options: ["3 times (1, 2, 3)", "4 times", "2 times", "1 time"]
-    correct: 0
-    explanation: "range(1, 4) starts at 1 and stops before 4, giving 1, 2, 3."
+    score *= 2
 
-  - id: q040
-    question: "What keyword immediately exits a loop early?"
-    options: ["break", "stop", "end", "exit"]
-    correct: 0
-    explanation: "break immediately stops the loop, skipping any remaining repeats."
+    score += 1
 
-  - id: q041
-    question: "What keyword do you use to create your own function?"
-    options: ["def", "func", "function", "define"]
-    correct: 0
-    explanation: "def starts a function definition in Python, e.g. def greet():"
+    print(score)'
+  options:
+  - '7'
+  - '6'
+  - '8'
+  - '9'
+  correct: 0
+  explanation: '*= doubles score to 6 first, then += 1 adds one more, making 7.'
+- id: q126
+  question: What does print(2 + 3 * 4) show?
+  options:
+  - '14'
+  - '20'
+  - '24'
+  - '9'
+  correct: 0
+  explanation: Python does multiplication before addition, so 3 * 4 happens first, then 2 is added.
+- id: q127
+  question: What does print((2 + 3) * 4) show?
+  options:
+  - '20'
+  - '14'
+  - '9'
+  - '24'
+  correct: 0
+  explanation: Parentheses run first, so 2 + 3 becomes 5 before it's multiplied by 4.
+- id: q128
+  question: What does print(3 - 10) show?
+  options:
+  - '-7'
+  - '7'
+  - '-13'
+  - '13'
+  correct: 0
+  explanation: Subtracting a bigger number from a smaller one gives a negative answer.
+- id: q129
+  question: What does print(-4 * 3) show?
+  options:
+  - '-12'
+  - '12'
+  - '-7'
+  - '-1'
+  correct: 0
+  explanation: A negative number times a positive number gives a negative result.
+- id: q130
+  question: What does print(-10 / 4) show?
+  options:
+  - '-2.5'
+  - '-2.0'
+  - '2.5'
+  - '-3.0'
+  correct: 0
+  explanation: / always gives a decimal answer, and dividing a negative number keeps the result negative.
+- id: q131
+  question: What does print(-7 // 2) show?
+  options:
+  - '-4'
+  - '-3'
+  - '-3.5'
+  - '3'
+  correct: 0
+  explanation: // always rounds down toward negative infinity, so -3.5 rounds down to -4, not up to -3.
+- id: q132
+  question: What does print(-7 % 2) show?
+  options:
+  - '1'
+  - '-1'
+  - '1.5'
+  - '-3'
+  correct: 0
+  explanation: In Python, the result of % always matches the sign of the second number, so it comes out positive here.
+- id: q133
+  question: What does print(abs(-8)) show?
+  options:
+  - '8'
+  - '-8'
+  - '0'
+  - '64'
+  correct: 0
+  explanation: abs() strips away the negative sign and returns the distance from zero.
+- id: q134
+  question: What does print(min(4, 9, 2)) show?
+  options:
+  - '2'
+  - '4'
+  - '9'
+  - '15'
+  correct: 0
+  explanation: min() looks through all the values given and returns the smallest one.
+- id: q135
+  question: What does print(max(2, 9, 4)) show?
+  options:
+  - '9'
+  - '4'
+  - '2'
+  - '15'
+  correct: 0
+  explanation: max() looks through all the values given and returns the largest one.
+- id: q136
+  question: What does print(round(3.7)) show?
+  options:
+  - '4'
+  - '3'
+  - '3.7'
+  - '4.0'
+  correct: 0
+  explanation: round() rounds to the nearest whole number, and 3.7 is closer to 4 than to 3.
+- id: q137
+  question: What does print(round(2.5)) show?
+  options:
+  - '2'
+  - '3'
+  - '2.5'
+  - '2.0'
+  correct: 0
+  explanation: Python rounds an exact .5 to the nearest even number, so 2.5 rounds down to 2.
+- id: q138
+  question: What does print(round(-2.5)) show?
+  options:
+  - '-2'
+  - '-3'
+  - '-2.5'
+  - '2'
+  correct: 0
+  explanation: The same round-to-even rule applies to negative numbers, so -2.5 rounds to -2, the nearest even number.
+- id: q139
+  question: What does print(round(3.14159, 2)) show?
+  options:
+  - '3.14'
+  - '3.1'
+  - '3.15'
+  - '3.142'
+  correct: 0
+  explanation: Giving round() a second number tells it how many decimal places to keep.
+- id: q140
+  question: What does print(5 <= 5) show?
+  options:
+  - 'True'
+  - 'False'
+  - '5'
+  - Error
+  correct: 0
+  explanation: <= means "less than or equal to," and since the two values are equal, this is True.
+- id: q141
+  question: What does print(3 >= 7) show?
+  options:
+  - 'False'
+  - 'True'
+  - '3'
+  - Error
+  correct: 0
+  explanation: 3 is not greater than or equal to 7, so the comparison is False.
+- id: q142
+  question: What does print(8 < 8) show?
+  options:
+  - 'False'
+  - 'True'
+  - '0'
+  - Error
+  correct: 0
+  explanation: < means strictly less than, so a number is never less than itself.
+- id: q143
+  question: What does print(0.1 + 0.2) show?
+  options:
+  - '0.30000000000000004'
+  - '0.3'
+  - '0.30000000000000003'
+  - '0.30000000000000002'
+  correct: 0
+  explanation: Computers store decimals in binary, so some simple-looking sums come out with a tiny rounding error.
+- id: q144
+  question: What does print(2 + 3 ** 2) show?
+  options:
+  - '11'
+  - '25'
+  - '10'
+  - '13'
+  correct: 0
+  explanation: '** happens before +, so 3 ** 2 becomes 9 first, then 2 is added.'
+- id: q145
+  question: What does print(10 - 4 // 2) show?
+  options:
+  - '8'
+  - '3'
+  - '5'
+  - '6'
+  correct: 0
+  explanation: // happens before -, so 4 // 2 becomes 2 first, then it's subtracted from 10.
+- id: q146
+  question: What does print(1 < 2 < 3) show?
+  options:
+  - 'True'
+  - 'False'
+  - '2'
+  - Error
+  correct: 0
+  explanation: Python can chain comparisons -- this checks both 1 < 2 and 2 < 3, and both are true.
+- id: q147
+  question: What does print(-2 ** 2) show?
+  options:
+  - '-4'
+  - '4'
+  - '-6'
+  - '2'
+  correct: 0
+  explanation: '** happens before the unary minus, so this is -(2 ** 2), which is -4.'
+- id: q148
+  question: What does print((-2) ** 2) show?
+  options:
+  - '4'
+  - '-4'
+  - '16'
+  - '-2'
+  correct: 0
+  explanation: The parentheses make Python square -2 itself, and a negative times a negative gives a positive result.
+- id: q149
+  question: What does print(6 % 6) show?
+  options:
+  - '0'
+  - '6'
+  - '1'
+  - '36'
+  correct: 0
+  explanation: A number divides evenly into itself, leaving no remainder.
+- id: q150
+  question: What does print(7.0 // 2) show?
+  options:
+  - '3.0'
+  - '3'
+  - '3.5'
+  - '4.0'
+  correct: 0
+  explanation: Floor division still rounds down to a whole number, but keeps the decimal point when one of the numbers is already a float.
+- id: q151
+  question: What does print(2.5 + 1.5) show?
+  options:
+  - '4.0'
+  - '4'
+  - '4.5'
+  - '3.0'
+  correct: 0
+  explanation: Adding two floats always gives a float back, even when the answer is a whole number like 4.
+- id: q152
+  question: What does print(0.5 * 4) show?
+  options:
+  - '2.0'
+  - '2'
+  - '2.5'
+  - '0.5'
+  correct: 0
+  explanation: Multiplying a float by a whole number still gives a float result.
+- id: q153
+  question: What does print(min(-3, -7)) show?
+  options:
+  - '-7'
+  - '-3'
+  - '3'
+  - '7'
+  correct: 0
+  explanation: -7 is further from zero in the negative direction, which makes it the smaller of the two numbers.
+- id: q154
+  question: What does print(max(-3, -7)) show?
+  options:
+  - '-3'
+  - '-7'
+  - '3'
+  - '7'
+  correct: 0
+  explanation: -3 is closer to zero than -7, which makes it the larger of the two numbers.
+- id: q155
+  question: What does print(abs(-3.5)) show?
+  options:
+  - '3.5'
+  - '-3.5'
+  - '3'
+  - '4'
+  correct: 0
+  explanation: abs() removes the negative sign but keeps the decimal part exactly as it was.
+- id: q156
+  question: What does print(5 + 2 * 3 - 1) show?
+  options:
+  - '10'
+  - '20'
+  - '16'
+  - '6'
+  correct: 0
+  explanation: 'Multiplication happens first (2 * 3 = 6), then the additions and subtractions run left to right: 5 + 6 - 1 = 10.'
+- id: q157
+  question: What does print(20 // 3) show?
+  options:
+  - '6'
+  - '6.67'
+  - '7'
+  - '2'
+  correct: 0
+  explanation: 20 divided by 3 is 6 with some left over, and // keeps only the whole-number part.
+- id: q158
+  question: What does print(20 % 3) show?
+  options:
+  - '2'
+  - '6'
+  - '0'
+  - '3'
+  correct: 0
+  explanation: 20 divided by 3 is 6 groups with 2 left over, and % gives you that leftover.
+- id: q159
+  question: What does print(9 ** 0.5) show?
+  options:
+  - '3.0'
+  - '4.5'
+  - '81'
+  - '3'
+  correct: 0
+  explanation: Raising a number to the power of 0.5 is the same as taking its square root.
+- id: q160
+  question: What does print(2 ** 10) show?
+  options:
+  - '1024'
+  - '20'
+  - '100'
+  - '512'
+  correct: 0
+  explanation: '** multiplies 2 by itself ten times, and the result doubles each time you add one more power.'
+- id: q161
+  question: What does print("Py" + "thon") show?
+  options:
+  - Python
+  - Py thon
+  - PyPython
+  - An error
+  correct: 0
+  explanation: + joins strings together exactly as written, with no space added automatically -- "Py" and "thon" become "Python".
+- id: q162
+  question: 'How do you fix print("Score: " + 5) so it doesn''t cause an error?'
+  options:
+  - 'print("Score: " + str(5))'
+  - 'print("Score: " - 5)'
+  - 'print("Score: ", + 5)'
+  - 'print("Score: " * 5)'
+  correct: 0
+  explanation: str(5) turns the number into text first, so it can safely join with another string using +.
+- id: q163
+  question: What does print("a" + "b" + "c") show?
+  options:
+  - abc
+  - a b c
+  - a, b, c
+  - c
+  correct: 0
+  explanation: You can chain + as many times as you like -- each string gets joined onto the end of the last one.
+- id: q164
+  question: Which line prints Good morning with a space between the words, using +?
+  options:
+  - print("Good" + " " + "morning")
+  - print("Good" + "morning")
+  - print("Good", + "morning")
+  - print("Good" - "morning")
+  correct: 0
+  explanation: + only joins exactly what you give it -- to get a space between two words, you have to include " " as its own piece.
+- id: q165
+  question: What does print("=" * 5) show?
+  options:
+  - =====
+  - = = = = =
+  - 5=
+  - An error
+  correct: 0
+  explanation: Multiplying a string by a number repeats that string that many times, with nothing extra added in between.
+- id: q166
+  question: What does print("ab" * 2) show?
+  options:
+  - abab
+  - ab2
+  - a b
+  - aabb
+  correct: 0
+  explanation: '"ab" * 2 repeats the whole string "ab" two times in a row.'
+- id: q167
+  question: What does print("wow" * 0) show?
+  options:
+  - Nothing -- an empty string
+  - wow
+  - '0'
+  - An error
+  correct: 0
+  explanation: Repeating a string zero times gives you an empty string, so print shows a blank line.
+- id: q168
+  question: Can you multiply two strings together, like "cat" * "dog"?
+  options:
+  - No, that causes an error -- * needs a string and a number
+  - Yes, it joins them into "catdog"
+  - Yes, it joins them with a space
+  - Yes, it repeats each letter twice
+  correct: 0
+  explanation: The * operator for strings needs a number to know how many times to repeat -- it can't multiply two pieces of text together.
+- id: q169
+  question: What does len("") return?
+  options:
+  - '0'
+  - '1'
+  - Nothing
+  - An error
+  correct: 0
+  explanation: An empty string has no characters in it at all, so its length is 0.
+- id: q170
+  question: What does len("Coding") return?
+  options:
+  - '6'
+  - '7'
+  - '5'
+  - Coding
+  correct: 0
+  explanation: len() counts every letter in the string, and C-o-d-i-n-g has 6 letters.
+- id: q171
+  question: What does len("Hi there") return?
+  options:
+  - '8'
+  - '7'
+  - '9'
+  - '2'
+  correct: 0
+  explanation: len() counts the space too, not just the letters -- H-i-space-t-h-e-r-e adds up to 8 characters.
+- id: q172
+  question: What does "cat"[0] give you?
+  options:
+  - c
+  - a
+  - t
+  - cat
+  correct: 0
+  explanation: Python counts positions starting at 0, so index 0 is the very first character.
+- id: q173
+  question: What does "hello"[1] give you?
+  options:
+  - e
+  - h
+  - l
+  - '1'
+  correct: 0
+  explanation: Counting from 0, position 1 is the second letter of "hello", which is e.
+- id: q174
+  question: If word = "dog", what does word[2] give you?
+  options:
+  - g
+  - d
+  - o
+  - dog
+  correct: 0
+  explanation: d is at index 0, o is at index 1, and g is at index 2 -- Python starts counting from 0.
+- id: q175
+  question: What is the index number of the very first letter in a string?
+  options:
+  - '0'
+  - '1'
+  - '-1'
+  - It depends on the string
+  correct: 0
+  explanation: Python always starts indexing at 0, so the first character in any string is at position 0.
+- id: q176
+  question: What does "Python"[4] give you?
+  options:
+  - o
+  - h
+  - n
+  - P
+  correct: 0
+  explanation: Counting from 0, the letters of "Python" are P(0) y(1) t(2) h(3) o(4) n(5), so index 4 is o.
+- id: q177
+  question: What happens if you run "cat"[5], where 5 is bigger than the last valid index?
+  options:
+  - An error, because that position doesn't exist
+  - It shows an empty space
+  - It shows the letter t again
+  - It shows "cat"
+  correct: 0
+  explanation: '"cat" only has indexes 0, 1, and 2 -- asking for index 5 goes past the end and causes an error.'
+- id: q178
+  question: What does print("HELLO".lower()) show?
+  options:
+  - hello
+  - HELLO
+  - Hello
+  - hELLO
+  correct: 0
+  explanation: .lower() turns every letter in the string into its lowercase version.
+- id: q179
+  question: What does print("Hi There".lower()) show?
+  options:
+  - hi there
+  - Hi There
+  - HI THERE
+  - hi There
+  correct: 0
+  explanation: .lower() changes every letter to lowercase, including the ones that started out capitalized.
+- id: q180
+  question: If text = "Hi" and you run text.upper(), does the value stored in text change?
+  options:
+  - No -- .upper() gives back a new string, but text still holds "Hi"
+  - Yes -- text now holds "HI"
+  - Yes, but only the first letter changes in text
+  - No, and .upper() also doesn't produce anything at all
+  correct: 0
+  explanation: String methods like .upper() don't change the original string -- they return a brand new one, so you'd need to store it in a variable to keep it.
+- id: q181
+  question: What does print("  hi  ".strip()) show?
+  options:
+  - hi
+  - '  hi  '
+  - ' hi'
+  - 'hi  '
+  correct: 0
+  explanation: .strip() removes extra spaces from both the start and the end of a string, but leaves spaces in the middle alone.
+- id: q182
+  question: What is the .strip() method mainly used for?
+  options:
+  - Removing extra spaces from the start and end of a string
+  - Removing all spaces anywhere in a string
+  - Making letters lowercase
+  - Cutting a string in half
+  correct: 0
+  explanation: strip() is a cleanup tool -- it trims stray spaces off the edges of text, which is handy after someone types an answer.
+- id: q183
+  question: What does print("cat".replace("c", "b")) show?
+  options:
+  - bat
+  - cat
+  - bbb
+  - b
+  correct: 0
+  explanation: .replace() swaps every match of the first piece of text for the second, so the c becomes b.
+- id: q184
+  question: What does print("I like dogs".replace("dogs", "cats")) show?
+  options:
+  - I like cats
+  - I like dogs
+  - I like catsdogs
+  - I like dogscats
+  correct: 0
+  explanation: .replace() finds "dogs" in the sentence and swaps it out for "cats", leaving the rest unchanged.
+- id: q185
+  question: What does print("a b c".split()) show?
+  options:
+  - '[''a'', ''b'', ''c'']'
+  - a b c
+  - '''a b c'''
+  - abc
+  correct: 0
+  explanation: .split() breaks a string apart wherever there's a space, giving you back a list of the pieces.
+- id: q186
+  question: What does the .split() method do to a string, by default?
+  options:
+  - Breaks it into a list of words, splitting at the spaces
+  - Cuts it into exactly two pieces
+  - Removes all the spaces
+  - Joins its letters with spaces
+  correct: 0
+  explanation: Without telling it otherwise, .split() looks for spaces and uses them as the dividing points between words.
+- id: q187
+  question: What does print("hello world".title()) show?
+  options:
+  - Hello World
+  - HELLO WORLD
+  - hello world
+  - Hello world
+  correct: 0
+  explanation: .title() capitalizes the first letter of every word in the string.
+- id: q188
+  question: What does print("banana".count("a")) show?
+  options:
+  - '3'
+  - '2'
+  - '6'
+  - '1'
+  correct: 0
+  explanation: .count() tells you how many times a piece of text appears -- "banana" has three a's.
+- id: q189
+  question: What does print("mississippi".count("s")) show?
+  options:
+  - '4'
+  - '2'
+  - '3'
+  - '5'
+  correct: 0
+  explanation: Counting each s in "mississippi" one at a time gives four matches.
+- id: q190
+  question: 'What does this print?
 
-  - id: q042
-    question: "What does return do inside a function?"
-    options: ["Sends a value back out of the function", "Prints a value", "Stops the whole program", "Repeats the function"]
-    correct: 0
-    explanation: "return hands a result back to whatever called the function, so it can be used elsewhere."
+    name = "Max"
 
-  - id: q043
-    question: "What does this print?\ndef double(x):\n    return x * 2\nprint(double(4))"
-    options: ["8", "4", "42", "Error"]
-    correct: 0
-    explanation: "double(4) runs the function with x = 4, returning 4 * 2 = 8."
+    print(f"Hi {name}!")'
+  options:
+  - Hi Max!
+  - Hi name!
+  - Hi {name}!
+  - f"Hi Max!"
+  correct: 0
+  explanation: An f-string swaps out {name} for the value stored in the name variable, giving you Hi Max!.
+- id: q191
+  question: In an f-string, what do the curly braces {} do?
+  options:
+  - Insert the value of a variable into the text
+  - Mark the start and end of a comment
+  - Make the text inside them bold
+  - Cause an error if used
+  correct: 0
+  explanation: Anything placed inside {} in an f-string gets swapped out for its actual value when the string is printed.
+- id: q192
+  question: Which letter must come right before the opening quote to make a string an f-string?
+  options:
+  - f
+  - s
+  - i
+  - x
+  correct: 0
+  explanation: Writing f right before the quote tells Python to look inside the string for {} and fill them in with real values.
+- id: q193
+  question: 'What does this print?
 
-  - id: q044
-    question: "In def greet(name):, what is name called?"
-    options: ["A parameter", "A return value", "A loop", "A comment"]
-    correct: 0
-    explanation: "name is a parameter -- a placeholder for whatever value gets passed in when the function is called."
+    age = 10
 
-  - id: q045
-    question: "How do you call (run) a function named say_hi?"
-    options: ["say_hi()", "call say_hi", "run(say_hi)", "say_hi"]
-    correct: 0
-    explanation: "Parentheses after the function name is what actually runs it -- just typing the name alone does not call it."
+    print(f"I am {age} years old")'
+  options:
+  - I am 10 years old
+  - I am age years old
+  - I am {age} years old
+  - '10'
+  correct: 0
+  explanation: The f-string replaces {age} with the value stored in age, which is 10.
+- id: q194
+  question: 'What does print("Age: " + str(12)) show?'
+  options:
+  - 'Age: 12'
+  - An error
+  - 'Age: str(12)'
+  - Age:12
+  correct: 0
+  explanation: str(12) turns the number 12 into the text "12", so it can be safely joined with another string using +.
+- id: q195
+  question: What kind of value does str(3.5) return?
+  options:
+  - A string (text)
+  - A number
+  - A list
+  - A boolean
+  correct: 0
+  explanation: str() converts whatever you give it into text, so str(3.5) produces the string "3.5", not a number anymore.
+- id: q196
+  question: In an if/elif/else chain, what happens once one condition is found to be True?
+  options:
+  - Python runs that block and skips the rest of the chain
+  - Python runs that block and then checks the remaining conditions anyway
+  - Python runs every block in the chain
+  - Python runs only the else block
+  correct: 0
+  explanation: As soon as Python finds a True condition, it runs that block and moves on -- the rest of the elif/else chain is skipped.
+- id: q197
+  question: "What does this print?\nscore = 75\nif score >= 90:\n    print(\"A\")\nelif score >= 70:\n    print(\"B\")\nelse:\n    print(\"C\")"
+  options:
+  - B
+  - A
+  - C
+  - Nothing
+  correct: 0
+  explanation: score >= 90 is False, but score >= 70 is True, so the elif branch runs and prints B.
+- id: q198
+  question: What does the >= operator check?
+  options:
+  - Whether the left value is greater than or equal to the right value
+  - Whether the left value is greater than the right value only
+  - Whether the left value is equal to the right value
+  - Whether the left value is less than the right value
+  correct: 0
+  explanation: '>= is true when the left side is bigger than the right side, or exactly the same.'
+- id: q199
+  question: What does the <= operator check?
+  options:
+  - Whether the left value is less than or equal to the right value
+  - Whether the left value is less than the right value only
+  - Whether the left value is equal to the right value
+  - Whether the left value is greater than the right value
+  correct: 0
+  explanation: <= is true when the left side is smaller than the right side, or exactly the same.
+- id: q200
+  question: For a condition using and to be True, what must happen?
+  options:
+  - Both conditions on either side must be True
+  - At least one of the conditions must be True
+  - Exactly one of the conditions must be True
+  - Neither condition needs to be True
+  correct: 0
+  explanation: and only produces True when both sides are True -- if either side is False, the whole thing is False.
+- id: q201
+  question: For a condition using or to be True, what must happen?
+  options:
+  - At least one of the conditions must be True
+  - Both conditions must be True
+  - Neither condition can be True
+  - The first condition must be False
+  correct: 0
+  explanation: or produces True as long as one side (or both) is True.
+- id: q202
+  question: What does the not operator do to a boolean value?
+  options:
+  - Flips True to False and False to True
+  - Always turns the value into True
+  - Always turns the value into False
+  - Combines two separate conditions
+  correct: 0
+  explanation: not reverses a boolean -- True becomes False and False becomes True.
+- id: q203
+  question: What does print(True and False) show?
+  options:
+  - 'False'
+  - 'True'
+  - Error
+  - None
+  correct: 0
+  explanation: and needs both sides to be True, but here one side is False, so the result is False.
+- id: q204
+  question: What does print(True or False) show?
+  options:
+  - 'True'
+  - 'False'
+  - Error
+  - None
+  correct: 0
+  explanation: or only needs one side to be True, and the first side here is True, so the result is True.
+- id: q205
+  question: What does print(not True) show?
+  options:
+  - 'False'
+  - 'True'
+  - Error
+  - None
+  correct: 0
+  explanation: not flips True into its opposite, False.
+- id: q206
+  question: Which of these values is "falsy" when used as an if condition?
+  options:
+  - '"" (an empty string)'
+  - '"0" (the string zero)'
+  - '" " (a single space)'
+  - '"False" (the word False as text)'
+  correct: 0
+  explanation: An empty string has no characters, so Python treats it as falsy -- any non-empty string, even "0", is truthy.
+- id: q207
+  question: Which number is "falsy" when used as an if condition?
+  options:
+  - '0'
+  - '1'
+  - '-1'
+  - '100'
+  correct: 0
+  explanation: 0 is the only falsy number -- every other number, positive or negative, counts as truthy.
+- id: q208
+  question: Which of these is "falsy" in Python?
+  options:
+  - '[] (an empty list)'
+  - '[0] (a list holding zero)'
+  - '[False] (a list holding False)'
+  - '[None] (a list holding None)'
+  correct: 0
+  explanation: An empty list has no items, so it's falsy -- a list that contains something, even a falsy value like 0, is still truthy.
+- id: q209
+  question: Is None considered truthy or falsy when used in an if statement?
+  options:
+  - Falsy
+  - Truthy
+  - It causes an error
+  - It depends on the variable's name
+  correct: 0
+  explanation: None represents "nothing," so Python treats it as falsy.
+- id: q210
+  question: What is a "nested" if statement?
+  options:
+  - An if statement placed inside another if or else block
+  - An if statement written with no condition
+  - Two if statements joined together with and
+  - An if statement written all on one line
+  correct: 0
+  explanation: Nesting means putting one if statement's whole block inside another if's block, so the inner check only happens if the outer one passed.
+- id: q211
+  question: "What does this print?\nx = 10\nif x > 5:\n    if x > 8:\n        print(\"big\")\n    else:\n        print(\"medium\")\nelse:\n    print(\"small\")"
+  options:
+  - big
+  - medium
+  - small
+  - Nothing
+  correct: 0
+  explanation: 'x > 5 is True, so Python checks the inner if: x > 8 is also True, so it prints big.'
+- id: q212
+  question: What's the key difference between an elif chain and two separate if statements?
+  options:
+  - In an elif chain only one branch can run, but separate if statements are each checked independently and more than one can run
+  - elif runs faster but behaves exactly like separate ifs
+  - Separate if statements can only be used with numbers
+  - elif can only appear once in an entire program
+  correct: 0
+  explanation: elif links conditions together so Python stops at the first match, while separate ifs are unrelated checks that can all run.
+- id: q213
+  question: What does "cat" == "cat" evaluate to?
+  options:
+  - 'True'
+  - 'False'
+  - Error
+  - cat
+  correct: 0
+  explanation: Both strings have the exact same letters in the same order, so == says they're equal.
+- id: q214
+  question: What does "Cat" == "cat" evaluate to?
+  options:
+  - 'False'
+  - 'True'
+  - Error
+  - cat
+  correct: 0
+  explanation: Python compares text case-sensitively, so a capital C makes the strings different.
+- id: q215
+  question: What does 5 == "5" evaluate to?
+  options:
+  - 'False'
+  - 'True'
+  - Error
+  - '5'
+  correct: 0
+  explanation: The number 5 and the text "5" are different data types, so Python considers them not equal.
+- id: q216
+  question: What does 1 < 5 < 10 evaluate to?
+  options:
+  - 'True'
+  - 'False'
+  - Error -- Python doesn't allow chained comparisons
+  - '5'
+  correct: 0
+  explanation: Python lets you chain comparisons -- it checks that 5 is bigger than 1 and smaller than 10, and both are true.
+- id: q217
+  question: What does 10 < 5 < 20 evaluate to?
+  options:
+  - 'False'
+  - 'True'
+  - Error
+  - '5'
+  correct: 0
+  explanation: 10 < 5 is already False, so the whole chained comparison is False, no matter what comes after.
+- id: q218
+  question: In the expression not True and False, which operator does Python apply first?
+  options:
+  - not, since it has higher precedence than and
+  - and, since it always runs before not
+  - They happen at the exact same time
+  - Python requires parentheses before it can decide
+  correct: 0
+  explanation: not binds tighter than and, so Python flips True to False first, then applies and.
+- id: q219
+  question: In a condition like A or B, if A is already True, what does Python do with B?
+  options:
+  - It skips checking B, since the result is already known to be True
+  - It always checks B anyway
+  - It raises an error
+  - It checks B before A
+  correct: 0
+  explanation: or short-circuits -- once one side is True, the overall result is True, so there's no need to check the rest.
+- id: q220
+  question: In a condition like A and B, if A is already False, what does Python do with B?
+  options:
+  - It skips checking B, since the result is already known to be False
+  - It still evaluates B and ignores the result
+  - It raises an error
+  - It automatically makes the whole condition True
+  correct: 0
+  explanation: and short-circuits -- once one side is False, the overall result must be False, so Python doesn't bother checking B.
+- id: q221
+  question: What data type does an expression like 10 > 2 always produce?
+  options:
+  - A boolean (True or False)
+  - An integer
+  - A string
+  - A list
+  correct: 0
+  explanation: Comparisons always evaluate to one of the two boolean values, True or False.
+- id: q222
+  question: "What does this print?\ntemp = 50\nif temp > 80:\n    print(\"hot\")\nelif temp > 60:\n    print(\"warm\")\nelif temp > 40:\n    print(\"cool\")\nelse:\n    print(\"cold\")"
+  options:
+  - cool
+  - warm
+  - hot
+  - cold
+  correct: 0
+  explanation: temp > 80 and temp > 60 are both False, but temp > 40 is True, so Python prints cool and stops there.
+- id: q223
+  question: Is the else part of an if statement required?
+  options:
+  - No -- you can write an if (and even elif) with no else at all
+  - Yes, every if statement must have an else
+  - Yes, but only when there's an elif
+  - No, but only if there's no condition
+  correct: 0
+  explanation: else is optional -- if none of the conditions are True and there's no else, Python simply runs nothing.
+- id: q224
+  question: Can you write an elif without a preceding if statement?
+  options:
+  - No, elif must follow an if (or another elif) that came before it
+  - Yes, elif works fine completely on its own
+  - Yes, but only inside a function
+  - Yes, but only inside a loop
+  correct: 0
+  explanation: elif means "else, if this instead" -- it only makes sense as part of a chain that starts with an if.
+- id: q225
+  question: What does 5 != 5 evaluate to?
+  options:
+  - 'False'
+  - 'True'
+  - Error
+  - '5'
+  correct: 0
+  explanation: 5 and 5 are equal, so asking whether they are NOT equal gives False.
+- id: q226
+  question: Is the number 0.0 truthy or falsy when used as an if condition?
+  options:
+  - Falsy
+  - Truthy
+  - It causes an error
+  - Only falsy inside loops
+  correct: 0
+  explanation: 0.0 is Python's decimal version of zero, and like the whole number 0, it counts as falsy.
+- id: q227
+  question: If an if statement is nested inside another if's block, how is its code indented compared to the outer if?
+  options:
+  - It's indented one extra level deeper than the outer if's block
+  - It's indented one level less than the outer if
+  - It uses the exact same indentation as the outer if
+  - Indentation doesn't matter for nested ifs
+  correct: 0
+  explanation: Each level of nesting adds one more indent, showing Python (and you!) which if a line belongs to.
+- id: q228
+  question: "What does this print?\nscore = 95\npassed = score >= 60\nif passed:\n    if score >= 90:\n        print(\"Honors\")\n    else:\n        print(\"Pass\")\nelse:\n    print(\"Fail\")"
+  options:
+  - Honors
+  - Pass
+  - Fail
+  - Nothing
+  correct: 0
+  explanation: 'passed is True, so Python checks the inner if: score >= 90 is also True, so it prints Honors.'
+- id: q229
+  question: Which of these correctly checks whether the boolean variable is_raining is True?
+  options:
+  - 'if is_raining:'
+  - 'if is_raining = True:'
+  - 'if raining is is_raining:'
+  - 'when is_raining:'
+  correct: 0
+  explanation: A boolean variable can be used directly as a condition -- no extra comparison is needed.
+- id: q230
+  question: "What does this print?\nage = 10\nhas_ticket = True\nif age >= 5 and has_ticket:\n    print(\"Can ride\")\nelse:\n    print(\"Cannot ride\")"
+  options:
+  - Can ride
+  - Cannot ride
+  - 'True'
+  - Error
+  correct: 0
+  explanation: age >= 5 is True and has_ticket is True, so both sides of and are True, and Python prints Can ride.
+- id: q231
+  question: What numbers does `range(2, 10, 2)` produce?
+  options:
+  - 2, 4, 6, 8
+  - 2, 4, 6, 8, 10
+  - 0, 2, 4, 6, 8
+  - 2, 4, 6, 8, 10, 12
+  correct: 0
+  explanation: range(2, 10, 2) starts at 2 and adds 2 each time, stopping before it reaches 10.
+- id: q232
+  question: What does `range(10, 0, -1)` do?
+  options:
+  - Counts down from 10 to 1
+  - Counts down from 10 to 0
+  - Counts up from 0 to 10
+  - Causes an error
+  correct: 0
+  explanation: A step of -1 counts backward one number at a time, stopping just before it reaches 0.
+- id: q233
+  question: How many times does the loop body run for `for i in range(5, 5):`?
+  options:
+  - 0 times -- the loop body never runs
+  - 5 times
+  - 1 time
+  - Forever
+  correct: 0
+  explanation: Since the start and stop are the same number, range(5, 5) is empty, so there's nothing to loop over.
+- id: q234
+  question: In `range(start, stop, step)`, what does the step control?
+  options:
+  - How much the count changes each time
+  - How many total numbers appear
+  - The very first number range starts at
+  - Where counting stops
+  correct: 0
+  explanation: The step is the size of each jump, like counting by 2s or 5s instead of 1s.
+- id: q235
+  question: What does `range(0, 20, 5)` produce?
+  options:
+  - 0, 5, 10, 15
+  - 0, 5, 10, 15, 20
+  - 5, 10, 15, 20
+  - 0, 4, 8, 12, 16
+  correct: 0
+  explanation: Counting from 0 by 5s stops right before reaching 20, so 20 itself is never included.
+- id: q236
+  question: What does `range(-3)` produce?
+  options:
+  - Nothing -- the loop body never runs
+  - -3, -2, -1
+  - -3, -2, -1, 0
+  - An error
+  correct: 0
+  explanation: With only one argument, range always counts up starting at 0, so it can never reach a negative number like -3.
+- id: q237
+  question: What does `range(1, 10, 3)` produce?
+  options:
+  - 1, 4, 7
+  - 1, 4, 7, 10
+  - 1, 3, 6, 9
+  - 3, 6, 9
+  correct: 0
+  explanation: Starting at 1 and adding 3 each time gives 1, 4, 7 -- the next jump would land on 10, which is excluded.
+- id: q238
+  question: Does `range(5)` ever include the number 5?
+  options:
+  - No -- it stops right before 5
+  - Yes, it's the last number produced
+  - Yes, but only with a step of 1
+  - Only on some computers
+  correct: 0
+  explanation: range(5) counts 0 through 4 -- the stop value is always left out.
+- id: q239
+  question: "What does this print?\nfor fruit in [\"apple\", \"banana\"]:\n    print(fruit)"
+  options:
+  - apple then banana, each on its own line
+  - '["apple", "banana"]'
+  - applebanana
+  - banana then apple
+  correct: 0
+  explanation: A for loop can step through a list directly, giving you one item -- in list order -- each time around.
+- id: q240
+  question: "What does this print?\nfor letter in \"cat\":\n    print(letter)"
+  options:
+  - c, a, t on separate lines
+  - cat
+  - c a t all on one line
+  - t, a, c on separate lines
+  correct: 0
+  explanation: Looping over a string visits it one character at a time, in order.
+- id: q241
+  question: Is `for cat in range(3):` a legal for loop?
+  options:
+  - Yes -- any valid variable name works as the loop variable
+  - No, loop variables must be named i, j, or k
+  - No, loop variables must be a single letter
+  - Only if the word is a real animal
+  correct: 0
+  explanation: The loop variable is just a regular variable name -- Python doesn't care what word you use, as long as it follows normal naming rules.
+- id: q242
+  question: What is a for loop best used for?
+  options:
+  - Repeating an action a set number of times, or once for each item in a collection
+  - Pausing the program until the user responds
+  - Making a decision between two options
+  - Storing multiple values in one place
+  correct: 0
+  explanation: for loops are built for stepping through a known sequence, like a range of numbers or a list.
+- id: q243
+  question: When might you choose a while loop instead of a for loop?
+  options:
+  - When you don't know ahead of time how many times you'll need to repeat
+  - When you want to repeat exactly 5 times
+  - When you need to loop over a list
+  - When you want to avoid indenting your code
+  correct: 0
+  explanation: A while loop keeps going based on a condition, which is handy when you can't predict the number of repeats in advance.
+- id: q244
+  question: "What happens with `while True:\n    print(\"Hi\")` if there's no break anywhere inside it?"
+  options:
+  - It prints Hi forever, since the condition is always True
+  - It prints Hi once and stops
+  - It's a syntax error
+  - It prints Hi exactly 100 times
+  correct: 0
+  explanation: while True never becomes False on its own, so without a break the loop has no way to stop.
+- id: q245
+  question: "What line is missing to stop this loop from running forever?\ncount = 0\nwhile count < 5:\n    print(count)"
+  options:
+  - count = count + 1, inside the loop
+  - print(count) should be removed
+  - while should be changed to for
+  - count < 5 should become count > 5
+  correct: 0
+  explanation: Without updating count inside the loop, the condition count < 5 never changes, so it stays True forever.
+- id: q246
+  question: "In a guessing game, what does this pattern do?\nwhile True:\n    guess = input(\"Guess: \")\n    if guess == secret:\n        break"
+  options:
+  - Keeps asking until the player gives the right answer, then stops
+  - Asks the question exactly once
+  - Never stops, even with the right answer
+  - Asks the question a random number of times
+  correct: 0
+  explanation: Combining while True with a break inside an if is a common way to repeat something until a condition is met.
+- id: q247
+  question: If a break is inside the inner loop of a nested loop, which loop does it stop?
+  options:
+  - Only the loop it's directly inside (the innermost one)
+  - Every loop it's nested inside, all at once
+  - Only the outermost loop
+  - The whole program
+  correct: 0
+  explanation: break only stops the loop that directly contains it -- any outer loops keep going.
+- id: q248
+  question: What does the continue keyword do inside a loop?
+  options:
+  - Skips the rest of the current repeat and jumps to the next one
+  - Stops the loop completely
+  - Repeats the current pass one extra time
+  - Pauses the loop until the user presses a key
+  correct: 0
+  explanation: continue cuts the current lap short but lets the loop keep going for the remaining repeats.
+- id: q249
+  question: What's the key difference between break and continue?
+  options:
+  - break exits the loop entirely; continue just skips to the next repeat
+  - They do exactly the same thing
+  - break skips one repeat; continue exits the loop entirely
+  - Both stop the whole program
+  correct: 0
+  explanation: break ends the loop for good, while continue only skips ahead to the next round.
+- id: q250
+  question: "What will this print?\nfor i in range(5):\n    if i == 3:\n        break\n    print(i)"
+  options:
+  - 0, 1, 2 -- then the loop stops
+  - 0, 1, 2, 3, 4
+  - 0, 1, 2, 4
+  - Nothing prints
+  correct: 0
+  explanation: break fires as soon as i reaches 3, ending the loop before it can print 3 or anything after.
+- id: q251
+  question: "What will this print?\nfor i in range(5):\n    if i == 3:\n        continue\n    print(i)"
+  options:
+  - 0, 1, 2, 4 -- 3 gets skipped
+  - 0, 1, 2 -- then the loop stops
+  - 0, 1, 2, 3, 4
+  - Only 3
+  correct: 0
+  explanation: continue skips just the print for i == 3, then the loop carries on normally with 4.
+- id: q252
+  question: After a break exits a loop, where does the program go next?
+  options:
+  - It moves on to the first line after the loop
+  - It jumps back to the top of the program
+  - It ends the entire program
+  - It jumps ahead to the next loop's last repeat
+  correct: 0
+  explanation: break only ends that one loop -- the rest of the program keeps running normally right after it.
+- id: q253
+  question: What is a nested loop?
+  options:
+  - A loop written inside the body of another loop
+  - Two loops written one after another
+  - A loop that calls itself
+  - A loop with two separate conditions
+  correct: 0
+  explanation: Nesting means putting one loop's whole indented block inside another loop's indented block.
+- id: q254
+  question: "How many total times does the inner loop's body run here?\nfor i in range(3):\n    for j in range(4):\n        print(\"*\")"
+  options:
+  - 12 times
+  - 7 times
+  - 3 times
+  - 4 times
+  correct: 0
+  explanation: The inner loop runs fully (4 times) for every single pass of the outer loop (3 times), so 3 x 4 = 12.
+- id: q255
+  question: "What will this print?\nfor i in range(2):\n    for j in range(2):\n        print(i, j)"
+  options:
+  - 0 0, 0 1, 1 0, 1 1 -- each pair on its own line
+  - 0 0, 1 1
+  - 0 1, 1 0
+  - 0 0, 0 1, 0 0, 0 1
+  correct: 0
+  explanation: For every value of i, the inner loop runs completely through all its j values before i changes again.
+- id: q256
+  question: In a nested loop, does the inner loop always finish all its repeats before the outer loop moves to its next value?
+  options:
+  - Yes, every time
+  - No, they alternate one step at a time
+  - No, the outer loop always finishes first
+  - It depends on how fast the computer is
+  correct: 0
+  explanation: Each pass through the outer loop runs the entire inner loop from start to finish before control returns.
+- id: q257
+  question: Which range() call correctly prints the numbers 1 through 10, inclusive?
+  options:
+  - range(1, 11)
+  - range(1, 10)
+  - range(0, 10)
+  - range(1, 10, 1)
+  correct: 0
+  explanation: range stops before its second number, so you need one more than the last number you want -- range(1, 11) reaches 10.
+- id: q258
+  question: What's wrong with using `range(1, 5)` if you wanted to print the numbers 1 through 5?
+  options:
+  - It only produces 1, 2, 3, 4 -- 5 is missing
+  - It produces 1, 2, 3, 4, 5 correctly
+  - It produces 0, 1, 2, 3, 4
+  - It causes an error
+  correct: 0
+  explanation: This is a classic off-by-one mistake -- range's stop value is never included, so you'd need range(1, 6) to include 5.
+- id: q259
+  question: In general, what is an "off-by-one" error?
+  options:
+  - A mistake where a loop runs one time too many or too few
+  - A mistake where a variable holds the wrong type of value
+  - A mistake where a loop never starts at all
+  - A typo in a print() statement
+  correct: 0
+  explanation: Off-by-one errors happen when the start or stop of a loop is set just one number away from what you actually meant.
+- id: q260
+  question: What happens if you forget the colon at the end of a for line, like `for i in range(5)`?
+  options:
+  - Python raises a SyntaxError
+  - Nothing -- colons are optional for loops
+  - The loop runs once instead of repeating
+  - The loop runs but skips the first number
+  correct: 0
+  explanation: Just like if statements, every for and while line must end with a colon before its indented block.
+- id: q261
+  question: What does `range(4, 1)` produce (no step given)?
+  options:
+  - Nothing -- the loop body never runs
+  - 4, 3, 2
+  - 4, 3, 2, 1
+  - 1, 2, 3, 4
+  correct: 0
+  explanation: Without a negative step, range can't count downward, so a start bigger than the stop just produces an empty range.
+- id: q262
+  question: How would you fix `range(4, 1)` so it correctly counts down from 4 to 2?
+  options:
+  - range(4, 1, -1)
+  - range(1, 4)
+  - range(4, -1)
+  - range(4, 1, 1)
+  correct: 0
+  explanation: Counting downward needs a negative step -- range(4, 1, -1) gives 4, 3, 2.
+- id: q263
+  question: Which loop type knows exactly how many times it will repeat before it even starts?
+  options:
+  - A for loop over a range, since the range fixes the count upfront
+  - A while loop, since its condition is checked in advance
+  - Both loop types always know in advance
+  - Neither loop type ever knows in advance
+  correct: 0
+  explanation: range(...) calculates its exact list of numbers before the loop begins, while a while loop's repeat count depends on when its condition happens to turn False.
+- id: q264
+  question: In loop talk, what does it mean to "iterate" over something?
+  options:
+  - To go through its items or numbers one at a time, in order
+  - To skip every other item
+  - To run the loop only once
+  - To stop the loop early
+  correct: 0
+  explanation: Iterating just means visiting each item in turn, which is exactly what a loop does.
+- id: q265
+  question: What's wrong with writing `while count = 5:` as a loop condition?
+  options:
+  - It's a SyntaxError -- comparing needs ==, not =
+  - Nothing, it works fine
+  - It creates an infinite loop
+  - It only runs when count is not 5
+  correct: 0
+  explanation: A single = assigns a value, but a loop condition needs == to compare values instead.
+- id: q266
+  question: What must come at the end of a def line, right after the parentheses?
+  options:
+  - 'A colon :'
+  - A semicolon ;
+  - A period .
+  - An equals sign =
+  correct: 0
+  explanation: Python uses a colon to show that an indented block of code follows, just like with if and for.
+- id: q267
+  question: "What does this print?\ndef do_nothing():\n    pass\nprint(do_nothing())"
+  options:
+  - None
+  - '0'
+  - Nothing at all, no output
+  - Error
+  correct: 0
+  explanation: A function with no return statement automatically gives back None.
+- id: q268
+  question: Which line correctly defines a function named add that takes two parameters, a and b?
+  options:
+  - 'def add(a, b):'
+  - 'def add a, b:'
+  - 'define add(a, b):'
+  - 'function add(a, b):'
+  correct: 0
+  explanation: Function definitions use def, the name, and parameters inside parentheses, ending with a colon.
+- id: q269
+  question: "def greet(name=\"friend\"):\n    print(\"Hi \" + name)\ngreet()\nWhat does this print?"
+  options:
+  - Hi friend
+  - 'Hi '
+  - Error, name is required
+  - Hi None
+  correct: 0
+  explanation: Since no argument was given, Python uses the default value "friend" for name.
+- id: q270
+  question: "def greet(name=\"friend\"):\n    print(\"Hi \" + name)\ngreet(\"Sam\")\nWhat does this print?"
+  options:
+  - Hi Sam
+  - Hi friend
+  - Hi Sam friend
+  - Error, too many arguments
+  correct: 0
+  explanation: Passing "Sam" overrides the default value, so name becomes "Sam" instead of "friend".
+- id: q271
+  question: In greet("Sam"), what do you call the value "Sam" that you're passing in?
+  options:
+  - An argument
+  - A parameter
+  - A default
+  - A return value
+  correct: 0
+  explanation: The value you plug in when calling a function is called an argument; the placeholder in the def line is the parameter.
+- id: q272
+  question: "def greet(name):\n    print(name)\ngreet()\nWhat happens when this runs?"
+  options:
+  - Python raises an error because name has no value
+  - It prints an empty line
+  - It prints None
+  - It prints "name"
+  correct: 0
+  explanation: Since name has no default value, Python needs an argument for it and raises an error when none is given.
+- id: q273
+  question: "What does this print?\ndef add(a, b):\n    return a + b\nprint(add(3, 5))"
+  options:
+  - '8'
+  - '35'
+  - Error
+  - '3'
+  correct: 0
+  explanation: add(3, 5) runs with a = 3 and b = 5, returning 3 + 5 = 8.
+- id: q274
+  question: "What does this print?\ndef triple(x):\n    return x * 3\nprint(triple(5))"
+  options:
+  - '15'
+  - '5'
+  - '53'
+  - Error
+  correct: 0
+  explanation: triple(5) runs with x = 5, returning 5 * 3 = 15.
+- id: q275
+  question: If you call say_hi() and then call say_hi() again right after, what happens?
+  options:
+  - Its code runs both times
+  - It only runs the first time
+  - The second call causes an error
+  - Both calls happen at once and only print once
+  correct: 0
+  explanation: A function runs its code every single time it's called, no matter how many times you call it.
+- id: q276
+  question: In a program that runs top to bottom, where must a function's def line appear compared to where you call it?
+  options:
+  - Before the line that calls it
+  - After the line that calls it
+  - It doesn't matter, order is never checked
+  - Inside the call itself
+  correct: 0
+  explanation: Python must read a function's definition before it can be called, or it won't know what the name means yet.
+- id: q277
+  question: Which of these is a valid name for a function?
+  options:
+  - calculate_total
+  - 2total
+  - calculate-total
+  - class
+  correct: 0
+  explanation: Function names can use letters, numbers, and underscores, but can't start with a digit, contain a hyphen, or reuse a reserved word like class.
+- id: q278
+  question: If you want to use a function's result later in a calculation, what should the function do?
+  options:
+  - return the value
+  - print the value
+  - only calculate it silently
+  - use input() to ask for it
+  correct: 0
+  explanation: print() only shows text on screen -- return hands the actual value back so your code can use it.
+- id: q279
+  question: "def greet(name, greeting=\"Hello\"):\n    print(greeting + \", \" + name + \"!\")\ngreet(\"Max\")\nWhat does this print?"
+  options:
+  - Hello, Max!
+  - Max, Hello!
+  - Hello, friend!
+  - Error, greeting is missing
+  correct: 0
+  explanation: name gets "Max" from the call, and greeting keeps its default value "Hello" since nothing else was given.
+- id: q280
+  question: What does numbers = [] create?
+  options:
+  - An empty list with no items yet
+  - A list containing one empty string
+  - An error
+  - A list containing the number 0
+  correct: 0
+  explanation: Square brackets with nothing inside make an empty list, ready for items to be added later.
+- id: q281
+  question: What type of value does numbers = [10, 20, 30] create?
+  options:
+  - A list
+  - A string
+  - A dictionary
+  - A tuple
+  correct: 0
+  explanation: Square brackets containing items separated by commas create a list.
+- id: q282
+  question: 'fruits = ["apple", "banana", "cherry"]
 
-  - id: q046
-    question: "Why do functions help organize code?"
-    options: ["They let you reuse the same steps without retyping them", "They make the program run slower", "They delete unused variables", "They only work with numbers"]
-    correct: 0
-    explanation: "A function packages up steps once so you can reuse them anywhere by calling its name."
+    print(fruits[5])
 
-  - id: q047
-    question: "How do you create a list of three fruits in Python?"
-    options: ["fruits = [\"apple\", \"banana\", \"cherry\"]", "fruits = (\"apple\", \"banana\", \"cherry\")", "fruits = {apple, banana, cherry}", "fruits = apple, banana, cherry"]
-    correct: 0
-    explanation: "Square brackets with items separated by commas create a list."
+    What happens when this runs?'
+  options:
+  - Python raises an error because there's no item at position 5
+  - It prints an empty string
+  - It prints None
+  - It prints the last item, "cherry"
+  correct: 0
+  explanation: fruits only has positions 0, 1, and 2, so asking for position 5 goes out of range and causes an error.
+- id: q283
+  question: If fruits = ["apple", "banana", "cherry"] has 3 items, what index gets you the LAST item?
+  options:
+  - '2'
+  - '3'
+  - '1'
+  - '0'
+  correct: 0
+  explanation: With 3 items at positions 0, 1, and 2, the last item sits at index 2 -- one less than the total count.
+- id: q284
+  question: Why does fruits[1] give you the SECOND item instead of the first?
+  options:
+  - Because Python starts counting list positions at 0
+  - Because Python starts counting at 1, like everyday counting
+  - Because lists are stored in random order
+  - Because fruits[1] is a typo for fruits[2]
+  correct: 0
+  explanation: Python lists are indexed starting at 0, so position 1 is actually the second item.
+- id: q285
+  question: 'pets = ["dog", "cat", "fish"]
 
-  - id: q048
-    question: "If fruits = [\"apple\", \"banana\", \"cherry\"], what does fruits[0] give you?"
-    options: ["apple", "banana", "cherry", "Error"]
-    correct: 0
-    explanation: "Python lists start counting from index 0, so fruits[0] is the first item, \"apple\"."
+    print("My pet is a " + pets[1])
 
-  - id: q049
-    question: "How do you add \"grape\" to the end of a list called fruits?"
-    options: ["fruits.append(\"grape\")", "fruits.add(\"grape\")", "fruits + \"grape\"", "fruits[grape]"]
-    correct: 0
-    explanation: ".append() adds a new item onto the end of a list."
+    What does this print?'
+  options:
+  - My pet is a cat
+  - My pet is a dog
+  - My pet is a fish
+  - Error
+  correct: 0
+  explanation: pets[1] is the second item, "cat", which gets joined onto the end of the string.
+- id: q286
+  question: If fruits has 3 items and you run fruits.append("grape"), how many items does fruits have now?
+  options:
+  - '4'
+  - '3'
+  - '5'
+  - '0'
+  correct: 0
+  explanation: .append() adds one new item onto the end, so the list grows by exactly 1.
+- id: q287
+  question: 'fruits = ["apple", "banana"]
 
-  - id: q050
-    question: "What does len(fruits) return if fruits has 3 items?"
-    options: ["3", "2", "0", "The last item"]
-    correct: 0
-    explanation: "len() counts how many items are in the list."
+    fruits.append("cherry")
 
-  - id: q051
-    question: "If fruits = [\"apple\", \"banana\", \"cherry\"], what will print(fruits[1]) show?"
-    options: ["banana", "apple", "cherry", "Error"]
-    correct: 0
-    explanation: "Index 1 is the second item, since counting starts at 0."
+    Where does "cherry" end up in the list?'
+  options:
+  - At the end, as the last item
+  - At the beginning, as the first item
+  - In the middle of the list
+  - It replaces "banana"
+  correct: 0
+  explanation: .append() always adds the new item onto the end of the list, after everything already there.
+- id: q288
+  question: Does fruits.append("grape") create a brand-new list, or change fruits itself?
+  options:
+  - It changes (modifies) fruits itself
+  - It creates a brand-new list and leaves fruits unchanged
+  - It deletes fruits entirely
+  - It only works if fruits is empty
+  correct: 0
+  explanation: .append() modifies the original list in place rather than making a separate copy.
+- id: q289
+  question: What does len(my_list) return if my_list = []?
+  options:
+  - '0'
+  - '1'
+  - None
+  - Error
+  correct: 0
+  explanation: An empty list has zero items, so len() returns 0.
+- id: q290
+  question: Why might you write range(len(my_list)) inside a for loop?
+  options:
+  - To loop through every index position in the list
+  - To make the list longer
+  - To sort the list from smallest to largest
+  - To delete every item in the list
+  correct: 0
+  explanation: len(my_list) gives the number of items, so range(len(my_list)) counts through every valid index position.
+- id: q291
+  question: "fruits = [\"apple\", \"banana\", \"cherry\"]\nfor fruit in fruits:\n    print(fruit)\nWhat does this print?"
+  options:
+  - 'apple
 
-  - id: q052
-    question: "Which module do you import to generate a random number?"
-    options: ["random", "math", "numbers", "games"]
-    correct: 0
-    explanation: "import random gives access to functions like randint() for generating random numbers."
+    banana
 
-  - id: q053
-    question: "What does random.randint(1, 10) give you?"
-    options: ["A random whole number between 1 and 10 (inclusive)", "Always the number 10", "A random decimal", "The number 1"]
-    correct: 0
-    explanation: "randint(a, b) picks a random whole number, including both a and b as possible results."
+    cherry'
+  - apple
+  - 'fruits
 
-  - id: q054
-    question: "In the Snake project, what do you use instead of a while loop for animation?"
-    options: ["game.after(ms, callback) to schedule the next step", "A for loop that never ends", "print() in a loop", "input() repeated forever"]
-    correct: 0
-    explanation: "Graphical lessons ban while loops, so animation uses self-scheduling with game.after() instead."
+    fruits
 
-  - id: q055
-    question: "Why might code that runs with no errors still fail a lesson's challenge?"
-    options: ["Its output doesn't exactly match what the challenge expects", "Python only allows one program per day", "The code editor deletes wrong answers", "Lessons never check output"]
-    correct: 0
-    explanation: "A lesson checks whether your program's output matches the expected result -- code can run fine and still print the wrong thing."
+    fruits'
+  - Error
+  correct: 0
+  explanation: The loop runs once for each item in the list, printing apple, then banana, then cherry.
+- id: q292
+  question: In for fruit in fruits:, what happens to fruit each time the loop repeats?
+  options:
+  - It's set to the next item in the fruits list
+  - It deletes the current item from fruits
+  - It adds a new item to fruits
+  - It stays equal to the whole fruits list
+  correct: 0
+  explanation: Each time around, the loop variable fruit takes on the next item from the list, one at a time.
+- id: q293
+  question: 'If my_list has 5 items, how many times does for item in my_list: repeat?'
+  options:
+  - 5 times, once for each item
+  - 4 times
+  - Forever, until stopped
+  - 1 time
+  correct: 0
+  explanation: A for loop over a list runs exactly once per item, so 5 items means 5 repeats.
+- id: q294
+  question: What does random.choice(["rock", "paper", "scissors"]) do?
+  options:
+  - Picks one random item from the list
+  - Picks the first item every time
+  - Adds a new item to the list
+  - Removes an item from the list
+  correct: 0
+  explanation: random.choice() looks at a list and randomly picks one of its items.
+- id: q295
+  question: Why do you need to write import random before using random.randint()?
+  options:
+  - randint() lives inside the random module, which isn't loaded by default
+  - Python can't count numbers without it
+  - randint() doesn't exist until you define it yourself
+  - import makes your program run faster
+  correct: 0
+  explanation: Extra tools like randint() live in modules that Python only loads when you import them.
+- id: q296
+  question: If you run random.randint(1, 6) twice in the same program, will you always get the same number both times?
+  options:
+  - Not necessarily -- each call can independently pick any number in the range
+  - Yes, it always repeats the same number
+  - No, the second call always increases by 1
+  - No, the second call always returns 1
+  correct: 0
+  explanation: Each call to randint() is a fresh random pick, so two calls can match or differ -- there's no fixed pattern.
+- id: q297
+  question: In the Snake project, what does game.after(300, move_snake) actually do?
+  options:
+  - Waits 300 milliseconds, then calls move_snake again
+  - Moves the snake 300 pixels immediately
+  - Deletes the snake after 300 seconds
+  - Runs move_snake exactly 300 times
+  correct: 0
+  explanation: game.after(ms, function) schedules that function to run again after the given number of milliseconds.
+- id: q298
+  question: Why does the Snake project avoid using a while loop to keep the snake moving?
+  options:
+  - A while loop would freeze the game window instead of letting it update smoothly
+  - while loops are not allowed anywhere in Python
+  - while loops only work with numbers, not shapes
+  - The game window can't run any code at all
+  correct: 0
+  explanation: A while loop would run nonstop and lock up the game window, so self-scheduling with game.after() is used instead.
+- id: q299
+  question: What does game.draw_rect(x, y, width, height, color) do in the Snake project?
+  options:
+  - Draws a colored rectangle on the game screen at a given position and size
+  - Moves an existing shape across the screen
+  - Deletes a shape from the screen
+  - Changes the game window's background color
+  correct: 0
+  explanation: draw_rect() creates a new rectangle shape on the game screen using the position, size, and color you give it.
+- id: q300
+  question: "def move_snake():\n    game.move_shape(snake, 10, 0)\n    game.after(300, move_snake)\nWhy does move_snake call game.after(300, move_snake) on itself?"
+  options:
+  - So it keeps scheduling its own next run, creating a repeating game loop
+  - Because every function in Python must call itself
+  - To stop the game permanently after one move
+  - Because game.after() requires exactly two functions
+  correct: 0
+  explanation: By scheduling itself again each time it runs, move_snake keeps the snake moving in an ongoing game loop.
