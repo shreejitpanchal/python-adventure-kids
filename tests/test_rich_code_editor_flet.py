@@ -1,3 +1,5 @@
+import asyncio
+
 import flet as ft
 
 from app.ui.components.rich_code_editor_flet import RichCodeEditor, tokenize
@@ -120,7 +122,7 @@ def test_on_selection_change_setter_does_not_replace_the_internal_handler():
         name="selection_change", control=editor._field, selected_text="",
         selection=ft.TextSelection(base_offset=3, extent_offset=3),
     )
-    editor._field.on_selection_change(event)
+    asyncio.run(_fire(editor, event))
 
     assert seen == [event]
     assert editor._cursor_pos == 3
@@ -132,8 +134,87 @@ def test_selection_change_updates_cursor_pos_even_without_external_handler():
         name="selection_change", control=editor._field, selected_text="",
         selection=ft.TextSelection(base_offset=5, extent_offset=5),
     )
-    editor._field.on_selection_change(event)
+    asyncio.run(_fire(editor, event))
     assert editor._cursor_pos == 5
+
+
+async def _fire(editor: RichCodeEditor, event: ft.TextSelectionChangeEvent) -> None:
+    editor._field.on_selection_change(event)
+
+
+# -- debounced refresh (tablet backspace/composing bug fix) --------------------
+async def _type_and_wait(editor: RichCodeEditor, page: FakePage, code: str) -> None:
+    editor._field.value = code
+    editor._field.on_change(ft.Event(name="change", control=editor._field))
+    await asyncio.sleep(0.35)
+
+
+def test_on_change_does_not_call_page_update_immediately():
+    editor, page = _make_editor("")
+
+    async def scenario():
+        editor._field.value = "p"
+        editor._field.on_change(
+            ft.Event(name="change", control=editor._field)
+        )
+        assert page.update_count == 0
+
+    asyncio.run(scenario())
+
+
+def test_on_change_refreshes_and_updates_once_after_the_debounce_window():
+    editor, page = _make_editor("")
+    asyncio.run(_type_and_wait(editor, page, 'print("hi")'))
+    assert page.update_count == 1
+    assert "".join(s.text for s in editor._underlay.spans) == 'print("hi")'
+
+
+def test_rapid_keystrokes_coalesce_into_a_single_update():
+    editor, page = _make_editor("")
+
+    async def scenario():
+        for partial in ["p", "pr", "pri", "prin", "print"]:
+            editor._field.value = partial
+            editor._field.on_change(
+                ft.Event(name="change", control=editor._field)
+            )
+            await asyncio.sleep(0.05)  # well under the debounce window
+        await asyncio.sleep(0.35)
+
+    asyncio.run(scenario())
+    assert page.update_count == 1
+    assert "".join(s.text for s in editor._underlay.spans) == "print"
+
+
+def test_selection_change_also_debounces_its_page_update():
+    editor, page = _make_editor("print(1)")
+
+    async def scenario():
+        event = ft.TextSelectionChangeEvent(
+            name="selection_change", control=editor._field, selected_text="",
+            selection=ft.TextSelection(base_offset=3, extent_offset=3),
+        )
+        editor._field.on_selection_change(event)
+        assert page.update_count == 0
+        await asyncio.sleep(0.35)
+        assert page.update_count == 1
+
+    asyncio.run(scenario())
+
+
+def test_setting_value_programmatically_cancels_a_pending_debounced_refresh():
+    editor, page = _make_editor("")
+
+    async def scenario():
+        editor._field.value = "p"
+        editor._field.on_change(
+            ft.Event(name="change", control=editor._field)
+        )
+        editor.value = "reset"  # should cancel the pending timer, not double-fire later
+        await asyncio.sleep(0.35)
+        assert page.update_count == 0  # the setter itself never calls page.update()
+
+    asyncio.run(scenario())
 
 
 # -- autocomplete suggestions ---------------------------------------------------

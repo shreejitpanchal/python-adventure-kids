@@ -29,13 +29,28 @@ plain ft.TextField (what code_editor_flet.py's make_code_editor() returned)
 so lesson_screen_flet.py and macro_toolbar_flet.py don't need to know the
 editor got smarter -- only the .control accessor (for embedding in the
 view) and highlight_error_line()/clear_error_highlight() are new.
+
+Live-typing refreshes (recoloring the underlay, rebuilding the
+suggestion strip) are debounced rather than pushed on every keystroke.
+Typing fires both on_change and on_selection_change per character, and
+each used to call page.update() unconditionally -- two full-page resyncs
+per keystroke. On a tablet's software keyboard, which composes whole
+words rather than committing one character at a time, that constant
+server-driven resync of the live TextField was found to collide with the
+keyboard's own composing state: pressing backspace once would delete the
+keyboard's entire in-progress composing word instead of one character.
+Debouncing collapses a burst of typing into a single page.update() after
+a short pause, which is enough to stop stomping on the composing region.
 """
 from __future__ import annotations
 
+import asyncio
 import keyword
 import re
 
 import flet as ft
+
+_REFRESH_DEBOUNCE_SECONDS = 0.2
 
 EDITOR_BGCOLOR = "#1E1E2E"
 EDITOR_TEXT_COLOR = "#F1F1F1"
@@ -129,6 +144,7 @@ class RichCodeEditor:
         self._cursor_pos = len(initial_code)
         self._error_line: int | None = None
         self._external_selection_handler = None
+        self._refresh_timer: asyncio.TimerHandle | None = None
 
         self._underlay = ft.Text(
             spans=tokenize(initial_code),
@@ -168,6 +184,9 @@ class RichCodeEditor:
 
     @value.setter
     def value(self, code: str) -> None:
+        if self._refresh_timer is not None:
+            self._refresh_timer.cancel()
+            self._refresh_timer = None
         self._field.value = code
         self._cursor_pos = len(code or "")
         self._refresh_underlay()
@@ -205,16 +224,34 @@ class RichCodeEditor:
 
     # -- internals --------------------------------------------------------------
     def _on_field_change(self, e: ft.ControlEvent) -> None:
-        self._refresh_underlay()
-        self._rebuild_suggestions()
-        self._page.update()
+        self._schedule_refresh()
 
     def _on_field_selection_change(self, e: ft.TextSelectionChangeEvent) -> None:
         if e.selection is not None:
             self._cursor_pos = e.selection.start
-        self._rebuild_suggestions()
+        # The external handler (e.g. build_macro_toolbar()'s cursor
+        # tracker) only touches plain Python state, not a UI control, so
+        # it's called immediately rather than deferred with the rest --
+        # it needs to always reflect the real cursor position by the time
+        # a macro button is tapped, not lag behind a debounce window.
         if self._external_selection_handler is not None:
             self._external_selection_handler(e)
+        self._schedule_refresh()
+
+    def _schedule_refresh(self) -> None:
+        """Coalesces the underlay/suggestion rebuild (and the page.update()
+        that pushes it to the client) into one call after a short pause in
+        typing, instead of one-or-two per keystroke -- see the module
+        docstring for why that matters on tablet software keyboards."""
+        if self._refresh_timer is not None:
+            self._refresh_timer.cancel()
+        loop = asyncio.get_running_loop()
+        self._refresh_timer = loop.call_later(_REFRESH_DEBOUNCE_SECONDS, self._do_refresh)
+
+    def _do_refresh(self) -> None:
+        self._refresh_timer = None
+        self._refresh_underlay()
+        self._rebuild_suggestions()
         self._page.update()
 
     def _refresh_underlay(self) -> None:
