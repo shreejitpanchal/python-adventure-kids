@@ -6,16 +6,29 @@ filesystem, network, or anything outside this canvas.
 """
 from __future__ import annotations
 
+import math
 import tkinter as tk
 from typing import Callable
 
 VALID_KEYS = {"Up", "Down", "Left", "Right", "space"}
+
+# Turtle-style drawing starts a little inset from the canvas origin rather
+# than at (0, 0), so a lesson's first shape isn't drawn flush against the
+# top-left edge and clipped.
+_TURTLE_START_X = 50.0
+_TURTLE_START_Y = 50.0
 
 
 class GameCanvas:
     def __init__(self, canvas: tk.Canvas, window: tk.Toplevel):
         self._canvas = canvas
         self._window = window
+        self._turtle_x = _TURTLE_START_X
+        self._turtle_y = _TURTLE_START_Y
+        # Degrees, 0 = facing right (+x). Screen y grows downward, so
+        # increasing heading turns clockwise as drawn -- exactly what
+        # turn_right should do.
+        self._turtle_heading = 0.0
 
     def set_title(self, title: str) -> None:
         self._window.title(str(title))
@@ -64,3 +77,29 @@ class GameCanvas:
         sequence = "<space>" if key == "space" else f"<{key}>"
         self._window.bind(sequence, lambda event: callback())
         self._canvas.focus_set()
+
+    # -- turtle-style drawing (Creative Arts track) ------------------------
+    def forward(self, distance: int, color: str = "black") -> int:
+        """Moves forward by `distance` pixels in the current heading,
+        drawing a line along the way. Returns the line's shape id."""
+        radians = math.radians(self._turtle_heading)
+        new_x = self._turtle_x + math.cos(radians) * distance
+        new_y = self._turtle_y + math.sin(radians) * distance
+        shape_id = self._canvas.create_line(
+            self._turtle_x, self._turtle_y, new_x, new_y, fill=str(color), width=2,
+        )
+        self._turtle_x, self._turtle_y = new_x, new_y
+        return shape_id
+
+    def turn_right(self, degrees: float) -> None:
+        """Rotates the heading clockwise (as drawn) by `degrees`."""
+        self._turtle_heading = (self._turtle_heading + degrees) % 360
+
+    def turn_left(self, degrees: float) -> None:
+        """Rotates the heading counter-clockwise (as drawn) by `degrees`."""
+        self._turtle_heading = (self._turtle_heading - degrees) % 360
+
+    def draw_line(self, x1: int, y1: int, x2: int, y2: int, color: str = "black") -> int:
+        """Draws a straight line between two explicit points -- independent
+        of forward()/turn_right()'s turtle position and heading."""
+        return self._canvas.create_line(int(x1), int(y1), int(x2), int(y2), fill=str(color), width=2)

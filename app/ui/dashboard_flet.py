@@ -28,6 +28,8 @@ def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
         controls=[
             _build_header(page, state),
             ft.Container(height=16),
+            _build_xp_hud(state),
+            ft.Container(height=16),
             _build_mission_card(page, state),
             ft.Container(height=16),
             _build_missions_sidebar(page, state),
@@ -59,6 +61,10 @@ def _build_header(page: ft.Page, state: AppState) -> ft.Control:
                         style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
                     ),
                     ft.Button(
+                        "🏆 Trophy Room", on_click=lambda _e: page.go("/trophy-room"), height=48,
+                        style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
+                    ),
+                    ft.Button(
                         "⚙️ Settings", on_click=lambda _e: page.go("/settings"), height=48,
                         style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
                     ),
@@ -72,6 +78,42 @@ def _build_header(page: ft.Page, state: AppState) -> ft.Control:
             ft.Text(f"Welcome back, {name}!", size=20, weight=ft.FontWeight.BOLD, color=theme.text),
         ],
         spacing=10,
+    )
+
+
+def _build_xp_hud(state: AppState) -> ft.Control:
+    """Player-level HUD, separate from the existing "Level {n}" stat pill on
+    the mission card below (that one is the current lesson's `level` number,
+    not an XP-derived player level -- two different, pre-existing meanings
+    of "level" in this app, kept visually distinct here rather than
+    conflated)."""
+    theme = state.theme
+    player = state.progress.get_player_level()
+    progress_ratio = player.xp_into_level / player.xp_needed_for_level if player.xp_needed_for_level else 0.0
+
+    return ft.Container(
+        content=ft.Row(
+            [
+                ft.Container(
+                    content=ft.Text(f"LVL {player.level}", size=16, weight=ft.FontWeight.BOLD, color="#FFFFFF"),
+                    bgcolor=theme.warning, border_radius=10,
+                    padding=ft.padding.Padding.symmetric(horizontal=14, vertical=10),
+                ),
+                ft.Column(
+                    [
+                        ft.Text("Player Level", size=13, color=theme.text_muted),
+                        ft.ProgressBar(
+                            value=progress_ratio, color=theme.success, bgcolor=theme.bg,
+                            height=14, border_radius=7, width=240,
+                        ),
+                        ft.Text(f"{player.xp_into_level}/{player.xp_needed_for_level} XP", size=11, color=theme.text_muted),
+                    ],
+                    spacing=4,
+                ),
+            ],
+            spacing=14,
+        ),
+        bgcolor=theme.card, border_radius=16, padding=16,
     )
 
 

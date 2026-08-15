@@ -52,12 +52,14 @@ class SettingsFrame(ctk.CTkFrame):
         grid.grid_columnconfigure(0, weight=1)
         grid.grid_columnconfigure(1, weight=1)
 
+        player_level = self.app.progress.get_player_level().level
         current_key = self.app.settings.theme
         for index, preset in enumerate(theme.THEME_PRESETS.values()):
             row, col = divmod(index, 2)
-            self._build_theme_option(grid, preset, current_key == preset.key, row, col)
+            unlocked = player_level >= preset.min_level
+            self._build_theme_option(grid, preset, current_key == preset.key, unlocked, row, col)
 
-    def _build_theme_option(self, parent, preset, is_selected: bool, row: int, col: int) -> None:
+    def _build_theme_option(self, parent, preset, is_selected: bool, unlocked: bool, row: int, col: int) -> None:
         border_color = theme.COLOR_PRIMARY if is_selected else preset.card
         option = ctk.CTkFrame(
             parent, fg_color=preset.bg, corner_radius=16,
@@ -65,27 +67,41 @@ class SettingsFrame(ctk.CTkFrame):
         )
         option.grid(row=row, column=col, sticky="nsew", padx=8, pady=8)
 
+        title_text = f"{preset.icon}  {preset.title}" if unlocked else f"🔒  {preset.title}"
         ctk.CTkLabel(
-            option, text=f"{preset.icon}  {preset.title}", font=theme.font_heading(16),
-            text_color=preset.text,
+            option, text=title_text, font=theme.font_heading(16),
+            text_color=preset.text if unlocked else preset.text_muted,
         ).pack(anchor="w", padx=16, pady=(16, 8))
 
         swatches = ctk.CTkFrame(option, fg_color="transparent")
         swatches.pack(anchor="w", padx=16, pady=(0, 12))
-        for color in (preset.primary, preset.success, preset.warning, preset.danger):
+        swatch_colors = (
+            (preset.primary, preset.success, preset.warning, preset.danger) if unlocked
+            else (preset.text_muted,) * 4
+        )
+        for color in swatch_colors:
             ctk.CTkFrame(
                 swatches, fg_color=color, width=28, height=28, corner_radius=8,
             ).pack(side="left", padx=(0, 6))
 
-        button_text = "✅ Selected" if is_selected else "Select"
+        if not unlocked:
+            button_text = f"🔒 Unlocks at Level {preset.min_level}"
+        else:
+            button_text = "✅ Selected" if is_selected else "Select"
         ctk.CTkButton(
             option, text=button_text, font=theme.font_body(13), height=34,
-            fg_color=preset.primary, hover_color=preset.primary_hover,
-            text_color="#FFFFFF", state="disabled" if is_selected else "normal",
+            fg_color=preset.primary if unlocked else theme.COLOR_TEXT_MUTED,
+            hover_color=preset.primary_hover,
+            text_color="#FFFFFF", state="disabled" if (is_selected or not unlocked) else "normal",
             command=lambda key=preset.key: self._on_select_theme(key),
         ).pack(fill="x", padx=16, pady=(0, 16))
 
     def _on_select_theme(self, theme_key: str) -> None:
+        preset = theme.THEME_PRESETS.get(theme_key)
+        if preset is None:
+            return
+        if self.app.progress.get_player_level().level < preset.min_level:
+            return  # defense in depth -- the button should already be disabled
         self.app.apply_and_persist_theme(theme_key)
         self.app.show_settings()
 

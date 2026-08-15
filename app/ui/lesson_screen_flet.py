@@ -25,15 +25,16 @@ import flet as ft
 import flet.canvas as cv
 
 from app.engine.lesson import Lesson
-from app.engine.validator import validate_output
+from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_canvas_flet import GameCanvas
 from app.sandbox.errors import extract_error_line_number, translate_error
 from app.sandbox.inprocess_runner import ExecutionResult, RunHandle, run_code
 from app.ui.app_state_flet import AppState
-from app.ui.code_editor_flet import make_code_editor, make_read_only_code_block
-from app.ui.color_utils import contrasting_text_color
-
-_REWARD_CARD_COLOR = "#FFF3D0"
+from app.ui.code_editor_flet import make_read_only_code_block
+from app.ui.components.codey_avatar_flet import CodeyState, build_codey_avatar
+from app.ui.components.macro_toolbar_flet import build_macro_toolbar
+from app.ui.components.rich_code_editor_flet import RichCodeEditor
+from app.ui.components.victory_overlay_flet import build_victory_overlay
 
 _KEY_NAME_MAP = {
     "Arrow Up": "Up", "Arrow Down": "Down", "Arrow Left": "Left", "Arrow Right": "Right",
@@ -102,22 +103,30 @@ class _LessonController:
         code_card = self._build_code_card()
         game_panel = self._build_game_panel() if lesson.graphical else None
         output_card = self._build_output_card()
-        self._build_reward_card()
-
-        if lesson.graphical:
-            self.page.on_keyboard_event = self._on_keyboard_event
+        self._build_victory_overlay()
 
         controls = [header, explanation_card, example_card, challenge_card, code_card]
         if game_panel is not None:
-            controls.append(game_panel)
-        controls.extend([output_card, self.reward_card])
+            controls.append(
+                ft.KeyboardListener(
+                    content=game_panel, autofocus=True,
+                    on_key_down=self._on_key_down, on_key_up=self._on_key_up,
+                )
+            )
+        controls.append(output_card)
+
+        # The victory overlay is a full-screen Stack layer, not another item
+        # in the scrolling column -- see app/ui/components/victory_overlay_flet.py.
+        content = ft.Container(
+            content=ft.Column(controls, scroll=ft.ScrollMode.AUTO, spacing=10, expand=True),
+            padding=24, expand=True,
+        )
 
         return ft.View(
             route=f"/lesson/{lesson.id}",
             bgcolor=theme.bg,
-            scroll=ft.ScrollMode.AUTO,
-            padding=24,
-            controls=controls,
+            padding=0,
+            controls=[ft.Stack([content, self.reward_card], expand=True)],
         )
 
     def _card(self, title: str, children: list[ft.Control]) -> ft.Control:
@@ -133,8 +142,11 @@ class _LessonController:
         theme = self.theme
         lesson = self.lesson
 
-        self.editor = make_code_editor(lesson.starter_code.strip())
-        children: list[ft.Control] = [self.editor]
+        self._codey = build_codey_avatar(theme)
+
+        self.editor = RichCodeEditor(self.page, theme, lesson.starter_code.strip())
+        self.macro_toolbar = build_macro_toolbar(self.editor, self.page, theme)
+        children: list[ft.Control] = [self._codey.control, self.editor.control, self.macro_toolbar]
 
         if lesson.input_prompt:
             self.input_field = ft.TextField(hint_text="Type your answer...", width=240)
@@ -222,34 +234,29 @@ class _LessonController:
         if self.game_canvas is not None:
             self.game_canvas.trigger_key(key)
 
-    def _on_keyboard_event(self, e: ft.KeyboardEvent) -> None:
+    def _on_key_down(self, e: ft.KeyDownEvent) -> None:
         key = _KEY_NAME_MAP.get(e.key)
-        if key is not None:
-            self._trigger_game_key(key)
+        if key is None:
+            return
+        self._trigger_game_key(key)
+        if self.game_canvas is not None:
+            self.game_canvas.key_down(key)
 
-    def _build_reward_card(self) -> None:
-        theme = self.theme
-        # The reward card's cream background is fixed regardless of the
-        # active theme (a deliberate always-celebratory look), so its text
-        # must be too -- theme.text is tuned for dark themes' own dark
-        # background and turns near-invisible on this light card (#2547).
-        reward_text_color = contrasting_text_color(_REWARD_CARD_COLOR)
-        self.reward_text = ft.Text("", size=22, weight=ft.FontWeight.BOLD, color=reward_text_color)
-        self.badge_text = ft.Text("", size=16, color=reward_text_color)
-        self.reward_card = ft.Container(
-            content=ft.Column(
-                [
-                    self.reward_text,
-                    self.badge_text,
-                    ft.Button(
-                        "CONTINUE ➜", on_click=self._on_continue, height=56,
-                        style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
-                    ),
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
-            ),
-            bgcolor=_REWARD_CARD_COLOR, border_radius=18, padding=24, visible=False,
-        )
+    def _on_key_up(self, e: ft.KeyUpEvent) -> None:
+        key = _KEY_NAME_MAP.get(e.key)
+        if key is not None and self.game_canvas is not None:
+            self.game_canvas.key_up(key)
+
+    def _build_victory_overlay(self) -> None:
+        # self.reward_card is kept as the name for the overlay's root Stack
+        # control (it's still just an ft.Control with a .visible flag) so
+        # the rest of this class -- and every existing test -- didn't need
+        # to change to know about the new presentation.
+        handle = build_victory_overlay(self.page, self.theme, self._on_continue)
+        self._victory_handle = handle
+        self.reward_card = handle.overlay
+        self.reward_text = handle.reward_text
+        self.badge_text = handle.badge_text
 
     # -- run flow -----------------------------------------------------------
     async def _on_run(self, e) -> None:
@@ -263,8 +270,10 @@ class _LessonController:
         self.run_button.disabled = True
         self.stop_button.disabled = False
         self._hide_details()
+        self.editor.clear_error_highlight()
         self.output_text.value = "⏳ Running your code..."
         self.output_text.color = self.theme.text_muted
+        self._codey.set_state(CodeyState.RUNNING)
         self.page.update()
 
         code = self.editor.value or ""
@@ -285,6 +294,7 @@ class _LessonController:
 
         if result.blocked:
             self._show_output(f"🚫 {result.blocked_message}", self.theme.danger)
+            self._codey.set_state(CodeyState.BLOCKED)
             self.state.progress.log_event(self.lesson.id, "attempt_blocked", result.blocked_message)
             self.page.update()
             return
@@ -292,11 +302,13 @@ class _LessonController:
         if result.timed_out:
             if handle.cancelled:
                 self._show_output("⏹ Stopped.", self.theme.text_muted)
+                self._codey.set_state(CodeyState.IDLE)
             else:
                 self._show_output(
                     "⏳ Your code is taking too long — maybe there's a loop that never stops?",
                     self.theme.danger,
                 )
+                self._codey.set_state(CodeyState.WARNING)
                 self.state.progress.log_event(self.lesson.id, "attempt_timeout")
             self.page.update()
             return
@@ -306,24 +318,42 @@ class _LessonController:
             line = extract_error_line_number(result.stderr)
             if line:
                 friendly = f"{friendly} (near line {line})"
+                self.editor.highlight_error_line(line)
             self._show_output(f"{friendly}\n\n💡 {hint}", self.theme.danger, raw=result.stderr)
+            self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
             self.page.update()
             return
 
-        if validate_output(
+        output_ok = validate_output(
             result.stdout, self.lesson.expected_output,
             input_value=self._current_input_value,
             expected_output_pattern=self.lesson.expected_output_pattern,
-        ):
+        )
+        ast_ok = (
+            validate_ast_contains(self.editor.value or "", self.lesson.ast_contains)
+            if self.lesson.ast_contains else True
+        )
+
+        if output_ok and ast_ok:
             self._show_output(result.stdout or "(no output)", self.theme.success)
+            self._codey.set_state(CodeyState.SUCCESS)
             self._on_lesson_success()
+        elif output_ok and not ast_ok:
+            self._show_output(
+                f"Python said:\n{result.stdout or '(no output)'}\n\n"
+                "That's the right answer, but try solving it using what this lesson "
+                "is teaching, not just typing the answer directly!",
+                self.theme.warning,
+            )
+            self._codey.set_state(CodeyState.WARNING)
         else:
             self._show_output(
                 f"Python said:\n{result.stdout or '(no output)'}\n\n"
                 "That's not quite what we're looking for yet — give it another try!",
                 self.theme.warning,
             )
+            self._codey.set_state(CodeyState.WARNING)
             self.state.progress.log_event(self.lesson.id, "attempt_wrong_output", result.stdout[-200:])
         self.page.update()
 
@@ -341,12 +371,15 @@ class _LessonController:
         )
 
         self._hide_details()
+        self.editor.clear_error_highlight()
+        self._codey.set_state(CodeyState.RUNNING)
         code = self.editor.value or ""
 
         result = run_code(code, game=self.game_canvas, disallow_while=True)
 
         if result.blocked:
             self._show_output(f"🚫 {result.blocked_message}", self.theme.danger)
+            self._codey.set_state(CodeyState.BLOCKED)
             self.state.progress.log_event(self.lesson.id, "attempt_blocked", result.blocked_message)
             self.page.update()
             return
@@ -356,12 +389,27 @@ class _LessonController:
             line = extract_error_line_number(result.stderr)
             if line:
                 friendly = f"{friendly} (near line {line})"
+                self.editor.highlight_error_line(line)
             self._show_output(f"{friendly}\n\n💡 {hint}", self.theme.danger, raw=result.stderr)
+            self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
             self.page.update()
             return
 
+        ast_ok = (
+            validate_ast_contains(code, self.lesson.ast_contains) if self.lesson.ast_contains else True
+        )
+        if not ast_ok:
+            self._show_output(
+                "🎮 Your game ran, but try solving it using what this lesson is teaching!",
+                self.theme.warning,
+            )
+            self._codey.set_state(CodeyState.WARNING)
+            self.page.update()
+            return
+
         self._show_output("🎮 Your game is running! Check it out above.", self.theme.success)
+        self._codey.set_state(CodeyState.SUCCESS)
         self._on_lesson_success()
         self.page.update()
 
@@ -371,6 +419,7 @@ class _LessonController:
 
     def _on_reset(self, e) -> None:
         self.editor.value = self.lesson.starter_code.strip()
+        self.editor.clear_error_highlight()
         if self.input_field is not None:
             self.input_field.value = ""
         if self.game_canvas is not None:
@@ -379,7 +428,8 @@ class _LessonController:
         self._hide_details()
         self.output_text.value = "Press RUN to see what happens!"
         self.output_text.color = self.theme.text_muted
-        self.reward_card.visible = False
+        self._codey.set_state(CodeyState.IDLE)
+        self._victory_handle.hide()
         self.page.update()
 
     def _on_hint(self, e) -> None:
@@ -434,13 +484,11 @@ class _LessonController:
             f"🎖️ New badge unlocked: {self.lesson.badge.replace('_', ' ').title()}!"
             if badge_newly_awarded else ""
         )
-        self.reward_card.visible = True
+        self._victory_handle.show()
 
     def _on_continue(self, e) -> None:
         if self.game_canvas is not None:
             self.game_canvas.cancel_pending()
-        if self.lesson.graphical:
-            self.page.on_keyboard_event = None
         self.page.go("/dashboard")
 
     def _on_menu(self, e) -> None:
@@ -448,6 +496,4 @@ class _LessonController:
             self._run_handle.cancel()
         if self.game_canvas is not None:
             self.game_canvas.cancel_pending()
-        if self.lesson.graphical:
-            self.page.on_keyboard_event = None
         self.page.go("/dashboard")

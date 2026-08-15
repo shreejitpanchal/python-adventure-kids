@@ -1,0 +1,35 @@
+id: art_07
+title: "Creative Arts: The Five-Sided Shape 🎨"
+level: 226
+objective: "Draw a pentagon by working out the right turn angle."
+explanation: |
+  A full turn all the way around is 360 degrees. To draw a shape with equal
+  sides that closes up perfectly, split 360 evenly by the number of sides:
+  a square turns 360 / 4 = 90 degrees each time, so a pentagon (5 sides)
+  turns 360 / 5 = 72 degrees each time.
+example_code: |
+  game.set_background("white")
+  for i in range(5):
+      game.forward(80)
+      game.turn_right(72)
+starter_code: |
+  game.set_background("white")
+  for i in range(5):
+      game.forward(80)
+      game.turn_right(72)
+challenge: |
+  🎯 Challenge: Press RUN to see a pentagon! Then work out the angle for a
+  hexagon (6 sides) yourself and try it.
+expected_output: ""
+ast_contains: ["for", "forward", "turn_right"]
+hints:
+  - "360 divided by the number of sides gives the turn angle."
+  - "For 6 sides: 360 / 6 = 60 degrees."
+  - "Change both range(5) to range(6) AND turn_right(72) to turn_right(60) together."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+graphical: true
+category: creative_arts
+category_level: 7
+main_path: false

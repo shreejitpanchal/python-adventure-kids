@@ -74,3 +74,30 @@ def test_every_preset_color_is_valid_hex():
             value = getattr(preset, field_name)
             assert value.startswith("#") and len(value) == 7
             int(value[1:], 16)  # raises if not valid hex
+
+
+# -- unlockable skins ---------------------------------------------------------
+_LOCKED_SKIN_KEYS = {"space_odyssey", "cyberpunk", "enchanted_forest"}
+_ORIGINAL_SKIN_KEYS = {
+    "sunny_light", "ocean_breeze", "sunset_glow", "forest_adventure", "midnight_dark", "galaxy",
+}
+
+
+def test_original_six_presets_are_always_unlocked():
+    for key in _ORIGINAL_SKIN_KEYS:
+        assert theme.THEME_PRESETS[key].min_level == 1
+
+
+def test_new_adventure_skins_are_locked_behind_a_player_level():
+    for key in _LOCKED_SKIN_KEYS:
+        assert theme.THEME_PRESETS[key].min_level > 1
+
+
+def test_locked_skins_unlock_in_increasing_order():
+    levels = [theme.THEME_PRESETS[key].min_level for key in ("space_odyssey", "cyberpunk", "enchanted_forest")]
+    assert levels == sorted(levels)
+    assert len(set(levels)) == len(levels), "locked skins should unlock at distinct levels"
+
+
+def test_every_preset_key_set_matches_original_plus_locked():
+    assert set(theme.THEME_PRESETS.keys()) == _ORIGINAL_SKIN_KEYS | _LOCKED_SKIN_KEYS

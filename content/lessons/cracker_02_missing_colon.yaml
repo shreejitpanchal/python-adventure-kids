@@ -1,0 +1,31 @@
+id: cracker_02
+title: "Code Cracker: The Missing Colon 🧩"
+level: 201
+objective: "Fix a SyntaxError caused by a missing colon."
+explanation: |
+  Every if, for, while, and def line needs a colon : at the end, right
+  before the indented block starts. Forgetting it confuses Python about
+  where the line is supposed to end.
+example_code: |
+  age = 10
+  if age > 5:
+      print("You're older than 5!")
+starter_code: |
+  age = 10
+  if age > 5
+      print("You're older than 5!")
+challenge: |
+  🎯 This code won't run! Something's missing right after the condition
+  on the if line.
+expected_output: "You're older than 5!"
+ast_contains: ["if"]
+hints:
+  - "Look right after the condition age > 5 -- something's missing."
+  - "Every if line needs a colon : at the end."
+  - "It should look like: if age > 5:"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 2
+main_path: false

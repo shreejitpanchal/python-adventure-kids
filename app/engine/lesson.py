@@ -41,3 +41,10 @@ class Lesson:
     """Whether this lesson is part of the single guided curriculum sequence
     (shown as "Today's Mission" / chained via next_lesson_id) versus a bonus
     practice level only reachable through the category browser."""
+    ast_contains: Optional[list[str]] = None
+    """Structural constructs the submitted code must contain (see
+    app.engine.validator.validate_ast_contains) -- checked in addition to
+    expected_output/expected_output_pattern when set, not instead of it.
+    For lessons where matching output alone isn't enough to confirm the
+    child used the taught construct (e.g. "Code Crackers" debugging
+    exercises)."""

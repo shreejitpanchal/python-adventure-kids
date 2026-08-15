@@ -1,0 +1,36 @@
+id: art_05
+title: "Creative Arts: The Magic Square Loop 🎨"
+level: 224
+objective: "Use a for loop to draw a square instead of repeating code four times."
+explanation: |
+  You could draw a square by writing forward/turn_right four times in a
+  row -- but a for loop can do the repeating for you, so you only have to
+  write the pattern once.
+
+  A square has 4 equal sides and 4 right-angle (90 degree) corners.
+example_code: |
+  game.set_background("white")
+  for i in range(4):
+      game.forward(100)
+      game.turn_right(90)
+starter_code: |
+  game.set_background("white")
+  for i in range(4):
+      game.forward(100)
+      game.turn_right(90)
+challenge: |
+  🎯 Challenge: Press RUN to see the loop draw a square! Then try changing
+  range(4) to a different number -- what shape do you get instead?
+expected_output: ""
+ast_contains: ["for", "forward", "turn_right"]
+hints:
+  - "range(4) repeats the loop body 4 times -- once per side of the square."
+  - "Try range(3) for a triangle, or range(6) for a hexagon."
+  - "Keep forward and turn_right the same amount each time for an even shape."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+graphical: true
+category: creative_arts
+category_level: 5
+main_path: false

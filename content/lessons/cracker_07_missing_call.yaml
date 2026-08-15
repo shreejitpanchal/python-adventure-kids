@@ -1,0 +1,31 @@
+id: cracker_07
+title: "Code Cracker: The Function That Never Ran 🧩"
+level: 206
+objective: "Fix a bug caused by forgetting to actually call a function."
+explanation: |
+  Typing a function's name alone doesn't run it -- you need parentheses ()
+  after it, even if it doesn't need any information inside them.
+example_code: |
+  def cheer():
+      print("Go team!")
+
+  cheer()
+starter_code: |
+  def cheer():
+      print("Go team!")
+
+  cheer
+challenge: |
+  🎯 Nothing prints! Actually call the function so it runs.
+expected_output: "Go team!"
+ast_contains: ["def"]
+hints:
+  - "Typing cheer by itself just refers to the function -- it doesn't run it."
+  - "Add parentheses to actually call it."
+  - "It should look like: cheer()"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 7
+main_path: false

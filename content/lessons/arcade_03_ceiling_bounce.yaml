@@ -1,0 +1,61 @@
+id: arcade_03
+title: "Arcade Lab: Off the Ceiling Too 🧱"
+level: 262
+objective: "Give the ball a second speed, dy, so it bounces off the top of the screen as well."
+explanation: |
+  A real ball doesn't just bounce left and right -- it bounces up and down too. We give it
+  a second speed, dy (change in y), and check the top wall (y <= 8) the same way we checked
+  the side walls.
+
+  Notice move_ball() now says "global dx, dy" -- you can list more than one variable after
+  global, separated by a comma.
+example_code: |
+  game.set_background("black")
+  ball = game.draw_circle(180, 40, 8, "yellow")
+  dx = 4
+  dy = 4
+
+  def move_ball():
+      global dx, dy
+      x, y = game.get_shape_position(ball)
+      if x <= 8 or x >= 352:
+          dx = -dx
+      if y <= 8:
+          dy = -dy
+      game.move_shape(ball, dx, dy)
+      game.after(30, move_ball)
+
+  move_ball()
+starter_code: |
+  game.set_background("black")
+  ball = game.draw_circle(180, 40, 8, "yellow")
+  dx = 4
+  dy = 4
+
+  def move_ball():
+      global dx, dy
+      x, y = game.get_shape_position(ball)
+      if x <= 8 or x >= 352:
+          dx = -dx
+      if y <= 8:
+          dy = -dy
+      game.move_shape(ball, dx, dy)
+      game.after(30, move_ball)
+
+  move_ball()
+challenge: |
+  🎯 Challenge: Press RUN and watch the ball bounce off the top and sides! What happens
+  if you change the ball's starting y to 200 instead of 40?
+expected_output: ""
+ast_contains: ["after", "global"]
+hints:
+  - "y <= 8 checks the top wall, the same way x <= 8 checks the left wall."
+  - "The ball still falls off the bottom of the screen -- the next lesson fixes that with a paddle!"
+  - "dx and dy can flip independently -- one bounce doesn't have to affect the other."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+graphical: true
+category: arcade_lab
+category_level: 3
+main_path: false

@@ -1,0 +1,31 @@
+id: rpg_07
+title: "RPG Quest: Victory or Defeat? ⚔️"
+level: 246
+objective: "Use if/else to decide the outcome of a battle."
+explanation: |
+  A battle needs to check health and react differently depending on the
+  result -- if health has run out, it's game over; otherwise, the fight
+  continues.
+example_code: |
+  health = 0
+  if health <= 0:
+      print("Game Over")
+  else:
+      print("You survive!")
+starter_code: |
+  health = 0
+  print("You survive!")
+challenge: |
+  🎯 Health hit 0! Add a check so it correctly prints "Game Over" instead.
+expected_output: "Game Over"
+ast_contains: ["if"]
+hints:
+  - "Use if health <= 0: to check whether health ran out."
+  - "Print \"Game Over\" inside that if block."
+  - "It should look like:\nif health <= 0:\n    print(\"Game Over\")\nelse:\n    print(\"You survive!\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: rpg_quests
+category_level: 7
+main_path: false

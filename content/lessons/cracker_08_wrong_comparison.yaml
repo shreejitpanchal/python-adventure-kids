@@ -1,0 +1,31 @@
+id: cracker_08
+title: "Code Cracker: Just Barely Missed It 🧩"
+level: 207
+objective: "Fix a comparison that's excluding a value it should include."
+explanation: |
+  > means "greater than" -- it does NOT include the number itself. >= means
+  "greater than or equal to" -- it DOES include it. Mixing these up is an
+  easy bug to make and an easy one to miss.
+example_code: |
+  age = 10
+  if age >= 10:
+      print("Old enough!")
+starter_code: |
+  age = 10
+  if age > 10:
+      print("Old enough!")
+challenge: |
+  🎯 Nothing prints, even though age is exactly 10! Fix the comparison so
+  age 10 counts as "old enough."
+expected_output: "Old enough!"
+ast_contains: ["if"]
+hints:
+  - "age is exactly 10, but age > 10 only counts numbers ABOVE 10."
+  - "You need a comparison that includes 10 itself."
+  - "It should look like: if age >= 10:"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 8
+main_path: false

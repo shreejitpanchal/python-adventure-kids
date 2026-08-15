@@ -31,6 +31,11 @@ class ThemePreset:
     warning: str
     danger: str
     star: str
+    min_level: int = 1
+    """Player level (see app.progress.store.PlayerLevel) required to select
+    this skin in Settings -- 1 means always unlocked. Locked skins still
+    render fine if already selected (e.g. from an old save); the gate is
+    only enforced at selection time in the Settings screen."""
 
 
 # A handful of curated, kid-friendly palettes -- including two dark-mode
@@ -77,6 +82,32 @@ THEME_PRESETS: dict[str, ThemePreset] = {
         primary="#C77DFF", primary_hover="#A855F7",
         success="#4ADE9E", success_hover="#3BC589",
         warning="#FFC857", danger="#FF7B7B", star="#FFD866",
+    ),
+    # Unlockable "Adventure Skins" -- gated behind player level (see
+    # app.progress.store.PlayerLevel), not selectable from the start.
+    "space_odyssey": ThemePreset(
+        key="space_odyssey", title="Space Odyssey", icon="🚀", is_dark=True,
+        bg="#0B1026", card="#151B3D", text="#E8ECFF", text_muted="#8A93C7",
+        primary="#5DE8FF", primary_hover="#3BC5DD",
+        success="#4ADE9E", success_hover="#3BC589",
+        warning="#FFC857", danger="#FF6B6B", star="#FFD866",
+        min_level=3,
+    ),
+    "cyberpunk": ThemePreset(
+        key="cyberpunk", title="Cyberpunk", icon="🌆", is_dark=True,
+        bg="#160221", card="#26073A", text="#F5E6FF", text_muted="#B98FD6",
+        primary="#FF2E9A", primary_hover="#E01E82",
+        success="#39FF88", success_hover="#2ADB6F",
+        warning="#FFE93B", danger="#FF3860", star="#00F0FF",
+        min_level=5,
+    ),
+    "enchanted_forest": ThemePreset(
+        key="enchanted_forest", title="Enchanted Forest", icon="🧚", is_dark=True,
+        bg="#0D1F16", card="#16301F", text="#E4F5E9", text_muted="#8FBF9F",
+        primary="#7CFFB2", primary_hover="#5FE896",
+        success="#4ADE9E", success_hover="#3BC589",
+        warning="#FFC857", danger="#FF7B7B", star="#FFD866",
+        min_level=8,
     ),
 }
 

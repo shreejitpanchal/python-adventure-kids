@@ -1,0 +1,35 @@
+id: cracker_01
+title: "Code Cracker: The Mismatched Score 🧩"
+level: 200
+objective: "Fix a TypeError caused by adding text and a number together."
+explanation: |
+  + only works when both sides match: two numbers, or two pieces of text.
+  Mixing them -- like text + a number -- causes a TypeError.
+
+  int() converts text that looks like a number into a real number, so it
+  can be added to other numbers.
+example_code: |
+  user_score = "150"
+  bonus_points = 50
+  total_score = int(user_score) + bonus_points
+  print(total_score)
+starter_code: |
+  user_score = "150"
+  bonus_points = 50
+  total_score = user_score + bonus_points
+  print(total_score)
+challenge: |
+  🎯 This code is broken! user_score is text (in quotes), but bonus_points
+  is a number -- fix the line so they can be added together.
+expected_output: "200"
+ast_contains: ["int", "print"]
+hints:
+  - "user_score is text (in quotes), but bonus_points is a number -- they can't be added directly."
+  - "Wrap user_score in int(...) to turn it into a real number first."
+  - "It should look like: total_score = int(user_score) + bonus_points"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 1
+main_path: false

@@ -6,7 +6,7 @@ import threading
 import customtkinter as ctk
 
 from app.engine.lesson import Lesson
-from app.engine.validator import validate_output
+from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_window import GameWindow
 from app.games.graphical_runner import run_graphical_code
 from app.sandbox.errors import extract_error_line_number, translate_error
@@ -257,13 +257,26 @@ class LessonScreen(ctk.CTkFrame):
             self.app.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
             return
 
-        if validate_output(
+        output_ok = validate_output(
             result.stdout, self.lesson.expected_output,
             input_value=self._current_input_value,
             expected_output_pattern=self.lesson.expected_output_pattern,
-        ):
+        )
+        ast_ok = (
+            validate_ast_contains(self.editor.get_code(), self.lesson.ast_contains)
+            if self.lesson.ast_contains else True
+        )
+
+        if output_ok and ast_ok:
             self._show_output(result.stdout or "(no output)", theme.COLOR_SUCCESS)
             self._on_lesson_success()
+        elif output_ok and not ast_ok:
+            self._show_output(
+                f"Python said:\n{result.stdout or '(no output)'}\n\n"
+                "That's the right answer, but try solving it using what this lesson "
+                "is teaching, not just typing the answer directly!",
+                theme.COLOR_WARNING,
+            )
         else:
             self._show_output(
                 f"Python said:\n{result.stdout or '(no output)'}\n\n"
@@ -294,6 +307,16 @@ class LessonScreen(ctk.CTkFrame):
             if line:
                 self.editor.highlight_error_line(line)
             self.app.progress.log_event(self.lesson.id, "attempt_error", result.traceback_text[-200:])
+            return
+
+        ast_ok = (
+            validate_ast_contains(code, self.lesson.ast_contains) if self.lesson.ast_contains else True
+        )
+        if not ast_ok:
+            self._show_output(
+                "🎮 Your game ran, but try solving it using what this lesson is teaching!",
+                theme.COLOR_WARNING,
+            )
             return
 
         self._show_output("🎮 Your game is running! Check out the window that just opened.", theme.COLOR_SUCCESS)

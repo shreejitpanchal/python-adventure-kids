@@ -1,0 +1,34 @@
+id: art_06
+title: "Creative Arts: Turning the Other Way 🎨"
+level: 225
+objective: "Draw the same square shape using turn_left instead of turn_right."
+explanation: |
+  game.turn_left(degrees) spins the robot artist the opposite way from
+  turn_right -- counter-clockwise instead of clockwise. Everything else
+  about drawing works exactly the same.
+example_code: |
+  game.set_background("white")
+  for i in range(4):
+      game.forward(100)
+      game.turn_left(90)
+starter_code: |
+  game.set_background("white")
+  for i in range(4):
+      game.forward(100)
+      game.turn_left(90)
+challenge: |
+  🎯 Challenge: Press RUN and compare this to the square from turn_right --
+  does it look any different?
+expected_output: ""
+ast_contains: ["for", "forward", "turn_left"]
+hints:
+  - "turn_left and turn_right turn by the same amount, just in opposite directions."
+  - "For a simple closed shape like a square, the result looks the same either way!"
+  - "The difference matters more once shapes get more complicated."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+graphical: true
+category: creative_arts
+category_level: 6
+main_path: false

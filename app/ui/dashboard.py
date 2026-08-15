@@ -23,6 +23,7 @@ class DashboardFrame(ctk.CTkFrame):
         self.scroll.pack(fill="both", expand=True)
 
         self._build_header(self.scroll)
+        self._build_xp_hud(self.scroll)
         self._build_body(self.scroll)
         self._build_footer(self.scroll)
 
@@ -60,6 +61,43 @@ class DashboardFrame(ctk.CTkFrame):
             parent, text=f"Welcome back, {name}!", font=theme.font_heading(20),
             text_color=theme.COLOR_TEXT,
         ).pack(anchor="w", padx=44, pady=(0, 20))
+
+    def _build_xp_hud(self, parent) -> None:
+        """Player-level HUD, separate from the existing "Level {n}" stat pill
+        in the mission card below (that one is the current lesson's `level`
+        number, not an XP-derived player level -- two different, pre-existing
+        meanings of "level" in this app, kept visually distinct here rather
+        than conflated)."""
+        player = self.app.progress.get_player_level()
+        progress_ratio = player.xp_into_level / player.xp_needed_for_level if player.xp_needed_for_level else 0.0
+
+        hud = ctk.CTkFrame(parent, fg_color=theme.COLOR_CARD, corner_radius=16)
+        hud.pack(fill="x", padx=40, pady=(0, 16))
+
+        row = ctk.CTkFrame(hud, fg_color="transparent")
+        row.pack(fill="x", padx=16, pady=16)
+
+        badge = ctk.CTkFrame(row, fg_color=theme.COLOR_WARNING, corner_radius=10)
+        badge.pack(side="left", padx=(0, 14))
+        ctk.CTkLabel(
+            badge, text=f"LVL {player.level}", font=theme.font_button(16), text_color="#FFFFFF",
+        ).pack(padx=14, pady=10)
+
+        info = ctk.CTkFrame(row, fg_color="transparent")
+        info.pack(side="left", fill="x", expand=True)
+
+        ctk.CTkLabel(
+            info, text="Player Level", font=theme.font_body(13), text_color=theme.COLOR_TEXT_MUTED,
+        ).pack(anchor="w")
+
+        xp_bar = ctk.CTkProgressBar(info, height=14, corner_radius=7, progress_color=theme.COLOR_SUCCESS, width=240)
+        xp_bar.pack(anchor="w", pady=(4, 4))
+        xp_bar.set(progress_ratio)
+
+        ctk.CTkLabel(
+            info, text=f"{player.xp_into_level}/{player.xp_needed_for_level} XP",
+            font=theme.font_body(11), text_color=theme.COLOR_TEXT_MUTED,
+        ).pack(anchor="w")
 
     def _build_body(self, parent) -> None:
         container = ctk.CTkFrame(parent, fg_color="transparent")

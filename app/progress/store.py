@@ -43,7 +43,33 @@ CREATE TABLE IF NOT EXISTS quiz_attempts (
     total INTEGER NOT NULL,
     completed_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS player_xp (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    total_xp INTEGER NOT NULL DEFAULT 0
+);
 """
+
+# XP cost to clear level N is N * 100 (level 1->2 costs 100, 2->3 costs 200, ...).
+_XP_PER_LEVEL_STEP = 100
+
+
+def _level_from_xp(total_xp: int) -> tuple[int, int, int]:
+    """(level, xp_into_level, xp_needed_for_level) for a cumulative XP total.
+
+    Computed fresh from the single stored total_xp counter rather than
+    storing level/remaining-xp as separate mutable fields, so there's one
+    source of truth and the leveling curve can change later without
+    migrating old stored state.
+    """
+    level = 1
+    remaining = total_xp
+    xp_needed = level * _XP_PER_LEVEL_STEP
+    while remaining >= xp_needed:
+        remaining -= xp_needed
+        level += 1
+        xp_needed = level * _XP_PER_LEVEL_STEP
+    return level, remaining, xp_needed
 
 
 def _now() -> str:
@@ -60,6 +86,14 @@ class ProfileSummary:
     badges_earned: int
 
 
+@dataclass
+class PlayerLevel:
+    level: int
+    xp_into_level: int
+    xp_needed_for_level: int
+    total_xp: int
+
+
 class ProgressStore:
     """Owns the SQLite connection for the child's progress data."""
 
@@ -74,6 +108,9 @@ class ProgressStore:
             self._conn.executescript(SCHEMA)
             self._conn.execute(
                 "INSERT OR IGNORE INTO profile (id, level, total_stars) VALUES (1, 1, 0)"
+            )
+            self._conn.execute(
+                "INSERT OR IGNORE INTO player_xp (id, total_xp) VALUES (1, 0)"
             )
 
     def close(self) -> None:
@@ -131,6 +168,10 @@ class ProgressStore:
 
     # -- Lessons -------------------------------------------------------
     def complete_lesson(self, lesson_id: str, stars_earned: int) -> None:
+        # XP is only awarded the first time a lesson is completed -- otherwise
+        # replaying an already-completed lesson would let XP be farmed
+        # infinitely, unlike stars (which are already capped via MAX() below).
+        first_time = not self.is_lesson_completed(lesson_id)
         with self._conn:
             self._conn.execute(
                 """INSERT INTO lesson_completions (lesson_id, stars_earned, completed_at)
@@ -144,6 +185,8 @@ class ProgressStore:
                 "UPDATE profile SET total_stars = (SELECT COALESCE(SUM(stars_earned), 0) FROM lesson_completions) WHERE id = 1"
             )
         self.log_event(lesson_id, "lesson_completed", f"stars={stars_earned}")
+        if first_time:
+            self.add_xp(stars_earned * 10)
 
     def is_lesson_completed(self, lesson_id: str) -> bool:
         with closing(self._conn.cursor()) as cur:
@@ -180,6 +223,13 @@ class ProgressStore:
             cur.execute("SELECT badge_id FROM badges ORDER BY earned_at")
             return [row[0] for row in cur.fetchall()]
 
+    def get_badges_with_dates(self) -> list[tuple[str, str]]:
+        """(badge_id, earned_at ISO timestamp) pairs, oldest first -- for the
+        Trophy Room, which shows when each badge was earned."""
+        with closing(self._conn.cursor()) as cur:
+            cur.execute("SELECT badge_id, earned_at FROM badges ORDER BY earned_at")
+            return [(row[0], row[1]) for row in cur.fetchall()]
+
     # -- Quiz --------------------------------------------------------------
     def record_quiz_attempt(self, score: int, total: int) -> None:
         with self._conn:
@@ -188,6 +238,10 @@ class ProgressStore:
                 (score, total, _now()),
             )
         self.log_event(None, "quiz_completed", f"score={score}/{total}")
+        # Every attempt is a freshly randomized session, so unlike lessons
+        # there's no first-time-only gate -- XP per correct answer is safe
+        # from farming since it still requires answering correctly each time.
+        self.add_xp(score * 5)
 
     def get_best_quiz_score(self) -> Optional[tuple[int, int]]:
         """(score, total) of the highest-scoring attempt, or None if never played."""
@@ -202,6 +256,26 @@ class ProgressStore:
         with closing(self._conn.cursor()) as cur:
             cur.execute("SELECT COUNT(*) FROM quiz_attempts")
             return cur.fetchone()[0]
+
+    # -- XP / leveling -------------------------------------------------------
+    def add_xp(self, amount: int) -> PlayerLevel:
+        """Awards XP (amount may be 0, e.g. a lesson worth 0 stars) and
+        returns the resulting level/progress."""
+        if amount:
+            with self._conn:
+                self._conn.execute(
+                    "UPDATE player_xp SET total_xp = total_xp + ? WHERE id = 1", (amount,)
+                )
+        return self.get_player_level()
+
+    def get_player_level(self) -> PlayerLevel:
+        with closing(self._conn.cursor()) as cur:
+            cur.execute("SELECT total_xp FROM player_xp WHERE id = 1")
+            (total_xp,) = cur.fetchone()
+        level, xp_into_level, xp_needed = _level_from_xp(total_xp)
+        return PlayerLevel(
+            level=level, xp_into_level=xp_into_level, xp_needed_for_level=xp_needed, total_xp=total_xp,
+        )
 
     # -- Activity log (feeds the parent dashboard) ------------------------
     def log_event(self, lesson_id: Optional[str], event_type: str, detail: str = "") -> None:
@@ -232,3 +306,4 @@ class ProgressStore:
             self._conn.execute(
                 "UPDATE profile SET level = 1, total_stars = 0, current_lesson_id = NULL, streak_days = 0, last_played_date = NULL WHERE id = 1"
             )
+            self._conn.execute("UPDATE player_xp SET total_xp = 0 WHERE id = 1")

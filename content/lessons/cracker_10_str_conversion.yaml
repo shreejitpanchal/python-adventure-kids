@@ -1,0 +1,28 @@
+id: cracker_10
+title: "Code Cracker: The Missing str() 🧩"
+level: 209
+objective: "Fix a TypeError caused by joining text and a number with +."
+explanation: |
+  + can join two strings, or add two numbers -- but not mix a string and a
+  number together. str() turns a number into text first, so it can safely
+  join with other text using +.
+example_code: |
+  lives = 3
+  print("Lives left: " + str(lives))
+starter_code: |
+  lives = 3
+  print("Lives left: " + lives)
+challenge: |
+  🎯 This code won't run! Fix the line so it prints without an error.
+expected_output: "Lives left: 3"
+ast_contains: ["str", "print"]
+hints:
+  - "lives is a number, but you're trying to join it directly with text using +."
+  - "str() turns a number into text first."
+  - "It should look like: print(\"Lives left: \" + str(lives))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 10
+main_path: false

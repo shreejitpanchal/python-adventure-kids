@@ -38,9 +38,10 @@ def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
 def _build_theme_card(page: ft.Page, state: AppState) -> ft.Control:
     theme = state.theme
     current_key = state.settings.theme
+    player_level = state.progress.get_player_level().level
 
     options = [
-        _build_theme_option(page, state, preset, current_key == preset.key)
+        _build_theme_option(page, state, preset, current_key == preset.key, player_level >= preset.min_level)
         for preset in THEME_PRESETS.values()
     ]
 
@@ -60,8 +61,12 @@ def _build_theme_card(page: ft.Page, state: AppState) -> ft.Control:
     )
 
 
-def _build_theme_option(page: ft.Page, state: AppState, preset: ThemePreset, is_selected: bool) -> ft.Control:
+def _build_theme_option(
+    page: ft.Page, state: AppState, preset: ThemePreset, is_selected: bool, unlocked: bool,
+) -> ft.Control:
     def select(_e=None) -> None:
+        if state.progress.get_player_level().level < preset.min_level:
+            return  # defense in depth -- the button should already be disabled
         state.apply_theme(preset.key)
         # Not page.go("/settings") -- Flet's own routing drops a RouteChangeEvent
         # whose route matches the last-seen one (Page.before_event(), page.py),
@@ -75,23 +80,32 @@ def _build_theme_option(page: ft.Page, state: AppState, preset: ThemePreset, is_
         page.theme_mode = ft.ThemeMode.DARK if state.theme.is_dark else ft.ThemeMode.LIGHT
         page.update()
 
+    swatch_colors = (
+        (preset.primary, preset.success, preset.warning, preset.danger) if unlocked
+        else (preset.text_muted,) * 4
+    )
     swatches = ft.Row(
-        [
-            ft.Container(bgcolor=color, width=28, height=28, border_radius=8)
-            for color in (preset.primary, preset.success, preset.warning, preset.danger)
-        ],
+        [ft.Container(bgcolor=color, width=28, height=28, border_radius=8) for color in swatch_colors],
         spacing=6,
     )
+
+    if not unlocked:
+        button_text = f"🔒 Unlocks at Level {preset.min_level}"
+    else:
+        button_text = "✅ Selected" if is_selected else "Select"
 
     return ft.Container(
         content=ft.Column(
             [
-                ft.Text(f"{preset.icon}  {preset.title}", size=16, weight=ft.FontWeight.BOLD, color=preset.text),
+                ft.Text(
+                    f"{preset.icon}  {preset.title}" if unlocked else f"🔒  {preset.title}",
+                    size=16, weight=ft.FontWeight.BOLD, color=preset.text if unlocked else preset.text_muted,
+                ),
                 swatches,
                 ft.Button(
-                    "✅ Selected" if is_selected else "Select",
-                    disabled=is_selected, on_click=select, height=48,
-                    style=ft.ButtonStyle(bgcolor=preset.primary, color="#FFFFFF"),
+                    button_text,
+                    disabled=is_selected or not unlocked, on_click=select, height=48,
+                    style=ft.ButtonStyle(bgcolor=preset.primary if unlocked else preset.text_muted, color="#FFFFFF"),
                 ),
             ],
             spacing=10,

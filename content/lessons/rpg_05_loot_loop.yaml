@@ -1,0 +1,30 @@
+id: rpg_05
+title: "RPG Quest: Reading the Loot List ⚔️"
+level: 244
+objective: "Use a for loop to print every item in a list."
+explanation: |
+  for item in a_list: repeats once for every item in the list, giving you
+  each one in turn -- perfect for showing everything in an inventory
+  without printing each item by hand.
+example_code: |
+  inventory = ["map", "potion", "sword"]
+  for item in inventory:
+      print(item)
+starter_code: |
+  inventory = ["map", "potion", "sword"]
+  print(inventory[0])
+challenge: |
+  🎯 Print every item in the inventory, one per line -- not just the
+  first one.
+expected_output: "map\npotion\nsword"
+ast_contains: ["for"]
+hints:
+  - "for item in inventory: repeats once per item, automatically."
+  - "Put print(item) indented underneath the for line."
+  - "It should look like:\nfor item in inventory:\n    print(item)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: rpg_quests
+category_level: 5
+main_path: false

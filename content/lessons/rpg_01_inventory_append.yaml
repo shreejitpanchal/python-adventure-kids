@@ -1,0 +1,30 @@
+id: rpg_01
+title: "RPG Quest: Equipping the Mythic Sword ⚔️"
+level: 240
+objective: "Add a new item to a list using .append()."
+explanation: |
+  Your explorer's inventory is a list. .append(item) adds a new item onto
+  the end of it, in place -- inventory.append("sword") doesn't make a new
+  list, it grows the existing one.
+example_code: |
+  inventory = ["map", "potion"]
+  inventory.append("mythic sword")
+  print(inventory)
+starter_code: |
+  inventory = ["map", "potion"]
+  print(inventory)
+challenge: |
+  🎯 Your explorer just found a mythic sword! Add it to the inventory
+  before printing it.
+expected_output: "['map', 'potion', 'mythic sword']"
+ast_contains: ["inventory.append"]
+hints:
+  - "Use inventory.append(...) to add a new item onto the end of the list."
+  - "Add the append line before the print line, so the sword is already in there."
+  - "It should look like: inventory.append(\"mythic sword\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: rpg_quests
+category_level: 1
+main_path: false

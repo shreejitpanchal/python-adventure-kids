@@ -84,6 +84,169 @@ def test_clear_removes_all_shapes():
     assert len(canvas.shapes) == 0
 
 
+def test_forward_draws_a_line_from_the_starting_position():
+    gc, canvas, container, title_text = make_canvas()
+    shape_id = gc.forward(100)
+    assert len(canvas.shapes) == 1
+    line = canvas.shapes[0]
+    assert (line.x1, line.y1, line.x2, line.y2) == pytest.approx([50.0, 50.0, 150.0, 50.0])
+    assert isinstance(shape_id, int)
+
+
+def test_forward_twice_continues_from_the_new_position():
+    gc, canvas, container, title_text = make_canvas()
+    gc.forward(50)
+    gc.forward(30)
+    second_line = canvas.shapes[1]
+    assert (second_line.x1, second_line.y1, second_line.x2, second_line.y2) == pytest.approx([100.0, 50.0, 130.0, 50.0])
+
+
+def test_turn_right_rotates_the_heading_clockwise():
+    gc, canvas, container, title_text = make_canvas()
+    gc.turn_right(90)
+    gc.forward(40)
+    line = canvas.shapes[0]
+    assert (line.x1, line.y1, line.x2, line.y2) == pytest.approx([50.0, 50.0, 50.0, 90.0])
+
+
+def test_turn_left_rotates_the_heading_counterclockwise():
+    gc, canvas, container, title_text = make_canvas()
+    gc.turn_left(90)
+    gc.forward(40)
+    line = canvas.shapes[0]
+    assert (line.x1, line.y1, line.x2, line.y2) == pytest.approx([50.0, 50.0, 50.0, 10.0])
+
+
+def test_four_forward_and_turn_right_draws_a_closed_square():
+    gc, canvas, container, title_text = make_canvas()
+    for _ in range(4):
+        gc.forward(100)
+        gc.turn_right(90)
+    assert (gc._turtle_x, gc._turtle_y) == pytest.approx((50.0, 50.0))
+    assert len(canvas.shapes) == 4
+
+
+def test_draw_line_is_independent_of_turtle_position_and_heading():
+    gc, canvas, container, title_text = make_canvas()
+    gc.turn_right(45)  # should have no effect on draw_line
+    gc.draw_line(0, 0, 10, 10, "blue")
+    line = canvas.shapes[0]
+    assert (line.x1, line.y1, line.x2, line.y2) == (0, 0, 10, 10)
+    assert line.paint.color == "blue"
+    # And doesn't move the turtle itself.
+    assert (gc._turtle_x, gc._turtle_y) == (50.0, 50.0)
+
+
+def test_draw_circle_adds_a_shape_centered_at_x_y():
+    gc, canvas, container, title_text = make_canvas()
+    shape_id = gc.draw_circle(100, 120, 15, "red")
+    assert isinstance(shape_id, int)
+    assert len(canvas.shapes) == 1
+    circle = canvas.shapes[0]
+    assert (circle.x, circle.y, circle.radius) == (100, 120, 15)
+    assert circle.paint.color == "red"
+
+
+def test_draw_circle_and_draw_rect_ids_dont_collide():
+    gc, canvas, container, title_text = make_canvas()
+    a = gc.draw_rect(0, 0, 10, 10)
+    b = gc.draw_circle(0, 0, 5)
+    assert a != b
+
+
+def test_move_shape_works_for_circles_too():
+    gc, canvas, container, title_text = make_canvas()
+    shape_id = gc.draw_circle(50, 50, 10)
+    gc.move_shape(shape_id, 5, -5)
+    assert gc.get_shape_position(shape_id) == (55, 45)
+
+
+def test_check_collision_true_when_two_rects_overlap():
+    gc, canvas, container, title_text = make_canvas()
+    a = gc.draw_rect(0, 0, 20, 20)
+    b = gc.draw_rect(10, 10, 20, 20)
+    assert gc.check_collision(a, b) is True
+
+
+def test_check_collision_false_when_two_rects_dont_overlap():
+    gc, canvas, container, title_text = make_canvas()
+    a = gc.draw_rect(0, 0, 10, 10)
+    b = gc.draw_rect(100, 100, 10, 10)
+    assert gc.check_collision(a, b) is False
+
+
+def test_check_collision_between_a_circle_and_a_rect():
+    gc, canvas, container, title_text = make_canvas()
+    ball = gc.draw_circle(20, 20, 10)  # bbox (10,10)-(30,30)
+    paddle = gc.draw_rect(25, 25, 40, 10)  # bbox (25,25)-(65,35)
+    assert gc.check_collision(ball, paddle) is True
+
+    gc.set_shape_position(ball, 200, 200)
+    assert gc.check_collision(ball, paddle) is False
+
+
+def test_check_collision_touching_edges_does_not_count_as_overlap():
+    gc, canvas, container, title_text = make_canvas()
+    a = gc.draw_rect(0, 0, 10, 10)
+    b = gc.draw_rect(10, 0, 10, 10)  # flush against a's right edge
+    assert gc.check_collision(a, b) is False
+
+
+def test_check_collision_with_an_unknown_shape_id_is_false_not_a_crash():
+    gc, canvas, container, title_text = make_canvas()
+    a = gc.draw_rect(0, 0, 10, 10)
+    assert gc.check_collision(a, 9999) is False
+
+
+def test_check_collision_ignores_shapes_with_no_tracked_size():
+    gc, canvas, container, title_text = make_canvas()
+    a = gc.draw_rect(0, 0, 100, 100)
+    line_id = gc.draw_line(0, 0, 10, 10)
+    assert gc.check_collision(a, line_id) is False
+
+
+def test_delete_shape_forgets_its_size_for_collision_checks():
+    gc, canvas, container, title_text = make_canvas()
+    a = gc.draw_rect(0, 0, 10, 10)
+    b = gc.draw_rect(0, 0, 10, 10)
+    gc.delete_shape(b)
+    assert gc.check_collision(a, b) is False
+
+
+def test_is_key_down_false_before_any_key_down():
+    gc, canvas, container, title_text = make_canvas()
+    assert gc.is_key_down("Left") is False
+
+
+def test_key_down_then_is_key_down_true():
+    gc, canvas, container, title_text = make_canvas()
+    gc.key_down("Left")
+    assert gc.is_key_down("Left") is True
+
+
+def test_key_up_releases_a_held_key():
+    gc, canvas, container, title_text = make_canvas()
+    gc.key_down("Left")
+    gc.key_up("Left")
+    assert gc.is_key_down("Left") is False
+
+
+def test_key_up_on_a_key_never_pressed_is_a_safe_no_op():
+    gc, canvas, container, title_text = make_canvas()
+    gc.key_up("Right")  # should not raise
+
+
+def test_key_down_silently_ignores_unrecognized_keys():
+    gc, canvas, container, title_text = make_canvas()
+    gc.key_down("Enter")  # should not raise -- driven by real keyboard events, not lesson code
+
+
+def test_is_key_down_rejects_unknown_key():
+    gc, canvas, container, title_text = make_canvas()
+    with pytest.raises(ValueError):
+        gc.is_key_down("Escape")
+
+
 def test_on_key_rejects_unknown_key():
     gc, canvas, container, title_text = make_canvas()
     with pytest.raises(ValueError):

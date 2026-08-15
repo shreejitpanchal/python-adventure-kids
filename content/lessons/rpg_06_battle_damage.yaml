@@ -1,0 +1,31 @@
+id: rpg_06
+title: "RPG Quest: Taking Damage ⚔️"
+level: 245
+objective: "Use subtraction to reduce a character's health."
+explanation: |
+  A battle needs a health total that goes down when your explorer gets
+  hit. Subtracting the damage amount from health and storing the result
+  back keeps track of exactly how hurt they are.
+example_code: |
+  health = 100
+  damage = 35
+  health = health - damage
+  print(health)
+starter_code: |
+  health = 100
+  damage = 35
+  print(health)
+challenge: |
+  🎯 A monster hit your explorer for 35 damage! Subtract it from health
+  before printing.
+expected_output: "65"
+hints:
+  - "health - damage gives the new, lower health."
+  - "Store the result back into health before printing it."
+  - "It should look like: health = health - damage"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: rpg_quests
+category_level: 6
+main_path: false

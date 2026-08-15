@@ -18,6 +18,7 @@ from app.ui.parent_dashboard_flet import build_parent_view
 from app.ui.quiz_screen_flet import build_quiz_view
 from app.ui.settings_screen_flet import build_settings_view
 from app.ui.setup_wizard_flet import build_setup_wizard_view
+from app.ui.trophy_room_flet import build_trophy_room_view
 
 
 def main(page: ft.Page) -> None:
@@ -47,6 +48,8 @@ def main(page: ft.Page) -> None:
             page.views.append(build_parent_view(page, state))
         elif route == "/quiz":
             page.views.append(build_quiz_view(page, state))
+        elif route == "/trophy-room":
+            page.views.append(build_trophy_room_view(page, state))
         elif route.startswith("/lesson/"):
             lesson_id = route.removeprefix("/lesson/")
             page.views.append(build_lesson_view(page, state, lesson_id))

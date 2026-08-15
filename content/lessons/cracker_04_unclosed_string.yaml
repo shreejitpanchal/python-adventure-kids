@@ -1,0 +1,26 @@
+id: cracker_04
+title: "Code Cracker: The Runaway Quote 🧩"
+level: 203
+objective: "Fix a SyntaxError caused by a missing closing quote mark."
+explanation: |
+  Every string needs a matching pair of quote marks -- one to open it, one
+  to close it. Forgetting the closing one confuses Python about where your
+  text ends and the rest of the line begins.
+example_code: |
+  print("Welcome to the game!")
+starter_code: |
+  print("Welcome to the game!)
+challenge: |
+  🎯 This code won't run! Count the quote marks and fix the missing one.
+expected_output: "Welcome to the game!"
+ast_contains: ["print"]
+hints:
+  - "Count the quote marks around the text -- there should be two."
+  - "Add a closing quote mark right before the closing parenthesis."
+  - "It should look like: print(\"Welcome to the game!\")"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 4
+main_path: false

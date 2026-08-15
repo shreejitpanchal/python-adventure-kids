@@ -1,0 +1,41 @@
+id: art_04
+title: "Creative Arts: The Triangle 🎨"
+level: 223
+objective: "Combine forward and turn_right three times to draw a triangle."
+explanation: |
+  A triangle has 3 sides and 3 corners. Draw one side, turn, draw the next
+  side, turn again, draw the last side -- three forward/turn_right pairs
+  in a row, no loop needed yet.
+
+  For a triangle where every side is the same length, each turn is 120
+  degrees.
+example_code: |
+  game.set_background("white")
+  game.forward(100)
+  game.turn_right(120)
+  game.forward(100)
+  game.turn_right(120)
+  game.forward(100)
+starter_code: |
+  game.set_background("white")
+  game.forward(100)
+  game.turn_right(120)
+  game.forward(100)
+  game.turn_right(120)
+  game.forward(100)
+challenge: |
+  🎯 Challenge: Press RUN to see a triangle! Then try making each side a
+  different length -- what shape do you get?
+expected_output: ""
+ast_contains: ["forward", "turn_right"]
+hints:
+  - "Three sides, three turns -- but only two turns are needed between three forward moves."
+  - "120 degrees makes every corner point the same amount."
+  - "If the sides aren't equal, the triangle won't look even -- that's OK, try it!"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+graphical: true
+category: creative_arts
+category_level: 4
+main_path: false

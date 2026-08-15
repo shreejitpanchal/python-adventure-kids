@@ -1,0 +1,29 @@
+id: cracker_09
+title: "Code Cracker: The Extra Space 🧩"
+level: 208
+objective: "Fix an IndentationError caused by an unexpected extra space."
+explanation: |
+  Python uses indentation (spacing at the start of a line) to know which
+  lines belong together. A line that's indented when it shouldn't be --
+  even by one space -- confuses Python about what you meant.
+example_code: |
+  message = "Hello!"
+  print(message)
+starter_code: |
+  message = "Hello!"
+      print(message)
+challenge: |
+  🎯 This code won't run! Remove the extra space before print so it lines
+  up with the line above it.
+expected_output: "Hello!"
+ast_contains: ["print"]
+hints:
+  - "Look closely at the spaces before print -- there shouldn't be any."
+  - "print(message) should start at the very left, lined up with message = ..."
+  - "It should look like:\nmessage = \"Hello!\"\nprint(message)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 9
+main_path: false

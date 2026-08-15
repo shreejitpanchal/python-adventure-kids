@@ -1,0 +1,30 @@
+id: art_01
+title: "Creative Arts: Your First Line 🎨"
+level: 220
+objective: "Draw a single straight line on the canvas."
+explanation: |
+  game.draw_line(x1, y1, x2, y2, color) draws a straight line between two
+  points. (x1, y1) is where the line starts, (x2, y2) is where it ends --
+  measured in pixels from the top-left corner of the canvas.
+example_code: |
+  game.set_background("white")
+  game.draw_line(20, 20, 200, 20, "purple")
+starter_code: |
+  game.set_background("white")
+  game.draw_line(20, 20, 200, 20, "purple")
+challenge: |
+  🎯 Challenge: Press RUN to see your line! Then try changing the numbers
+  to draw a line somewhere else, or a different color.
+expected_output: ""
+ast_contains: ["draw_line"]
+hints:
+  - "The first two numbers are where the line starts, the last two are where it ends."
+  - "Try game.draw_line(20, 100, 200, 100, \"orange\") for a horizontal line lower down."
+  - "Color names like \"red\", \"blue\", and \"green\" all work."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+graphical: true
+category: creative_arts
+category_level: 1
+main_path: false

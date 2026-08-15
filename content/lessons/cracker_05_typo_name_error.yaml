@@ -1,0 +1,29 @@
+id: cracker_05
+title: "Code Cracker: The Sneaky Typo 🧩"
+level: 204
+objective: "Fix a NameError caused by a misspelled variable name."
+explanation: |
+  Python variable names have to match exactly, every single time. A single
+  typo makes Python think you're asking about a variable that was never
+  created.
+example_code: |
+  player_name = "Alex"
+  print(player_name)
+starter_code: |
+  player_name = "Alex"
+  print(playr_name)
+challenge: |
+  🎯 This code won't run! Compare the spelling on both lines and fix the
+  typo.
+expected_output: "Alex"
+ast_contains: ["print"]
+hints:
+  - "Compare the spelling on both lines carefully."
+  - "player_name is missing a letter on the print line."
+  - "It should look like: print(player_name)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 5
+main_path: false

@@ -1,0 +1,28 @@
+id: cracker_06
+title: "Code Cracker: The Missing Number 🧩"
+level: 205
+objective: "Fix a loop that's printing one number too few."
+explanation: |
+  range(start, stop) stops BEFORE reaching stop -- it never includes the
+  last number. To count all the way up to and including 5, you need
+  range(1, 6), not range(1, 5).
+example_code: |
+  for number in range(1, 6):
+      print(number)
+starter_code: |
+  for number in range(1, 5):
+      print(number)
+challenge: |
+  🎯 This loop is missing a number! Fix the range so it prints 1 through 5.
+expected_output: "1\n2\n3\n4\n5"
+ast_contains: ["for"]
+hints:
+  - "range(1, 5) stops before reaching 5 -- count how many numbers it actually prints."
+  - "To include 5, the stop number needs to be one bigger."
+  - "It should look like: range(1, 6)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 6
+main_path: false

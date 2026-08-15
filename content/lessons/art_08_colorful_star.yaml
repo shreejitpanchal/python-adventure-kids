@@ -1,0 +1,37 @@
+id: art_08
+title: "Creative Arts: The Colorful Star 🎨"
+level: 227
+objective: "Draw a five-pointed star and give it a custom color."
+explanation: |
+  game.forward(distance, color) works just like game.forward(distance), but
+  lets you pick the color of the line it draws too.
+
+  A five-pointed star is a fun loop trick: instead of turning a little bit
+  each time like a pentagon, turn a lot -- 144 degrees -- and the path
+  crosses over itself into a star shape.
+example_code: |
+  game.set_background("black")
+  for i in range(5):
+      game.forward(150, "gold")
+      game.turn_right(144)
+starter_code: |
+  game.set_background("black")
+  for i in range(5):
+      game.forward(150, "gold")
+      game.turn_right(144)
+challenge: |
+  🎯 Challenge: Press RUN to see a golden star! Then try a different color,
+  or a different size star.
+expected_output: ""
+ast_contains: ["for", "forward", "turn_right"]
+hints:
+  - "The color goes as a second thing inside forward(), after the distance."
+  - "Try game.forward(150, \"cyan\") or any other color name."
+  - "Bigger distance makes a bigger star -- try 200 instead of 150."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+graphical: true
+category: creative_arts
+category_level: 8
+main_path: false

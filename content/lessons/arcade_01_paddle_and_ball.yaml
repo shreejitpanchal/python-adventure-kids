@@ -1,0 +1,34 @@
+id: arcade_01
+title: "Arcade Lab: Paddle and Ball 🏓"
+level: 260
+objective: "Draw a paddle and a ball using game.draw_rect() and game.draw_circle()."
+explanation: |
+  Every Pong-style game needs two things: a paddle to hit the ball, and a ball to bounce
+  around. You already know game.draw_rect(x, y, width, height, color) for the paddle.
+
+  game.draw_circle(x, y, radius, color) is new -- it draws a filled circle. Unlike
+  draw_rect, its x and y are the CENTER of the circle, not a corner.
+example_code: |
+  game.set_background("black")
+  paddle = game.draw_rect(140, 260, 80, 10, "white")
+  ball = game.draw_circle(180, 140, 8, "yellow")
+starter_code: |
+  game.set_background("black")
+  paddle = game.draw_rect(140, 260, 80, 10, "white")
+  ball = game.draw_circle(180, 140, 8, "yellow")
+challenge: |
+  🎯 Challenge: Press RUN to see your paddle and ball! Try changing the ball's radius
+  (the third number) to make it bigger or smaller.
+expected_output: ""
+ast_contains: ["draw_rect", "draw_circle"]
+hints:
+  - "game.draw_circle(180, 140, 8, \"yellow\") draws a yellow ball centered at (180, 140) with radius 8."
+  - "The game screen is 360 pixels wide and 280 pixels tall."
+  - "game.draw_rect still works the same way you learned it for Snake."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+graphical: true
+category: arcade_lab
+category_level: 1
+main_path: false

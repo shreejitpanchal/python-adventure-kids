@@ -1,0 +1,57 @@
+id: arcade_05
+title: "Arcade Lab: Paddle Bounce! 🏆"
+level: 264
+objective: "Use game.check_collision() to bounce the ball off the paddle."
+explanation: |
+  A bounce off a wall was easy -- we just checked an x or y number. But bouncing off the
+  paddle means checking if two shapes are actually touching, which is trickier since they
+  can be anywhere on the screen.
+
+  game.check_collision(shape_a, shape_b) does that hard part for you: it returns True the
+  moment two shapes overlap. When the ball hits the paddle, we flip dy, just like bouncing
+  off a wall.
+example_code: |
+  game.set_background("black")
+  paddle = game.draw_rect(140, 250, 80, 10, "white")
+  ball = game.draw_circle(180, 200, 8, "yellow")
+  dy = 4
+
+  def move_ball():
+      global dy
+      if game.check_collision(ball, paddle):
+          dy = -dy
+      game.move_shape(ball, 0, dy)
+      game.after(30, move_ball)
+
+  move_ball()
+starter_code: |
+  game.set_background("black")
+  paddle = game.draw_rect(140, 250, 80, 10, "white")
+  ball = game.draw_circle(180, 200, 8, "yellow")
+  dy = 4
+
+  def move_ball():
+      global dy
+      if game.check_collision(ball, paddle):
+          dy = -dy
+      game.move_shape(ball, 0, dy)
+      game.after(30, move_ball)
+
+  move_ball()
+challenge: |
+  🎯 Challenge: Press RUN and watch the ball bounce off the paddle! Now try combining
+  everything from this Arcade Lab -- add is_key_down() paddle movement and side-wall
+  bouncing from earlier lessons to build your own full Pong game.
+expected_output: ""
+ast_contains: ["check_collision"]
+hints:
+  - "game.check_collision(ball, paddle) is True only while the two shapes overlap."
+  - "Just like the wall bounces, flipping dy sends the ball back the other way."
+  - "You've now learned every piece needed for a real Pong game -- drawing, movement, keys, and collisions!"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+graphical: true
+category: arcade_lab
+category_level: 5
+main_path: false

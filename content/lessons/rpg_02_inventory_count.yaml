@@ -1,0 +1,29 @@
+id: rpg_02
+title: "RPG Quest: Counting Your Loot ⚔️"
+level: 241
+objective: "Use len() to count how many items are in a list."
+explanation: |
+  len(a_list) tells you how many items are inside it. It works on lists
+  the same way it worked on strings -- count the things inside, instead of
+  counting letters.
+example_code: |
+  inventory = ["map", "potion", "sword"]
+  print(len(inventory))
+starter_code: |
+  inventory = ["map", "potion", "sword"]
+  print(inventory)
+challenge: |
+  🎯 Your quest log wants a number, not a list! Print how many items you're
+  carrying instead of the list itself.
+expected_output: "3"
+ast_contains: ["len"]
+hints:
+  - "len(inventory) counts the items instead of listing them."
+  - "Replace print(inventory) with print(len(inventory))."
+  - "It should look like: print(len(inventory))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: rpg_quests
+category_level: 2
+main_path: false

@@ -66,6 +66,61 @@ def test_clear_removes_everything(game_canvas):
     assert canvas.find_all() == ()
 
 
+def test_forward_draws_a_line_from_the_starting_position(game_canvas):
+    gc, canvas, root = game_canvas
+    shape_id = gc.forward(100)
+    coords = canvas.coords(shape_id)
+    # Starts inset at (50, 50); heading 0 = facing +x, so straight right.
+    assert coords == pytest.approx([50.0, 50.0, 150.0, 50.0])
+
+
+def test_forward_twice_continues_from_the_new_position(game_canvas):
+    gc, canvas, root = game_canvas
+    gc.forward(50)
+    second_id = gc.forward(30)
+    coords = canvas.coords(second_id)
+    assert coords == pytest.approx([100.0, 50.0, 130.0, 50.0])
+
+
+def test_turn_right_rotates_the_heading_clockwise(game_canvas):
+    gc, canvas, root = game_canvas
+    gc.turn_right(90)
+    shape_id = gc.forward(40)
+    coords = canvas.coords(shape_id)
+    # Heading 90 with y-down screen coords means straight down.
+    assert coords == pytest.approx([50.0, 50.0, 50.0, 90.0])
+
+
+def test_turn_left_rotates_the_heading_counterclockwise(game_canvas):
+    gc, canvas, root = game_canvas
+    gc.turn_left(90)
+    shape_id = gc.forward(40)
+    coords = canvas.coords(shape_id)
+    assert coords == pytest.approx([50.0, 50.0, 50.0, 10.0])
+
+
+def test_four_forward_and_turn_right_draws_a_closed_square():
+    root = tk.Tk()
+    root.withdraw()
+    canvas = tk.Canvas(root)
+    gc = GameCanvas(canvas, root)
+    for _ in range(4):
+        gc.forward(100)
+        gc.turn_right(90)
+    assert (gc._turtle_x, gc._turtle_y) == pytest.approx((50.0, 50.0))
+    root.destroy()
+
+
+def test_draw_line_is_independent_of_turtle_position_and_heading(game_canvas):
+    gc, canvas, root = game_canvas
+    gc.turn_right(45)  # should have no effect on draw_line
+    shape_id = gc.draw_line(0, 0, 10, 10, "blue")
+    assert canvas.coords(shape_id) == [0.0, 0.0, 10.0, 10.0]
+    assert canvas.itemcget(shape_id, "fill") == "blue"
+    # And doesn't move the turtle itself.
+    assert (gc._turtle_x, gc._turtle_y) == (50.0, 50.0)
+
+
 def test_on_key_rejects_unknown_keys(game_canvas):
     gc, canvas, root = game_canvas
     with pytest.raises(ValueError):

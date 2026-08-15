@@ -1,0 +1,30 @@
+id: rpg_04
+title: "RPG Quest: Drinking the Potion ⚔️"
+level: 243
+objective: "Remove an item from a list using .remove()."
+explanation: |
+  .remove(item) takes an item OUT of a list, by naming what it is (not its
+  position). Once you use the potion, it shouldn't still be sitting in
+  your inventory.
+example_code: |
+  inventory = ["map", "potion", "sword"]
+  inventory.remove("potion")
+  print(inventory)
+starter_code: |
+  inventory = ["map", "potion", "sword"]
+  print(inventory)
+challenge: |
+  🎯 Your explorer just drank the potion! Remove it from the inventory
+  before printing.
+expected_output: "['map', 'sword']"
+ast_contains: ["inventory.remove"]
+hints:
+  - "Use inventory.remove(\"potion\") to take it out of the list."
+  - "Add the remove line before the print line."
+  - "It should look like: inventory.remove(\"potion\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: rpg_quests
+category_level: 4
+main_path: false

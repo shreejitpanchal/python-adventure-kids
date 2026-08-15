@@ -1,0 +1,36 @@
+id: art_03
+title: "Creative Arts: Turning Corners 🎨"
+level: 222
+objective: "Use game.turn_right() to change direction before drawing again."
+explanation: |
+  The robot artist can turn too! game.turn_right(degrees) spins it clockwise
+  by that many degrees, without drawing anything. A quarter turn is 90
+  degrees.
+
+  Turn, then forward again, and you can draw shapes with corners.
+example_code: |
+  game.set_background("white")
+  game.forward(100)
+  game.turn_right(90)
+  game.forward(100)
+starter_code: |
+  game.set_background("white")
+  game.forward(100)
+  game.turn_right(90)
+  game.forward(100)
+challenge: |
+  🎯 Challenge: Press RUN to see an L-shape! Then try turn_right(45) instead
+  -- what changes?
+expected_output: ""
+ast_contains: ["forward", "turn_right"]
+hints:
+  - "turn_right doesn't draw anything by itself -- it just changes which way the robot is facing."
+  - "90 degrees is a sharp, right-angle turn."
+  - "Try smaller turns, like 45, to see a wider angle."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+graphical: true
+category: creative_arts
+category_level: 3
+main_path: false

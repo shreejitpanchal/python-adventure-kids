@@ -37,6 +37,10 @@ CATEGORY_META: dict[str, CategoryMeta] = {
     "games": CategoryMeta("Mini Games", "🎮", "#EF5350"),
     "snake": CategoryMeta("Snake Project", "🐍", "#66BB6A"),
     "quiz": CategoryMeta("Quiz", "❓", "#5C6BC0"),
+    "code_crackers": CategoryMeta("Code Crackers", "🧩", "#D4A017"),
+    "creative_arts": CategoryMeta("Creative Arts", "🎨", "#FF6EC7"),
+    "rpg_quests": CategoryMeta("RPG Quests", "⚔️", "#8B4513"),
+    "arcade_lab": CategoryMeta("Arcade Lab", "🏓", "#00ACC1"),
 }
 
 DEFAULT_META = CategoryMeta("More Adventures", "⭐", "#78909C")

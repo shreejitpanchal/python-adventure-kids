@@ -1,0 +1,52 @@
+id: arcade_04
+title: "Arcade Lab: Move the Paddle 🕹️"
+level: 263
+objective: "Use game.is_key_down() to move the paddle left and right while a key is held."
+explanation: |
+  game.on_key(), which you used for Snake, only fires once per press. A paddle needs to
+  keep sliding as long as you HOLD the arrow key down -- so we use game.is_key_down(key)
+  instead, which asks "is this key being held right now?" every single tick.
+
+  We check it inside our own repeating move_paddle() loop (built with game.after(), just
+  like the moving ball), so the paddle keeps sliding smoothly for as long as you hold Left
+  or Right.
+example_code: |
+  game.set_background("black")
+  paddle = game.draw_rect(140, 260, 80, 10, "white")
+
+  def move_paddle():
+      if game.is_key_down("Left"):
+          game.move_shape(paddle, -6, 0)
+      if game.is_key_down("Right"):
+          game.move_shape(paddle, 6, 0)
+      game.after(30, move_paddle)
+
+  move_paddle()
+starter_code: |
+  game.set_background("black")
+  paddle = game.draw_rect(140, 260, 80, 10, "white")
+
+  def move_paddle():
+      if game.is_key_down("Left"):
+          game.move_shape(paddle, -6, 0)
+      if game.is_key_down("Right"):
+          game.move_shape(paddle, 6, 0)
+      game.after(30, move_paddle)
+
+  move_paddle()
+challenge: |
+  🎯 Challenge: Press RUN, then hold the Left and Right arrows (or tap-and-hold the D-pad)
+  to slide the paddle! Try making it move faster by changing 6 to a bigger number.
+expected_output: ""
+ast_contains: ["is_key_down"]
+hints:
+  - "game.is_key_down(\"Left\") is True for every tick you're holding the key, not just once."
+  - "Two separate if statements let the paddle respond to both keys independently."
+  - "game.on_key() is still there for single-press actions like Snake's turns -- is_key_down is for holding."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+graphical: true
+category: arcade_lab
+category_level: 4
+main_path: false

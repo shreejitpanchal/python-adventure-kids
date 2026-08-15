@@ -1,0 +1,30 @@
+id: art_02
+title: "Creative Arts: The Robot Artist 🎨"
+level: 221
+objective: "Use game.forward() to move and draw at the same time."
+explanation: |
+  Imagine a tiny robot artist standing on the canvas, facing right. game.forward(distance)
+  moves it forward by that many pixels -- and it draws a line the whole way, like
+  dragging a pen across paper.
+example_code: |
+  game.set_background("white")
+  game.forward(150)
+starter_code: |
+  game.set_background("white")
+  game.forward(150)
+challenge: |
+  🎯 Challenge: Press RUN to see the robot artist draw a line! Then try
+  changing the distance to make it longer or shorter.
+expected_output: ""
+ast_contains: ["forward"]
+hints:
+  - "game.forward(150) moves the robot 150 pixels and draws as it goes."
+  - "Try a bigger number, like game.forward(300)."
+  - "The robot always starts facing right, at the same spot every time you press RUN."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+graphical: true
+category: creative_arts
+category_level: 2
+main_path: false

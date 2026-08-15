@@ -126,3 +126,69 @@ def test_reset_progress_clears_quiz_attempts(store):
     store.record_quiz_attempt(score=40, total=55)
     store.reset_progress()
     assert store.get_best_quiz_score() is None
+
+
+# -- XP / leveling ------------------------------------------------------------
+def test_new_profile_starts_at_player_level_one_with_no_xp(store):
+    player = store.get_player_level()
+    assert player.level == 1
+    assert player.total_xp == 0
+    assert player.xp_into_level == 0
+    assert player.xp_needed_for_level == 100
+
+
+def test_add_xp_accumulates_without_leveling_up(store):
+    player = store.add_xp(30)
+    assert player.total_xp == 30
+    assert player.level == 1
+    assert player.xp_into_level == 30
+
+    player = store.add_xp(20)
+    assert player.total_xp == 50
+    assert player.level == 1
+    assert player.xp_into_level == 50
+
+
+def test_add_xp_crosses_a_level_boundary(store):
+    player = store.add_xp(100)
+    assert player.level == 2
+    assert player.xp_into_level == 0
+    assert player.xp_needed_for_level == 200  # level 2 -> 3 costs 200
+
+
+def test_add_xp_can_cross_multiple_level_boundaries_at_once(store):
+    # 100 (lvl1->2) + 200 (lvl2->3) + 50 into level 3 = 350
+    player = store.add_xp(350)
+    assert player.level == 3
+    assert player.xp_into_level == 50
+    assert player.xp_needed_for_level == 300
+
+
+def test_add_xp_zero_is_a_no_op(store):
+    before = store.get_player_level()
+    after = store.add_xp(0)
+    assert after == before
+
+
+def test_complete_lesson_awards_xp_once_but_not_on_replay(store):
+    store.complete_lesson("lesson_01", stars_earned=3)
+    assert store.get_player_level().total_xp == 30  # 3 stars * 10 xp
+
+    store.complete_lesson("lesson_01", stars_earned=3)  # replay, same lesson
+    assert store.get_player_level().total_xp == 30, "XP should not be farmable by replaying a completed lesson"
+
+
+def test_record_quiz_attempt_awards_xp_every_time(store):
+    store.record_quiz_attempt(score=5, total=5)
+    assert store.get_player_level().total_xp == 25  # 5 correct * 5 xp
+
+    store.record_quiz_attempt(score=3, total=5)
+    assert store.get_player_level().total_xp == 40  # +15 more
+
+
+def test_reset_progress_clears_xp(store):
+    store.add_xp(250)
+    store.reset_progress()
+    player = store.get_player_level()
+    assert player.total_xp == 0
+    assert player.level == 1

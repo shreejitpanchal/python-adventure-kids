@@ -1,0 +1,32 @@
+id: cracker_03
+title: "Code Cracker: One Equals Sign Too Few 🧩"
+level: 202
+objective: "Fix a SyntaxError caused by using = instead of == in a comparison."
+explanation: |
+  A single = stores a value in a variable. A double == compares two values
+  to see if they're equal. Using = where you mean == is one of the most
+  common mistakes in programming -- and Python won't even let you run code
+  with a plain = inside an if condition.
+example_code: |
+  score = 100
+  if score == 100:
+      print("Perfect score!")
+starter_code: |
+  score = 100
+  if score = 100:
+      print("Perfect score!")
+challenge: |
+  🎯 This code won't run! Fix the condition so it compares instead of
+  assigns.
+expected_output: "Perfect score!"
+ast_contains: ["if"]
+hints:
+  - "score = 100 stores a value -- that's not what you want inside an if."
+  - "Use == to check if two things are equal."
+  - "It should look like: if score == 100:"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 3
+main_path: false
