@@ -63,7 +63,17 @@ def _build_theme_card(page: ft.Page, state: AppState) -> ft.Control:
 def _build_theme_option(page: ft.Page, state: AppState, preset: ThemePreset, is_selected: bool) -> ft.Control:
     def select(_e=None) -> None:
         state.apply_theme(preset.key)
-        page.go("/settings")
+        # Not page.go("/settings") -- Flet's own routing drops a RouteChangeEvent
+        # whose route matches the last-seen one (Page.before_event(), page.py),
+        # so navigating to the route we're already on is a silent no-op: the
+        # view stays built with the old theme's colors until some other route
+        # actually changes. Rebuild the view and reapply the page-level theme
+        # bits in place instead, the same way app_window_flet.route_change() does.
+        page.views.clear()
+        page.views.append(build_settings_view(page, state))
+        page.bgcolor = state.theme.bg
+        page.theme_mode = ft.ThemeMode.DARK if state.theme.is_dark else ft.ThemeMode.LIGHT
+        page.update()
 
     swatches = ft.Row(
         [
