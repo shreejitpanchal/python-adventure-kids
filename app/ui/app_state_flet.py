@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from app.config.settings import Settings, get_db_path, load_settings, save_settings
 from app.engine.lesson_engine import LessonEngine
+from app.engine.quiz_engine import QuizEngine
 from app.progress.store import ProgressStore
 from app.ui.theme_flet import ThemePreset, get_preset
 
@@ -15,6 +16,7 @@ class AppState:
         self.settings: Settings = load_settings()
         self.progress = ProgressStore(get_db_path())
         self.lesson_engine = LessonEngine()
+        self.quiz_engine = QuizEngine()
 
     @property
     def theme(self) -> ThemePreset:

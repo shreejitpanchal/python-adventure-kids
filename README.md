@@ -10,19 +10,22 @@ A GUI-based Python learning app for kids, built with CustomTkinter.
 
 ## Status
 
-A Windows-to-Android re-platform onto [Flet](https://flet.dev) is
-underway in the background (one Python codebase targeting both), starting
-with the sandbox/execution layer — see "Code execution sandbox" below.
-The app described in this README, screenshots included, is the current
-CustomTkinter build, which keeps working unaffected until that migration
-reaches the UI.
+A Windows-to-Android re-platform onto [Flet](https://flet.dev) (one Python
+codebase targeting both — `main_flet.py`, `app/ui/*_flet.py`) is being built
+out feature-by-feature alongside the CustomTkinter app described in this
+README. It now has its own setup wizard, dashboard, category browser, quiz,
+settings screen, PIN-gated parent area, and full lesson flow (including the
+Snake project's graphical lessons), built against the same content and
+progress data. It isn't the shipping build yet, though — `run.bat`/`run.sh`
+and the screenshots below are still the CustomTkinter app (`main.py`); run
+the Flet build with `flet run main_flet.py` (see "Running it").
 
-**Phases 1–6 in progress: 132 lessons complete** (18 main-path + 114 bonus
-practice levels). First-run setup wizard, main dashboard, a category
-browser, a settings screen with 6 selectable color themes (including two
-dark-mode options), local progress storage, a PIN-gated parent area, and
-a full lesson flow (explain → example → code editor → run → friendly
-errors → reward) work end to end for:
+**Phases 1–8 in progress: 132 lessons complete** (18 main-path + 114 bonus
+practice levels), plus a standalone 55-question Quiz. First-run setup
+wizard, main dashboard, a category browser, a settings screen with 6
+selectable color themes (including two dark-mode options), local progress
+storage, a PIN-gated parent area, and a full lesson flow (explain → example
+→ code editor → run → friendly errors → reward) work end to end for:
 
 - **Lessons 1–13 (main path)**: Meet Python, Numbers, Addition,
   Subtraction, Multiplication, Division ("Math Master" badge), Variables,
@@ -42,6 +45,8 @@ errors → reward) work end to end for:
   type conversion, `**`/`//`/`%`, and chained/combined expressions —
   reachable only through the category browser, see "Category browser"
   below.
+- **Quiz**: a standalone 55-question multiple-choice quiz covering the
+  whole curriculum, reshuffled every time it's played — see "Quiz" below.
 
 See "Graphical lessons" below for how Snake's execution model differs
 from the rest of the lessons.
@@ -63,6 +68,13 @@ Manually, if you prefer:
 First run walks through a short setup wizard (child's name + an optional
 parent PIN), then lands on the dashboard.
 
+**The in-progress Flet re-platform** (see "Status" above) runs separately
+and shares the same progress data:
+
+```powershell
+.venv\Scripts\python.exe -m flet run main_flet.py
+```
+
 ## Running the tests
 
 ```powershell
@@ -74,22 +86,27 @@ parent PIN), then lands on the dashboard.
 ```
 app/
   ui/        # screens: setup wizard, dashboard, lesson screen, code editor,
-             # category browser, settings/theme picker, shared theme + assets
+             # category browser, quiz, settings/theme picker, shared theme +
+             # assets -- plain filenames are the CustomTkinter app; *_flet.py
+             # is the parallel in-progress Flet re-platform (see "Status")
   config/    # settings persistence + platform-appropriate data directory
-  progress/  # SQLite-backed progress, stars, badges, streaks, activity log
+  progress/  # SQLite-backed progress, stars, badges, streaks, activity log, quiz attempts
   parent/    # PIN-gated parent area (summary + recent activity)
-  engine/    # lesson model + YAML-based lesson engine + category logic + output validator
+  engine/    # lesson model + YAML-based lesson engine + category logic +
+             # output validator + quiz model/engine
   sandbox/   # AST safety check + two execution engines (see "Code execution
              # sandbox" below for why there are currently two)
   games/     # GameCanvas/GameWindow + in-process graphical runner (Snake's execution model)
 content/
   lessons/   # lesson content (YAML), kept separate from app code
+  quiz/      # the quiz question bank (YAML), same content-not-code principle
   images/    # app icon (main-icon.png / .ico)
 docs/
   app-screenshots/  # images used in this README
-tests/       # pytest suite (230 tests)
+tests/       # pytest suite (602 tests)
 app-data/    # gitignored, legacy dev-only location — see "Data storage" below
-main.py      # entry point
+main.py      # CustomTkinter entry point
+main_flet.py # Flet entry point (see "Status")
 ```
 
 ## How it works
@@ -127,6 +144,27 @@ reachable through the category browser (`main_path: false`, no
 order-based fallback — specifically so bonus levels (which sort after
 lesson 18 by `level`) can never leak into the guided path just because
 they come later in file order.
+
+### Quiz
+
+A standalone 55-question multiple-choice quiz covering the whole
+curriculum (`content/quiz/quiz_questions.yaml`), reachable from both the
+dashboard's "❓ Quick Quiz" card and a "❓ Quiz" tile in the category
+browser. It's not a lesson category — multiple-choice doesn't fit the
+`Lesson` model at all (no code editor, no sandboxed run, no output to
+validate), so it gets its own small data model (`app/engine/quiz.py`)
+and engine (`app/engine/quiz_engine.py`) instead of borrowing the lesson
+one.
+
+`QuizEngine.start_session()` returns a freshly shuffled copy of every
+question each time it's called — both the question order and each
+question's own answer-option order are re-randomized, so the correct
+answer isn't always in the same position and no two playthroughs look
+the same. Picking an option gives instant right/wrong feedback plus a
+short explanation, then a results screen shows the score and offers
+"Play Again" (which reshuffles) or back to the menu. `ProgressStore`
+tracks the best score across attempts (`quiz_attempts` table), shown as
+a "🏆 Best: X/Y" badge on both quiz entry points once played.
 
 ### Code execution sandbox
 

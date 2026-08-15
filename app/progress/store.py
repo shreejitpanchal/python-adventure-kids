@@ -36,6 +36,13 @@ CREATE TABLE IF NOT EXISTS activity_log (
     detail TEXT,
     timestamp TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS quiz_attempts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    score INTEGER NOT NULL,
+    total INTEGER NOT NULL,
+    completed_at TEXT NOT NULL
+);
 """
 
 
@@ -173,6 +180,29 @@ class ProgressStore:
             cur.execute("SELECT badge_id FROM badges ORDER BY earned_at")
             return [row[0] for row in cur.fetchall()]
 
+    # -- Quiz --------------------------------------------------------------
+    def record_quiz_attempt(self, score: int, total: int) -> None:
+        with self._conn:
+            self._conn.execute(
+                "INSERT INTO quiz_attempts (score, total, completed_at) VALUES (?, ?, ?)",
+                (score, total, _now()),
+            )
+        self.log_event(None, "quiz_completed", f"score={score}/{total}")
+
+    def get_best_quiz_score(self) -> Optional[tuple[int, int]]:
+        """(score, total) of the highest-scoring attempt, or None if never played."""
+        with closing(self._conn.cursor()) as cur:
+            cur.execute(
+                "SELECT score, total FROM quiz_attempts ORDER BY (score * 1.0 / total) DESC, score DESC LIMIT 1"
+            )
+            row = cur.fetchone()
+            return (row[0], row[1]) if row else None
+
+    def get_quiz_attempt_count(self) -> int:
+        with closing(self._conn.cursor()) as cur:
+            cur.execute("SELECT COUNT(*) FROM quiz_attempts")
+            return cur.fetchone()[0]
+
     # -- Activity log (feeds the parent dashboard) ------------------------
     def log_event(self, lesson_id: Optional[str], event_type: str, detail: str = "") -> None:
         with self._conn:
@@ -198,6 +228,7 @@ class ProgressStore:
             self._conn.execute("DELETE FROM lesson_completions")
             self._conn.execute("DELETE FROM badges")
             self._conn.execute("DELETE FROM activity_log")
+            self._conn.execute("DELETE FROM quiz_attempts")
             self._conn.execute(
                 "UPDATE profile SET level = 1, total_stars = 0, current_lesson_id = NULL, streak_days = 0, last_played_date = NULL WHERE id = 1"
             )

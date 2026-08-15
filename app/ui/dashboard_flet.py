@@ -32,6 +32,8 @@ def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
             ft.Container(height=16),
             _build_missions_sidebar(page, state),
             ft.Container(height=16),
+            _build_quiz_card(page, state),
+            ft.Container(height=16),
             ft.Text("More lessons are on their way! 🚀", size=13, color=theme.text_muted),
         ],
     )
@@ -115,6 +117,29 @@ def _build_missions_sidebar(page: ft.Page, state: AppState) -> ft.Control:
     return ft.Container(
         content=ft.Column(items, spacing=8),
         bgcolor=theme.card, border_radius=20, padding=16,
+    )
+
+
+def _build_quiz_card(page: ft.Page, state: AppState) -> ft.Control:
+    """Same tile pattern as the Quiz entry in the category browser
+    (category_map_flet.py's _build_quiz_tile) -- a quick-access shortcut
+    to the same standalone quiz, not a lesson category."""
+    meta = get_category_meta("quiz")
+    best = state.progress.get_best_quiz_score()
+    status = f"🏆 Best: {best[0]}/{best[1]}" if best else f"{len(state.quiz_engine)} questions · Tap to play!"
+    text_color = contrasting_text_color(meta.color)
+
+    return ft.Container(
+        content=ft.Column(
+            [
+                ft.Text(f"{meta.icon}  Quick Quiz", size=16, weight=ft.FontWeight.BOLD, color=text_color),
+                ft.Text(status, size=12, color=text_color),
+            ],
+            spacing=4,
+        ),
+        bgcolor=meta.color, border_radius=20, padding=16,
+        on_click=lambda _e: page.go("/quiz"),
+        ink=True,
     )
 
 

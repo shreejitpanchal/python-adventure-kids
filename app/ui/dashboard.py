@@ -65,13 +65,17 @@ class DashboardFrame(ctk.CTkFrame):
         container = ctk.CTkFrame(parent, fg_color="transparent")
         container.pack(fill="both", expand=True, padx=40, pady=10)
 
-        self._build_missions_sidebar(container)
+        left_column = ctk.CTkFrame(container, fg_color="transparent", width=260)
+        left_column.pack(side="left", fill="y", padx=(0, 16))
+
+        self._build_missions_sidebar(left_column)
+        self._build_quiz_card(left_column)
         self._build_mission_card(container)
 
-    # -- left sidebar: completed missions, replayable -------------------------
+    # -- left column: completed missions, replayable, then quick-access quiz ---
     def _build_missions_sidebar(self, parent) -> None:
-        sidebar = ctk.CTkFrame(parent, fg_color=theme.COLOR_CARD, corner_radius=20, width=260)
-        sidebar.pack(side="left", fill="y", padx=(0, 16))
+        sidebar = ctk.CTkFrame(parent, fg_color=theme.COLOR_CARD, corner_radius=20)
+        sidebar.pack(fill="x", pady=(0, 16))
 
         ctk.CTkLabel(
             sidebar, text="✅ Completed Missions", font=theme.font_heading(16),
@@ -114,6 +118,22 @@ class DashboardFrame(ctk.CTkFrame):
 
     def _on_replay(self, lesson_id: str) -> None:
         self.app.show_lesson(lesson_id)
+
+    def _build_quiz_card(self, parent) -> None:
+        """Same tile pattern as the Quiz entry in the category browser
+        (category_map.py's _build_quiz_tile) -- a quick-access shortcut to
+        the same standalone quiz, not a lesson category."""
+        meta = get_category_meta("quiz")
+        best = self.app.progress.get_best_quiz_score()
+        status = f"🏆 Best: {best[0]}/{best[1]}" if best else f"{len(self.app.quiz_engine)} questions · Tap to play!"
+
+        ctk.CTkButton(
+            parent, text=f"{meta.icon}  Quick Quiz\n{status}",
+            font=theme.font_heading(15), anchor="w", height=64, corner_radius=16,
+            fg_color=meta.color, hover_color=darken(meta.color),
+            text_color=contrasting_text_color(meta.color),
+            command=self._on_open_quiz,
+        ).pack(fill="x")
 
     # -- right side: today's mission --------------------------------------------
     def _build_mission_card(self, parent) -> None:
@@ -194,6 +214,9 @@ class DashboardFrame(ctk.CTkFrame):
 
     def _open_category_map(self) -> None:
         self.app.show_category_map()
+
+    def _on_open_quiz(self) -> None:
+        self.app.show_quiz()
 
     def _open_settings(self) -> None:
         self.app.show_settings()

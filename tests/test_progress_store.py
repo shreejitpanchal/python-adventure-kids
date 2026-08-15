@@ -106,3 +106,23 @@ def test_log_event_recorded_in_activity(store):
     assert len(recent) == 1
     assert recent[0]["event_type"] == "hint_used"
     assert recent[0]["lesson_id"] == "lesson_01"
+
+
+def test_best_quiz_score_is_none_when_never_played(store):
+    assert store.get_best_quiz_score() is None
+    assert store.get_quiz_attempt_count() == 0
+
+
+def test_record_quiz_attempt_tracks_best_by_percentage(store):
+    store.record_quiz_attempt(score=40, total=55)
+    store.record_quiz_attempt(score=30, total=55)
+    store.record_quiz_attempt(score=45, total=55)
+
+    assert store.get_best_quiz_score() == (45, 55)
+    assert store.get_quiz_attempt_count() == 3
+
+
+def test_reset_progress_clears_quiz_attempts(store):
+    store.record_quiz_attempt(score=40, total=55)
+    store.reset_progress()
+    assert store.get_best_quiz_score() is None

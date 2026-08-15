@@ -5,6 +5,7 @@ import customtkinter as ctk
 
 from app.config.settings import Settings, get_db_path, load_settings, save_settings
 from app.engine.lesson_engine import LessonEngine
+from app.engine.quiz_engine import QuizEngine
 from app.progress.store import ProgressStore
 from app.ui import theme
 from app.ui.assets import apply_window_icon, ensure_windows_app_id
@@ -30,6 +31,7 @@ class App(ctk.CTk):
 
         self.progress = ProgressStore(get_db_path())
         self.lesson_engine = LessonEngine()
+        self.quiz_engine = QuizEngine()
 
         self._current_frame: ctk.CTkFrame | None = None
         self.protocol("WM_DELETE_WINDOW", self._on_close)
@@ -74,6 +76,11 @@ class App(ctk.CTk):
         from app.ui.category_levels import CategoryLevelsFrame
 
         self.show_frame(CategoryLevelsFrame(self, category))
+
+    def show_quiz(self) -> None:
+        from app.ui.quiz_screen import QuizScreen
+
+        self.show_frame(QuizScreen(self))
 
     def show_settings(self) -> None:
         from app.ui.settings_screen import SettingsFrame

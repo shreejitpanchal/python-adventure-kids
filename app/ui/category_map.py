@@ -39,6 +39,8 @@ class CategoryMapFrame(ctk.CTkFrame):
         engine = self.app.lesson_engine
         completed_ids = set(self.app.progress.get_completed_lesson_ids())
 
+        self._build_quiz_tile()
+
         for category in engine.categories():
             lessons = engine.lessons_in_category(category)
             meta = get_category_meta(category)
@@ -58,8 +60,29 @@ class CategoryMapFrame(ctk.CTkFrame):
                 command=lambda c=category: self._on_open_category(c),
             ).pack(fill="x", pady=8)
 
+    def _build_quiz_tile(self) -> None:
+        """The Quiz category isn't derived from lesson content -- it's a
+        standalone randomized question bank (app/engine/quiz_engine.py) --
+        so its tile is built directly here instead of in the category loop."""
+        meta = get_category_meta("quiz")
+        best = self.app.progress.get_best_quiz_score()
+        status = f"🏆 Best: {best[0]}/{best[1]}" if best else f"{len(self.app.quiz_engine)} questions · Not played yet"
+        text_color = contrasting_text_color(meta.color)
+
+        ctk.CTkButton(
+            self.body,
+            text=f"{meta.icon}  {meta.title}\n{status}",
+            font=theme.font_heading(18), anchor="w", height=76, corner_radius=16,
+            fg_color=meta.color, hover_color=darken(meta.color),
+            text_color=text_color,
+            command=self._on_open_quiz,
+        ).pack(fill="x", pady=8)
+
     def _on_open_category(self, category: str) -> None:
         self.app.show_category_levels(category)
+
+    def _on_open_quiz(self) -> None:
+        self.app.show_quiz()
 
     def _on_menu(self) -> None:
         self.app.show_dashboard()

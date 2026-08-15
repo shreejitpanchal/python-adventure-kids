@@ -13,7 +13,7 @@ def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
     engine = state.lesson_engine
     completed_ids = set(state.progress.get_completed_lesson_ids())
 
-    items: list[ft.Control] = []
+    items: list[ft.Control] = [_build_quiz_tile(page, state)]
     for category in engine.categories():
         lessons = engine.lessons_in_category(category)
         meta = get_category_meta(category)
@@ -55,4 +55,27 @@ def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
         scroll=ft.ScrollMode.AUTO,
         padding=24,
         controls=[header, ft.Column(items, spacing=8)],
+    )
+
+
+def _build_quiz_tile(page: ft.Page, state: AppState) -> ft.Control:
+    """The Quiz category isn't derived from lesson content -- it's a
+    standalone randomized question bank (app/engine/quiz_engine.py) -- so
+    its tile is built directly here instead of from engine.categories()."""
+    meta = get_category_meta("quiz")
+    best = state.progress.get_best_quiz_score()
+    status = f"🏆 Best: {best[0]}/{best[1]}" if best else f"{len(state.quiz_engine)} questions · Not played yet"
+    text_color = contrasting_text_color(meta.color)
+
+    return ft.Container(
+        content=ft.Column(
+            [
+                ft.Text(f"{meta.icon}  {meta.title}", size=18, weight=ft.FontWeight.BOLD, color=text_color),
+                ft.Text(status, size=13, color=text_color),
+            ],
+            spacing=4,
+        ),
+        bgcolor=meta.color, border_radius=16, padding=16,
+        on_click=lambda _e: page.go("/quiz"),
+        ink=True,
     )

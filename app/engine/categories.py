@@ -36,6 +36,7 @@ CATEGORY_META: dict[str, CategoryMeta] = {
     "lists": CategoryMeta("Lists", "🎒", "#8D6E63"),
     "games": CategoryMeta("Mini Games", "🎮", "#EF5350"),
     "snake": CategoryMeta("Snake Project", "🐍", "#66BB6A"),
+    "quiz": CategoryMeta("Quiz", "❓", "#5C6BC0"),
 }
 
 DEFAULT_META = CategoryMeta("More Adventures", "⭐", "#78909C")

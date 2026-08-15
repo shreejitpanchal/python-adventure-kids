@@ -15,6 +15,7 @@ from app.ui.category_map_flet import build_category_map_view
 from app.ui.dashboard_flet import build_dashboard_view
 from app.ui.lesson_screen_flet import build_lesson_view
 from app.ui.parent_dashboard_flet import build_parent_view
+from app.ui.quiz_screen_flet import build_quiz_view
 from app.ui.settings_screen_flet import build_settings_view
 from app.ui.setup_wizard_flet import build_setup_wizard_view
 
@@ -44,6 +45,8 @@ def main(page: ft.Page) -> None:
             page.views.append(build_settings_view(page, state))
         elif route == "/parent":
             page.views.append(build_parent_view(page, state))
+        elif route == "/quiz":
+            page.views.append(build_quiz_view(page, state))
         elif route.startswith("/lesson/"):
             lesson_id = route.removeprefix("/lesson/")
             page.views.append(build_lesson_view(page, state, lesson_id))
