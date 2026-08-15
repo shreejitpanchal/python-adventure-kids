@@ -1,0 +1,30 @@
+id: lesson_320
+title: "Ask a Question: Level 2 🙋"
+level: 320
+objective: "Use input() to get a name and join it with more than one piece of text using +."
+explanation: |
+  You can join lots of pieces of text together with +, not just two!
+
+  name = input("What is your name? ") stores your answer. Then "Hi " + name + ", you are AWESOME!" glues three pieces together: the greeting, your name, and the compliment.
+
+  Python reads left to right, joining each piece onto the last, until it's all one string.
+example_code: |
+  name = input("What is your name? ")
+  print("Hi " + name + ", you are AWESOME!")
+starter_code: |
+  name = input("What is your name? ")
+  print("Hi " + name + ", you are AWESOME!")
+challenge: |
+  🎯 Challenge: Type your name in the box below, then press RUN to see Python cheer you on!
+expected_output: "What is your name? Hi {input}, you are AWESOME!"
+input_prompt: "What is your name?"
+hints:
+  - "Type your name in the answer box above the RUN button first."
+  - "Each + glues one more piece of text onto the string."
+  - "You don't need to change the code — just add your answer and press RUN!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: input
+category_level: 2
+main_path: false

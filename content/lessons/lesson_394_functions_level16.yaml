@@ -1,0 +1,37 @@
+id: lesson_394
+title: "Functions: Level 16 ⚙️"
+level: 394
+objective: "Use a loop inside a function to build up a total, then return it."
+explanation: |
+  A function can add things up inside a loop, keeping a running total in a variable, and only hand back the final answer once the loop is completely done.
+
+  sum_to(n) starts total at 0, adds every number from 1 up to n onto it, then returns total once the loop finishes.
+example_code: |
+  def sum_to(n):
+      total = 0
+      for i in range(1, n + 1):
+          total += i
+      return total
+
+  print(sum_to(5))
+starter_code: |
+  def sum_to(n):
+      total = 0
+      for i in range(1, n + 1):
+          total += i
+      return total
+
+  print(sum_to(5))
+challenge: |
+  🎯 Challenge: Can you call sum_to with 10 instead of 5, so it prints 55?
+expected_output: "55"
+hints:
+  - "Change the number you pass into sum_to(...)."
+  - "sum_to(10) adds up every number from 1 to 10."
+  - "It should look like: print(sum_to(10))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 16
+main_path: false

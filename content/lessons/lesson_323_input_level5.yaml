@@ -1,0 +1,28 @@
+id: lesson_323
+title: "Ask a Question: Level 5 🙋"
+level: 323
+objective: "Add a fixed number onto whatever number you type."
+explanation: |
+  Once your typed answer becomes a real number, you can add to it just like any other number.
+
+  n = int(input("Type a number: ")) stores your number, then print(n + 10) adds 10 onto it.
+example_code: |
+  n = int(input("Type a number: "))
+  print(n + 10)
+starter_code: |
+  n = int(input("Type a number: "))
+  print(n + 10)
+challenge: |
+  🎯 Challenge: Type the number 8 in the box below, then press RUN to see Python add 10 to it!
+expected_output: "Type a number: 18"
+input_prompt: "Type a number:"
+hints:
+  - "Type 8 in the answer box above the RUN button."
+  - "+ adds two numbers together, just like in math class."
+  - "You don't need to change the code — just type 8 and press RUN!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: input
+category_level: 5
+main_path: false

@@ -1,0 +1,30 @@
+id: lesson_375
+title: "Loops: Level 17 🔁"
+level: 375
+objective: "Multiply a running total inside a loop to build up a product."
+explanation: |
+  A loop can multiply just as easily as it can add. Instead of total += i, using product = product * i keeps multiplying the running total by each new number.
+
+  product starts at 1 (not 0 — multiplying by 0 would wipe everything out!). Each trip through the loop, product = product * i multiplies it by the next number, building up a much bigger result.
+example_code: |
+  product = 1
+  for i in range(1, 6):
+      product = product * i
+  print(product)
+starter_code: |
+  product = 1
+  for i in range(1, 6):
+      product = product * i
+  print(product)
+challenge: |
+  🎯 Challenge: Can you make it multiply 1 through 6 instead of 1 through 5?
+expected_output: "720"
+hints:
+  - "Change range(1, 6) to range(1, 7)."
+  - "range(1, 7) multiplies in the number 6 as well, since range stops just before its second number."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 17
+main_path: false

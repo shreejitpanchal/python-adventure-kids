@@ -1,0 +1,33 @@
+id: lesson_349
+title: "Decisions: Level 11 🚦"
+level: 349
+objective: "Use % to check whether a number is even or odd."
+explanation: |
+  % gives you the remainder left over after dividing. number % 2 is 0 for even numbers, and 1 for odd numbers.
+
+  if number % 2 == 0: is a quick way to ask Python "is this number even?"
+example_code: |
+  number = 7
+  if number % 2 == 0:
+      print("Even number!")
+  else:
+      print("Odd number!")
+starter_code: |
+  number = 7
+  if number % 2 == 0:
+      print("Even number!")
+  else:
+      print("Odd number!")
+challenge: |
+  🎯 Challenge: Change number so Python prints "Even number!" instead.
+expected_output: "Even number!"
+hints:
+  - "% 2 gives the remainder when dividing by 2."
+  - "An even number has a remainder of 0 when divided by 2."
+  - "Try number = 8."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 11
+main_path: false

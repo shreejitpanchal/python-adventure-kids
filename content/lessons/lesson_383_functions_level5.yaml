@@ -1,0 +1,33 @@
+id: lesson_383
+title: "Functions: Level 5 ⚙️"
+level: 383
+objective: "Combine a parameter and return, then print the result outside the function."
+explanation: |
+  Parameters and return work great together: the parameter feeds information in, and return sends an answer back out. Nothing gets printed until you tell the caller to print it.
+
+  def double(n): return n * 2 takes a number in and hands back double it. answer = double(4) stores 8 in answer, then print("Doubled:", answer) shows it.
+example_code: |
+  def double(n):
+      return n * 2
+
+  answer = double(4)
+  print("Doubled:", answer)
+starter_code: |
+  def double(n):
+      return n * 2
+
+  answer = double(4)
+  print("Doubled:", answer)
+challenge: |
+  🎯 Challenge: Can you call double with 9 instead of 4, so it prints "Doubled: 18"?
+expected_output: "Doubled: 18"
+hints:
+  - "Change the number you pass into double(...)."
+  - "double(9) returns 9 * 2."
+  - "It should look like: answer = double(9)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 5
+main_path: false

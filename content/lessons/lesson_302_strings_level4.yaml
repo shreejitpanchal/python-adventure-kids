@@ -1,0 +1,27 @@
+id: lesson_302
+title: "Strings: Level 4 🔤"
+level: 302
+objective: "Find how many characters are in a string using len()."
+explanation: |
+  len(word) counts how many characters are inside a string, including spaces.
+
+  It's like counting the letter tiles laid out in a row — len("dragon") counts all 6 tiles.
+example_code: |
+  word = "dragon"
+  print(len(word))
+starter_code: |
+  word = "dragon"
+  print(len(word))
+challenge: |
+  🎯 Challenge: Change word to "unicorn" and print how many letters it has.
+expected_output: "7"
+hints:
+  - "Change \"dragon\" to \"unicorn\", keeping the quotes."
+  - "len() counts every letter in the string for you — you don't have to count by hand."
+  - "It should look like: word = \"unicorn\", print(len(word))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 4
+main_path: false

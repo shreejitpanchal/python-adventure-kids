@@ -1,0 +1,39 @@
+id: lesson_385
+title: "Functions: Level 7 ⚙️"
+level: 385
+objective: "Call one function from inside another function."
+explanation: |
+  Machines can use other machines. A function's body can call a different function and use what it returns, just like any other piece of code can.
+
+  Here, show_square calls square(n) to do the actual work, then prints the result it gets back.
+example_code: |
+  def square(n):
+      return n * n
+
+  def show_square(n):
+      result = square(n)
+      print("Square:", result)
+
+  show_square(3)
+starter_code: |
+  def square(n):
+      return n * n
+
+  def show_square(n):
+      result = square(n)
+      print("Square:", result)
+
+  show_square(3)
+challenge: |
+  🎯 Challenge: Can you call show_square with 6 instead of 3, so it prints "Square: 36"?
+expected_output: "Square: 36"
+hints:
+  - "Change the number you pass into show_square(...)."
+  - "show_square(6) calls square(6), which returns 6 * 6."
+  - "It should look like: show_square(6)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 7
+main_path: false

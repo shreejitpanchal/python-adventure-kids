@@ -1,0 +1,45 @@
+id: lesson_358
+title: "Decisions: Level 20 🚦"
+level: 358
+objective: "Combine int(), arithmetic, and an elif chain into one small program."
+explanation: |
+  This capstone puts everything together: converting text to numbers with int(), doing arithmetic on the results, and sorting the result with an elif chain.
+
+  total = price * quantity works out the order total, and the elif chain then decides which message fits that total.
+example_code: |
+  price_text = "8"
+  quantity_text = "3"
+  price = int(price_text)
+  quantity = int(quantity_text)
+  total = price * quantity
+  if total >= 50:
+      print("Big order! Total: " + str(total))
+  elif total >= 20:
+      print("Nice order! Total: " + str(total))
+  else:
+      print("Small order. Total: " + str(total))
+starter_code: |
+  price_text = "8"
+  quantity_text = "3"
+  price = int(price_text)
+  quantity = int(quantity_text)
+  total = price * quantity
+  if total >= 50:
+      print("Big order! Total: " + str(total))
+  elif total >= 20:
+      print("Nice order! Total: " + str(total))
+  else:
+      print("Small order. Total: " + str(total))
+challenge: |
+  🎯 Challenge: Change price_text and quantity_text so Python prints "Big order! Total: 60" instead.
+expected_output: "Big order! Total: 60"
+hints:
+  - "total = price * quantity, then the elif chain checks how big total is."
+  - "You need total to work out to exactly 60."
+  - "Try price_text = \"10\" and quantity_text = \"6\" (10 * 6 = 60)."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 20
+main_path: false

@@ -1,0 +1,35 @@
+id: lesson_341
+title: "Decisions: Level 3 🚦"
+level: 341
+objective: "Compare two variables directly with if to decide which is bigger."
+explanation: |
+  You don't need a fixed number to compare against — you can compare two variables directly.
+
+  if apples > oranges: checks whether the value stored in apples is bigger than the value stored in oranges, right there in the condition.
+example_code: |
+  apples = 4
+  oranges = 9
+  if apples > oranges:
+      print("You have more apples!")
+  else:
+      print("You have more oranges!")
+starter_code: |
+  apples = 4
+  oranges = 9
+  if apples > oranges:
+      print("You have more apples!")
+  else:
+      print("You have more oranges!")
+challenge: |
+  🎯 Challenge: Change apples and oranges so Python prints "You have more apples!" instead.
+expected_output: "You have more apples!"
+hints:
+  - "apples needs to become bigger than oranges."
+  - "Try swapping the numbers around."
+  - "Try apples = 9 and oranges = 4."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 3
+main_path: false

@@ -1,0 +1,29 @@
+id: lesson_409
+title: "Lists: Level 11 🎒"
+level: 409
+objective: "Remove a specific item from a list with .remove(...)."
+explanation: |
+  .remove(...) searches a list for a matching item and takes it out. fruits.remove("apple") finds "apple" in the backpack and removes it, leaving everything else in place.
+
+  Unlike indexing, you tell .remove(...) WHAT to take out, not WHERE it is.
+example_code: |
+  fruits = ["apple", "banana", "orange"]
+  fruits.remove("apple")
+  print(fruits)
+starter_code: |
+  fruits = ["apple", "banana", "orange"]
+  fruits.remove("apple")
+  print(fruits)
+challenge: |
+  🎯 Challenge: Can you take "apple" out of this backpack and print what's left?
+expected_output: "['banana', 'orange']"
+hints:
+  - ".remove(...) takes a specific item out of a list by name."
+  - "Call fruits.remove(\"apple\") before printing the list."
+  - "It should look like: fruits.remove(\"apple\") then print(fruits)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 11
+main_path: false

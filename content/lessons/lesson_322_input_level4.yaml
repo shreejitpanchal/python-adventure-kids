@@ -1,0 +1,30 @@
+id: lesson_322
+title: "Ask a Question: Level 4 🙋"
+level: 322
+objective: "Convert typed text into a number and print its square."
+explanation: |
+  Multiplying a number by itself is called squaring it.
+
+  n = int(input("Type a number: ")) stores your number. print(n * n) multiplies n by itself.
+
+  Try 5 — you should see 25!
+example_code: |
+  n = int(input("Type a number: "))
+  print(n * n)
+starter_code: |
+  n = int(input("Type a number: "))
+  print(n * n)
+challenge: |
+  🎯 Challenge: Type the number 5 in the box below, then press RUN to see it squared!
+expected_output: "Type a number: 25"
+input_prompt: "Type a number:"
+hints:
+  - "Type 5 in the answer box above the RUN button."
+  - "n * n multiplies a number by itself — that's called squaring."
+  - "You don't need to change the code — just type 5 and press RUN!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: input
+category_level: 4
+main_path: false

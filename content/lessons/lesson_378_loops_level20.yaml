@@ -1,0 +1,33 @@
+id: lesson_378
+title: "Loops: Level 20 🔁"
+level: 378
+objective: "Combine a loop, a conditional, and an accumulator to solve a multi-step problem."
+explanation: |
+  This final loops challenge puts everything from this whole track together: a for loop to visit every number, an if to filter which ones count, and an accumulator to total them up.
+
+  total starts at 0. Every number from 1 to 20 gets checked with i % 3 == 0 — only the ones divisible by 3 get added into total with total += i.
+example_code: |
+  total = 0
+  for i in range(1, 21):
+      if i % 3 == 0:
+          total += i
+  print(total)
+starter_code: |
+  total = 0
+  for i in range(1, 21):
+      if i % 3 == 0:
+          total += i
+  print(total)
+challenge: |
+  🎯 Challenge: Can you make it total the numbers from 1 to 20 that are divisible by 4 instead of 3?
+expected_output: "60"
+hints:
+  - "Change i % 3 == 0 to i % 4 == 0."
+  - "Divisible by 4 means i % 4 leaves no remainder — check 4, 8, 12, 16, 20."
+  - "4 + 8 + 12 + 16 + 20 = 60 — that's the total your program should print."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 20
+main_path: false

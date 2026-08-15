@@ -1,0 +1,27 @@
+id: lesson_312
+title: "Strings: Level 14 🔤"
+level: 312
+objective: "Count how many times a character appears using .count()."
+explanation: |
+  word.count("a") looks through the whole string and tells you how many times "a" shows up.
+
+  In "banana", the letter "a" appears 3 times, so "banana".count("a") gives back 3.
+example_code: |
+  word = "banana"
+  print(word.count("a"))
+starter_code: |
+  word = "banana"
+  print(word.count("a"))
+challenge: |
+  🎯 Challenge: Change word to "mississippi" and count how many times "s" appears in it.
+expected_output: "4"
+hints:
+  - "Change \"banana\" to \"mississippi\", and change \"a\" to \"s\" inside .count()."
+  - "Count carefully — there are two separate pairs of \"s\" letters in \"mississippi\"."
+  - "It should look like: word = \"mississippi\", print(word.count(\"s\"))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 14
+main_path: false

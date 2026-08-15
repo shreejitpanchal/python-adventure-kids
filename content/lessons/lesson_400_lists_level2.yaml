@@ -1,0 +1,27 @@
+id: lesson_400
+title: "Lists: Level 2 🎒"
+level: 400
+objective: "Access a list item by a different position number."
+explanation: |
+  You already know fruits[0] grabs the first item from the backpack. Every item in a list has its own position number, called an index, starting at 0.
+
+  fruits[2] reaches past the first two items and grabs the THIRD one — because counting starts at 0, position 2 is actually the third spot.
+example_code: |
+  fruits = ["apple", "banana", "orange"]
+  print(fruits[2])
+starter_code: |
+  fruits = ["apple", "banana", "orange"]
+  print(fruits[2])
+challenge: |
+  🎯 Challenge: This backpack has three fruits. Can you print the fruit sitting at position 2 — the THIRD item?
+expected_output: "orange"
+hints:
+  - "Position 2 is the third item, since counting starts at 0."
+  - "Use square brackets after the list name: fruits[2]."
+  - "It should look like: print(fruits[2])"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 2
+main_path: false

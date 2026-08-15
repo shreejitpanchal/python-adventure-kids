@@ -1,0 +1,27 @@
+id: lesson_411
+title: "Lists: Level 13 🎒"
+level: 411
+objective: "Sort a list into order with sorted(...)."
+explanation: |
+  sorted(...) hands back a NEW list with the items arranged from smallest to largest (or alphabetically, for words) — it doesn't change the original list.
+
+  sorted([9, 3, 7, 1]) looks at every number and lines them up in order: 1, 3, 7, 9.
+example_code: |
+  numbers = [9, 3, 7, 1]
+  print(sorted(numbers))
+starter_code: |
+  numbers = [9, 3, 7, 1]
+  print(sorted(numbers))
+challenge: |
+  🎯 Challenge: Can you print this backpack of numbers sorted from smallest to largest?
+expected_output: "[1, 3, 7, 9]"
+hints:
+  - "sorted(...) puts the items of a list in order."
+  - "Wrap the list name inside sorted(...)."
+  - "It should look like: print(sorted(numbers))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 13
+main_path: false

@@ -1,0 +1,32 @@
+id: lesson_367
+title: "Loops: Level 9 🔁"
+level: 367
+objective: "Loop directly over the letters of a string."
+explanation: |
+  You don't need range() to loop over a word — Python can walk through a string letter by letter all on its own.
+
+  for ch in word: sets ch to each character in turn: the first letter, then the second, and so on until the word runs out.
+example_code: |
+  word = "python"
+  for ch in word:
+      print(ch)
+starter_code: |
+  word = "python"
+  for ch in word:
+      print(ch)
+challenge: |
+  🎯 Challenge: Can you make it print the letters of "code" instead?
+expected_output: |
+  c
+  o
+  d
+  e
+hints:
+  - "Change word = \"python\" to word = \"code\"."
+  - "The rest of the loop stays exactly the same — it works on any word."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 9
+main_path: false

@@ -1,0 +1,41 @@
+id: lesson_345
+title: "Decisions: Level 7 🚦"
+level: 345
+objective: "Nest an if inside another if to check a condition in two steps."
+explanation: |
+  You can put an if/else inside another if's body — this is called nesting. The inner if only runs at all when the outer condition was true.
+
+  Here, Python first checks has_ticket. Only if that's "yes" does it bother checking age at all.
+example_code: |
+  has_ticket = "yes"
+  age = 10
+  if has_ticket == "yes":
+      if age >= 12:
+          print("Enjoy the movie!")
+      else:
+          print("This movie needs an adult with you.")
+  else:
+      print("You need a ticket first!")
+starter_code: |
+  has_ticket = "yes"
+  age = 10
+  if has_ticket == "yes":
+      if age >= 12:
+          print("Enjoy the movie!")
+      else:
+          print("This movie needs an adult with you.")
+  else:
+      print("You need a ticket first!")
+challenge: |
+  🎯 Challenge: Change age so Python prints "Enjoy the movie!" instead.
+expected_output: "Enjoy the movie!"
+hints:
+  - "has_ticket is already \"yes\", so look at the inner if."
+  - "The inner if checks whether age is 12 or more."
+  - "Try age = 12."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 7
+main_path: false

@@ -1,0 +1,31 @@
+id: lesson_389
+title: "Functions: Level 11 ⚙️"
+level: 389
+objective: "Combine two numeric parameters with arithmetic inside a function."
+explanation: |
+  A function can take several numbers in and do math with them together. area(width, height) multiplies its two parameters and returns the result -- a tiny calculator machine.
+
+  Call it with any two numbers you like and it works out the area of a rectangle that size.
+example_code: |
+  def area(width, height):
+      return width * height
+
+  print(area(4, 5))
+starter_code: |
+  def area(width, height):
+      return width * height
+
+  print(area(4, 5))
+challenge: |
+  🎯 Challenge: Can you call area with width 6 and height 7, so it prints 42?
+expected_output: "42"
+hints:
+  - "Change both numbers you pass into area(...)."
+  - "area(6, 7) returns 6 * 7."
+  - "It should look like: print(area(6, 7))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 11
+main_path: false

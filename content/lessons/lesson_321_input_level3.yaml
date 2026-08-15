@@ -1,0 +1,30 @@
+id: lesson_321
+title: "Ask a Question: Level 3 🙋"
+level: 321
+objective: "Convert typed text into a number with int() and print double that number."
+explanation: |
+  input() always hands you back text, even if you type a number! To do math with it, you first need to convert it.
+
+  n = int(input("Type a number: ")) turns your typed text into a real number and stores it in n.
+
+  print(n * 2) then multiplies that number by 2.
+example_code: |
+  n = int(input("Type a number: "))
+  print(n * 2)
+starter_code: |
+  n = int(input("Type a number: "))
+  print(n * 2)
+challenge: |
+  🎯 Challenge: Type the number 6 in the box below, then press RUN to see it doubled!
+expected_output: "Type a number: 12"
+input_prompt: "Type a number:"
+hints:
+  - "Type 6 in the answer box above the RUN button."
+  - "int(...) turns your typed text into a real number Python can do math with."
+  - "You don't need to change the code — just type 6 and press RUN!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: input
+category_level: 3
+main_path: false

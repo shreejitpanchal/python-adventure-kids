@@ -1,0 +1,29 @@
+id: lesson_360
+title: "Loops: Level 2 🔁"
+level: 360
+objective: "Print the loop variable itself instead of a fixed message."
+explanation: |
+  The little letter after for (like i) isn't just decoration — it's a variable that changes every time the loop repeats.
+
+  for i in range(5): means i is 0 the first time, then 1, then 2, and so on up to 4. If you print(i) instead of a fixed word, you'll see every one of those numbers go by.
+example_code: |
+  for i in range(5):
+      print(i)
+starter_code: |
+  for i in range(5):
+      print(i)
+challenge: |
+  🎯 Challenge: Can you make it print the numbers 0 through 2 instead of 0 through 4?
+expected_output: |
+  0
+  1
+  2
+hints:
+  - "Change range(5) to range(3)."
+  - "range(3) counts 0, 1, 2 — three numbers, but it stops before 3."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 2
+main_path: false

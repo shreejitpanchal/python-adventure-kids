@@ -1,0 +1,39 @@
+id: lesson_340
+title: "Decisions: Level 2 🚦"
+level: 340
+objective: "Use if/elif/else to choose between three different outcomes."
+explanation: |
+  Sometimes there are more than two choices. elif (short for "else if") lets Python check a second condition if the first one was false.
+
+  Python checks each condition in order, top to bottom. The first one that's true wins, and the rest are skipped.
+
+  If none of the if or elif conditions are true, the else at the bottom runs instead.
+example_code: |
+  score = 55
+  if score >= 90:
+      print("Excellent!")
+  elif score >= 70:
+      print("Good job!")
+  else:
+      print("Keep practicing!")
+starter_code: |
+  score = 55
+  if score >= 90:
+      print("Excellent!")
+  elif score >= 70:
+      print("Good job!")
+  else:
+      print("Keep practicing!")
+challenge: |
+  🎯 Challenge: Change score so Python prints "Good job!" instead.
+expected_output: "Good job!"
+hints:
+  - "Try changing score = 55 to a bigger number."
+  - "A score of 70 or more (but less than 90) should print \"Good job!\"."
+  - "Try score = 75."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 2
+main_path: false

@@ -1,0 +1,31 @@
+id: lesson_362
+title: "Loops: Level 4 🔁"
+level: 362
+objective: "Add a third number to range() to skip-count."
+explanation: |
+  range() can take a third number too: range(start, stop, step). Instead of counting one at a time, Python jumps by step each time.
+
+  range(0, 10, 2) starts at 0 and jumps by 2 each time: 0, 2, 4, 6, 8 — every even number under 10.
+example_code: |
+  for i in range(0, 10, 2):
+      print(i)
+starter_code: |
+  for i in range(0, 10, 2):
+      print(i)
+challenge: |
+  🎯 Challenge: Can you print the odd numbers 1 through 9 instead?
+expected_output: |
+  1
+  3
+  5
+  7
+  9
+hints:
+  - "Start at 1 instead of 0: range(1, 10, 2)."
+  - "Keep the step at 2 — just change where you start."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 4
+main_path: false

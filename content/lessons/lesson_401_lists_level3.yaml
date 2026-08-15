@@ -1,0 +1,27 @@
+id: lesson_401
+title: "Lists: Level 3 🎒"
+level: 401
+objective: "Use negative indexing to grab the last item in a list."
+explanation: |
+  Python lets you count from the END of a list too, using negative numbers. snacks[-1] means "the last item", no matter how long the list is.
+
+  snacks[-2] would be the SECOND-to-last item. Negative indexing is a handy shortcut so you don't have to count how many items are in the list first.
+example_code: |
+  snacks = ["chips", "pretzels", "popcorn"]
+  print(snacks[-1])
+starter_code: |
+  snacks = ["chips", "pretzels", "popcorn"]
+  print(snacks[-1])
+challenge: |
+  🎯 Challenge: Can you print the LAST snack in the backpack using negative indexing?
+expected_output: "popcorn"
+hints:
+  - "Negative indexing counts backward from the end of the list."
+  - "snacks[-1] always means the last item, no matter the list's length."
+  - "It should look like: print(snacks[-1])"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 3
+main_path: false

@@ -1,0 +1,33 @@
+id: lesson_346
+title: "Decisions: Level 8 🚦"
+level: 346
+objective: "Compare text with == to check a password-style condition."
+explanation: |
+  == works on text (strings) too, not just numbers. It checks whether two pieces of text are exactly the same, letter for letter.
+
+  if password == "secret123": is only true when password holds that exact word.
+example_code: |
+  password = "sunshine"
+  if password == "secret123":
+      print("Access granted!")
+  else:
+      print("Access denied.")
+starter_code: |
+  password = "sunshine"
+  if password == "secret123":
+      print("Access granted!")
+  else:
+      print("Access denied.")
+challenge: |
+  🎯 Challenge: Change password so Python prints "Access granted!" instead.
+expected_output: "Access granted!"
+hints:
+  - "== checks if two pieces of text are exactly the same."
+  - "The password Python is looking for is \"secret123\"."
+  - "Try password = \"secret123\"."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 8
+main_path: false

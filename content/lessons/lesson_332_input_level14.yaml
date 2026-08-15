@@ -1,0 +1,28 @@
+id: lesson_332
+title: "Ask a Question: Level 14 🙋"
+level: 332
+objective: "Use .upper() to shout a typed word back in capital letters."
+explanation: |
+  .upper() is a trick you can do to any piece of text — it makes a shouty, ALL CAPS version of it.
+
+  word = input("Type a word: ") stores your word. print(word.upper()) prints it back in capital letters.
+example_code: |
+  word = input("Type a word: ")
+  print(word.upper())
+starter_code: |
+  word = input("Type a word: ")
+  print(word.upper())
+challenge: |
+  🎯 Challenge: Type the word cat in the box below, then press RUN to see Python SHOUT it!
+expected_output: "Type a word: CAT"
+input_prompt: "Type a word:"
+hints:
+  - "Type cat in the answer box above the RUN button."
+  - ".upper() turns every letter into a capital letter."
+  - "You don't need to change the code — just type cat and press RUN!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: input
+category_level: 14
+main_path: false

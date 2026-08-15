@@ -1,0 +1,33 @@
+id: lesson_416
+title: "Lists: Level 18 🎒"
+level: 416
+objective: "Write a function that takes a list as a parameter and returns a value."
+explanation: |
+  Functions can work with lists just like any other value. def total_of(numbers): defines a function that accepts a list, and return sum(numbers) hands back the total of everything inside it.
+
+  Once defined, you can call total_of(prices) with any list of numbers, and it will add them all up for you.
+example_code: |
+  def total_of(numbers):
+      return sum(numbers)
+
+  prices = [3, 5, 10]
+  print(total_of(prices))
+starter_code: |
+  def total_of(numbers):
+      return sum(numbers)
+
+  prices = [3, 5, 10]
+  print(total_of(prices))
+challenge: |
+  🎯 Challenge: Can you write a function that takes a list of prices and returns their total, then print the result?
+expected_output: "18"
+hints:
+  - "A function can take a list as its parameter, just like any other value."
+  - "Use return sum(numbers) inside the function to hand back the total."
+  - "It should look like: def total_of(numbers): return sum(numbers), then print(total_of(prices))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 18
+main_path: false

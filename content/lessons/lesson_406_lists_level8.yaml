@@ -1,0 +1,33 @@
+id: lesson_406
+title: "Lists: Level 8 🎒"
+level: 406
+objective: "Add up all the numbers in a list using a loop."
+explanation: |
+  Lists can hold numbers too! To add them all up, start a total at 0, then loop through the list adding each number to the total.
+
+  total += n means "add n to total and save it back into total" — after the loop finishes, total holds the sum of everything in the list.
+example_code: |
+  numbers = [4, 8, 15]
+  total = 0
+  for n in numbers:
+      total += n
+  print(total)
+starter_code: |
+  numbers = [4, 8, 15]
+  total = 0
+  for n in numbers:
+      total += n
+  print(total)
+challenge: |
+  🎯 Challenge: Can you add up every number in this backpack and print the total?
+expected_output: "27"
+hints:
+  - "Start a total variable at 0 before the loop."
+  - "Inside the loop, use total += n to keep a running sum."
+  - "It should look like: total = 0, then for n in numbers: total += n, then print(total)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 8
+main_path: false

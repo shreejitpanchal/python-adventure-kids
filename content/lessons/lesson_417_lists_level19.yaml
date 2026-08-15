@@ -1,0 +1,35 @@
+id: lesson_417
+title: "Lists: Level 19 🎒"
+level: 417
+objective: "Use a loop and an if statement to build a new filtered list."
+explanation: |
+  You can combine everything you've learned to build a brand NEW list that only keeps items passing a test. Start with an empty list, loop through the original, and only .append(...) the ones that pass the if check.
+
+  n % 2 == 0 checks whether a number is even — so this pattern builds a list of just the even numbers, leaving the odd ones behind.
+example_code: |
+  numbers = [1, 2, 3, 4, 5, 6, 7, 8]
+  evens = []
+  for n in numbers:
+      if n % 2 == 0:
+          evens.append(n)
+  print(evens)
+starter_code: |
+  numbers = [1, 2, 3, 4, 5, 6, 7, 8]
+  evens = []
+  for n in numbers:
+      if n % 2 == 0:
+          evens.append(n)
+  print(evens)
+challenge: |
+  🎯 Challenge: Can you build a new list containing only the EVEN numbers from this backpack?
+expected_output: "[2, 4, 6, 8]"
+hints:
+  - "Start with an empty list to hold the even numbers."
+  - "Use n % 2 == 0 inside an if to test whether a number is even."
+  - "It should look like: evens = [], then for n in numbers: if n % 2 == 0: evens.append(n), then print(evens)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 19
+main_path: false

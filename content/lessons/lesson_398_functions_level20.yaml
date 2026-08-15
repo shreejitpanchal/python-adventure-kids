@@ -1,0 +1,42 @@
+id: lesson_398
+title: "Functions: Level 20 ⚙️"
+level: 398
+objective: "Capstone: combine multiple parameters, arithmetic, and a conditional return, calling the function several times."
+explanation: |
+  You've built functions with parameters, return, loops, and conditionals inside them one piece at a time. A real function often uses all of those together -- several parameters, some arithmetic, and a decision about what to return.
+
+  total_cost(price, quantity, discount) works out price times quantity, and only applies the discount if the subtotal is big enough (over 50) to earn one.
+example_code: |
+  def total_cost(price, quantity, discount):
+      subtotal = price * quantity
+      if subtotal > 50:
+          subtotal -= discount
+      return subtotal
+
+  print(total_cost(10, 3, 5))
+  print(total_cost(4, 2, 5))
+starter_code: |
+  def total_cost(price, quantity, discount):
+      subtotal = price * quantity
+      if subtotal > 50:
+          subtotal -= discount
+      return subtotal
+
+  print(total_cost(10, 3, 5))
+  print(total_cost(4, 2, 5))
+challenge: |
+  🎯 Challenge: Can you add a third call, total_cost(20, 4, 15), and print it too? That order's subtotal (80) is big enough to earn the discount, so the third line should print 65.
+expected_output: |
+  30
+  8
+  65
+hints:
+  - "Add a third print(total_cost(...)) line underneath the other two."
+  - "total_cost(20, 4, 15): subtotal is 20 * 4 = 80, and since 80 > 50, the discount applies: 80 - 15."
+  - "It should look like: print(total_cost(20, 4, 15))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 20
+main_path: false

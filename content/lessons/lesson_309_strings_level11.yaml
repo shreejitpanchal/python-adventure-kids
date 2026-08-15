@@ -1,0 +1,27 @@
+id: lesson_309
+title: "Strings: Level 11 🔤"
+level: 309
+objective: "Grab a chunk of a string using slicing."
+explanation: |
+  A slice grabs several characters at once instead of just one. word[0:3] means "start at position 0, and stop right before position 3."
+
+  So "elephant"[0:3] grabs positions 0, 1, and 2 — the letters "e", "l", "e" — giving you "ele".
+example_code: |
+  word = "elephant"
+  print(word[0:3])
+starter_code: |
+  word = "elephant"
+  print(word[0:3])
+challenge: |
+  🎯 Challenge: Change word to "dinosaur" and print its first four letters using a slice.
+expected_output: "dino"
+hints:
+  - "Change \"elephant\" to \"dinosaur\", and change the slice to [0:4] so it grabs four letters."
+  - "word[0:4] stops right before position 4, so it grabs positions 0, 1, 2, and 3."
+  - "It should look like: word = \"dinosaur\", print(word[0:4])"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 11
+main_path: false

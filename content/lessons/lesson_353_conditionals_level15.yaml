@@ -1,0 +1,35 @@
+id: lesson_353
+title: "Decisions: Level 15 🚦"
+level: 353
+objective: "Combine and and or in one bigger condition."
+explanation: |
+  You can mix multiple or checks together in one condition. Here, ANY one of three things being true is enough for the whole condition to be true.
+
+  day == "Saturday" or day == "Sunday" or is_holiday == "yes" is true if it's the weekend, OR it's a holiday — no school either way.
+example_code: |
+  day = "Tuesday"
+  is_holiday = "no"
+  if day == "Saturday" or day == "Sunday" or is_holiday == "yes":
+      print("No school today!")
+  else:
+      print("Time for school!")
+starter_code: |
+  day = "Tuesday"
+  is_holiday = "no"
+  if day == "Saturday" or day == "Sunday" or is_holiday == "yes":
+      print("No school today!")
+  else:
+      print("Time for school!")
+challenge: |
+  🎯 Challenge: Change day or is_holiday so Python prints "No school today!" instead.
+expected_output: "No school today!"
+hints:
+  - "or means ANY one of the conditions being true is enough."
+  - "Try changing day to \"Saturday\", or set is_holiday to \"yes\"."
+  - "day = \"Saturday\" alone is enough to trigger the message."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 15
+main_path: false

@@ -1,0 +1,30 @@
+id: lesson_373
+title: "Loops: Level 15 🔁"
+level: 373
+objective: "Build up a string one piece at a time by concatenating inside a loop."
+explanation: |
+  A loop doesn't just print things — it can also build up a value over multiple trips around, like a snowball rolling and growing.
+
+  result starts as an empty string "". Each time the loop runs, result = result + str(i) glues one more digit onto the end. By the time the loop finishes, result holds every digit joined together.
+example_code: |
+  result = ""
+  for i in range(1, 6):
+      result = result + str(i)
+  print(result)
+starter_code: |
+  result = ""
+  for i in range(1, 6):
+      result = result + str(i)
+  print(result)
+challenge: |
+  🎯 Challenge: Can you make it build "123456" instead (six digits, 1 through 6)?
+expected_output: "123456"
+hints:
+  - "Change range(1, 6) to range(1, 7)."
+  - "range(1, 7) counts 1 through 6 — the loop needs one more trip to add the digit 6."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 15
+main_path: false

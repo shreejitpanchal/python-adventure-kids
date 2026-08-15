@@ -1,0 +1,37 @@
+id: lesson_377
+title: "Loops: Level 19 🔁"
+level: 377
+objective: "Use a loop inside a loop to build a growing pattern."
+explanation: |
+  A loop can even live inside another loop! The outer loop picks the row number, and the inner loop uses that row number to decide how many stars to add before printing.
+
+  For row 1, the inner loop runs once ("*"). For row 2, it runs twice ("**"). Each row's inner loop count matches its row number, building a growing triangle.
+example_code: |
+  for row in range(1, 5):
+      line = ""
+      for col in range(row):
+          line = line + "*"
+      print(line)
+starter_code: |
+  for row in range(1, 5):
+      line = ""
+      for col in range(row):
+          line = line + "*"
+      print(line)
+challenge: |
+  🎯 Challenge: Can you make the triangle grow to 5 rows instead of 4?
+expected_output: |
+  *
+  **
+  ***
+  ****
+  *****
+hints:
+  - "Change range(1, 5) to range(1, 6)."
+  - "range(1, 6) gives the outer loop rows 1 through 5."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 19
+main_path: false

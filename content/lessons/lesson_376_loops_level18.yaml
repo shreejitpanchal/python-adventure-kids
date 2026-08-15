@@ -1,0 +1,32 @@
+id: lesson_376
+title: "Loops: Level 18 🔁"
+level: 376
+objective: "Combine a loop, an if, and an accumulator to total only some numbers."
+explanation: |
+  You can mix everything you've learned together: a loop to visit every number, an if to check a condition, and a running total that only grows when that condition is true.
+
+  total += i only runs when i % 2 == 0 is true — that's what keeps odd numbers out of the total. Change the condition, and you change which numbers get added in.
+example_code: |
+  total = 0
+  for i in range(1, 11):
+      if i % 2 == 0:
+          total += i
+  print(total)
+starter_code: |
+  total = 0
+  for i in range(1, 11):
+      if i % 2 == 0:
+          total += i
+  print(total)
+challenge: |
+  🎯 Challenge: Can you make it total the odd numbers from 1 to 10 instead of the even ones?
+expected_output: "25"
+hints:
+  - "Change i % 2 == 0 to i % 2 != 0."
+  - "% 2 == 0 checks for even numbers; % 2 != 0 checks for odd ones."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 18
+main_path: false

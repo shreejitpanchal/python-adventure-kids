@@ -1,0 +1,35 @@
+id: lesson_343
+title: "Decisions: Level 5 🚦"
+level: 343
+objective: "Use or to check that at least one condition is true."
+explanation: |
+  or is more relaxed than and — it only needs ONE side to be true, and the whole condition becomes true.
+
+  if homework_done == "yes" or chores_done == "yes": lets the show happen as soon as either job is finished, not both.
+example_code: |
+  homework_done = "no"
+  chores_done = "no"
+  if homework_done == "yes" or chores_done == "yes":
+      print("You can watch one show!")
+  else:
+      print("Finish something first!")
+starter_code: |
+  homework_done = "no"
+  chores_done = "no"
+  if homework_done == "yes" or chores_done == "yes":
+      print("You can watch one show!")
+  else:
+      print("Finish something first!")
+challenge: |
+  🎯 Challenge: Change homework_done or chores_done so Python prints "You can watch one show!" instead.
+expected_output: "You can watch one show!"
+hints:
+  - "or only needs ONE side to be true."
+  - "Try changing homework_done to \"yes\" - you don't have to change chores_done too."
+  - "homework_done = \"yes\" is enough on its own."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 5
+main_path: false

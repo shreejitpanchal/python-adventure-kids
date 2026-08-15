@@ -1,0 +1,35 @@
+id: lesson_352
+title: "Decisions: Level 14 🚦"
+level: 352
+objective: "Store a message inside a variable depending on a condition, then print it."
+explanation: |
+  Instead of printing straight inside the if and else, you can store a different message in a variable in each branch, then print that variable once at the end.
+
+  This is handy when you want to do more with the message later, not just show it right away.
+example_code: |
+  temperature = 40
+  if temperature >= 60:
+      message = "Wear a t-shirt!"
+  else:
+      message = "Wear a jacket!"
+  print(message)
+starter_code: |
+  temperature = 40
+  if temperature >= 60:
+      message = "Wear a t-shirt!"
+  else:
+      message = "Wear a jacket!"
+  print(message)
+challenge: |
+  🎯 Challenge: Change temperature so Python prints "Wear a t-shirt!" instead.
+expected_output: "Wear a t-shirt!"
+hints:
+  - "message gets set inside the if or the else, then printed once at the end."
+  - "temperature needs to be 60 or more to get the t-shirt message."
+  - "Try temperature = 65."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 14
+main_path: false

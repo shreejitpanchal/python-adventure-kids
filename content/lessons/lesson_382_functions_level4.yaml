@@ -1,0 +1,33 @@
+id: lesson_382
+title: "Functions: Level 4 ⚙️"
+level: 382
+objective: "Use return to hand back a value instead of printing inside the function."
+explanation: |
+  So far your functions have printed things themselves. But a function can also hand a result back to whoever called it, using return -- then it's up to the caller to decide what to do with it, like print it.
+
+  def add_five(x): return x + 5 doesn't print anything by itself. result = add_five(10) stores the answer in result, and then print(result) shows it.
+example_code: |
+  def add_five(x):
+      return x + 5
+
+  result = add_five(10)
+  print(result)
+starter_code: |
+  def add_five(x):
+      return x + 5
+
+  result = add_five(10)
+  print(result)
+challenge: |
+  🎯 Challenge: Can you call add_five with 20 instead of 10, so it prints 25?
+expected_output: "25"
+hints:
+  - "Change the number you pass into add_five(...)."
+  - "add_five(20) returns 20 + 5."
+  - "It should look like: result = add_five(20)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 4
+main_path: false

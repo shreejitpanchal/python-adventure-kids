@@ -1,0 +1,29 @@
+id: lesson_300
+title: "Strings: Level 2 🔤"
+level: 300
+objective: "Join two strings together using +."
+explanation: |
+  You can glue two strings together with +, just like taping two pieces of paper end to end.
+
+  first + second sticks the text in first right up against the text in second — no space appears unless you put one in yourself.
+example_code: |
+  first = "Pea"
+  second = "nut"
+  print(first + second)
+starter_code: |
+  first = "Pea"
+  second = "nut"
+  print(first + second)
+challenge: |
+  🎯 Challenge: Change the two variables to "Sun" and "flower" so it prints "Sunflower".
+expected_output: "Sunflower"
+hints:
+  - "Change \"Pea\" to \"Sun\" and \"nut\" to \"flower\"."
+  - "+ just sticks the two strings together — it doesn't add a space by itself."
+  - "It should look like: first = \"Sun\", second = \"flower\", print(first + second)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 2
+main_path: false

@@ -1,0 +1,27 @@
+id: lesson_410
+title: "Lists: Level 12 🎒"
+level: 410
+objective: "Join a list of strings into one string with .join(...)."
+explanation: |
+  .join(...) glues every item in a list together into a single string, with whatever you put in front of the dot placed BETWEEN each item.
+
+  ", ".join(fruits) glues the fruits together with a comma and a space in between, turning the whole list into one readable sentence.
+example_code: |
+  fruits = ["apple", "banana", "orange"]
+  print(", ".join(fruits))
+starter_code: |
+  fruits = ["apple", "banana", "orange"]
+  print(", ".join(fruits))
+challenge: |
+  🎯 Challenge: Can you join every fruit in this backpack into one string, separated by ", "?
+expected_output: "apple, banana, orange"
+hints:
+  - ".join(...) glues a list of strings together into one string."
+  - "Put the separator in quotes before .join, like \", \".join(fruits)."
+  - "It should look like: print(\", \".join(fruits))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 12
+main_path: false

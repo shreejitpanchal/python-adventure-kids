@@ -1,0 +1,37 @@
+id: lesson_387
+title: "Functions: Level 9 ⚙️"
+level: 387
+objective: "Put an if/else inside a function's body."
+explanation: |
+  A function can make decisions too. Put an if/else inside its body, and the function will choose what to do differently depending on the parameter it was given.
+
+  check_temp(temp) checks whether temp is above 30 and prints a different message depending on the answer.
+example_code: |
+  def check_temp(temp):
+      if temp > 30:
+          print("It's hot!")
+      else:
+          print("It's not too hot.")
+
+  check_temp(20)
+starter_code: |
+  def check_temp(temp):
+      if temp > 30:
+          print("It's hot!")
+      else:
+          print("It's not too hot.")
+
+  check_temp(20)
+challenge: |
+  🎯 Challenge: Can you call check_temp with 35 instead of 20, so it prints "It's hot!"?
+expected_output: "It's hot!"
+hints:
+  - "Change the number you pass into check_temp(...)."
+  - "It needs to be bigger than 30 to trigger the \"hot\" message."
+  - "It should look like: check_temp(35)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 9
+main_path: false

@@ -1,0 +1,29 @@
+id: lesson_314
+title: "Strings: Level 16 🔤"
+level: 314
+objective: "Put a math expression directly inside an f-string."
+explanation: |
+  The curly braces {} in an f-string aren't just for variables — you can put a whole calculation inside them, like {a + b}.
+
+  Python works out the math first, then drops the answer straight into the text.
+example_code: |
+  a = 4
+  b = 5
+  print(f"{a} + {b} = {a + b}")
+starter_code: |
+  a = 4
+  b = 5
+  print(f"{a} + {b} = {a + b}")
+challenge: |
+  🎯 Challenge: Change a to 7 and b to 6, keeping the same f-string, so it prints the new sum.
+expected_output: "7 + 6 = 13"
+hints:
+  - "Just change the numbers stored in a and b — the f-string itself doesn't need to change."
+  - "{a + b} recalculates automatically once a and b are different."
+  - "It should look like: a = 7, b = 6, print(f\"{a} + {b} = {a + b}\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 16
+main_path: false

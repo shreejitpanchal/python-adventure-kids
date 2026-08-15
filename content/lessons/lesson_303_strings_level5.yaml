@@ -1,0 +1,27 @@
+id: lesson_303
+title: "Strings: Level 5 🔤"
+level: 303
+objective: "Convert a string to all uppercase using .upper()."
+explanation: |
+  shout.upper() gives you back the same text, but with every letter turned into a CAPITAL letter.
+
+  It doesn't change the box itself — it just hands print() a shouty version to show.
+example_code: |
+  shout = "quiet"
+  print(shout.upper())
+starter_code: |
+  shout = "quiet"
+  print(shout.upper())
+challenge: |
+  🎯 Challenge: Change shout to "whisper" and print its uppercase version.
+expected_output: "WHISPER"
+hints:
+  - "Change \"quiet\" to \"whisper\", keeping the quotes."
+  - ".upper() goes right after the variable name, with a dot in between."
+  - "It should look like: shout = \"whisper\", print(shout.upper())"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 5
+main_path: false

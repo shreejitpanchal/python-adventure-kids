@@ -1,0 +1,38 @@
+id: lesson_386
+title: "Functions: Level 8 ⚙️"
+level: 386
+objective: "Put a for loop inside a function's body."
+explanation: |
+  A function's machine can have a whole loop running inside it. Everything indented under the def line is part of the function, loop included -- so calling the function once runs the loop from start to finish.
+
+  count_up(n) counts from 1 up to n, printing each number along the way.
+example_code: |
+  def count_up(n):
+      for i in range(1, n + 1):
+          print(i)
+
+  count_up(3)
+starter_code: |
+  def count_up(n):
+      for i in range(1, n + 1):
+          print(i)
+
+  count_up(3)
+challenge: |
+  🎯 Challenge: Can you call count_up with 5 instead of 3, so it prints the numbers 1 through 5, each on its own line?
+expected_output: |
+  1
+  2
+  3
+  4
+  5
+hints:
+  - "Change the number you pass into count_up(...)."
+  - "count_up(5) makes the loop run from 1 up to and including 5."
+  - "It should look like: count_up(5)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 8
+main_path: false

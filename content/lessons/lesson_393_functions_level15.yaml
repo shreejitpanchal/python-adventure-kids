@@ -1,0 +1,35 @@
+id: lesson_393
+title: "Functions: Level 15 ⚙️"
+level: 393
+objective: "Use a function's returned value in further computation outside the function."
+explanation: |
+  A returned value is just a regular value once it comes back -- you can store it in a variable and keep doing math with it, exactly like any number you typed yourself.
+
+  half(n) hands back n divided by 2. The caller then adds 100 to that result before printing it -- the function doesn't know or care what happens to its answer afterward.
+example_code: |
+  def half(n):
+      return n / 2
+
+  result = half(20)
+  total = result + 100
+  print(total)
+starter_code: |
+  def half(n):
+      return n / 2
+
+  result = half(20)
+  total = result + 100
+  print(total)
+challenge: |
+  🎯 Challenge: Can you call half with 50 instead of 20, so it prints 125.0?
+expected_output: "125.0"
+hints:
+  - "Change the number you pass into half(...)."
+  - "half(50) returns 25.0, and 25.0 + 100 is 125.0."
+  - "It should look like: result = half(50)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 15
+main_path: false

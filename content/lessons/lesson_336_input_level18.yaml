@@ -1,0 +1,28 @@
+id: lesson_336
+title: "Ask a Question: Level 18 🙋"
+level: 336
+objective: "Read a price as a float and print it doubled."
+explanation: |
+  Prices often have cents, like 4.50, so float() is the right tool to convert them.
+
+  price = float(input("What is the price? ")) stores your price as a decimal number. print(price * 2) shows what it would cost to buy two!
+example_code: |
+  price = float(input("What is the price? "))
+  print(price * 2)
+starter_code: |
+  price = float(input("What is the price? "))
+  print(price * 2)
+challenge: |
+  🎯 Challenge: Type the price 5 in the box below, then press RUN to see double the price!
+expected_output: "What is the price? 10.0"
+input_prompt: "What is the price?"
+hints:
+  - "Type 5 in the answer box above the RUN button."
+  - "float() lets Python work with prices that have decimal points."
+  - "You don't need to change the code — just type 5 and press RUN!"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: input
+category_level: 18
+main_path: false

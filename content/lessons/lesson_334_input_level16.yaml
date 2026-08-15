@@ -1,0 +1,28 @@
+id: lesson_334
+title: "Ask a Question: Level 16 🙋"
+level: 334
+objective: "Combine str() and + to build one sentence using a typed age."
+explanation: |
+  Python won't let you glue a number straight onto text with + — you have to turn it back into text first using str().
+
+  age = int(input("How old are you? ")) stores your age as a number. print("Explorer is " + str(age) + " years old!") turns age back into text with str(age) so it can be joined into the sentence.
+example_code: |
+  age = int(input("How old are you? "))
+  print("Explorer is " + str(age) + " years old!")
+starter_code: |
+  age = int(input("How old are you? "))
+  print("Explorer is " + str(age) + " years old!")
+challenge: |
+  🎯 Challenge: Type your age (like 9) in the box below, then press RUN to see it in a full sentence!
+expected_output: "How old are you? Explorer is {input} years old!"
+input_prompt: "How old are you?"
+hints:
+  - "Type your age, like 9, in the answer box above the RUN button."
+  - "str(age) turns the number back into text so + can join it with other text."
+  - "You don't need to change the code — just type your age and press RUN!"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: input
+category_level: 16
+main_path: false

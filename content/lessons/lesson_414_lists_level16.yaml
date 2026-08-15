@@ -1,0 +1,29 @@
+id: lesson_414
+title: "Lists: Level 16 🎒"
+level: 414
+objective: "Compute the average of a list of numbers with sum() and len()."
+explanation: |
+  The average of a list is the total divided by how many items there are. sum(grades) adds every number together, and len(grades) counts how many numbers are in the list.
+
+  Dividing sum(grades) by len(grades) gives you the average — the "typical" value across the whole backpack.
+example_code: |
+  grades = [80, 90, 100, 70]
+  average = sum(grades) / len(grades)
+  print(average)
+starter_code: |
+  grades = [80, 90, 100, 70]
+  average = sum(grades) / len(grades)
+  print(average)
+challenge: |
+  🎯 Challenge: Can you compute and print the average of these four grades?
+expected_output: "85.0"
+hints:
+  - "sum(...) adds up every number in a list, and len(...) counts them."
+  - "Divide the sum by the length to get the average."
+  - "It should look like: average = sum(grades) / len(grades), then print(average)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 16
+main_path: false

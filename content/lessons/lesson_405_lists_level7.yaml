@@ -1,0 +1,32 @@
+id: lesson_405
+title: "Lists: Level 7 🎒"
+level: 405
+objective: "Loop over a list using its index positions with range(len(...))."
+explanation: |
+  Sometimes you want both the position AND the item while looping. range(len(letters)) counts from 0 up to (but not including) the list's length, giving you every valid index.
+
+  Then letters[i] uses that index to grab each item, so you can print the position and the value together.
+example_code: |
+  letters = ["a", "b", "c"]
+  for i in range(len(letters)):
+      print(i, letters[i])
+starter_code: |
+  letters = ["a", "b", "c"]
+  for i in range(len(letters)):
+      print(i, letters[i])
+challenge: |
+  🎯 Challenge: Can you print each letter's position number next to the letter itself?
+expected_output: |
+  0 a
+  1 b
+  2 c
+hints:
+  - "range(len(letters)) creates a position number for every item in the list."
+  - "Use letters[i] inside the loop to grab the item at position i."
+  - "It should look like: for i in range(len(letters)): then print(i, letters[i])"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 7
+main_path: false

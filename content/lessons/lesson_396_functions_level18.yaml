@@ -1,0 +1,37 @@
+id: lesson_396
+title: "Functions: Level 18 ⚙️"
+level: 396
+objective: "Return a word describing the result of a condition, rather than a plain number."
+explanation: |
+  A returned value doesn't have to be a number -- it can be a word describing what happened, chosen with an if/else, so the caller gets an easy-to-read answer back.
+
+  even_or_odd(n) checks n % 2 == 0 (whether dividing by 2 leaves no remainder) and returns "even" or "odd" depending on the answer.
+example_code: |
+  def even_or_odd(n):
+      if n % 2 == 0:
+          return "even"
+      else:
+          return "odd"
+
+  print(even_or_odd(4))
+starter_code: |
+  def even_or_odd(n):
+      if n % 2 == 0:
+          return "even"
+      else:
+          return "odd"
+
+  print(even_or_odd(4))
+challenge: |
+  🎯 Challenge: Can you call even_or_odd with 7 instead of 4, so it prints "odd"?
+expected_output: "odd"
+hints:
+  - "Change the number you pass into even_or_odd(...)."
+  - "7 % 2 doesn't equal 0, so it isn't even."
+  - "It should look like: print(even_or_odd(7))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 18
+main_path: false

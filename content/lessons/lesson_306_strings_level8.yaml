@@ -1,0 +1,27 @@
+id: lesson_306
+title: "Strings: Level 8 🔤"
+level: 306
+objective: "Repeat a string multiple times using *."
+explanation: |
+  You can repeat a string with *, just like typing the same word over and over.
+
+  laugh * 3 gives you the text in laugh, copied and stuck together 3 times in a row.
+example_code: |
+  laugh = "ha"
+  print(laugh * 3)
+starter_code: |
+  laugh = "ha"
+  print(laugh * 3)
+challenge: |
+  🎯 Challenge: Change laugh to "ho" and repeat it 4 times instead of 3.
+expected_output: "hohohoho"
+hints:
+  - "Change \"ha\" to \"ho\", and change the 3 to a 4."
+  - "* repeats the whole string, copying it that many times in a row."
+  - "It should look like: laugh = \"ho\", print(laugh * 4)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 8
+main_path: false

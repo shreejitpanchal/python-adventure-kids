@@ -1,0 +1,32 @@
+id: lesson_404
+title: "Lists: Level 6 🎒"
+level: 404
+objective: "Loop over every item in a list with a for loop."
+explanation: |
+  Instead of grabbing items one at a time with fruits[0], fruits[1], fruits[2]..., a for loop can visit EVERY item automatically.
+
+  for color in colors: print(color) says "for each color in the backpack, print it" — Python handles the counting for you.
+example_code: |
+  colors = ["red", "green", "blue"]
+  for color in colors:
+      print(color)
+starter_code: |
+  colors = ["red", "green", "blue"]
+  for color in colors:
+      print(color)
+challenge: |
+  🎯 Challenge: Can you print every color in this backpack, one per line, using a for loop?
+expected_output: |
+  red
+  green
+  blue
+hints:
+  - "A for loop can visit every item in a list without needing index numbers."
+  - "for color in colors: — then print(color) indented underneath."
+  - "It should look like: for color in colors: then print(color) indented on the next line."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 6
+main_path: false

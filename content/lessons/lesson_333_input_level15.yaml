@@ -1,0 +1,28 @@
+id: lesson_333
+title: "Ask a Question: Level 15 🙋"
+level: 333
+objective: "Join a typed word onto another word already written in the code."
+explanation: |
+  You can glue your typed word onto a word that's already sitting in the code, using +.
+
+  word = input("Type a word: ") stores your word. print(word + " World") joins a space and the word "World" right after it.
+example_code: |
+  word = input("Type a word: ")
+  print(word + " World")
+starter_code: |
+  word = input("Type a word: ")
+  print(word + " World")
+challenge: |
+  🎯 Challenge: Type any word (try Hello) in the box below, then press RUN to see it joined with World!
+expected_output: "Type a word: {input} World"
+input_prompt: "Type a word:"
+hints:
+  - "Type any word, like Hello, in the answer box above the RUN button."
+  - "+ \" World\" glues a space and the word World onto whatever you type."
+  - "You don't need to change the code — just type a word and press RUN!"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: input
+category_level: 15
+main_path: false

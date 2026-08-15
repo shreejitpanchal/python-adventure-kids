@@ -1,0 +1,27 @@
+id: lesson_402
+title: "Lists: Level 4 🎒"
+level: 402
+objective: "Use len() to count how many items are in a list."
+explanation: |
+  len(...) counts how many items are packed inside a list — just like it counts letters in a word.
+
+  toys = ["robot", "ball", "kite", "yo-yo"] has four items, so len(toys) gives back 4.
+example_code: |
+  toys = ["robot", "ball", "kite", "yo-yo"]
+  print(len(toys))
+starter_code: |
+  toys = ["robot", "ball", "kite", "yo-yo"]
+  print(len(toys))
+challenge: |
+  🎯 Challenge: Can you print how many toys are packed in this backpack?
+expected_output: "4"
+hints:
+  - "len(...) tells you how many items are in a list."
+  - "Wrap the list name inside len(...)."
+  - "It should look like: print(len(toys))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 4
+main_path: false

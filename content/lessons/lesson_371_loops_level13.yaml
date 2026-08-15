@@ -1,0 +1,38 @@
+id: lesson_371
+title: "Loops: Level 13 🔁"
+level: 371
+objective: "Use a while loop to count down instead of up."
+explanation: |
+  A while loop can count down just as easily as up — start high, check the condition, and subtract instead of add.
+
+  n starts at 5. While n >= 1 is true, Python prints n and then n -= 1 makes it smaller. Once n drops below 1, the loop stops.
+example_code: |
+  n = 5
+  while n >= 1:
+      print(n)
+      n -= 1
+starter_code: |
+  n = 5
+  while n >= 1:
+      print(n)
+      n -= 1
+challenge: |
+  🎯 Challenge: Can you make it count down from 8 to 1 instead?
+expected_output: |
+  8
+  7
+  6
+  5
+  4
+  3
+  2
+  1
+hints:
+  - "Change n = 5 to n = 8."
+  - "The condition n >= 1 already works for any starting number — you only need to change where n starts."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 13
+main_path: false

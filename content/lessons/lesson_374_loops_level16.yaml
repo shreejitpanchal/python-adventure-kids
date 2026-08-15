@@ -1,0 +1,33 @@
+id: lesson_374
+title: "Loops: Level 16 🔁"
+level: 374
+objective: "Control how many times a loop repeats using a number the child types in."
+explanation: |
+  So far every loop has repeated a fixed number of times typed straight into the code. But a loop can repeat however many times someone asks for instead!
+
+  count = int(input("How many times? ")) stores the typed answer as a number. Using range(count) instead of a fixed number like range(5) makes the loop repeat exactly that many times.
+example_code: |
+  count = int(input("How many times? "))
+  for i in range(5):
+      print("Lap!")
+starter_code: |
+  count = int(input("How many times? "))
+  for i in range(5):
+      print("Lap!")
+challenge: |
+  🎯 Challenge: Type the number 3 in the box below, then change range(5) to range(count) so the loop repeats exactly your number of times!
+expected_output: |
+  How many times? Lap!
+  Lap!
+  Lap!
+input_prompt: "How many times?"
+hints:
+  - "Change range(5) to range(count)."
+  - "Type 3 in the answer box above the RUN button first."
+  - "count already stores your number as an int — just plug it straight into range()."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 16
+main_path: false

@@ -1,0 +1,27 @@
+id: lesson_308
+title: "Strings: Level 10 🔤"
+level: 308
+objective: "Grab a character from the end of a string using negative indexing."
+explanation: |
+  Counting from the front starts at 0, but Python also lets you count backward from the end using negative numbers.
+
+  word[-1] grabs the very last letter, word[-2] would grab the second-to-last, and so on.
+example_code: |
+  word = "python"
+  print(word[-1])
+starter_code: |
+  word = "python"
+  print(word[-1])
+challenge: |
+  🎯 Challenge: Change word to "rocket" and print its last letter.
+expected_output: "t"
+hints:
+  - "Change \"python\" to \"rocket\", keeping the quotes."
+  - "word[-1] always grabs the last letter, no matter how long the word is."
+  - "It should look like: word = \"rocket\", print(word[-1])"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 10
+main_path: false

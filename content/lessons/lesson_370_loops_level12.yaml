@@ -1,0 +1,38 @@
+id: lesson_370
+title: "Loops: Level 12 🔁"
+level: 370
+objective: "Repeat with a while loop instead of a for loop."
+explanation: |
+  while repeats as long as a condition stays true — you control when it stops, instead of Python counting a fixed number of times for you.
+
+  n starts at 1. While n <= 5 is true, Python prints n and then increases it with n += 1. Eventually n reaches 6, the condition becomes false, and the loop stops.
+example_code: |
+  n = 1
+  while n <= 5:
+      print(n)
+      n += 1
+starter_code: |
+  n = 1
+  while n <= 5:
+      print(n)
+      n += 1
+challenge: |
+  🎯 Challenge: Can you make it count up to 8 instead of 5?
+expected_output: |
+  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+hints:
+  - "Change n <= 5 to n <= 8."
+  - "Don't forget n += 1 stays inside the loop, or it would never stop!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 12
+main_path: false

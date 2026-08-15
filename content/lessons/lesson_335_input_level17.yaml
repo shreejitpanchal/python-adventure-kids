@@ -1,0 +1,28 @@
+id: lesson_335
+title: "Ask a Question: Level 17 🙋"
+level: 335
+objective: "Use parentheses to control order of operations and find an average."
+explanation: |
+  Parentheses tell Python what to work out first, just like in math class.
+
+  n = int(input("Type a number: ")) stores your number. print((n + 10) / 2) adds 10 to n first because of the parentheses, then divides the result by 2 — that's the average (halfway point) between your number and 10.
+example_code: |
+  n = int(input("Type a number: "))
+  print((n + 10) / 2)
+starter_code: |
+  n = int(input("Type a number: "))
+  print((n + 10) / 2)
+challenge: |
+  🎯 Challenge: Type the number 20 in the box below, then press RUN to see its average with 10!
+expected_output: "Type a number: 15.0"
+input_prompt: "Type a number:"
+hints:
+  - "Type 20 in the answer box above the RUN button."
+  - "(n + 10) happens first because of the parentheses, then the whole thing is divided by 2."
+  - "You don't need to change the code — just type 20 and press RUN!"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: input
+category_level: 17
+main_path: false

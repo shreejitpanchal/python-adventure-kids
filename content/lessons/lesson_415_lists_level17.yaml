@@ -1,0 +1,31 @@
+id: lesson_415
+title: "Lists: Level 17 🎒"
+level: 415
+objective: "Build a new list from scratch inside a loop."
+explanation: |
+  You can start with a totally empty backpack — [] — and fill it up as you go. Each time through the loop, .append(...) adds one more item.
+
+  squares = [] starts empty, then for each number from 1 to 4, its square gets appended, building the list one piece at a time.
+example_code: |
+  squares = []
+  for n in range(1, 5):
+      squares.append(n * n)
+  print(squares)
+starter_code: |
+  squares = []
+  for n in range(1, 5):
+      squares.append(n * n)
+  print(squares)
+challenge: |
+  🎯 Challenge: Can you build a list of the squares of 1, 2, 3, and 4, then print it?
+expected_output: "[1, 4, 9, 16]"
+hints:
+  - "Start with an empty list: squares = []"
+  - "Inside the loop, use squares.append(n * n) to add each square."
+  - "It should look like: squares = [], then for n in range(1, 5): squares.append(n * n), then print(squares)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 17
+main_path: false

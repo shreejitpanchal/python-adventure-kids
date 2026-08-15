@@ -1,0 +1,37 @@
+id: lesson_418
+title: "Lists: Level 20 🎒"
+level: 418
+objective: "Combine list building, filtering, and a summary print in one program."
+explanation: |
+  This final challenge combines everything from the Lists track: building a list from scratch inside a loop, filtering it with an if statement, and printing a summary at the end.
+
+  You'll build a list of numbers 1 through 10, keep only the ones divisible by 3, then print both the filtered list and how many items made it in.
+example_code: |
+  multiples = []
+  for n in range(1, 11):
+      if n % 3 == 0:
+          multiples.append(n)
+  print(multiples)
+  print(len(multiples))
+starter_code: |
+  multiples = []
+  for n in range(1, 11):
+      if n % 3 == 0:
+          multiples.append(n)
+  print(multiples)
+  print(len(multiples))
+challenge: |
+  🎯 Challenge: Can you build a list of numbers 1 through 10, keep only the ones divisible by 3, and print the list followed by its count?
+expected_output: |
+  [3, 6, 9]
+  3
+hints:
+  - "Loop through range(1, 11) and use n % 3 == 0 to test for multiples of 3."
+  - "Append the ones that pass the test to an empty list, building it as you go."
+  - "It should look like: multiples = [], then for n in range(1, 11): if n % 3 == 0: multiples.append(n), then print(multiples) and print(len(multiples))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 20
+main_path: false

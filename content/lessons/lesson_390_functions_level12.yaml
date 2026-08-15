@@ -1,0 +1,31 @@
+id: lesson_390
+title: "Functions: Level 12 ⚙️"
+level: 390
+objective: "Build a formatted string from a string parameter and return it."
+explanation: |
+  Parameters don't have to be numbers -- a function can take a string in and stitch it together with other text using +, then return the whole thing.
+
+  welcome(place) builds a sentence around whatever place you give it and hands the finished sentence back.
+example_code: |
+  def welcome(place):
+      return "Welcome to " + place + "!"
+
+  print(welcome("Mars"))
+starter_code: |
+  def welcome(place):
+      return "Welcome to " + place + "!"
+
+  print(welcome("Mars"))
+challenge: |
+  🎯 Challenge: Can you call welcome with "the Jungle" so it prints "Welcome to the Jungle!"?
+expected_output: "Welcome to the Jungle!"
+hints:
+  - "Change the text you pass into welcome(...)."
+  - "Make sure your text is inside quotes: \"the Jungle\"."
+  - "It should look like: print(welcome(\"the Jungle\"))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 12
+main_path: false

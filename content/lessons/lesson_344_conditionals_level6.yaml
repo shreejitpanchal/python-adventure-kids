@@ -1,0 +1,33 @@
+id: lesson_344
+title: "Decisions: Level 6 🚦"
+level: 344
+objective: "Use not to flip a condition to its opposite."
+explanation: |
+  not flips a condition around: it turns True into False, and False into True.
+
+  if not is_raining: means "if is_raining is FALSE" — in other words, if it is NOT raining.
+example_code: |
+  is_raining = True
+  if not is_raining:
+      print("Let's play outside!")
+  else:
+      print("Let's stay inside.")
+starter_code: |
+  is_raining = True
+  if not is_raining:
+      print("Let's play outside!")
+  else:
+      print("Let's stay inside.")
+challenge: |
+  🎯 Challenge: Change is_raining so Python prints "Let's play outside!" instead.
+expected_output: "Let's play outside!"
+hints:
+  - "not flips True to False and False to True."
+  - "Try changing is_raining to False."
+  - "When is_raining is False, not is_raining becomes True."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 6
+main_path: false

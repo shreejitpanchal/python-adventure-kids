@@ -1,0 +1,30 @@
+id: lesson_364
+title: "Loops: Level 6 🔁"
+level: 364
+objective: "Add up numbers inside a loop using +=."
+explanation: |
+  A variable can keep a running total as a loop repeats. Start it at 0 before the loop, then add to it each time around with +=.
+
+  total += i means "add i to whatever total already is". After the loop finishes, total holds the sum of every number that went by.
+example_code: |
+  total = 0
+  for i in range(1, 6):
+      total += i
+  print(total)
+starter_code: |
+  total = 0
+  for i in range(1, 6):
+      total += i
+  print(total)
+challenge: |
+  🎯 Challenge: Can you add up all the numbers from 1 through 10 instead?
+expected_output: "55"
+hints:
+  - "Change range(1, 6) to range(1, 11)."
+  - "total starts at 0 and += i adds each number as the loop goes."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 6
+main_path: false

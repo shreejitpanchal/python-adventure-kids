@@ -1,0 +1,34 @@
+id: lesson_368
+title: "Loops: Level 10 🔁"
+level: 368
+objective: "Count how many times a character appears in a string using a loop."
+explanation: |
+  A loop can check every letter in a word one at a time, and a counter variable can keep track of how many matched.
+
+  count starts at 0. Every time ch == "a" is true inside the loop, count += 1 adds one. After the loop finishes, count holds the total.
+example_code: |
+  word = "banana"
+  count = 0
+  for ch in word:
+      if ch == "a":
+          count += 1
+  print(count)
+starter_code: |
+  word = "banana"
+  count = 0
+  for ch in word:
+      if ch == "a":
+          count += 1
+  print(count)
+challenge: |
+  🎯 Challenge: Can you count how many times "n" appears in "banana" instead?
+expected_output: "2"
+hints:
+  - "Change ch == \"a\" to ch == \"n\"."
+  - "banana has the letter n in two spots — check your count matches!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 10
+main_path: false

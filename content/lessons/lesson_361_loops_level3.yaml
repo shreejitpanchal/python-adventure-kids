@@ -1,0 +1,31 @@
+id: lesson_361
+title: "Loops: Level 3 🔁"
+level: 361
+objective: "Use range() with a starting number that isn't 0."
+explanation: |
+  range() can take two numbers instead of one: range(start, stop). The loop begins at start and stops right before stop — stop itself never gets printed.
+
+  range(2, 6) counts 2, 3, 4, 5 — four numbers, not five, because 6 is the line Python stops at without crossing.
+example_code: |
+  for i in range(2, 6):
+      print(i)
+starter_code: |
+  for i in range(2, 6):
+      print(i)
+challenge: |
+  🎯 Challenge: Can you make it count from 5 up to 9 instead?
+expected_output: |
+  5
+  6
+  7
+  8
+  9
+hints:
+  - "Change range(2, 6) to range(5, 10)."
+  - "Remember: the stop number is never printed, so to include 9 you need range(5, 10)."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 3
+main_path: false

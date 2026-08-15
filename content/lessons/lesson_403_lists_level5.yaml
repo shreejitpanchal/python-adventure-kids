@@ -1,0 +1,29 @@
+id: lesson_403
+title: "Lists: Level 5 🎒"
+level: 403
+objective: "Add a new item to the end of a list with .append(...)."
+explanation: |
+  A backpack doesn't have to stay the same forever — you can unzip it and add something new! pets.append("fish") tacks a new item onto the END of the list.
+
+  After appending, the list has one more item than before, and the new item is always last.
+example_code: |
+  pets = ["cat", "dog"]
+  pets.append("fish")
+  print(pets)
+starter_code: |
+  pets = ["cat", "dog"]
+  pets.append("fish")
+  print(pets)
+challenge: |
+  🎯 Challenge: Start with a backpack of two pets, then add "fish" to the end and print the whole list.
+expected_output: "['cat', 'dog', 'fish']"
+hints:
+  - ".append(...) adds a new item to the end of a list."
+  - "Call it like pets.append(\"fish\") before printing pets."
+  - "It should look like: pets.append(\"fish\") then print(pets)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 5
+main_path: false

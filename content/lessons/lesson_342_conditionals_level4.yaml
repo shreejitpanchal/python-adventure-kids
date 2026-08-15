@@ -1,0 +1,35 @@
+id: lesson_342
+title: "Decisions: Level 4 🚦"
+level: 342
+objective: "Use and to check that two conditions are both true."
+explanation: |
+  and lets you check two conditions at once. The whole thing is only true when BOTH sides are true.
+
+  if height >= 120 and age >= 8: only lets the child through when their height AND their age both meet the rule.
+example_code: |
+  height = 100
+  age = 6
+  if height >= 120 and age >= 8:
+      print("You can ride the roller coaster!")
+  else:
+      print("Not yet - you need to grow a bit more.")
+starter_code: |
+  height = 100
+  age = 6
+  if height >= 120 and age >= 8:
+      print("You can ride the roller coaster!")
+  else:
+      print("Not yet - you need to grow a bit more.")
+challenge: |
+  🎯 Challenge: Change height and age so Python prints "You can ride the roller coaster!" instead.
+expected_output: "You can ride the roller coaster!"
+hints:
+  - "Both height and age need to be big enough this time."
+  - "and means BOTH sides must be true - not just one."
+  - "Try height = 120 and age = 8."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 4
+main_path: false

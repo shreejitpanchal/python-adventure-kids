@@ -1,0 +1,35 @@
+id: lesson_347
+title: "Decisions: Level 9 🚦"
+level: 347
+objective: "Turn text into a number with int() and use it in a condition."
+explanation: |
+  Answers often start out as text, like age_text = "10". Before you can compare them like numbers, you need int() to turn that text into a real number.
+
+  age = int(age_text) stores the converted number in age, so age >= 13 can compare it properly.
+example_code: |
+  age_text = "10"
+  age = int(age_text)
+  if age >= 13:
+      print("You are a teenager or older!")
+  else:
+      print("You are still a kid!")
+starter_code: |
+  age_text = "10"
+  age = int(age_text)
+  if age >= 13:
+      print("You are a teenager or older!")
+  else:
+      print("You are still a kid!")
+challenge: |
+  🎯 Challenge: Change age_text so Python prints "You are a teenager or older!" instead.
+expected_output: "You are a teenager or older!"
+hints:
+  - "age_text is turned into a real number using int(age_text)."
+  - "age needs to become 13 or more."
+  - "Try age_text = \"13\"."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 9
+main_path: false

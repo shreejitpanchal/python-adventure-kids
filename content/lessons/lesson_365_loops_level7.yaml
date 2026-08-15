@@ -1,0 +1,30 @@
+id: lesson_365
+title: "Loops: Level 7 🔁"
+level: 365
+objective: "Multiply numbers together inside a loop using *=."
+explanation: |
+  Just like += builds up a running total, *= builds up a running product — but it has to start at 1, not 0, or everything would multiply down to zero!
+
+  total *= i means "multiply total by i". Run this enough times and you're computing a whole chain of multiplication without writing it out by hand.
+example_code: |
+  total = 1
+  for i in range(1, 5):
+      total *= i
+  print(total)
+starter_code: |
+  total = 1
+  for i in range(1, 5):
+      total *= i
+  print(total)
+challenge: |
+  🎯 Challenge: Can you multiply the numbers 1 through 5 together instead (1 × 2 × 3 × 4 × 5)?
+expected_output: "120"
+hints:
+  - "Change range(1, 5) to range(1, 6)."
+  - "total starts at 1 — starting at 0 would make everything multiply down to 0!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 7
+main_path: false

@@ -1,0 +1,33 @@
+id: lesson_356
+title: "Decisions: Level 18 🚦"
+level: 356
+objective: "Use .lower() before comparing text, so capital letters don't matter."
+explanation: |
+  == is picky about capital letters — "YES" and "yes" are not equal to Python. .lower() fixes that by turning text into all lowercase first.
+
+  if answer.lower() == "yes": accepts "yes", "YES", "Yes", or any other mix of capitals, because they all become "yes" once lowered.
+example_code: |
+  answer = "No"
+  if answer.lower() == "yes":
+      print("Great, let's continue!")
+  else:
+      print("Okay, maybe next time.")
+starter_code: |
+  answer = "No"
+  if answer.lower() == "yes":
+      print("Great, let's continue!")
+  else:
+      print("Okay, maybe next time.")
+challenge: |
+  🎯 Challenge: Change answer so Python prints "Great, let's continue!" instead.
+expected_output: "Great, let's continue!"
+hints:
+  - ".lower() turns text into all lowercase before comparing."
+  - "answer just needs to be some capitalization of yes, like \"YES\" or \"Yes\"."
+  - "Try answer = \"YES\"."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 18
+main_path: false

@@ -1,0 +1,31 @@
+id: lesson_380
+title: "Functions: Level 2 ⚙️"
+level: 380
+objective: "Give a function a parameter so it can use different information each time."
+explanation: |
+  A function can have a labeled box inside its parentheses called a parameter. Whatever you pass in when you call the function gets stored in that box.
+
+  def greet(name): means name is a box waiting to be filled. Call greet("Explorer") and name becomes "Explorer" for that run.
+example_code: |
+  def greet(name):
+      print("Hi " + name + "!")
+
+  greet("Explorer")
+starter_code: |
+  def greet(name):
+      print("Hi " + name + "!")
+
+  greet("Explorer")
+challenge: |
+  🎯 Challenge: Can you call greet with the name "Nova" instead, so it prints "Hi Nova!"?
+expected_output: "Hi Nova!"
+hints:
+  - "Change what's inside the parentheses when you call greet."
+  - "greet(\"Nova\") makes name equal to \"Nova\" inside the function."
+  - "It should print exactly: Hi Nova!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 2
+main_path: false

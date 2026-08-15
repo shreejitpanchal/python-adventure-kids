@@ -1,0 +1,27 @@
+id: lesson_318
+title: "Strings: Level 20 🔤"
+level: 318
+objective: "Combine f-strings, .upper(), and len() to build a formatted message."
+explanation: |
+  You've learned a lot about strings: joining them, measuring them with len(), shouting with .upper(), and weaving variables into text with f-strings. This last challenge mixes them all together.
+
+  f"{name.upper()} has {len(name)} letters" runs .upper() and len() right inside the curly braces, then drops both results into the sentence.
+example_code: |
+  name = "Nova"
+  print(f"{name.upper()} has {len(name)} letters")
+starter_code: |
+  name = "Nova"
+  print(f"{name.upper()} has {len(name)} letters")
+challenge: |
+  🎯 Challenge: Change name to "Explorer" and print the same kind of message for it.
+expected_output: "EXPLORER has 8 letters"
+hints:
+  - "Just change \"Nova\" to \"Explorer\" — the rest of the line already handles the rest."
+  - "name.upper() and len(name) both update automatically once name changes."
+  - "It should look like: name = \"Explorer\", print(f\"{name.upper()} has {len(name)} letters\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 20
+main_path: false

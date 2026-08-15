@@ -1,0 +1,35 @@
+id: lesson_407
+title: "Lists: Level 9 🎒"
+level: 407
+objective: "Find the largest number in a list using a loop and an if statement."
+explanation: |
+  To find the biggest number, start by guessing the first item is the biggest. Then check every other item — whenever you find something bigger, update your guess.
+
+  if s > biggest: biggest = s replaces biggest only when a bigger number shows up, so by the end of the loop, biggest really is the largest.
+example_code: |
+  scores = [12, 45, 7, 39]
+  biggest = scores[0]
+  for s in scores:
+      if s > biggest:
+          biggest = s
+  print(biggest)
+starter_code: |
+  scores = [12, 45, 7, 39]
+  biggest = scores[0]
+  for s in scores:
+      if s > biggest:
+          biggest = s
+  print(biggest)
+challenge: |
+  🎯 Challenge: Can you find and print the biggest score in this backpack?
+expected_output: "45"
+hints:
+  - "Start by assuming the first item is the biggest."
+  - "Compare every item with if s > biggest: and update biggest when you find something bigger."
+  - "It should look like: biggest = scores[0], then loop with if s > biggest: biggest = s, then print(biggest)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 9
+main_path: false

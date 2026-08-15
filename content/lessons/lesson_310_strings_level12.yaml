@@ -1,0 +1,27 @@
+id: lesson_310
+title: "Strings: Level 12 🔤"
+level: 310
+objective: "Remove extra spaces from the ends of a string using .strip()."
+explanation: |
+  Sometimes text has extra spaces stuck to the front and back, like a word wearing a puffy coat.
+
+  messy.strip() peels off any spaces at the very start and very end — but leaves spaces in the middle alone.
+example_code: |
+  messy = "   hello   "
+  print(messy.strip())
+starter_code: |
+  messy = "   hello   "
+  print(messy.strip())
+challenge: |
+  🎯 Challenge: Change messy to "   space   " and print it with the extra spaces stripped off.
+expected_output: "space"
+hints:
+  - "Change \"hello\" to \"space\", but keep the extra spaces around it inside the quotes."
+  - ".strip() only removes spaces from the outside edges, not from the middle."
+  - "It should look like: messy = \"   space   \", print(messy.strip())"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 12
+main_path: false

@@ -1,0 +1,28 @@
+id: lesson_325
+title: "Ask a Question: Level 7 🙋"
+level: 325
+objective: "Convert typed text into a decimal number with float() and print half of it."
+explanation: |
+  int() only understands whole numbers. float() is its cousin — it converts text into a number that can have a decimal point, like 3.5.
+
+  n = float(input("Type a number: ")) stores your number as a float. print(n / 2) divides it in half — and / always gives back a decimal answer, even when it comes out even.
+example_code: |
+  n = float(input("Type a number: "))
+  print(n / 2)
+starter_code: |
+  n = float(input("Type a number: "))
+  print(n / 2)
+challenge: |
+  🎯 Challenge: Type the number 10 in the box below, then press RUN to see it cut in half!
+expected_output: "Type a number: 5.0"
+input_prompt: "Type a number:"
+hints:
+  - "Type 10 in the answer box above the RUN button."
+  - "/ divides one number by another and always gives a decimal answer."
+  - "You don't need to change the code — just type 10 and press RUN!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: input
+category_level: 7
+main_path: false

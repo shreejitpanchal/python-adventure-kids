@@ -1,0 +1,27 @@
+id: lesson_313
+title: "Strings: Level 15 🔤"
+level: 313
+objective: "Build text with a variable inside it using an f-string."
+explanation: |
+  An f-string is a string with an f right before the opening quote. It lets you drop a variable straight into the middle of your text using curly braces {}.
+
+  f"Hello {name}" prints "Hello" followed by whatever text is stored inside name — no + signs needed.
+example_code: |
+  name = "Milo"
+  print(f"Hello {name}")
+starter_code: |
+  name = "Milo"
+  print(f"Hello {name}")
+challenge: |
+  🎯 Challenge: Change name to "Nova" and change the greeting to print "Hi Nova".
+expected_output: "Hi Nova"
+hints:
+  - "Change \"Milo\" to \"Nova\", and change the word Hello to Hi inside the f-string."
+  - "Everything inside {} gets swapped out for the variable's value — the rest of the text stays as-is."
+  - "It should look like: name = \"Nova\", print(f\"Hi {name}\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 15
+main_path: false

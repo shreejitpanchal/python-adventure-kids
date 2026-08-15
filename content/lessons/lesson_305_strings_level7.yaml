@@ -1,0 +1,27 @@
+id: lesson_305
+title: "Strings: Level 7 🔤"
+level: 305
+objective: "Join text and a number together using str()."
+explanation: |
+  + only works on strings, but a score like 10 is a number, not a string. str(score) turns the number into text so it can be joined.
+
+  "Score: " + str(score) glues the label and the number together into one line.
+example_code: |
+  score = 10
+  print("Score: " + str(score))
+starter_code: |
+  score = 10
+  print("Score: " + str(score))
+challenge: |
+  🎯 Challenge: Make a variable points hold 7, and print "Points: 7" using + and str().
+expected_output: "Points: 7"
+hints:
+  - "Make a new variable points = 7, and change the label text to \"Points: \"."
+  - "str(points) turns the number 7 into text so + can join it to the label."
+  - "It should look like: points = 7, print(\"Points: \" + str(points))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 7
+main_path: false

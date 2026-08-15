@@ -1,0 +1,28 @@
+id: lesson_328
+title: "Ask a Question: Level 10 🙋"
+level: 328
+objective: "Print the negative of whatever number is typed."
+explanation: |
+  Putting a minus sign in front of a number flips it to its negative twin: 7 becomes -7, and -7 would become 7.
+
+  n = int(input("Type a number: ")) stores your number. print(-n) prints its flipped, negative version.
+example_code: |
+  n = int(input("Type a number: "))
+  print(-n)
+starter_code: |
+  n = int(input("Type a number: "))
+  print(-n)
+challenge: |
+  🎯 Challenge: Type the number 7 in the box below, then press RUN to see it flip to negative!
+expected_output: "Type a number: -7"
+input_prompt: "Type a number:"
+hints:
+  - "Type 7 in the answer box above the RUN button."
+  - "A minus sign right before a number flips it between positive and negative."
+  - "You don't need to change the code — just type 7 and press RUN!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: input
+category_level: 10
+main_path: false

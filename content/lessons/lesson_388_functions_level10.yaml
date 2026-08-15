@@ -1,0 +1,37 @@
+id: lesson_388
+title: "Functions: Level 10 ⚙️"
+level: 388
+objective: "Return different values depending on a condition."
+explanation: |
+  return doesn't have to happen only once at the end of a function. You can put a return inside an if and a different return inside its else, so the function hands back a different answer depending on what happened.
+
+  grade(score) returns "Pass" when the score is high enough, or "Fail" otherwise -- the caller just prints whichever one comes back.
+example_code: |
+  def grade(score):
+      if score >= 50:
+          return "Pass"
+      else:
+          return "Fail"
+
+  print(grade(40))
+starter_code: |
+  def grade(score):
+      if score >= 50:
+          return "Pass"
+      else:
+          return "Fail"
+
+  print(grade(40))
+challenge: |
+  🎯 Challenge: Can you call grade with 75 instead of 40, so it prints "Pass"?
+expected_output: "Pass"
+hints:
+  - "Change the number you pass into grade(...)."
+  - "It needs to be 50 or higher to return \"Pass\"."
+  - "It should look like: print(grade(75))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 10
+main_path: false

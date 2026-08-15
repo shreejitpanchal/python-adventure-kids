@@ -1,0 +1,37 @@
+id: lesson_372
+title: "Loops: Level 14 🔁"
+level: 372
+objective: "Stop a while loop early with break."
+explanation: |
+  while True: repeats forever — on purpose! It only stops when your code tells it to with break.
+
+  Each time around, this loop prints n and checks if n == 5. When that's finally true, break jumps out of the loop immediately, skipping everything after it.
+example_code: |
+  n = 1
+  while True:
+      print(n)
+      if n == 5:
+          break
+      n += 1
+starter_code: |
+  n = 1
+  while True:
+      print(n)
+      if n == 5:
+          break
+      n += 1
+challenge: |
+  🎯 Challenge: Can you make it stop after reaching 3 instead of 5?
+expected_output: |
+  1
+  2
+  3
+hints:
+  - "Change if n == 5: to if n == 3:."
+  - "The loop still starts at n = 1 — only the stopping point changes."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 14
+main_path: false

@@ -1,0 +1,27 @@
+id: lesson_412
+title: "Lists: Level 14 🎒"
+level: 412
+objective: "Count how many times an item appears with .count(...)."
+explanation: |
+  .count(...) searches a list and tells you how many times a particular item shows up — handy when the same value appears more than once.
+
+  letters.count("a") looks through the whole backpack and counts every "a" it finds.
+example_code: |
+  letters = ["a", "b", "a", "c", "a"]
+  print(letters.count("a"))
+starter_code: |
+  letters = ["a", "b", "a", "c", "a"]
+  print(letters.count("a"))
+challenge: |
+  🎯 Challenge: Can you count how many times "a" shows up in this backpack of letters?
+expected_output: "3"
+hints:
+  - ".count(...) tells you how many times an item appears in a list."
+  - "Call letters.count(\"a\") inside the print(...)."
+  - "It should look like: print(letters.count(\"a\"))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 14
+main_path: false

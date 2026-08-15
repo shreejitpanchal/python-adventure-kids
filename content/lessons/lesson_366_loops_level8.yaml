@@ -1,0 +1,33 @@
+id: lesson_366
+title: "Loops: Level 8 🔁"
+level: 366
+objective: "Combine a loop with an if to only print some numbers."
+explanation: |
+  Loops and if can team up: check a condition each time around, and only print when it's true.
+
+  i % 2 == 0 checks if i divides evenly by 2 — in other words, if i is even. Put that if inside the for loop and Python only prints the numbers that pass the test.
+example_code: |
+  for i in range(1, 11):
+      if i % 2 == 0:
+          print(i)
+starter_code: |
+  for i in range(1, 11):
+      if i % 2 == 0:
+          print(i)
+challenge: |
+  🎯 Challenge: Can you print only the odd numbers from 1 to 10 instead?
+expected_output: |
+  1
+  3
+  5
+  7
+  9
+hints:
+  - "Change i % 2 == 0 to i % 2 != 0."
+  - "!= means \"not equal to\" — an odd number never divides evenly by 2, so the leftover is never 0."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 8
+main_path: false

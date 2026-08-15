@@ -1,0 +1,27 @@
+id: lesson_408
+title: "Lists: Level 10 🎒"
+level: 408
+objective: "Slice out part of a list with fruits[0:2]."
+explanation: |
+  Slicing grabs a CHUNK of a list instead of a single item. fruits[0:2] means "start at position 0, stop before position 2" — so it grabs positions 0 and 1.
+
+  The second number in a slice is never included, only everything up to (but not touching) it.
+example_code: |
+  fruits = ["apple", "banana", "orange", "grape"]
+  print(fruits[0:2])
+starter_code: |
+  fruits = ["apple", "banana", "orange", "grape"]
+  print(fruits[0:2])
+challenge: |
+  🎯 Challenge: Can you slice out just the first two fruits from this backpack of four?
+expected_output: "['apple', 'banana']"
+hints:
+  - "A slice uses two numbers inside the brackets, separated by a colon."
+  - "fruits[0:2] grabs positions 0 and 1, but stops before position 2."
+  - "It should look like: print(fruits[0:2])"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 10
+main_path: false

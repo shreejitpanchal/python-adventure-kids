@@ -1,0 +1,33 @@
+id: lesson_413
+title: "Lists: Level 15 🎒"
+level: 413
+objective: "Check whether an item is in a list using the in keyword."
+explanation: |
+  The in keyword asks a yes-or-no question: is this item somewhere inside the list? "banana" in fruits gives back True or False.
+
+  Combined with if, you can make decisions based on what's packed in the backpack — without needing to know exactly where it is.
+example_code: |
+  fruits = ["apple", "banana", "orange"]
+  if "banana" in fruits:
+      print("Found it!")
+  else:
+      print("Not found.")
+starter_code: |
+  fruits = ["apple", "banana", "orange"]
+  if "banana" in fruits:
+      print("Found it!")
+  else:
+      print("Not found.")
+challenge: |
+  🎯 Challenge: Can you check whether "banana" is packed in this backpack, and print "Found it!" if it is?
+expected_output: "Found it!"
+hints:
+  - "The in keyword checks whether an item is inside a list."
+  - "Use it inside an if: if \"banana\" in fruits:"
+  - "It should look like: if \"banana\" in fruits: print(\"Found it!\") else: print(\"Not found.\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 15
+main_path: false

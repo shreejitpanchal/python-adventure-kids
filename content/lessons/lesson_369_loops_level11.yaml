@@ -1,0 +1,38 @@
+id: lesson_369
+title: "Loops: Level 11 🔁"
+level: 369
+objective: "Nest one loop inside another to build a small table."
+explanation: |
+  A loop can live inside another loop! The outer loop runs once per row, and for each row, the inner loop runs all the way through before moving to the next row.
+
+  Here the outer i is the row number and the inner j multiplies against it, building each row of a tiny multiplication table one piece at a time.
+example_code: |
+  for i in range(1, 4):
+      row = ""
+      for j in range(1, 4):
+          if j > 1:
+              row = row + " "
+          row = row + str(i * j)
+      print(row)
+starter_code: |
+  for i in range(1, 4):
+      row = ""
+      for j in range(1, 4):
+          if j > 1:
+              row = row + " "
+          row = row + str(i * j)
+      print(row)
+challenge: |
+  🎯 Challenge: Can you make it a 2x2 table (rows and columns 1 to 2) instead of 3x3?
+expected_output: |
+  1 2
+  2 4
+hints:
+  - "Change both range(1, 4) to range(1, 3)."
+  - "Both the outer and inner loop need to change — there are two of them!"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 11
+main_path: false

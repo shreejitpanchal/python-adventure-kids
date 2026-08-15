@@ -1,0 +1,31 @@
+id: lesson_384
+title: "Functions: Level 6 ⚙️"
+level: 384
+objective: "Give a parameter a default value so the function still works when called with no arguments."
+explanation: |
+  A parameter can have a backup value ready to use, in case nobody fills its box. def greet(name="friend"): means if you call greet() with nothing inside the parentheses, name is automatically "friend".
+
+  But you can still override the default any time you want, just by passing something in: greet("Kai") makes name "Kai" instead.
+example_code: |
+  def greet(name="friend"):
+      print("Hello, " + name + "!")
+
+  greet()
+starter_code: |
+  def greet(name="friend"):
+      print("Hello, " + name + "!")
+
+  greet()
+challenge: |
+  🎯 Challenge: Can you call greet with the name "Kai" so it prints "Hello, Kai!" instead of using the default?
+expected_output: "Hello, Kai!"
+hints:
+  - "Put a name inside the parentheses when you call greet(...) this time."
+  - "Passing in a value overrides the default \"friend\"."
+  - "It should look like: greet(\"Kai\")"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 6
+main_path: false

@@ -1,0 +1,41 @@
+id: lesson_348
+title: "Decisions: Level 10 🚦"
+level: 348
+objective: "Use an elif chain to sort a score into a letter grade."
+explanation: |
+  You can chain up as many elif branches as you need. Python checks them top to bottom and stops at the first one that's true.
+
+  Here, a score is sorted into a letter grade — A, B, C, or F — depending on which range it falls into.
+example_code: |
+  score = 68
+  if score >= 90:
+      print("Letter grade: A")
+  elif score >= 80:
+      print("Letter grade: B")
+  elif score >= 70:
+      print("Letter grade: C")
+  else:
+      print("Letter grade: F")
+starter_code: |
+  score = 68
+  if score >= 90:
+      print("Letter grade: A")
+  elif score >= 80:
+      print("Letter grade: B")
+  elif score >= 70:
+      print("Letter grade: C")
+  else:
+      print("Letter grade: F")
+challenge: |
+  🎯 Challenge: Change score so Python prints "Letter grade: C" instead.
+expected_output: "Letter grade: C"
+hints:
+  - "elif checks each condition in order, top to bottom."
+  - "A score from 70 to 79 gives a C."
+  - "Try score = 75."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 10
+main_path: false

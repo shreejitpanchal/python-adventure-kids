@@ -1,0 +1,39 @@
+id: lesson_397
+title: "Functions: Level 19 ⚙️"
+level: 397
+objective: "Combine a loop and an if inside a function to solve a small task."
+explanation: |
+  Functions can combine everything you've learned so far -- a loop to look at every letter, and an if inside it to decide which letters count, building up an answer as it goes.
+
+  count_vowels(word) walks through every letter in word, and whenever that letter is one of "aeiouAEIOU", it adds one to count. Once the loop is done, it returns the total.
+example_code: |
+  def count_vowels(word):
+      count = 0
+      for letter in word:
+          if letter in "aeiouAEIOU":
+              count += 1
+      return count
+
+  print(count_vowels("banana"))
+starter_code: |
+  def count_vowels(word):
+      count = 0
+      for letter in word:
+          if letter in "aeiouAEIOU":
+              count += 1
+      return count
+
+  print(count_vowels("banana"))
+challenge: |
+  🎯 Challenge: Can you call count_vowels with "adventure" instead of "banana", so it prints the correct number of vowels?
+expected_output: "4"
+hints:
+  - "Change the word you pass into count_vowels(...)."
+  - "Count the vowels in \"adventure\" yourself: a, e, u, e."
+  - "It should look like: print(count_vowels(\"adventure\"))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 19
+main_path: false

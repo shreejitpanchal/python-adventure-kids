@@ -1,0 +1,47 @@
+id: lesson_355
+title: "Decisions: Level 17 🚦"
+level: 355
+objective: "Use a longer elif chain to sort a number into one of five bands."
+explanation: |
+  An elif chain can have as many branches as you like. Here, a temperature is sorted into one of five weather messages.
+
+  Python checks each range from the top down and stops at the first one that fits, so order matters.
+example_code: |
+  temp_text = "50"
+  temperature = int(temp_text)
+  if temperature >= 90:
+      print("It's a scorcher! Stay hydrated.")
+  elif temperature >= 70:
+      print("Nice and warm today.")
+  elif temperature >= 50:
+      print("A bit cool - bring a jacket.")
+  elif temperature >= 32:
+      print("Chilly! Wear a coat.")
+  else:
+      print("Freezing! Bundle up warmly.")
+starter_code: |
+  temp_text = "50"
+  temperature = int(temp_text)
+  if temperature >= 90:
+      print("It's a scorcher! Stay hydrated.")
+  elif temperature >= 70:
+      print("Nice and warm today.")
+  elif temperature >= 50:
+      print("A bit cool - bring a jacket.")
+  elif temperature >= 32:
+      print("Chilly! Wear a coat.")
+  else:
+      print("Freezing! Bundle up warmly.")
+challenge: |
+  🎯 Challenge: Change temp_text so Python prints "Freezing! Bundle up warmly." instead.
+expected_output: "Freezing! Bundle up warmly."
+hints:
+  - "temp_text is turned into a number using int(temp_text)."
+  - "The last else only runs when the temperature is below 32."
+  - "Try temp_text = \"20\"."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 17
+main_path: false

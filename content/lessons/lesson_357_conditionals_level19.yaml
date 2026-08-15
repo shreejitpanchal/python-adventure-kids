@@ -1,0 +1,47 @@
+id: lesson_357
+title: "Decisions: Level 19 🚦"
+level: 357
+objective: "Nest if/else inside if/else to weigh two different factors together."
+explanation: |
+  Bigger decisions sometimes depend on two things at once. Here, Python first checks is_raining, and inside EACH branch, it checks temperature too.
+
+  This gives four possible messages in total, built from just two nested if/else pairs.
+example_code: |
+  temperature = 75
+  is_raining = "no"
+  if is_raining == "yes":
+      if temperature < 60:
+          print("Cold and rainy - wear a coat!")
+      else:
+          print("Warm rain - grab an umbrella!")
+  else:
+      if temperature >= 80:
+          print("Hot and sunny - wear sunscreen!")
+      else:
+          print("Nice weather - enjoy the day!")
+starter_code: |
+  temperature = 75
+  is_raining = "no"
+  if is_raining == "yes":
+      if temperature < 60:
+          print("Cold and rainy - wear a coat!")
+      else:
+          print("Warm rain - grab an umbrella!")
+  else:
+      if temperature >= 80:
+          print("Hot and sunny - wear sunscreen!")
+      else:
+          print("Nice weather - enjoy the day!")
+challenge: |
+  🎯 Challenge: Change temperature so Python prints "Hot and sunny - wear sunscreen!" instead.
+expected_output: "Hot and sunny - wear sunscreen!"
+hints:
+  - "is_raining is already \"no\", so look at the else branch's own if/else."
+  - "You need temperature to be 80 or more while is_raining stays \"no\"."
+  - "Try temperature = 85."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 19
+main_path: false

@@ -1,0 +1,31 @@
+id: lesson_301
+title: "Strings: Level 3 🔤"
+level: 301
+objective: "Join three pieces of text together using +."
+explanation: |
+  You're not limited to joining just two strings — you can chain as many + signs as you like.
+
+  part1 + part2 + part3 sticks all three pieces together in order, left to right.
+example_code: |
+  part1 = "Super"
+  part2 = "hero"
+  part3 = "!"
+  print(part1 + part2 + part3)
+starter_code: |
+  part1 = "Super"
+  part2 = "hero"
+  part3 = "!"
+  print(part1 + part2 + part3)
+challenge: |
+  🎯 Challenge: Change the three variables to "Fire", "fly", and "!" so it prints "Firefly!".
+expected_output: "Firefly!"
+hints:
+  - "Change the three variables to \"Fire\", \"fly\", and \"!\"."
+  - "Each + just glues the next piece onto the end of what came before."
+  - "It should look like: part1 = \"Fire\", part2 = \"fly\", part3 = \"!\", print(part1 + part2 + part3)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 3
+main_path: false
