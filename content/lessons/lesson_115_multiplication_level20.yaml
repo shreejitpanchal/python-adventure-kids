@@ -1,0 +1,22 @@
+id: lesson_115
+title: "Multiplication: Level 20 ✖️"
+level: 115
+objective: "Combine everything you've learned about multiplication in one program."
+explanation: |
+  You've learned decimals, rounding, and comparisons. This last challenge mixes them together in one print.
+example_code: |
+  print(round(2.5 * 2), 3 * 3 > 5)
+starter_code: |
+  print(round(2.5 * 2), 3 * 3 > 5)
+challenge: |
+  🎯 Challenge: Print round(1.5 * 2), and whether 4 * 4 is greater than 20 — both together.
+expected_output: "3 False"
+hints:
+  - "Change the two parts: round(1.5 * 2) and 4 * 4 > 20."
+  - "It should look like: print(round(1.5 * 2), 4 * 4 > 20)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 20
+main_path: false

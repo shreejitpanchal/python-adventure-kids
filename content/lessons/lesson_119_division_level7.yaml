@@ -1,0 +1,22 @@
+id: lesson_119
+title: "Division: Level 7 ➗"
+level: 119
+objective: "Divide two numbers, then round the answer."
+explanation: |
+  round() can wrap around a division just like it can wrap around any other operator.
+example_code: |
+  print(round(17 / 5))
+starter_code: |
+  print(round(17 / 5))
+challenge: |
+  🎯 Challenge: Divide 22 by 6, then round the result.
+expected_output: "4"
+hints:
+  - "Change the numbers to 22 and 6."
+  - "It should look like: print(round(22 / 6))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 7
+main_path: false

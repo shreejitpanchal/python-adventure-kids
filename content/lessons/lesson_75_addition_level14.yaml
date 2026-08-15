@@ -1,0 +1,22 @@
+id: lesson_75
+title: "Addition: Level 14 ➕"
+level: 75
+objective: "Add five bigger numbers together."
+explanation: |
+  The more numbers you chain with +, the bigger the totals can get.
+example_code: |
+  print(1 + 2 + 3 + 4 + 5)
+starter_code: |
+  print(1 + 2 + 3 + 4 + 5)
+challenge: |
+  🎯 Challenge: Can you make Python add 10 + 20 + 30 + 40 + 50?
+expected_output: "150"
+hints:
+  - "Change all five numbers."
+  - "It should look like: print(10 + 20 + 30 + 40 + 50)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 14
+main_path: false

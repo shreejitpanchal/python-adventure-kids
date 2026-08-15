@@ -1,0 +1,24 @@
+id: lesson_51
+title: "Numbers: Level 7 🔢"
+level: 51
+objective: "Use abs() to find how far a number is from zero."
+explanation: |
+  abs() strips away a minus sign and tells you how far a number is from zero.
+
+  abs(-9) is 9, because -9 is 9 steps away from zero.
+example_code: |
+  print(abs(-9))
+starter_code: |
+  print(abs(-9))
+challenge: |
+  🎯 Challenge: Can you make Python print the absolute value of -14?
+expected_output: "14"
+hints:
+  - "Change -9 to -14 inside abs(...)."
+  - "It should look like: print(abs(-14))"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 7
+main_path: false

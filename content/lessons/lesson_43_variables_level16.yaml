@@ -1,0 +1,28 @@
+id: lesson_43
+title: "Variables: Level 16 📦"
+level: 43
+objective: "Build up a text variable by adding more text onto itself."
+explanation: |
+  Just like numbers, text variables can be updated using their own current value.
+
+  name = name + "thon" glues "thon" onto whatever text is already inside name.
+example_code: |
+  name = "Py"
+  name = name + "thon"
+  print(name)
+starter_code: |
+  name = "Py"
+  name = name + "thon"
+  print(name)
+challenge: |
+  🎯 Challenge: Start word as "Snake", then add "!" onto the end of itself. Print word.
+expected_output: "Snake!"
+hints:
+  - "Change word = word + \"!\" to glue an exclamation mark on."
+  - "It should look like: word = \"Snake\", word = word + \"!\", print(word)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 16
+main_path: false

@@ -1,0 +1,24 @@
+id: lesson_90
+title: "Subtraction: Level 12 ➖"
+level: 90
+objective: "Compare two different differences and find the smaller one."
+explanation: |
+  min() can compare the results of two subtractions, not just two plain numbers.
+
+  min(10 - 2, 5 - 1) works out both differences first (8 and 4), then hands back the smaller one.
+example_code: |
+  print(min(10 - 2, 5 - 1))
+starter_code: |
+  print(min(10 - 2, 5 - 1))
+challenge: |
+  🎯 Challenge: Which is smaller: 20 - 5 or 15 - 2? Make Python find out.
+expected_output: "13"
+hints:
+  - "Change the two problems to 20 - 5 and 15 - 2."
+  - "It should look like: print(min(20 - 5, 15 - 2))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 12
+main_path: false

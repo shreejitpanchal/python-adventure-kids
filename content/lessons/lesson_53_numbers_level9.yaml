@@ -1,0 +1,24 @@
+id: lesson_53
+title: "Numbers: Level 9 🔢"
+level: 53
+objective: "Compare two numbers with > and see Python's True/False answer."
+explanation: |
+  > asks "is the first number bigger?" Python answers with True or False.
+
+  9 > 4 is True, because 9 really is bigger than 4.
+example_code: |
+  print(9 > 4)
+starter_code: |
+  print(9 > 4)
+challenge: |
+  🎯 Challenge: Can you make Python check if 3 is greater than 10?
+expected_output: "False"
+hints:
+  - "Change the numbers to 3 and 10."
+  - "It should look like: print(3 > 10)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 9
+main_path: false

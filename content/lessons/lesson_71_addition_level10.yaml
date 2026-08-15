@@ -1,0 +1,22 @@
+id: lesson_71
+title: "Addition: Level 10 ➕"
+level: 71
+objective: "Add five copies of the same small number."
+explanation: |
+  There's no limit to how many numbers you can chain together with +.
+example_code: |
+  print(1 + 1 + 1 + 1 + 1)
+starter_code: |
+  print(1 + 1 + 1 + 1 + 1)
+challenge: |
+  🎯 Challenge: Can you make Python add 2 + 2 + 2 + 2 + 2?
+expected_output: "10"
+hints:
+  - "Change every 1 to a 2."
+  - "It should look like: print(2 + 2 + 2 + 2 + 2)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 10
+main_path: false

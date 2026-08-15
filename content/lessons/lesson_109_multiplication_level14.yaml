@@ -1,0 +1,22 @@
+id: lesson_109
+title: "Multiplication: Level 14 ✖️"
+level: 109
+objective: "Multiply five numbers in a row."
+explanation: |
+  The more numbers you chain with *, the faster the answer grows.
+example_code: |
+  print(1 * 2 * 3 * 4 * 5)
+starter_code: |
+  print(1 * 2 * 3 * 4 * 5)
+challenge: |
+  🎯 Challenge: Can you make Python multiply 2 * 2 * 2 * 2 * 2?
+expected_output: "32"
+hints:
+  - "Change every number to a 2."
+  - "It should look like: print(2 * 2 * 2 * 2 * 2)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 14
+main_path: false

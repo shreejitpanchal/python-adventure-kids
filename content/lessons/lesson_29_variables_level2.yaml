@@ -1,0 +1,28 @@
+id: lesson_29
+title: "Variables: Level 2 📦"
+level: 29
+objective: "Change what's stored inside a variable after it's already been set."
+explanation: |
+  A variable can change its mind! Once a box has something in it, you can put something new inside.
+
+  score = 5 puts 5 in the box. score = 8 right after replaces it with 8 — the box only ever remembers the newest thing.
+example_code: |
+  score = 5
+  score = 8
+  print(score)
+starter_code: |
+  score = 5
+  score = 8
+  print(score)
+challenge: |
+  🎯 Challenge: Make score start at 5, then change it to 20. Print score.
+expected_output: "20"
+hints:
+  - "Change the second line to score = 20."
+  - "It should look like: score = 5, then score = 20, then print(score)."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 2
+main_path: false

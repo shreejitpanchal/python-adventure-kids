@@ -1,0 +1,24 @@
+id: lesson_68
+title: "Addition: Level 7 ➕"
+level: 68
+objective: "Add two decimals, then round the answer."
+explanation: |
+  You can combine skills — add first, then round the result to a whole number.
+
+  round(3.2 + 4.7) adds first (getting 7.9), then rounds that to 8.
+example_code: |
+  print(round(3.2 + 4.7))
+starter_code: |
+  print(round(3.2 + 4.7))
+challenge: |
+  🎯 Challenge: Add 5.6 and 3.1, then round the result.
+expected_output: "9"
+hints:
+  - "Change the numbers to 5.6 and 3.1."
+  - "It should look like: print(round(5.6 + 3.1))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 7
+main_path: false

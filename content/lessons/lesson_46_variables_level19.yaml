@@ -1,0 +1,28 @@
+id: lesson_46
+title: "Variables: Level 19 📦"
+level: 46
+objective: "Update the same variable more than once in a row."
+explanation: |
+  You can update a variable again and again, one line at a time — each line builds on whatever came before it.
+example_code: |
+  x = 1
+  x = x + 1
+  x = x + 1
+  print(x)
+starter_code: |
+  x = 1
+  x = x + 1
+  x = x + 1
+  print(x)
+challenge: |
+  🎯 Challenge: Start total at 10, then add 5 to itself, twice in a row (two separate lines). Print total.
+expected_output: "20"
+hints:
+  - "Write total = total + 5 on two separate lines."
+  - "It should look like: total = 10, total = total + 5, total = total + 5, print(total)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 19
+main_path: false

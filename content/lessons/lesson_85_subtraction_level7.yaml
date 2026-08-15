@@ -1,0 +1,22 @@
+id: lesson_85
+title: "Subtraction: Level 7 ➖"
+level: 85
+objective: "Subtract two decimals, then round the answer."
+explanation: |
+  round() can wrap around a subtraction just like it can wrap around addition.
+example_code: |
+  print(round(9.8 - 2.4))
+starter_code: |
+  print(round(9.8 - 2.4))
+challenge: |
+  🎯 Challenge: Subtract 4.3 from 12.7, then round the result.
+expected_output: "8"
+hints:
+  - "Change the numbers to 12.7 and 4.3."
+  - "It should look like: print(round(12.7 - 4.3))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 7
+main_path: false

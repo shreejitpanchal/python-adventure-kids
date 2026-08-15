@@ -1,0 +1,24 @@
+id: lesson_54
+title: "Numbers: Level 10 🔢"
+level: 54
+objective: "Compare two numbers with == to check if they're equal."
+explanation: |
+  == asks "are these two numbers exactly equal?" (Two equal signs, not one — one = is for storing, two == is for asking.)
+
+  6 == 6 is True, because they match.
+example_code: |
+  print(6 == 6)
+starter_code: |
+  print(6 == 6)
+challenge: |
+  🎯 Challenge: Can you make Python check if 5 is equal to 9?
+expected_output: "False"
+hints:
+  - "Change the numbers to 5 and 9."
+  - "It should look like: print(5 == 9)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 10
+main_path: false

@@ -1,0 +1,22 @@
+id: lesson_132
+title: "Division: Level 20 ➗"
+level: 132
+objective: "Combine everything you've learned about division in one program."
+explanation: |
+  You've learned rounding, chaining, and comparisons. This last challenge mixes them together in one print.
+example_code: |
+  print(round(20 / 3), 15 / 3 > 4)
+starter_code: |
+  print(round(20 / 3), 15 / 3 > 4)
+challenge: |
+  🎯 Challenge: Print round(25 / 4), and whether 12 / 4 is greater than 5 — both together.
+expected_output: "6 False"
+hints:
+  - "Change the two parts: round(25 / 4) and 12 / 4 > 5."
+  - "It should look like: print(round(25 / 4), 12 / 4 > 5)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: division
+category_level: 20
+main_path: false

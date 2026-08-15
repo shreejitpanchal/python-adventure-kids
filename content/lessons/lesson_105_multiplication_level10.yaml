@@ -1,0 +1,24 @@
+id: lesson_105
+title: "Multiplication: Level 10 ✖️"
+level: 105
+objective: "Multiply a number by zero."
+explanation: |
+  Anything multiplied by zero is always zero, no matter how big the other number is.
+
+  print(9 * 4) shows a normal multiplication — but change that second number to 0 and watch what happens.
+example_code: |
+  print(9 * 4)
+starter_code: |
+  print(9 * 4)
+challenge: |
+  🎯 Challenge: Can you make Python multiply 47 by 0?
+expected_output: "0"
+hints:
+  - "Change both numbers: 47 and 0."
+  - "It should look like: print(47 * 0)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 10
+main_path: false

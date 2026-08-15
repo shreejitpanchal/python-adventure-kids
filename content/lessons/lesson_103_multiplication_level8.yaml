@@ -1,0 +1,22 @@
+id: lesson_103
+title: "Multiplication: Level 8 ✖️"
+level: 103
+objective: "Multiply two numbers, then find the absolute value of the result."
+explanation: |
+  abs() can wrap around a multiplication too — Python works out the product first, then strips away any minus sign.
+example_code: |
+  print(abs(-4 * 3))
+starter_code: |
+  print(abs(-4 * 3))
+challenge: |
+  🎯 Challenge: Multiply -6 by 5, then find the absolute value of the result.
+expected_output: "30"
+hints:
+  - "Change the numbers to -6 and 5."
+  - "It should look like: print(abs(-6 * 5))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 8
+main_path: false

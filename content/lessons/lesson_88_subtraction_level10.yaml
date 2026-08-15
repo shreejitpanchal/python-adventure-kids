@@ -1,0 +1,22 @@
+id: lesson_88
+title: "Subtraction: Level 10 ➖"
+level: 88
+objective: "Subtract the same number from a total, several times in a row."
+explanation: |
+  Chaining - lets you take the same amount away again and again.
+example_code: |
+  print(100 - 10 - 10 - 10 - 10 - 10)
+starter_code: |
+  print(100 - 10 - 10 - 10 - 10 - 10)
+challenge: |
+  🎯 Challenge: Can you make Python subtract 20, five times in a row, from 100?
+expected_output: "0"
+hints:
+  - "Change every 10 to a 20."
+  - "It should look like: print(100 - 20 - 20 - 20 - 20 - 20)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 10
+main_path: false

@@ -1,0 +1,22 @@
+id: lesson_129
+title: "Division: Level 17 ➗"
+level: 129
+objective: "Divide a number by two different numbers in a row."
+explanation: |
+  You can chain / more than once, just like you practiced back in Level 6 — this time with different numbers.
+example_code: |
+  print(100 / 2 / 2)
+starter_code: |
+  print(100 / 2 / 2)
+challenge: |
+  🎯 Challenge: Can you make Python divide 90 by 3, then by 2?
+expected_output: "15.0"
+hints:
+  - "Change the numbers to 90, 3, and 2."
+  - "It should look like: print(90 / 3 / 2)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 17
+main_path: false

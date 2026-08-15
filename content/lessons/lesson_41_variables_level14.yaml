@@ -1,0 +1,28 @@
+id: lesson_41
+title: "Variables: Level 14 📦"
+level: 41
+objective: "Combine three variables in one math expression."
+explanation: |
+  You can add up as many variables as you want in one line, just like adding plain numbers.
+example_code: |
+  a = 2
+  b = 3
+  c = 4
+  print(a + b + c)
+starter_code: |
+  a = 2
+  b = 3
+  c = 4
+  print(a + b + c)
+challenge: |
+  🎯 Challenge: Make a = 10, b = 20, c = 30. Print their total.
+expected_output: "60"
+hints:
+  - "Change the three numbers, then print(a + b + c)."
+  - "It should look like: a = 10, b = 20, c = 30, print(a + b + c)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 14
+main_path: false

@@ -1,0 +1,22 @@
+id: lesson_97
+title: "Subtraction: Level 19 ➖"
+level: 97
+objective: "Subtract a chain of five numbers from a big total."
+explanation: |
+  You've come a long way from subtracting just two numbers — now try chaining five of them together.
+example_code: |
+  print(50 - 1 - 2 - 3 - 4 - 5)
+starter_code: |
+  print(50 - 1 - 2 - 3 - 4 - 5)
+challenge: |
+  🎯 Challenge: Can you make Python subtract 5, 10, 15, 20, and 25 from 100?
+expected_output: "25"
+hints:
+  - "Change all six numbers."
+  - "It should look like: print(100 - 5 - 10 - 15 - 20 - 25)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 19
+main_path: false

@@ -1,0 +1,24 @@
+id: lesson_73
+title: "Addition: Level 12 ➕"
+level: 73
+objective: "Compare two different sums and find the bigger one."
+explanation: |
+  max() can compare the results of two additions, not just two plain numbers.
+
+  max(2 + 3, 1 + 1) works out both sums first (5 and 2), then hands back the bigger one.
+example_code: |
+  print(max(2 + 3, 1 + 1))
+starter_code: |
+  print(max(2 + 3, 1 + 1))
+challenge: |
+  🎯 Challenge: Which is bigger: 4 + 4 or 2 + 9? Make Python find out.
+expected_output: "11"
+hints:
+  - "Change the two sums to 4 + 4 and 2 + 9."
+  - "It should look like: print(max(4 + 4, 2 + 9))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 12
+main_path: false

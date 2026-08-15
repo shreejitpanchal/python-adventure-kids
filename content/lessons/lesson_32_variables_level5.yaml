@@ -1,0 +1,28 @@
+id: lesson_32
+title: "Variables: Level 5 📦"
+level: 32
+objective: "Update a variable using its own current value."
+explanation: |
+  A variable can be changed based on what it already holds — Python figures out the right side first, then stores the new answer.
+
+  score = score + 5 means "take what's in score, add 5, and put the result back in score."
+example_code: |
+  score = 10
+  score = score + 5
+  print(score)
+starter_code: |
+  score = 10
+  score = score + 5
+  print(score)
+challenge: |
+  🎯 Challenge: Start coins at 20, then add 7 more to itself. Print coins.
+expected_output: "27"
+hints:
+  - "Change coins to 20, then write coins = coins + 7."
+  - "It should look like: coins = 20, coins = coins + 7, print(coins)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 5
+main_path: false

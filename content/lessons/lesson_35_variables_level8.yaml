@@ -1,0 +1,26 @@
+id: lesson_35
+title: "Variables: Level 8 📦"
+level: 35
+objective: "Use *= as a shortcut for multiplying a variable."
+explanation: |
+  points *= 3 is a shortcut for points = points * 3 — it multiplies whatever is inside points.
+example_code: |
+  points = 4
+  points *= 3
+  print(points)
+starter_code: |
+  points = 4
+  points *= 3
+  print(points)
+challenge: |
+  🎯 Challenge: Start points at 6, then use *= to multiply by 5. Print points.
+expected_output: "30"
+hints:
+  - "Change points to 6, then write points *= 5."
+  - "It should look like: points = 6, points *= 5, print(points)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 8
+main_path: false

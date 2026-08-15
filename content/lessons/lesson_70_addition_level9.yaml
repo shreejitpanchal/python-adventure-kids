@@ -1,0 +1,22 @@
+id: lesson_70
+title: "Addition: Level 9 ➕"
+level: 70
+objective: "Compare the result of an addition with >."
+explanation: |
+  Python works out 5 + 5 first, then checks if that answer is greater than 8.
+example_code: |
+  print(5 + 5 > 8)
+starter_code: |
+  print(5 + 5 > 8)
+challenge: |
+  🎯 Challenge: Is 4 + 3 greater than 10? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 4 + 3 > 10."
+  - "It should look like: print(4 + 3 > 10)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 9
+main_path: false

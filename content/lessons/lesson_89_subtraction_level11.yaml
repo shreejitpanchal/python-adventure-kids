@@ -1,0 +1,22 @@
+id: lesson_89
+title: "Subtraction: Level 11 ➖"
+level: 89
+objective: "Subtract two decimal numbers with different decimal places."
+explanation: |
+  Python lines up the decimal points correctly, even if the two numbers have a different number of digits after the dot.
+example_code: |
+  print(8.75 - 3.5)
+starter_code: |
+  print(8.75 - 3.5)
+challenge: |
+  🎯 Challenge: Can you make Python subtract 2.25 from 9.5?
+expected_output: "7.25"
+hints:
+  - "Change the numbers to 9.5 and 2.25."
+  - "It should look like: print(9.5 - 2.25)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 11
+main_path: false

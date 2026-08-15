@@ -1,0 +1,22 @@
+id: lesson_64
+title: "Numbers: Level 20 🔢"
+level: 64
+objective: "Combine everything you've learned about numbers in one program."
+explanation: |
+  You've learned rounding, max/min, and absolute value. This last challenge uses all three together in one print.
+example_code: |
+  print(round(9.6), max(2, 8), abs(-5))
+starter_code: |
+  print(round(9.6), max(2, 8), abs(-5))
+challenge: |
+  🎯 Challenge: Print round(17.4), the bigger of 6 and 21, and the absolute value of -30 — all together.
+expected_output: "17 21 30"
+hints:
+  - "Change each part: round(17.4), max(6, 21), abs(-30)."
+  - "It should look like: print(round(17.4), max(6, 21), abs(-30))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 20
+main_path: false

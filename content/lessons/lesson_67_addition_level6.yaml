@@ -1,0 +1,22 @@
+id: lesson_67
+title: "Addition: Level 6 ➕"
+level: 67
+objective: "Add four numbers in a row."
+explanation: |
+  You can chain + as many times as you like — Python adds everything together, left to right.
+example_code: |
+  print(2 + 3 + 4 + 5)
+starter_code: |
+  print(2 + 3 + 4 + 5)
+challenge: |
+  🎯 Challenge: Can you make Python add 6 + 7 + 8 + 9?
+expected_output: "30"
+hints:
+  - "Change all four numbers."
+  - "It should look like: print(6 + 7 + 8 + 9)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 6
+main_path: false

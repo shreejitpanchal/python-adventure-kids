@@ -1,0 +1,22 @@
+id: lesson_116
+title: "Division: Level 4 ➗"
+level: 116
+objective: "Divide a decimal number."
+explanation: |
+  / works on decimals exactly the same way it works on whole numbers.
+example_code: |
+  print(7.5 / 2)
+starter_code: |
+  print(7.5 / 2)
+challenge: |
+  🎯 Challenge: Can you make Python divide 9.5 by 2?
+expected_output: "4.75"
+hints:
+  - "Change the numbers to 9.5 and 2."
+  - "It should look like: print(9.5 / 2)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: division
+category_level: 4
+main_path: false

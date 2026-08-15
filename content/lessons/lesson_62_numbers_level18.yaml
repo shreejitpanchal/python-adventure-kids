@@ -1,0 +1,24 @@
+id: lesson_62
+title: "Numbers: Level 18 🔢"
+level: 62
+objective: "Raise a negative number to a power."
+explanation: |
+  Powers work on negative numbers too — just remember the parentheses around the negative number, so Python knows the minus sign is part of it.
+
+  (-2) ** 3 means -2 multiplied by itself 3 times, which is -8.
+example_code: |
+  print((-2) ** 3)
+starter_code: |
+  print((-2) ** 3)
+challenge: |
+  🎯 Challenge: Can you make Python print -3 to the power of 2?
+expected_output: "9"
+hints:
+  - "Change -2 to -3, and 3 to 2."
+  - "It should look like: print((-3) ** 2)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 18
+main_path: false

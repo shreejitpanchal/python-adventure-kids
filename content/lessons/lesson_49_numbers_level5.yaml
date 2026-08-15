@@ -1,0 +1,24 @@
+id: lesson_49
+title: "Numbers: Level 5 🔢"
+level: 49
+objective: "Print a decimal number."
+explanation: |
+  Not every number is a whole number — a decimal point lets you show parts of a number too.
+
+  print(3.5) shows three and a half.
+example_code: |
+  print(3.5)
+starter_code: |
+  print(3.5)
+challenge: |
+  🎯 Challenge: A toy costs $4.25. Can you make Python print 4.25?
+expected_output: "4.25"
+hints:
+  - "Change 3.5 to 4.25."
+  - "It should look like: print(4.25)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 5
+main_path: false

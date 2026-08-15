@@ -1,0 +1,22 @@
+id: lesson_104
+title: "Multiplication: Level 9 ✖️"
+level: 104
+objective: "Compare the result of a multiplication with >."
+explanation: |
+  Python works out 4 * 4 first, then checks if that answer is greater than 10.
+example_code: |
+  print(4 * 4 > 10)
+starter_code: |
+  print(4 * 4 > 10)
+challenge: |
+  🎯 Challenge: Is 3 * 3 greater than 10? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 3 * 3 > 10."
+  - "It should look like: print(3 * 3 > 10)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 9
+main_path: false

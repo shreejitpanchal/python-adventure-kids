@@ -1,0 +1,26 @@
+id: lesson_31
+title: "Variables: Level 4 📦"
+level: 31
+objective: "Use a variable inside a math expression."
+explanation: |
+  A variable isn't just for printing by itself — you can use it in math too, just like a regular number.
+
+  price + 2 takes whatever is inside price and adds 2 to it.
+example_code: |
+  price = 5
+  print(price + 2)
+starter_code: |
+  price = 5
+  print(price + 2)
+challenge: |
+  🎯 Challenge: You have 12 stickers, stored in a variable called price. You get 3 more. Print the new total using price + 3.
+expected_output: "15"
+hints:
+  - "Change price to 12, then print(price + 3)."
+  - "It should look like: price = 12, print(price + 3)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 4
+main_path: false

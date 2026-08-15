@@ -1,0 +1,26 @@
+id: lesson_34
+title: "Variables: Level 7 📦"
+level: 34
+objective: "Use -= as a shortcut for subtracting from a variable."
+explanation: |
+  lives -= 1 is a shortcut for lives = lives - 1 — it takes 1 away from whatever is inside lives.
+example_code: |
+  lives = 3
+  lives -= 1
+  print(lives)
+starter_code: |
+  lives = 3
+  lives -= 1
+  print(lives)
+challenge: |
+  🎯 Challenge: Start health at 100, then use -= to take away 35. Print health.
+expected_output: "65"
+hints:
+  - "Change health to 100, then write health -= 35."
+  - "It should look like: health = 100, health -= 35, print(health)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 7
+main_path: false

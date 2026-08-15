@@ -1,0 +1,26 @@
+id: lesson_33
+title: "Variables: Level 6 📦"
+level: 33
+objective: "Use += as a shortcut for adding to a variable."
+explanation: |
+  coins += 10 is a shortcut for coins = coins + 10 — same result, less typing.
+example_code: |
+  coins = 20
+  coins += 10
+  print(coins)
+starter_code: |
+  coins = 20
+  coins += 10
+  print(coins)
+challenge: |
+  🎯 Challenge: Start lives at 3, then use += to add 4 more. Print lives.
+expected_output: "7"
+hints:
+  - "Change lives to 3, then write lives += 4."
+  - "It should look like: lives = 3, lives += 4, print(lives)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 6
+main_path: false

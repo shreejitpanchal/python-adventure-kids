@@ -1,0 +1,24 @@
+id: lesson_42
+title: "Variables: Level 15 📦"
+level: 42
+objective: "Use the same variable twice in one expression."
+explanation: |
+  A variable can appear more than once in the same line — Python just uses whatever value it's holding, every time it sees the name.
+example_code: |
+  x = 5
+  print(x * x)
+starter_code: |
+  x = 5
+  print(x * x)
+challenge: |
+  🎯 Challenge: Set x to 7 and print x times x.
+expected_output: "49"
+hints:
+  - "Change x to 7, keep print(x * x)."
+  - "It should look like: x = 7, print(x * x)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 15
+main_path: false

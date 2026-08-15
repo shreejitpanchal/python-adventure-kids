@@ -1,0 +1,24 @@
+id: lesson_45
+title: "Variables: Level 18 📦"
+level: 45
+objective: "Store a negative number in a variable and print its absolute value."
+explanation: |
+  abs(debt) works on a variable too — it strips away the minus sign and shows how far the number is from zero.
+example_code: |
+  debt = -50
+  print(abs(debt))
+starter_code: |
+  debt = -50
+  print(abs(debt))
+challenge: |
+  🎯 Challenge: Store -18 in a variable called change, and print its absolute value.
+expected_output: "18"
+hints:
+  - "Change debt to change = -18, then print(abs(change))."
+  - "It should look like: change = -18, print(abs(change))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 18
+main_path: false

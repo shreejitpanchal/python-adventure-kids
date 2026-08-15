@@ -1,0 +1,22 @@
+id: lesson_83
+title: "Subtraction: Level 5 ➖"
+level: 83
+objective: "Subtract a negative number and see it add instead."
+explanation: |
+  Subtracting a negative number flips into adding — 10 - -3 gives the same answer as 10 + 3.
+example_code: |
+  print(10 - -3)
+starter_code: |
+  print(10 - -3)
+challenge: |
+  🎯 Challenge: Can you make Python compute 15 - -6?
+expected_output: "21"
+hints:
+  - "Change the numbers to 15 and -6."
+  - "It should look like: print(15 - -6)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 5
+main_path: false

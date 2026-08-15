@@ -1,0 +1,22 @@
+id: lesson_74
+title: "Addition: Level 13 ➕"
+level: 74
+objective: "Convert text into a number, then add to it."
+explanation: |
+  int("10") turns the text "10" into a real number, so you can add to it like any other number.
+example_code: |
+  print(int("10") + 5)
+starter_code: |
+  print(int("10") + 5)
+challenge: |
+  🎯 Challenge: Convert the text "20" into a number and add 8 to it.
+expected_output: "28"
+hints:
+  - "Change \"10\" to \"20\", and 5 to 8."
+  - "It should look like: print(int(\"20\") + 8)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 13
+main_path: false

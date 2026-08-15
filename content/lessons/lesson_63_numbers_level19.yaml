@@ -1,0 +1,24 @@
+id: lesson_63
+title: "Numbers: Level 19 🔢"
+level: 63
+objective: "Compare the result of a math calculation, not just plain numbers."
+explanation: |
+  You can compare the answer to a math problem, not just two numbers sitting by themselves.
+
+  10 - 3 > 5 first works out 10 - 3 (which is 7), then checks if 7 is greater than 5.
+example_code: |
+  print(10 - 3 > 5)
+starter_code: |
+  print(10 - 3 > 5)
+challenge: |
+  🎯 Challenge: Can you make Python check if 9 - 6 is greater than 10?
+expected_output: "False"
+hints:
+  - "Change the problem to 9 - 6 > 10."
+  - "It should look like: print(9 - 6 > 10)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 19
+main_path: false

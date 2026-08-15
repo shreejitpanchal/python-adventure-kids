@@ -1,0 +1,24 @@
+id: lesson_48
+title: "Numbers: Level 4 🔢"
+level: 48
+objective: "Print a negative number."
+explanation: |
+  Numbers can go below zero too! Just put a minus sign right in front, with no space.
+
+  print(-7) shows negative seven.
+example_code: |
+  print(-7)
+starter_code: |
+  print(-7)
+challenge: |
+  🎯 Challenge: It's 12 degrees below zero outside. Can you make Python print -12?
+expected_output: "-12"
+hints:
+  - "Change the 7 to 12, and keep the minus sign."
+  - "It should look like: print(-12)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 4
+main_path: false

@@ -17,7 +17,7 @@ The app described in this README, screenshots included, is the current
 CustomTkinter build, which keeps working unaffected until that migration
 reaches the UI.
 
-**Phases 1–6 in progress: 28 lessons complete** (18 main-path + 10 bonus
+**Phases 1–6 in progress: 132 lessons complete** (18 main-path + 114 bonus
 practice levels). First-run setup wizard, main dashboard, a category
 browser, a settings screen with 6 selectable color themes (including two
 dark-mode options), local progress storage, a PIN-gated parent area, and
@@ -36,9 +36,12 @@ errors → reward) work end to end for:
   function instead of a loop. Steps 4–13 (keyboard control, food,
   collisions, score, game over, customization) are still to come.
 - **Bonus practice levels**: Numbers, Addition, Subtraction,
-  Multiplication, and Division each get 2 extra levels (harder numbers,
-  chained operations), reachable only through the category browser — see
-  "Category browser" below.
+  Multiplication, Division, and Variables each get a full 1–20 level
+  progression (levels 2/4 through 20 are bonus content), escalating from
+  the main-path basics through decimals, negative numbers, comparisons,
+  type conversion, `**`/`//`/`%`, and chained/combined expressions —
+  reachable only through the category browser, see "Category browser"
+  below.
 
 See "Graphical lessons" below for how Snake's execution model differs
 from the rest of the lessons.

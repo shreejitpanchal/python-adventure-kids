@@ -1,0 +1,34 @@
+id: lesson_38
+title: "Variables: Level 11 📦"
+level: 38
+objective: "Swap the values of two variables using a third, temporary variable."
+explanation: |
+  To swap what's in a and b, you need a third box first — otherwise you'd lose one value while copying the other.
+
+  temp = a saves a's value. Then a = b. Then b = temp puts the saved value into b.
+example_code: |
+  a = 1
+  b = 2
+  temp = a
+  a = b
+  b = temp
+  print(a, b)
+starter_code: |
+  a = 1
+  b = 2
+  temp = a
+  a = b
+  b = temp
+  print(a, b)
+challenge: |
+  🎯 Challenge: Start with a = 5 and b = 9. Swap them using a temp box, then print a and b.
+expected_output: "9 5"
+hints:
+  - "Copy a into temp first so you don't lose it, then a = b, then b = temp."
+  - "It should look like: a = 5, b = 9, temp = a, a = b, b = temp, print(a, b)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 11
+main_path: false

@@ -22,7 +22,7 @@ def test_lessons_in_category_sorted_by_category_level(engine):
     addition_lessons = engine.lessons_in_category("addition")
     levels = [lesson.category_level for lesson in addition_lessons]
     assert levels == sorted(levels)
-    assert len(addition_lessons) == 3  # lesson_03 + two bonus levels
+    assert len(addition_lessons) == 20  # lesson_03 + 19 bonus levels (2-20)
 
 
 def test_lessons_in_category_unknown_category_returns_empty(engine):

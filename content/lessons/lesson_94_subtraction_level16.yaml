@@ -1,0 +1,22 @@
+id: lesson_94
+title: "Subtraction: Level 16 ➖"
+level: 94
+objective: "Subtract a negative number from a negative number."
+explanation: |
+  Two minus signs together flip into a plus — -5 - -2 is the same as -5 + 2.
+example_code: |
+  print(-5 - -2)
+starter_code: |
+  print(-5 - -2)
+challenge: |
+  🎯 Challenge: Can you make Python compute -20 - -8?
+expected_output: "-12"
+hints:
+  - "Change the numbers to -20 and -8."
+  - "It should look like: print(-20 - -8)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 16
+main_path: false

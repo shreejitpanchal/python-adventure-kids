@@ -1,0 +1,24 @@
+id: lesson_77
+title: "Addition: Level 16 ➕"
+level: 77
+objective: "Add two negative numbers together."
+explanation: |
+  Two negative numbers add up to an even more negative number.
+
+  -5 + -7 is -12, because both numbers are below zero.
+example_code: |
+  print(-5 + -7)
+starter_code: |
+  print(-5 + -7)
+challenge: |
+  🎯 Challenge: Can you make Python add -9 and -14?
+expected_output: "-23"
+hints:
+  - "Change the numbers to -9 and -14."
+  - "It should look like: print(-9 + -14)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 16
+main_path: false

@@ -1,0 +1,24 @@
+id: lesson_117
+title: "Division: Level 5 ➗"
+level: 117
+objective: "Divide a number by a negative number."
+explanation: |
+  Dividing by a negative number flips the sign of the answer.
+
+  20 / -4 is -5.0, because a positive divided by a negative is negative.
+example_code: |
+  print(20 / -4)
+starter_code: |
+  print(20 / -4)
+challenge: |
+  🎯 Challenge: Can you make Python divide 30 by -5?
+expected_output: "-6.0"
+hints:
+  - "Change the numbers to 30 and -5."
+  - "It should look like: print(30 / -5)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: division
+category_level: 5
+main_path: false

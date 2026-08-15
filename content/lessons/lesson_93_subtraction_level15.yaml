@@ -1,0 +1,22 @@
+id: lesson_93
+title: "Subtraction: Level 15 ➖"
+level: 93
+objective: "Check whether a difference equals a target number."
+explanation: |
+  == checks if the difference you calculated matches exactly what you expected.
+example_code: |
+  print(10 - 4 == 6)
+starter_code: |
+  print(10 - 4 == 6)
+challenge: |
+  🎯 Challenge: Is 15 - 5 equal to 11? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 15 - 5 == 11."
+  - "It should look like: print(15 - 5 == 11)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 15
+main_path: false

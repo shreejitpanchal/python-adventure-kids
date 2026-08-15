@@ -1,0 +1,24 @@
+id: lesson_126
+title: "Division: Level 14 ➗"
+level: 126
+objective: "Compare two different quotients and find the smaller one."
+explanation: |
+  min() can compare the results of two divisions, not just two plain numbers.
+
+  min(20 / 4, 18 / 2) works out both divisions first (5.0 and 9.0), then hands back the smaller one.
+example_code: |
+  print(min(20 / 4, 18 / 2))
+starter_code: |
+  print(min(20 / 4, 18 / 2))
+challenge: |
+  🎯 Challenge: Which is smaller: 42 / 6 or 30 / 3? Make Python find out.
+expected_output: "7.0"
+hints:
+  - "Change the two problems to 42 / 6 and 30 / 3."
+  - "It should look like: print(min(42 / 6, 30 / 3))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 14
+main_path: false

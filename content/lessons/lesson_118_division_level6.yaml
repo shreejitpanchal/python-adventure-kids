@@ -1,0 +1,22 @@
+id: lesson_118
+title: "Division: Level 6 ➗"
+level: 118
+objective: "Divide a number by two different numbers in a row."
+explanation: |
+  Just like the other operators, you can chain / to divide more than once.
+example_code: |
+  print(100 / 2 / 5)
+starter_code: |
+  print(100 / 2 / 5)
+challenge: |
+  🎯 Challenge: Can you make Python divide 240 by 4, then by 3?
+expected_output: "20.0"
+hints:
+  - "Change the numbers to 240, 4, and 3."
+  - "It should look like: print(240 / 4 / 3)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 6
+main_path: false

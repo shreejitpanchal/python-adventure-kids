@@ -1,0 +1,22 @@
+id: lesson_131
+title: "Division: Level 19 ➗"
+level: 131
+objective: "Use // and % together on a bigger pair of numbers."
+explanation: |
+  You've practiced // and % separately — now use them together on bigger numbers.
+example_code: |
+  print(100 // 7, 100 % 7)
+starter_code: |
+  print(100 // 7, 100 % 7)
+challenge: |
+  🎯 Challenge: Print how many times 9 goes into 100, and the remainder, using // and %.
+expected_output: "11 1"
+hints:
+  - "Change 7 to 9 in both places."
+  - "It should look like: print(100 // 9, 100 % 9)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: division
+category_level: 19
+main_path: false

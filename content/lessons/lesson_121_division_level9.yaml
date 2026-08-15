@@ -1,0 +1,22 @@
+id: lesson_121
+title: "Division: Level 9 ➗"
+level: 121
+objective: "Compare the result of a division with >."
+explanation: |
+  Python works out 20 / 4 first, then checks if that answer is greater than 3.
+example_code: |
+  print(20 / 4 > 3)
+starter_code: |
+  print(20 / 4 > 3)
+challenge: |
+  🎯 Challenge: Is 15 / 5 greater than 4? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 15 / 5 > 4."
+  - "It should look like: print(15 / 5 > 4)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 9
+main_path: false

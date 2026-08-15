@@ -1,0 +1,22 @@
+id: lesson_110
+title: "Multiplication: Level 15 ✖️"
+level: 110
+objective: "Check whether a product equals a target number."
+explanation: |
+  == checks if the product you calculated matches exactly what you expected.
+example_code: |
+  print(3 * 4 == 12)
+starter_code: |
+  print(3 * 4 == 12)
+challenge: |
+  🎯 Challenge: Is 5 * 5 equal to 20? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 5 * 5 == 20."
+  - "It should look like: print(5 * 5 == 20)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 15
+main_path: false

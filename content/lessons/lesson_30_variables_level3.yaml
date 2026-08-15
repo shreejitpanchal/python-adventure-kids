@@ -1,0 +1,28 @@
+id: lesson_30
+title: "Variables: Level 3 📦"
+level: 30
+objective: "Store two different values in two variables and print them together."
+explanation: |
+  You can have as many boxes as you want, each with its own name.
+
+  print(a, b) shows what's inside both boxes at once, with a space between them.
+example_code: |
+  a = 3
+  b = 4
+  print(a, b)
+starter_code: |
+  a = 3
+  b = 4
+  print(a, b)
+challenge: |
+  🎯 Challenge: Make a hold 7 and b hold 9. Print them both together.
+expected_output: "7 9"
+hints:
+  - "Change the numbers: a = 7 and b = 9."
+  - "It should look like: a = 7, b = 9, print(a, b)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 3
+main_path: false

@@ -1,0 +1,26 @@
+id: lesson_36
+title: "Variables: Level 9 📦"
+level: 36
+objective: "Store text (not just numbers) in a variable."
+explanation: |
+  Variables can hold words too, not just numbers — just remember the quote marks around text.
+
+  name = "Sam" puts the text Sam inside the box named name.
+example_code: |
+  name = "Sam"
+  print(name)
+starter_code: |
+  name = "Sam"
+  print(name)
+challenge: |
+  🎯 Challenge: Make a variable named name hold the text Explorer, and print it.
+expected_output: "Explorer"
+hints:
+  - "Change \"Sam\" to \"Explorer\", keeping the quote marks."
+  - "It should look like: name = \"Explorer\", print(name)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 9
+main_path: false

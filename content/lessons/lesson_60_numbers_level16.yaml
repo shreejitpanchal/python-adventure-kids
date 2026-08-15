@@ -1,0 +1,24 @@
+id: lesson_60
+title: "Numbers: Level 16 🔢"
+level: 60
+objective: "Round a negative decimal number."
+explanation: |
+  Rounding works the same way for negative numbers — Python just finds the closest whole number, even below zero.
+
+  round(-4.7) becomes -5, because -4.7 is closer to -5 than to -4.
+example_code: |
+  print(round(-4.7))
+starter_code: |
+  print(round(-4.7))
+challenge: |
+  🎯 Challenge: Can you make Python round -8.6 to the nearest whole number?
+expected_output: "-9"
+hints:
+  - "Change -4.7 to -8.6."
+  - "It should look like: print(round(-8.6))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 16
+main_path: false

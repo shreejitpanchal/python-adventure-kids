@@ -1,0 +1,22 @@
+id: lesson_106
+title: "Multiplication: Level 11 ✖️"
+level: 106
+objective: "Multiply two decimal numbers together."
+explanation: |
+  * works between two decimals too, not just a decimal and a whole number.
+example_code: |
+  print(2.5 * 1.5)
+starter_code: |
+  print(2.5 * 1.5)
+challenge: |
+  🎯 Challenge: Can you make Python multiply 3.5 by 2.5?
+expected_output: "8.75"
+hints:
+  - "Change the numbers to 3.5 and 2.5."
+  - "It should look like: print(3.5 * 2.5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 11
+main_path: false

@@ -1,0 +1,24 @@
+id: lesson_100
+title: "Multiplication: Level 5 ✖️"
+level: 100
+objective: "Multiply a number by a negative number."
+explanation: |
+  Multiplying by a negative number flips the sign of the answer.
+
+  5 * -3 is -15, because a positive times a negative is negative.
+example_code: |
+  print(5 * -3)
+starter_code: |
+  print(5 * -3)
+challenge: |
+  🎯 Challenge: Can you make Python multiply 8 by -4?
+expected_output: "-32"
+hints:
+  - "Change the numbers to 8 and -4."
+  - "It should look like: print(8 * -4)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 5
+main_path: false

@@ -1,0 +1,30 @@
+id: lesson_47
+title: "Variables: Level 20 📦"
+level: 47
+objective: "Combine everything you've learned about variables in one program."
+explanation: |
+  You've learned a lot about boxes: text, numbers, +=, and printing several at once. This last challenge mixes them all together.
+example_code: |
+  name = "Explorer"
+  score = 0
+  score += 10
+  score += 5
+  print(name, score)
+starter_code: |
+  name = "Explorer"
+  score = 0
+  score += 10
+  score += 5
+  print(name, score)
+challenge: |
+  🎯 Challenge: Make a variable hero hold "Champion". Start points at 0, add 20 to points, then add 30 more. Print hero and points together.
+expected_output: "Champion 50"
+hints:
+  - "Use += twice: once to add 20, once to add 30."
+  - "It should look like: hero = \"Champion\", points = 0, points += 20, points += 30, print(hero, points)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 20
+main_path: false

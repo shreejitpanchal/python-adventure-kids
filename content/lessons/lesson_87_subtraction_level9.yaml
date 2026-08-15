@@ -1,0 +1,22 @@
+id: lesson_87
+title: "Subtraction: Level 9 ➖"
+level: 87
+objective: "Compare the result of a subtraction with >."
+explanation: |
+  Python works out 10 - 3 first, then checks if that answer is greater than 5.
+example_code: |
+  print(10 - 3 > 5)
+starter_code: |
+  print(10 - 3 > 5)
+challenge: |
+  🎯 Challenge: Is 9 - 8 greater than 5? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 9 - 8 > 5."
+  - "It should look like: print(9 - 8 > 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 9
+main_path: false

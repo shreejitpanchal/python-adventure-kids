@@ -1,0 +1,22 @@
+id: lesson_95
+title: "Subtraction: Level 17 ➖"
+level: 95
+objective: "Subtract three decimal numbers in a row."
+explanation: |
+  You can chain - with decimals too, just like with whole numbers.
+example_code: |
+  print(10.5 - 2.5 - 1.5)
+starter_code: |
+  print(10.5 - 2.5 - 1.5)
+challenge: |
+  🎯 Challenge: Can you make Python subtract 8.25, then 4.5, from 30.5?
+expected_output: "17.75"
+hints:
+  - "Change all three numbers to 30.5, 8.25, and 4.5."
+  - "It should look like: print(30.5 - 8.25 - 4.5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 17
+main_path: false

@@ -1,0 +1,22 @@
+id: lesson_114
+title: "Multiplication: Level 19 ✖️"
+level: 114
+objective: "Multiply a chain of five numbers together."
+explanation: |
+  You've come a long way from multiplying just two numbers — now try chaining five of them together.
+example_code: |
+  print(1 * 1 * 2 * 2 * 3)
+starter_code: |
+  print(1 * 1 * 2 * 2 * 3)
+challenge: |
+  🎯 Challenge: Can you make Python multiply 2 * 3 * 2 * 1 * 2?
+expected_output: "24"
+hints:
+  - "Change the numbers to 2, 3, 2, 1, 2."
+  - "It should look like: print(2 * 3 * 2 * 1 * 2)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 19
+main_path: false

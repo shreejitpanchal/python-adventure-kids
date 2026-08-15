@@ -1,0 +1,22 @@
+id: lesson_125
+title: "Division: Level 13 ➗"
+level: 125
+objective: "Convert text into a number, then divide it."
+explanation: |
+  int("20") turns the text "20" into a real number, so you can divide it like any other number.
+example_code: |
+  print(int("20") / 4)
+starter_code: |
+  print(int("20") / 4)
+challenge: |
+  🎯 Challenge: Convert the text "30" into a number and divide it by 5.
+expected_output: "6.0"
+hints:
+  - "Change \"20\" to \"30\", and 4 to 5."
+  - "It should look like: print(int(\"30\") / 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 13
+main_path: false

@@ -1,0 +1,24 @@
+id: lesson_39
+title: "Variables: Level 12 📦"
+level: 39
+objective: "Store the result of a comparison (True or False) in a variable."
+explanation: |
+  A comparison like 10 > 3 gives an answer of True or False — and that answer can be stored in a variable too.
+example_code: |
+  is_big = 10 > 3
+  print(is_big)
+starter_code: |
+  is_big = 10 > 3
+  print(is_big)
+challenge: |
+  🎯 Challenge: Make a variable called is_small store whether 4 is less than 2. Print it.
+expected_output: "False"
+hints:
+  - "Use < for \"less than\": is_small = 4 < 2"
+  - "It should look like: is_small = 4 < 2, print(is_small)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 12
+main_path: false

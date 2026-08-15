@@ -1,0 +1,24 @@
+id: lesson_56
+title: "Numbers: Level 12 🔢"
+level: 56
+objective: "Use max() to find the bigger of two numbers."
+explanation: |
+  max() looks at two numbers and hands you back whichever one is bigger.
+
+  max(4, 9) is 9, because 9 is the bigger of the two.
+example_code: |
+  print(max(4, 9))
+starter_code: |
+  print(max(4, 9))
+challenge: |
+  🎯 Challenge: Can you make Python print the bigger of 23 and 17?
+expected_output: "23"
+hints:
+  - "Change the numbers to 23 and 17."
+  - "It should look like: print(max(23, 17))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 12
+main_path: false

@@ -1,0 +1,24 @@
+id: lesson_50
+title: "Numbers: Level 6 🔢"
+level: 50
+objective: "Print two numbers at once, separated by a comma."
+explanation: |
+  print can show more than one thing if you separate them with commas — Python adds a space between them automatically.
+
+  print(5, 12) shows both numbers on the same line.
+example_code: |
+  print(5, 12)
+starter_code: |
+  print(5, 12)
+challenge: |
+  🎯 Challenge: Can you make Python print 8 and 20 together?
+expected_output: "8 20"
+hints:
+  - "Change the numbers to 8 and 20, keep the comma."
+  - "It should look like: print(8, 20)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 6
+main_path: false

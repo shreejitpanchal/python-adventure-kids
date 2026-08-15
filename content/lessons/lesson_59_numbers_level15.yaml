@@ -1,0 +1,24 @@
+id: lesson_59
+title: "Numbers: Level 15 🔢"
+level: 59
+objective: "Use int() to turn text into a real number you can do math with."
+explanation: |
+  Sometimes a number is trapped inside quote marks, like "8" — that's text, not a number, so Python can't do math with it directly.
+
+  int("8") converts it into a real number, so int("8") + 1 works and gives 9.
+example_code: |
+  print(int("8") + 1)
+starter_code: |
+  print(int("8") + 1)
+challenge: |
+  🎯 Challenge: Convert the text "15" into a real number and add 5 to it.
+expected_output: "20"
+hints:
+  - "Change \"8\" to \"15\", and 1 to 5."
+  - "It should look like: print(int(\"15\") + 5)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 15
+main_path: false

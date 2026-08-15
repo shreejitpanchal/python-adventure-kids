@@ -1,0 +1,24 @@
+id: lesson_69
+title: "Addition: Level 8 ➕"
+level: 69
+objective: "Add two numbers, then find the absolute value of the result."
+explanation: |
+  abs() can wrap around an entire addition — Python works out the sum first, then strips away any minus sign.
+
+  abs(-10 + 3) adds first (getting -7), then shows how far -7 is from zero: 7.
+example_code: |
+  print(abs(-10 + 3))
+starter_code: |
+  print(abs(-10 + 3))
+challenge: |
+  🎯 Challenge: Add -20 and 6, then find the absolute value of the result.
+expected_output: "14"
+hints:
+  - "Change the numbers to -20 and 6."
+  - "It should look like: print(abs(-20 + 6))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 8
+main_path: false

@@ -1,0 +1,24 @@
+id: lesson_113
+title: "Multiplication: Level 18 ✖️"
+level: 113
+objective: "Multiply two numbers, then square the result."
+explanation: |
+  You can combine * and ** — Python multiplies first, then raises that answer to a power.
+
+  (2 * 3) ** 2 multiplies first (getting 6), then squares it: 36.
+example_code: |
+  print((2 * 3) ** 2)
+starter_code: |
+  print((2 * 3) ** 2)
+challenge: |
+  🎯 Challenge: Multiply 2 * 5, then raise the result to the power of 2.
+expected_output: "100"
+hints:
+  - "Change the product to 2 * 5, keep ** 2."
+  - "It should look like: print((2 * 5) ** 2)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 18
+main_path: false

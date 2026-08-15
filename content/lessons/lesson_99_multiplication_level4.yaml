@@ -1,0 +1,22 @@
+id: lesson_99
+title: "Multiplication: Level 4 ✖️"
+level: 99
+objective: "Multiply a decimal number by a whole number."
+explanation: |
+  * works on decimals exactly the same way it works on whole numbers.
+example_code: |
+  print(2.5 * 2)
+starter_code: |
+  print(2.5 * 2)
+challenge: |
+  🎯 Challenge: Can you make Python multiply 1.5 by 3?
+expected_output: "4.5"
+hints:
+  - "Change the numbers to 1.5 and 3."
+  - "It should look like: print(1.5 * 3)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 4
+main_path: false

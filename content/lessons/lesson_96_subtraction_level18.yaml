@@ -1,0 +1,24 @@
+id: lesson_96
+title: "Subtraction: Level 18 ➖"
+level: 96
+objective: "Subtract two numbers, then square the result."
+explanation: |
+  You can combine - and ** — Python subtracts first, then raises that answer to a power.
+
+  (10 - 4) ** 2 subtracts first (getting 6), then squares it: 36.
+example_code: |
+  print((10 - 4) ** 2)
+starter_code: |
+  print((10 - 4) ** 2)
+challenge: |
+  🎯 Challenge: Subtract 15 - 7, then raise the result to the power of 2.
+expected_output: "64"
+hints:
+  - "Change the difference to 15 - 7, keep ** 2."
+  - "It should look like: print((15 - 7) ** 2)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 18
+main_path: false
