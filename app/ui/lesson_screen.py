@@ -13,6 +13,9 @@ from app.sandbox.errors import extract_error_line_number, translate_error
 from app.sandbox.runner import ExecutionResult, RunHandle, run_code
 from app.ui import theme
 from app.ui.code_editor import CodeEditor, make_read_only_code_block
+from app.ui.color_utils import contrasting_text_color
+
+_REWARD_CARD_COLOR = "#FFF3D0"
 
 
 class LessonScreen(ctk.CTkFrame):
@@ -167,17 +170,22 @@ class LessonScreen(ctk.CTkFrame):
         self._details_visible = False
 
     def _build_reward_card(self) -> None:
-        self.reward_card = ctk.CTkFrame(self.body, fg_color="#FFF3D0", corner_radius=18)
+        # The reward card's cream background is fixed regardless of the
+        # active theme (a deliberate always-celebratory look), so its text
+        # must be too -- theme.COLOR_TEXT is tuned for dark themes' own
+        # dark background and turns near-invisible on this light card (#2547).
+        reward_text_color = contrasting_text_color(_REWARD_CARD_COLOR)
+        self.reward_card = ctk.CTkFrame(self.body, fg_color=_REWARD_CARD_COLOR, corner_radius=18)
 
         self.reward_label = ctk.CTkLabel(
             self.reward_card, text="", font=theme.font_title(24),
-            text_color=theme.COLOR_TEXT, justify="center",
+            text_color=reward_text_color, justify="center",
         )
         self.reward_label.pack(pady=(24, 6))
 
         self.badge_label = ctk.CTkLabel(
             self.reward_card, text="", font=theme.font_heading(16),
-            text_color=theme.COLOR_TEXT,
+            text_color=reward_text_color,
         )
         self.badge_label.pack(pady=(0, 10))
 

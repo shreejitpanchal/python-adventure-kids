@@ -10,8 +10,10 @@ from __future__ import annotations
 import customtkinter as ctk
 
 from app.ui import theme
+from app.ui.color_utils import contrasting_text_color
 
 _OPTION_COUNT = 4
+_RESULTS_CARD_COLOR = "#FFF3D0"
 
 
 class QuizScreen(ctk.CTkFrame):
@@ -99,10 +101,15 @@ class QuizScreen(ctk.CTkFrame):
         self.next_button.pack_forget()
 
     def _build_results_card(self) -> None:
-        self.results_card = ctk.CTkFrame(self.body, fg_color="#FFF3D0", corner_radius=18)
+        # The results card's cream background is fixed regardless of the
+        # active theme (a deliberate always-celebratory look), so its text
+        # must be too -- theme.COLOR_TEXT is tuned for dark themes' own
+        # dark background and turns near-invisible on this light card (#2547).
+        self.results_card = ctk.CTkFrame(self.body, fg_color=_RESULTS_CARD_COLOR, corner_radius=18)
 
         self.results_label = ctk.CTkLabel(
-            self.results_card, text="", font=theme.font_title(24), text_color=theme.COLOR_TEXT,
+            self.results_card, text="", font=theme.font_title(24),
+            text_color=contrasting_text_color(_RESULTS_CARD_COLOR),
         )
         self.results_label.pack(pady=(24, 16))
 

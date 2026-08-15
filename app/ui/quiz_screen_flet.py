@@ -11,8 +11,10 @@ from __future__ import annotations
 import flet as ft
 
 from app.ui.app_state_flet import AppState
+from app.ui.color_utils import contrasting_text_color
 
 _OPTION_COUNT = 4
+_RESULTS_CARD_COLOR = "#FFF3D0"
 
 
 def build_quiz_view(page: ft.Page, state: AppState) -> ft.View:
@@ -48,11 +50,13 @@ class _QuizController:
 
         self.progress_text = ft.Text("", size=14, color=theme.text_muted)
         self.question_text = ft.Text("", size=18, weight=ft.FontWeight.BOLD, color=theme.text)
+        self.option_labels: list[ft.Text] = []
         self.option_buttons = [self._make_option_button(i) for i in range(_OPTION_COUNT)]
         self.feedback_text = ft.Text("", size=14)
+        self.next_label = ft.Text("Next ➜", size=16, color="#FFFFFF")
         self.next_button = ft.Button(
-            "Next ➜", on_click=self._on_next, visible=False, height=48,
-            style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+            content=self.next_label, on_click=self._on_next, visible=False, height=48,
+            style=ft.ButtonStyle(bgcolor=theme.primary),
         )
 
         self.question_card = self._card("❓ Question", [
@@ -63,7 +67,13 @@ class _QuizController:
             self.next_button,
         ])
 
-        self.results_text = ft.Text("", size=22, weight=ft.FontWeight.BOLD, color=theme.text)
+        # The results card's cream background is fixed regardless of the
+        # active theme (a deliberate always-celebratory look), so its text
+        # must be too -- theme.text is tuned for dark themes' own dark
+        # background and turns near-invisible on this light card (#2547).
+        self.results_text = ft.Text(
+            "", size=22, weight=ft.FontWeight.BOLD, color=contrasting_text_color(_RESULTS_CARD_COLOR),
+        )
         self.results_card = ft.Container(
             content=ft.Column(
                 [
@@ -84,7 +94,7 @@ class _QuizController:
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=16,
             ),
-            bgcolor="#FFF3D0", border_radius=18, padding=24, visible=False,
+            bgcolor=_RESULTS_CARD_COLOR, border_radius=18, padding=24, visible=False,
         )
 
         self._render_question()
@@ -107,9 +117,16 @@ class _QuizController:
         )
 
     def _make_option_button(self, index: int) -> ft.Button:
+        # Button has no `text` property in this Flet version -- only
+        # `content` (a string is wrapped into a Text control, but only once,
+        # at construction). Keep our own reference to that Text so later
+        # renders can mutate `.value`/`.color` on it directly, the same
+        # live-property pattern used for every other label on this screen.
+        label = ft.Text("", size=15)
+        self.option_labels.append(label)
         return ft.Button(
-            "", on_click=lambda _e, i=index: self._on_select(i), height=56, width=560,
-            style=ft.ButtonStyle(bgcolor=self.theme.bg, color=self.theme.text),
+            content=label, on_click=lambda _e, i=index: self._on_select(i), height=56, width=560,
+            style=ft.ButtonStyle(bgcolor=self.theme.bg),
         )
 
     # -- question flow ------------------------------------------------------
@@ -121,9 +138,10 @@ class _QuizController:
         self.question_text.value = question.question
 
         for i, button in enumerate(self.option_buttons):
-            button.text = question.options[i]
+            self.option_labels[i].value = question.options[i]
+            self.option_labels[i].color = theme.text
             button.disabled = False
-            button.style = ft.ButtonStyle(bgcolor=theme.bg, color=theme.text)
+            button.style = ft.ButtonStyle(bgcolor=theme.bg)
 
         self.feedback_text.value = ""
         self.next_button.visible = False
@@ -144,15 +162,17 @@ class _QuizController:
         for i, button in enumerate(self.option_buttons):
             button.disabled = True
             if i == question.correct:
-                button.style = ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF")
+                button.style = ft.ButtonStyle(bgcolor=theme.success)
+                self.option_labels[i].color = "#FFFFFF"
             elif i == index:
-                button.style = ft.ButtonStyle(bgcolor=theme.danger, color="#FFFFFF")
+                button.style = ft.ButtonStyle(bgcolor=theme.danger)
+                self.option_labels[i].color = "#FFFFFF"
 
         prefix = "✅ Correct! " if correct else "❌ Not quite. "
         self.feedback_text.value = prefix + question.explanation
         self.feedback_text.color = theme.success if correct else theme.danger
 
-        self.next_button.text = "Next ➜" if self.index + 1 < self.total else "See Results 🏁"
+        self.next_label.value = "Next ➜" if self.index + 1 < self.total else "See Results 🏁"
         self.next_button.visible = True
         self.progress_text.value = f"Question {self.index + 1} of {self.total}  ·  Score: {self.score}"
         self.page.update()

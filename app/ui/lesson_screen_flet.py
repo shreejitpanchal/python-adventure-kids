@@ -31,6 +31,9 @@ from app.sandbox.errors import extract_error_line_number, translate_error
 from app.sandbox.inprocess_runner import ExecutionResult, RunHandle, run_code
 from app.ui.app_state_flet import AppState
 from app.ui.code_editor_flet import make_code_editor, make_read_only_code_block
+from app.ui.color_utils import contrasting_text_color
+
+_REWARD_CARD_COLOR = "#FFF3D0"
 
 _KEY_NAME_MAP = {
     "Arrow Up": "Up", "Arrow Down": "Down", "Arrow Left": "Left", "Arrow Right": "Right",
@@ -226,8 +229,13 @@ class _LessonController:
 
     def _build_reward_card(self) -> None:
         theme = self.theme
-        self.reward_text = ft.Text("", size=22, weight=ft.FontWeight.BOLD, color=theme.text)
-        self.badge_text = ft.Text("", size=16, color=theme.text)
+        # The reward card's cream background is fixed regardless of the
+        # active theme (a deliberate always-celebratory look), so its text
+        # must be too -- theme.text is tuned for dark themes' own dark
+        # background and turns near-invisible on this light card (#2547).
+        reward_text_color = contrasting_text_color(_REWARD_CARD_COLOR)
+        self.reward_text = ft.Text("", size=22, weight=ft.FontWeight.BOLD, color=reward_text_color)
+        self.badge_text = ft.Text("", size=16, color=reward_text_color)
         self.reward_card = ft.Container(
             content=ft.Column(
                 [
@@ -240,7 +248,7 @@ class _LessonController:
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
             ),
-            bgcolor="#FFF3D0", border_radius=18, padding=24, visible=False,
+            bgcolor=_REWARD_CARD_COLOR, border_radius=18, padding=24, visible=False,
         )
 
     # -- run flow -----------------------------------------------------------
