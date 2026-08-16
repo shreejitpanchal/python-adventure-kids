@@ -264,3 +264,48 @@ def test_weekly_summary_active_days_counts_distinct_calendar_dates(store, monkey
 
     summary = store.get_weekly_summary()
     assert summary.active_days == 2
+
+
+# -- get_recent_failure_count() (adaptive practice / Practice Quest) ----------
+def test_recent_failure_count_zero_for_a_never_attempted_lesson(store):
+    assert store.get_recent_failure_count("lesson_10") == 0
+
+
+def test_recent_failure_count_counts_error_and_wrong_output_events(store):
+    store.log_event("lesson_10", "attempt_error", "x")
+    store.log_event("lesson_10", "attempt_wrong_output", "y")
+    assert store.get_recent_failure_count("lesson_10") == 2
+
+
+def test_recent_failure_count_counts_timeout_and_blocked_too(store):
+    store.log_event("lesson_10", "attempt_timeout")
+    store.log_event("lesson_10", "attempt_blocked", "import os")
+    assert store.get_recent_failure_count("lesson_10") == 2
+
+
+def test_recent_failure_count_ignores_unrelated_event_types(store):
+    store.log_event("lesson_10", "attempt_error", "x")
+    store.log_event("lesson_10", "hint_used", "some hint")
+    assert store.get_recent_failure_count("lesson_10") == 1
+
+
+def test_recent_failure_count_resets_after_a_completion(store):
+    store.log_event("lesson_10", "attempt_error", "x")
+    store.log_event("lesson_10", "attempt_error", "y")
+    store.complete_lesson("lesson_10", 3)
+    assert store.get_recent_failure_count("lesson_10") == 0
+
+
+def test_recent_failure_count_only_counts_failures_after_the_last_completion(store):
+    store.log_event("lesson_10", "attempt_error", "before")
+    store.complete_lesson("lesson_10", 3)
+    store.log_event("lesson_10", "attempt_error", "after")
+    assert store.get_recent_failure_count("lesson_10") == 1
+
+
+def test_recent_failure_count_is_isolated_per_lesson(store):
+    store.log_event("lesson_10", "attempt_error", "x")
+    store.log_event("lesson_11", "attempt_error", "y")
+    store.log_event("lesson_11", "attempt_error", "z")
+    assert store.get_recent_failure_count("lesson_10") == 1
+    assert store.get_recent_failure_count("lesson_11") == 2

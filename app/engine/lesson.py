@@ -52,3 +52,22 @@ class Lesson:
     """If true (graphical lessons only), the lesson also requires
     game.robot_at_goal() to be True after running -- not just "ran without
     raising" -- see app/ui/lesson_screen_flet.py's _on_run_graphical()."""
+    learning_path_module: Optional[str] = None
+    """The Python Journey module this lesson belongs to (see
+    content/learning_path.yaml / app/engine/learning_path.py), if any.
+    Most lessons -- especially bonus practice levels -- aren't referenced
+    by a module and leave this unset."""
+    lesson_type: str = "learn"
+    """One of learn/practice/challenge/project -- purely descriptive
+    (shown in the Python Journey UI), doesn't change validation behavior."""
+    concept_tags: list[str] = field(default_factory=list)
+    """Which Python Journey concepts this lesson teaches (see
+    docs/AUTHORING_GUIDE.md for the fixed vocabulary) -- used by
+    LessonEngine.recommend_practice() to suggest relevant practice after
+    repeated failures or a quiz. Empty is the common case; only lessons
+    wired into the adaptive-practice pool need this set."""
+    prerequisite_lesson_ids: list[str] = field(default_factory=list)
+    """Documented for content authors, not enforced by the engine --
+    real sequencing comes from main_path/next_lesson_id (guided chain),
+    category_level (bonus tracks), and a module's required_lesson_ids
+    list order (Python Journey) -- see docs/AUTHORING_GUIDE.md."""

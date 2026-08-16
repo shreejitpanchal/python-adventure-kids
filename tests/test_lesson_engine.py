@@ -117,7 +117,7 @@ def test_category_completion_covers_every_category_with_no_completions():
 def test_category_completion_counts_only_lessons_in_that_category():
     engine = LessonEngine()
     completion = engine.category_completion(completed_ids=["lesson_01", "lesson_08"])
-    assert completion["basics"] == (1, 1)
+    assert completion["basics"] == (1, len(engine.lessons_in_category("basics")))
     assert completion["strings"][0] == 1
     assert completion["strings"][1] == len(engine.lessons_in_category("strings"))
     assert completion["numbers"] == (0, len(engine.lessons_in_category("numbers")))
@@ -136,3 +136,77 @@ def test_category_completion_ignores_unrelated_completed_ids():
     completion = engine.category_completion(completed_ids=["not_a_real_lesson_id"])
     for done, _total in completion.values():
         assert done == 0
+
+
+# -- recommend_practice() / recommend_practice_for_tags() (adaptive practice) -
+def _clean_slate_engine() -> LessonEngine:
+    """A LessonEngine with every lesson's concept_tags cleared, so a test
+    only sees the tags it explicitly sets -- real content's own tags
+    (which legitimately change over time as more lessons get tagged)
+    would otherwise leak extra, untested-for candidates into these
+    recommend_practice() assertions."""
+    engine = LessonEngine()
+    for lesson in engine.all_in_order():
+        lesson.concept_tags = []
+    return engine
+
+
+def test_recommend_practice_returns_lessons_sharing_a_tag():
+    engine = _clean_slate_engine()
+    engine.get("lesson_10").concept_tags = ["conditionals"]
+    engine.get("lesson_09").concept_tags = ["conditionals"]
+    engine.get("lesson_11").concept_tags = ["loops"]
+
+    recommendations = engine.recommend_practice("lesson_10", completed_ids=[])
+    assert "lesson_09" in {lesson.id for lesson in recommendations}
+    assert "lesson_11" not in {lesson.id for lesson in recommendations}
+
+
+def test_recommend_practice_excludes_the_struggling_lesson_itself():
+    engine = _clean_slate_engine()
+    engine.get("lesson_10").concept_tags = ["conditionals"]
+    engine.get("lesson_09").concept_tags = ["conditionals"]
+
+    recommendations = engine.recommend_practice("lesson_10", completed_ids=[])
+    assert "lesson_10" not in {lesson.id for lesson in recommendations}
+
+
+def test_recommend_practice_is_empty_when_the_lesson_has_no_tags():
+    engine = _clean_slate_engine()
+    assert engine.recommend_practice("lesson_10", completed_ids=[]) == []
+
+
+def test_recommend_practice_respects_the_limit():
+    engine = _clean_slate_engine()
+    engine.get("lesson_10").concept_tags = ["conditionals"]
+    for lesson_id in ["lesson_09", "lesson_11", "lesson_12", "lesson_13"]:
+        engine.get(lesson_id).concept_tags = ["conditionals"]
+
+    recommendations = engine.recommend_practice("lesson_10", completed_ids=[], limit=2)
+    assert len(recommendations) == 2
+
+
+def test_recommend_practice_prefers_not_yet_completed_lessons():
+    engine = _clean_slate_engine()
+    engine.get("lesson_10").concept_tags = ["conditionals"]
+    engine.get("lesson_09").concept_tags = ["conditionals"]
+    engine.get("lesson_11").concept_tags = ["conditionals"]
+
+    recommendations = engine.recommend_practice("lesson_10", completed_ids=["lesson_09"], limit=1)
+    assert recommendations[0].id == "lesson_11"
+
+
+def test_recommend_practice_for_tags_matches_the_union_of_given_tags():
+    engine = _clean_slate_engine()
+    engine.get("lesson_09").concept_tags = ["input"]
+    engine.get("lesson_10").concept_tags = ["conditionals"]
+    engine.get("lesson_11").concept_tags = ["loops"]
+
+    recommendations = engine.recommend_practice_for_tags({"input", "loops"}, completed_ids=[])
+    ids = {lesson.id for lesson in recommendations}
+    assert ids == {"lesson_09", "lesson_11"}
+
+
+def test_recommend_practice_for_tags_empty_tag_set_returns_nothing():
+    engine = LessonEngine()
+    assert engine.recommend_practice_for_tags(set(), completed_ids=[]) == []

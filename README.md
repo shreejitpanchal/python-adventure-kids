@@ -21,7 +21,8 @@ and the screenshots below are still the CustomTkinter app (`main.py`); run
 the Flet build with `flet run main_flet.py` (see "Running it").
 
 **Phases 1–8 in progress: 132 lessons complete** (18 main-path + 114 bonus
-practice levels), plus a standalone 55-question Quiz. First-run setup
+practice levels), plus a standalone 300-question Quiz and an 8-module
+Python Journey course map. First-run setup
 wizard, main dashboard, a category browser, a settings screen with 6
 selectable color themes (including two dark-mode options), local progress
 storage, a PIN-gated parent area, and a full lesson flow (explain → example
@@ -45,8 +46,15 @@ storage, a PIN-gated parent area, and a full lesson flow (explain → example
   type conversion, `**`/`//`/`%`, and chained/combined expressions —
   reachable only through the category browser, see "Category browser"
   below.
-- **Quiz**: a standalone 55-question multiple-choice quiz covering the
+- **Quiz**: a standalone 300-question multiple-choice quiz covering the
   whole curriculum, reshuffled every time it's played — see "Quiz" below.
+- **Python Journey**: a fixed, 8-module guided course map (Flet only) —
+  Python Starter, Variables and Input, Decisions, Loops, Functions,
+  Collections, Problem Solving, Python Creator — each with a "🏆
+  Checkpoint" capstone project and its own badge, on top of the same
+  lesson content and progress store described above. See "Python
+  Journey" below, and `docs/AUTHORING_GUIDE.md` for how to add a module
+  or a lesson.
 
 See "Graphical lessons" below for how Snake's execution model differs
 from the rest of the lessons.
@@ -86,24 +94,35 @@ and shares the same progress data:
 ```
 app/
   ui/        # screens: setup wizard, dashboard, lesson screen, code editor,
-             # category browser, quiz, settings/theme picker, shared theme +
-             # assets -- plain filenames are the CustomTkinter app; *_flet.py
-             # is the parallel in-progress Flet re-platform (see "Status")
+             # category browser, Python Journey map, quiz, settings/theme
+             # picker, shared theme + assets -- plain filenames are the
+             # CustomTkinter app; *_flet.py is the parallel in-progress
+             # Flet re-platform (see "Status")
+  audio/     # chime-sound selection logic shared by both UIs (playback
+             # itself is UI-specific -- winsound for CTk, flet-audio for Flet)
   config/    # settings persistence + platform-appropriate data directory
   progress/  # SQLite-backed progress, stars, badges, streaks, activity log, quiz attempts
   parent/    # PIN-gated parent area (summary + recent activity)
   engine/    # lesson model + YAML-based lesson engine + category logic +
-             # output validator + quiz model/engine
+             # output validator + quiz model/engine + Python Journey's
+             # LearningPathEngine + badge display metadata
   sandbox/   # AST safety check + two execution engines (see "Code execution
              # sandbox" below for why there are currently two)
-  games/     # GameCanvas/GameWindow + in-process graphical runner (Snake's execution model)
+  games/     # GameCanvas/GameWindow + in-process graphical runner (Snake,
+             # Creative Arts, Arcade Lab, and Robot Adventure's execution model)
 content/
   lessons/   # lesson content (YAML), kept separate from app code
   quiz/      # the quiz question bank (YAML), same content-not-code principle
+  learning_path.yaml  # the 8-module Python Journey course map (see "Python
+             # Journey" below and docs/AUTHORING_GUIDE.md)
+  sounds/    # generated chime .wav files (scripts/generate_sounds.py) --
+             # CTk reads these directly; assets/sounds/ is a copy Flet's
+             # asset pipeline serves from (see app/ui/components/sound_player_flet.py)
   images/    # app icon (main-icon.png / .ico)
 docs/
-  app-screenshots/  # images used in this README
-tests/       # pytest suite (602 tests)
+  app-screenshots/    # images used in this README
+  AUTHORING_GUIDE.md  # how to add a Python Journey module or lesson
+tests/       # pytest suite (1250+ tests)
 app-data/    # gitignored, legacy dev-only location — see "Data storage" below
 main.py      # CustomTkinter entry point
 main_flet.py # Flet entry point (see "Status")
@@ -145,9 +164,47 @@ order-based fallback — specifically so bonus levels (which sort after
 lesson 18 by `level`) can never leak into the guided path just because
 they come later in file order.
 
+### Python Journey
+
+A third, curated way to reach lessons (Flet only — `🗺️ Python Journey` on
+the dashboard and in the category browser, routes `/journey` and
+`/journey/<module_id>`): a fixed sequence of 8 modules
+(`content/learning_path.yaml`, loaded by `app/engine/learning_path.py`'s
+`LearningPathEngine`), each a curated subset of existing lesson ids (plus
+occasionally a couple of new ones — see `docs/AUTHORING_GUIDE.md`) rather
+than a new content type. A module unlocks once the previous one is fully
+complete; within a module, lessons unlock in the order they're listed.
+
+Like the category browser, **no progress is stored specially for this
+feature** — `LearningPathEngine` computes module lock/available/
+in-progress/completed status, "Module *X* of 8", and even which module
+badges are newly earned, all live from the same `completed_lesson_ids`
+the rest of the app already tracks. That makes it migration-free: a
+returning child who finished lessons the old way, before Journey existed,
+sees correct module progress (and gets any badge they'd already earned)
+the very first time they open the map — `newly_earned_module_badges()`
+runs that catch-up check on every load.
+
+Two small additions ride along with Journey but aren't specific to it:
+
+- **Adaptive practice ("Practice Quest")** — a lesson gets an optional
+  `concept_tags` list (e.g. `[loops, for-loops]`); after 3 failed
+  attempts in a row on the same lesson
+  (`ProgressStore.get_recent_failure_count()`), a dismissible suggestion
+  offers 1-3 lessons sharing a tag (`LessonEngine.recommend_practice()`).
+  It never blocks retrying, hints, or continuing — purely additive.
+- **Quiz recommendations** — quiz questions carry the same `concept_tags`
+  field; the results screen suggests practice lessons from the union of
+  tags across every question missed that session
+  (`recommend_practice_for_tags()`), tracked only in memory for the
+  session, never persisted.
+
+See `docs/AUTHORING_GUIDE.md` for the full module/lesson YAML format, the
+fixed concept-tag vocabulary, and how module badges get awarded.
+
 ### Quiz
 
-A standalone 55-question multiple-choice quiz covering the whole
+A standalone 300-question multiple-choice quiz covering the whole
 curriculum (`content/quiz/quiz_questions.yaml`), reachable from both the
 dashboard's "❓ Quick Quiz" card and a "❓ Quiz" tile in the category
 browser. It's not a lesson category — multiple-choice doesn't fit the

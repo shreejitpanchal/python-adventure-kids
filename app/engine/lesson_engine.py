@@ -116,6 +116,38 @@ class LessonEngine:
                 return lesson
         return None
 
+    def recommend_practice(self, lesson_id: str, completed_ids: Collection[str], limit: int = 3) -> list[Lesson]:
+        """Up to `limit` lessons sharing a concept_tags entry with
+        `lesson_id`, for the "Practice Quest" suggestion after repeated
+        failures (app/progress/store.py's get_recent_failure_count()).
+        Excludes the struggling lesson itself; a no-op (empty list) if it
+        has no concept_tags to match against. See
+        recommend_practice_for_tags() for the quiz-results equivalent,
+        which starts from a raw tag set instead of one lesson."""
+        tags = set(self.get(lesson_id).concept_tags) if self.has(lesson_id) else set()
+        if not tags:
+            return []
+        return [
+            lesson for lesson in self.recommend_practice_for_tags(tags, completed_ids, limit + 1)
+            if lesson.id != lesson_id
+        ][:limit]
+
+    def recommend_practice_for_tags(
+        self, tags: Collection[str], completed_ids: Collection[str], limit: int = 3,
+    ) -> list[Lesson]:
+        """Up to `limit` lessons sharing at least one of `tags` --
+        the quiz results screen's "practice these next" recommendation,
+        built from the union of concept_tags across every question the
+        child got wrong this session. Prefers not-yet-completed lessons
+        (no point suggesting something already mastered)."""
+        tags = set(tags)
+        if not tags:
+            return []
+        completed = set(completed_ids)
+        candidates = [lesson for lesson in self.all_in_order() if set(lesson.concept_tags) & tags]
+        candidates.sort(key=lambda lesson: lesson.id in completed)  # not-yet-completed first
+        return candidates[:limit]
+
     def category_completion(self, completed_ids: Collection[str]) -> dict[str, tuple[int, int]]:
         """category -> (completed_count, total_count), in categories()
         order -- the shared "mastery per category" calculation for the

@@ -30,3 +30,4 @@ next_lesson_id: null
 category: lists
 category_level: 7
 main_path: false
+concept_tags: [lists, loops, indexing]

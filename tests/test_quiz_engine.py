@@ -89,3 +89,15 @@ def test_start_session_count_zero_or_negative_falls_back_to_full_set():
     engine = QuizEngine()
     assert len(engine.start_session(count=0)) == len(engine)
     assert len(engine.start_session(count=-3)) == len(engine)
+
+
+def test_start_session_carries_concept_tags_through_the_reshuffle():
+    """concept_tags must survive start_session()'s option-shuffling
+    rebuild (app/engine/quiz_engine.py explicitly re-lists every field
+    when constructing each session's QuizQuestion) -- adaptive practice
+    recommendations after a quiz depend on this."""
+    engine = QuizEngine()
+    original_by_id = {q.id: q.concept_tags for q in engine.start_session()}
+    session = engine.start_session()
+    for question in session:
+        assert question.concept_tags == original_by_id[question.id]

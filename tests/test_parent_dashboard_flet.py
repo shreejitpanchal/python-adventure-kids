@@ -193,18 +193,21 @@ def test_mastery_card_has_a_row_for_every_category(state):
     controller = _ParentController(FakePage(), state)
     controller.build_view()
 
+    basics_total = len(state.lesson_engine.lessons_in_category("basics"))
     assert set(controller.mastery_texts) == set(state.lesson_engine.categories())
-    assert controller.mastery_texts["basics"].value == "0/1"
+    assert controller.mastery_texts["basics"].value == f"0/{basics_total}"
     assert controller.mastery_bars["basics"].value == 0.0
 
 
 def test_mastery_card_reflects_completed_lessons(state):
-    state.progress.complete_lesson("lesson_01", 3)
+    basics_ids = [lesson.id for lesson in state.lesson_engine.lessons_in_category("basics")]
+    for lesson_id in basics_ids:
+        state.progress.complete_lesson(lesson_id, 3)
 
     controller = _ParentController(FakePage(), state)
     controller.build_view()
 
-    assert controller.mastery_texts["basics"].value == "1/1"
+    assert controller.mastery_texts["basics"].value == f"{len(basics_ids)}/{len(basics_ids)}"
     assert controller.mastery_bars["basics"].value == 1.0
 
 
@@ -215,6 +218,7 @@ def test_reset_zeroes_the_weekly_and_mastery_cards(state):
 
     controller._do_reset()
 
+    basics_total = len(state.lesson_engine.lessons_in_category("basics"))
     assert controller.weekly_value_texts["lessons"].value == "0"
-    assert controller.mastery_texts["basics"].value == "0/1"
+    assert controller.mastery_texts["basics"].value == f"0/{basics_total}"
     assert controller.mastery_bars["basics"].value == 0.0

@@ -376,6 +376,178 @@ def test_a_lesson_without_requires_goal_reached_ignores_robot_state(graphical_co
     assert graphical_controller.reward_card.visible is True
 
 
+# -- Python Journey: module badges -------------------------------------------
+def test_completing_every_lesson_in_a_module_awards_its_badge(state):
+    def run(lesson_id, edit=None):
+        lesson = state.lesson_engine.get(lesson_id)
+        c = _LessonController(FakePage(), state, lesson)
+        c.build_view()
+        if edit is not None:
+            c.editor.value = edit
+        asyncio.run(c._on_run(None))
+        return c
+
+    run("lesson_01")
+    run("lesson_02", edit="print(7)")
+    run("lesson_03", edit="print(7 + 5)")
+    run("lesson_450")
+    last = run(
+        "lesson_451",
+        edit=(
+            'print("=====================")\n'
+            'print("MEET AVYAAN THE CODER")\n'
+            'print("=====================")\n'
+            "# Favorite number, just for fun\n"
+            "favorite_number = 42\n"
+            'print("Favorite number:", favorite_number)\n'
+            'print("Loves: Python, games, and swimming!")'
+        ),
+    )
+
+    assert "module_python_starter" in state.progress.get_badge_ids()
+    assert "Module badge unlocked" in last.badge_text.value
+
+
+def test_module_badge_is_not_awarded_twice_on_replay(state):
+    edits = {
+        "lesson_02": "print(7)",
+        "lesson_03": "print(7 + 5)",
+        "lesson_451": (
+            'print("=====================")\n'
+            'print("MEET AVYAAN THE CODER")\n'
+            'print("=====================")\n'
+            "# Favorite number, just for fun\n"
+            "favorite_number = 42\n"
+            'print("Favorite number:", favorite_number)\n'
+            'print("Loves: Python, games, and swimming!")'
+        ),
+    }
+    for lesson_id in ["lesson_01", "lesson_02", "lesson_03", "lesson_450", "lesson_451"]:
+        lesson = state.lesson_engine.get(lesson_id)
+        c = _LessonController(FakePage(), state, lesson)
+        c.build_view()
+        c.editor.value = edits.get(lesson_id, lesson.starter_code.strip())
+        asyncio.run(c._on_run(None))
+
+    assert state.progress.get_badge_ids().count("module_python_starter") == 1
+
+    # Replaying the checkpoint lesson again shouldn't re-award the module badge.
+    lesson = state.lesson_engine.get("lesson_451")
+    c2 = _LessonController(FakePage(), state, lesson)
+    c2.build_view()
+    asyncio.run(c2._on_run(None))
+    assert "Module badge unlocked" not in c2.badge_text.value
+    assert state.progress.get_badge_ids().count("module_python_starter") == 1
+
+
+def test_completing_the_final_module_awards_the_journey_complete_badge(state):
+    from app.engine.learning_path import LearningPathEngine
+
+    learning_path = LearningPathEngine()
+    all_but_one = set()
+    for module in learning_path.modules()[:-1]:
+        all_but_one.update(learning_path.module_lesson_ids(module.id))
+    last_module = learning_path.modules()[-1]
+    last_lessons = learning_path.module_lesson_ids(last_module.id)
+
+    for lesson_id in all_but_one | set(last_lessons[:-1]):
+        state.progress.complete_lesson(lesson_id, 3)
+
+    final_lesson_id = last_lessons[-1]
+    lesson = state.lesson_engine.get(final_lesson_id)
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+
+    assert "python_journey_complete" in state.progress.get_badge_ids()
+    assert "Python Journey Complete" in controller.badge_text.value
+
+
+# -- Python Journey: Practice Quest -------------------------------------------
+def test_practice_quest_appears_after_repeated_failures_when_tags_overlap(state):
+    state.lesson_engine.get("lesson_10").concept_tags = ["conditionals"]
+    state.lesson_engine.get("lesson_09").concept_tags = ["conditionals"]
+
+    lesson = state.lesson_engine.get("lesson_10")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+
+    for _ in range(3):
+        controller.editor.value = 'print("nope")'
+        asyncio.run(controller._on_run(None))
+
+    assert controller.practice_quest_container.visible is True
+    assert len(controller.practice_quest_row.controls) >= 1
+
+
+def test_practice_quest_does_not_appear_before_the_failure_threshold(state):
+    state.lesson_engine.get("lesson_10").concept_tags = ["conditionals"]
+    state.lesson_engine.get("lesson_09").concept_tags = ["conditionals"]
+
+    lesson = state.lesson_engine.get("lesson_10")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+
+    controller.editor.value = 'print("nope")'
+    asyncio.run(controller._on_run(None))
+    controller.editor.value = 'print("nope")'
+    asyncio.run(controller._on_run(None))
+
+    assert controller.practice_quest_container.visible is False
+
+
+def test_practice_quest_does_not_appear_without_matching_tags(state):
+    lesson = state.lesson_engine.get("lesson_10")
+    lesson.concept_tags = []
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+
+    for _ in range(3):
+        controller.editor.value = 'print("nope")'
+        asyncio.run(controller._on_run(None))
+
+    assert controller.practice_quest_container.visible is False
+
+
+def test_dismissing_the_practice_quest_hides_it(state):
+    state.lesson_engine.get("lesson_10").concept_tags = ["conditionals"]
+    state.lesson_engine.get("lesson_09").concept_tags = ["conditionals"]
+
+    lesson = state.lesson_engine.get("lesson_10")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+
+    for _ in range(3):
+        controller.editor.value = 'print("nope")'
+        asyncio.run(controller._on_run(None))
+    assert controller.practice_quest_container.visible is True
+
+    controller._dismiss_practice_quest(None)
+    assert controller.practice_quest_container.visible is False
+
+
+def test_succeeding_hides_a_previously_shown_practice_quest(state):
+    state.lesson_engine.get("lesson_10").concept_tags = ["conditionals"]
+    state.lesson_engine.get("lesson_09").concept_tags = ["conditionals"]
+
+    lesson = state.lesson_engine.get("lesson_10")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+
+    for _ in range(3):
+        controller.editor.value = 'print("nope")'
+        asyncio.run(controller._on_run(None))
+    assert controller.practice_quest_container.visible is True
+
+    # lesson_10's starter_code (age = 9) doesn't itself satisfy the
+    # challenge -- it needs an actual solution to succeed.
+    controller.editor.value = (
+        "age = 5\nif age >= 8:\n    print(\"You can play!\")\nelse:\n    print(\"You are too young!\")"
+    )
+    asyncio.run(controller._on_run(None))
+    assert controller.practice_quest_container.visible is False
+
+
 # -- Codey avatar wiring (phase 8) --------------------------------------------
 
 def test_codey_starts_idle(controller):

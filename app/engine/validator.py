@@ -19,6 +19,7 @@ _KEYWORD_NODE_TYPES: dict[str, type[ast.AST]] = {
     "try": ast.Try,
     "with": ast.With,
     "global": ast.Global,
+    "f-string": ast.JoinedStr,
 }
 
 
@@ -64,7 +65,8 @@ def validate_ast_contains(code: str, patterns: list[str]) -> bool:
 
     Each pattern is one of:
     - a statement keyword ("if", "for", "while", "def", "return", "class",
-      "try", "with", "global")
+      "try", "with", "global") or "f-string" (an f"..." literal --
+      ast.JoinedStr -- also not expressible as a plain identifier)
     - a dotted attribute path ("inventory.append", "ball.speed_x") --
       matches an attribute access on a plain name, whether it's a call
       (inventory.append(x)) or a plain read/assignment (ball.speed_x = 2)

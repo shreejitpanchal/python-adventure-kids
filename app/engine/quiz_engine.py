@@ -50,5 +50,6 @@ class QuizEngine:
                 options=new_options,
                 correct=new_correct,
                 explanation=question.explanation,
+                concept_tags=question.concept_tags,
             ))
         return session

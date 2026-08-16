@@ -39,3 +39,4 @@ next_lesson_id: null
 graphical: true
 category: snake
 category_level: 3
+concept_tags: [functions, loops]

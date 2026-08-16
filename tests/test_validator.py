@@ -64,6 +64,11 @@ def test_ast_contains_keyword_global():
     assert validate_ast_contains("x = 0\nx += 1", ["global"]) is False
 
 
+def test_ast_contains_f_string():
+    assert validate_ast_contains('name = "x"\nprint(f"hi {name}")', ["f-string"]) is True
+    assert validate_ast_contains('name = "x"\nprint("hi " + name)', ["f-string"]) is False
+
+
 def test_ast_contains_bare_identifier_as_a_call():
     assert validate_ast_contains('print("hi")', ["print"]) is True
     assert validate_ast_contains('x = int("5")', ["int"]) is True

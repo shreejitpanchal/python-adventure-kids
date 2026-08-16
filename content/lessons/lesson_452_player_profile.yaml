@@ -1,0 +1,42 @@
+id: lesson_452
+title: "Project: Player Profile 🎮"
+level: 452
+objective: "Combine input(), type conversion, and an f-string into one finished mini-project."
+explanation: |
+  This is your Variables and Input project — build a player profile card, like the kind
+  you'd see at the start of a video game!
+
+  age = int(input("How old are you? ")) asks a question and converts your typed answer
+  from text into a real number, so Python could do math with it later if it needed to.
+
+  The last line uses an f-string: f"{name} is {age} years old..." — putting a variable
+  name inside {curly braces} drops its value right into the sentence.
+example_code: |
+  age = int(input("How old are you? "))
+  name = "Explorer"
+  favorite_color = "blue"
+  print(f"{name} is {age} years old and loves {favorite_color}!")
+starter_code: |
+  age = int(input("How old are you? "))
+  name = "Explorer"
+  favorite_color = "blue"
+  print(f"{name} is {age} years old and loves {favorite_color}!")
+challenge: |
+  🎯 Challenge: Change name to your own name and favorite_color to your favorite color.
+  Then type your real age in the box below and press RUN!
+expected_output: "How old are you? Ava is {input} years old and loves purple!"
+input_prompt: "How old are you?"
+ast_contains: ["f-string", "int"]
+hints:
+  - "Change name = \"Explorer\" to your own name, and favorite_color = \"blue\" to your favorite color."
+  - "The {curly braces} inside the f-string get replaced with each variable's real value."
+  - "This challenge checks for the name \"Ava\" and the color \"purple\" — try those exact ones first, then customize further on your own!"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: journey_projects
+category_level: 2
+main_path: false
+learning_path_module: variables-and-input
+lesson_type: project
+concept_tags: [variables, input, type-conversion, f-strings]

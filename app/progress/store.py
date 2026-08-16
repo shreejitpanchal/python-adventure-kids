@@ -53,6 +53,9 @@ CREATE TABLE IF NOT EXISTS player_xp (
 # XP cost to clear level N is N * 100 (level 1->2 costs 100, 2->3 costs 200, ...).
 _XP_PER_LEVEL_STEP = 100
 
+# event_types that count as a struggling attempt for get_recent_failure_count().
+_FAILURE_EVENT_TYPES = {"attempt_error", "attempt_wrong_output", "attempt_timeout", "attempt_blocked"}
+
 
 def _level_from_xp(total_xp: int) -> tuple[int, int, int]:
     """(level, xp_into_level, xp_needed_for_level) for a cumulative XP total.
@@ -321,6 +324,28 @@ class ProgressStore:
             rows = cur.fetchall()
         conn.row_factory = None
         return rows
+
+    def get_recent_failure_count(self, lesson_id: str) -> int:
+        """How many attempt-failure events (error/wrong-output/timeout/
+        blocked) have happened on this lesson since its last successful
+        completion, or ever if it's never been completed -- resets to 0
+        automatically once the lesson is passed, since a fresh
+        "lesson_completed" row then sits above every earlier failure.
+        Powers the "Practice Quest" suggestion after repeated struggle
+        (see LessonEngine.recommend_practice())."""
+        with closing(self._conn.cursor()) as cur:
+            cur.execute(
+                "SELECT event_type FROM activity_log WHERE lesson_id = ? ORDER BY id DESC",
+                (lesson_id,),
+            )
+            rows = cur.fetchall()
+        count = 0
+        for (event_type,) in rows:
+            if event_type == "lesson_completed":
+                break
+            if event_type in _FAILURE_EVENT_TYPES:
+                count += 1
+        return count
 
     def get_weekly_summary(self) -> WeeklySummary:
         """Activity in the last 7 days, for the parent dashboard's "This

@@ -26,3 +26,4 @@ next_lesson_id: null
 category: input
 category_level: 7
 main_path: false
+concept_tags: [input, type-conversion]

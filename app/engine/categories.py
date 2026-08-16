@@ -42,6 +42,7 @@ CATEGORY_META: dict[str, CategoryMeta] = {
     "rpg_quests": CategoryMeta("RPG Quests", "⚔️", "#8B4513"),
     "arcade_lab": CategoryMeta("Arcade Lab", "🏓", "#00ACC1"),
     "robot_adventure": CategoryMeta("Robot Adventure", "🤖", "#546E7A"),
+    "journey_projects": CategoryMeta("Journey Projects", "🏆", "#FFB300"),
 }
 
 DEFAULT_META = CategoryMeta("More Adventures", "⭐", "#78909C")

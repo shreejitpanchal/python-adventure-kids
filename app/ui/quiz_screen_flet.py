@@ -36,6 +36,10 @@ class _QuizController:
         self.index = 0
         self.score = 0
         self.answered = False
+        # concept_tags from every question missed this session -- purely
+        # in-memory, discarded once a new session starts; no DB change
+        # needed for this (see _show_results()'s "practice these next").
+        self.missed_tags: set[str] = set()
 
     # -- layout -----------------------------------------------------------------
     def build_view(self) -> ft.View:
@@ -81,10 +85,17 @@ class _QuizController:
         self.results_text = ft.Text(
             "", size=22, weight=ft.FontWeight.BOLD, color=contrasting_text_color(_RESULTS_CARD_COLOR),
         )
+        results_card_text_color = contrasting_text_color(_RESULTS_CARD_COLOR)
+        self.practice_heading = ft.Text(
+            "💡 Practice these next:", size=15, weight=ft.FontWeight.BOLD, color=results_card_text_color, visible=False,
+        )
+        self.practice_row = ft.Row([], spacing=8, wrap=True, alignment=ft.MainAxisAlignment.CENTER)
         self.results_card = ft.Container(
             content=ft.Column(
                 [
                     self.results_text,
+                    self.practice_heading,
+                    self.practice_row,
                     ft.Row(
                         [
                             ft.Button(
@@ -155,6 +166,7 @@ class _QuizController:
         self.total = len(self.questions)
         self.index = 0
         self.score = 0
+        self.missed_tags = set()
         self.setup_card.visible = False
         self.question_card.visible = True
         self._render_question()
@@ -188,6 +200,8 @@ class _QuizController:
         correct = index == question.correct
         if correct:
             self.score += 1
+        else:
+            self.missed_tags.update(question.concept_tags)
 
         for i, button in enumerate(self.option_buttons):
             button.disabled = True
@@ -218,6 +232,19 @@ class _QuizController:
         self.state.progress.record_quiz_attempt(self.score, self.total)
         percent = round(100 * self.score / self.total)
         self.results_text.value = f"🏁 You scored {self.score} / {self.total} ({percent}%)"
+
+        completed_ids = self.state.progress.get_completed_lesson_ids()
+        suggestions = self.state.lesson_engine.recommend_practice_for_tags(self.missed_tags, completed_ids)
+        self.practice_heading.visible = bool(suggestions)
+        self.practice_row.controls = [
+            ft.Button(
+                lesson.title, height=40,
+                on_click=lambda _e, lesson_id=lesson.id: self.page.go(f"/lesson/{lesson_id}"),
+                style=ft.ButtonStyle(bgcolor=self.theme.warning, color="#FFFFFF"),
+            )
+            for lesson in suggestions
+        ]
+
         self.question_card.visible = False
         self.results_card.visible = True
         self.page.update()

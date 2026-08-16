@@ -1,0 +1,84 @@
+# Python Journey: the fixed 8-module course map. Loaded by
+# app/engine/learning_path.py's LearningPathEngine. See
+# docs/AUTHORING_GUIDE.md for the full authoring guide, including how to
+# add a 9th module or extend an existing one.
+#
+# required_lesson_ids/checkpoint_lesson_id reference *existing* lesson
+# ids wherever a suitable lesson already exists (deliberately reuse-first
+# -- see docs/AUTHORING_GUIDE.md's "reuse an existing capstone" pattern).
+# Only lesson_450/451/452 are new content authored specifically for this
+# feature. Referencing a lesson here does NOT change its main_path/
+# next_lesson_id/category_level -- the existing "Today's Mission" chain
+# and category browser are untouched by this file.
+modules:
+  - id: python-starter
+    title: "Python Starter"
+    order: 1
+    icon: "🚀"
+    description: "Learn how Python talks, counts, and follows instructions."
+    required_lesson_ids: [lesson_01, lesson_02, lesson_03, lesson_450]
+    checkpoint_lesson_id: lesson_451
+    badge_id: module_python_starter
+
+  - id: variables-and-input
+    title: "Variables and Input"
+    order: 2
+    icon: "📦"
+    description: "Store information in variables, and ask the player questions."
+    required_lesson_ids: [lesson_07, lesson_09, lesson_314]
+    checkpoint_lesson_id: lesson_452
+    badge_id: module_variables_and_input
+
+  - id: decisions
+    title: "Decisions"
+    order: 3
+    icon: "🚦"
+    description: "Teach Python to choose between different outcomes."
+    required_lesson_ids: [lesson_10]
+    checkpoint_lesson_id: lesson_358
+    badge_id: module_decisions
+
+  - id: loops
+    title: "Loops"
+    order: 4
+    icon: "🔁"
+    description: "Repeat instructions without writing them over and over."
+    required_lesson_ids: [lesson_11]
+    checkpoint_lesson_id: lesson_378
+    badge_id: module_loops
+
+  - id: functions
+    title: "Functions"
+    order: 5
+    icon: "⚙️"
+    description: "Build reusable little machines out of code."
+    required_lesson_ids: [lesson_12]
+    checkpoint_lesson_id: lesson_398
+    badge_id: module_functions
+
+  - id: collections
+    title: "Collections"
+    order: 6
+    icon: "🎒"
+    description: "Store and organize many pieces of information at once."
+    required_lesson_ids: [lesson_13]
+    checkpoint_lesson_id: lesson_418
+    badge_id: module_collections
+
+  - id: problem-solving
+    title: "Problem Solving"
+    order: 7
+    icon: "🧩"
+    description: "Read error messages like a detective and squash bugs."
+    required_lesson_ids: [cracker_01, cracker_03, cracker_05]
+    checkpoint_lesson_id: cracker_10
+    badge_id: module_problem_solving
+
+  - id: python-creator
+    title: "Python Creator"
+    order: 8
+    icon: "🏆"
+    description: "Put everything together and build a real game."
+    required_lesson_ids: [lesson_16, lesson_17]
+    checkpoint_lesson_id: lesson_18
+    badge_id: module_python_creator

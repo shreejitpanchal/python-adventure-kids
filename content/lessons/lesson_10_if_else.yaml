@@ -32,3 +32,4 @@ badge: null
 next_lesson_id: lesson_11
 category: conditionals
 category_level: 1
+concept_tags: [conditionals, comparison, booleans]

@@ -57,8 +57,12 @@ def _build_header(page: ft.Page, state: AppState) -> ft.Control:
             ft.Row(
                 [
                     ft.Button(
-                        "🗺️ Categories", on_click=lambda _e: page.go("/categories"), height=48,
+                        "🗺️ Python Journey", on_click=lambda _e: page.go("/journey"), height=48,
                         style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+                    ),
+                    ft.Button(
+                        "📚 Categories", on_click=lambda _e: page.go("/categories"), height=48,
+                        style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
                     ),
                     ft.Button(
                         "🏆 Trophy Room", on_click=lambda _e: page.go("/trophy-room"), height=48,

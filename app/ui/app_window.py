@@ -5,6 +5,7 @@ import customtkinter as ctk
 
 from app.config.settings import Settings, get_db_path, load_settings, save_settings
 from app.engine.lesson_engine import LessonEngine
+from app.engine.learning_path import LearningPathEngine
 from app.engine.quiz_engine import QuizEngine
 from app.progress.store import ProgressStore
 from app.ui import theme
@@ -32,6 +33,7 @@ class App(ctk.CTk):
         self.progress = ProgressStore(get_db_path())
         self.lesson_engine = LessonEngine()
         self.quiz_engine = QuizEngine()
+        self.learning_path_engine = LearningPathEngine()
 
         self._current_frame: ctk.CTkFrame | None = None
         self.protocol("WM_DELETE_WINDOW", self._on_close)

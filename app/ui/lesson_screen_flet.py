@@ -25,6 +25,7 @@ import flet as ft
 import flet.canvas as cv
 
 from app.audio.player import success_sound_for
+from app.engine.badges import get_badge_meta
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_canvas_flet import GameCanvas
@@ -193,7 +194,23 @@ class _LessonController:
         self.details_container = ft.Container(
             content=self.details_text, bgcolor="#1E1E2E", border_radius=8, padding=12, visible=False,
         )
-        return self._card("💻 What Python Says", [self.output_text, self.details_button, self.details_container])
+        self.practice_quest_row = ft.Row([], spacing=8, wrap=True)
+        self.practice_quest_container = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Text("💡 Practice Quest: stuck? These might help!", size=14, weight=ft.FontWeight.BOLD, color=theme.text),
+                    self.practice_quest_row,
+                    ft.TextButton("✕ Dismiss", on_click=self._dismiss_practice_quest, style=ft.ButtonStyle(color=theme.text_muted)),
+                ],
+                spacing=8,
+            ),
+            bgcolor=theme.card, border=ft.border.Border.all(2, theme.warning), border_radius=8, padding=12,
+            visible=False,
+        )
+        return self._card(
+            "💻 What Python Says",
+            [self.output_text, self.details_button, self.details_container, self.practice_quest_container],
+        )
 
     def _build_game_panel(self) -> ft.Control:
         self._game_title_text = ft.Text(self.lesson.title, size=16, weight=ft.FontWeight.BOLD, color="#FFFFFF")
@@ -309,6 +326,7 @@ class _LessonController:
                 )
                 self._codey.set_state(CodeyState.WARNING)
                 self.state.progress.log_event(self.lesson.id, "attempt_timeout")
+                self._maybe_show_practice_quest()
             self.page.update()
             return
 
@@ -320,6 +338,7 @@ class _LessonController:
             self._show_output(f"{friendly}\n\n💡 {hint}", self.theme.danger, raw=result.stderr)
             self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
+            self._maybe_show_practice_quest()
             self.page.update()
             return
 
@@ -334,6 +353,7 @@ class _LessonController:
         )
 
         if output_ok and ast_ok:
+            self._hide_practice_quest()
             self._show_output(result.stdout or "(no output)", self.theme.success)
             self._codey.set_state(CodeyState.SUCCESS)
             self._on_lesson_success()
@@ -353,6 +373,7 @@ class _LessonController:
             )
             self._codey.set_state(CodeyState.WARNING)
             self.state.progress.log_event(self.lesson.id, "attempt_wrong_output", result.stdout[-200:])
+            self._maybe_show_practice_quest()
         self.page.update()
 
     async def _on_run_graphical(self) -> None:
@@ -433,6 +454,7 @@ class _LessonController:
             self.game_canvas.cancel_pending()
             self._game_canvas_control.shapes.clear()
         self._hide_details()
+        self._hide_practice_quest()
         self.output_text.value = "Press RUN to see what happens!"
         self.output_text.color = self.theme.text_muted
         self._codey.set_state(CodeyState.IDLE)
@@ -466,6 +488,40 @@ class _LessonController:
         self.details_button.visible = False
         self.details_container.visible = False
 
+    # -- adaptive practice ("Practice Quest") --------------------------------
+    _PRACTICE_QUEST_THRESHOLD = 3
+
+    def _maybe_show_practice_quest(self) -> None:
+        """After enough consecutive failed attempts on this lesson (see
+        ProgressStore.get_recent_failure_count()), suggest 1-3 lessons
+        sharing a concept_tags entry -- purely additive, never blocks
+        retry/hints/continue, and does nothing if the lesson has no
+        concept_tags or no failure count has crossed the threshold yet."""
+        failures = self.state.progress.get_recent_failure_count(self.lesson.id)
+        if failures < self._PRACTICE_QUEST_THRESHOLD:
+            return
+        completed_ids = self.state.progress.get_completed_lesson_ids()
+        suggestions = self.state.lesson_engine.recommend_practice(self.lesson.id, completed_ids)
+        if not suggestions:
+            return
+
+        self.practice_quest_row.controls = [
+            ft.Button(
+                lesson.title, height=40,
+                on_click=lambda _e, lesson_id=lesson.id: self.page.go(f"/lesson/{lesson_id}"),
+                style=ft.ButtonStyle(bgcolor=self.theme.warning, color="#FFFFFF"),
+            )
+            for lesson in suggestions
+        ]
+        self.practice_quest_container.visible = True
+
+    def _dismiss_practice_quest(self, e) -> None:
+        self._hide_practice_quest()
+        self.page.update()
+
+    def _hide_practice_quest(self) -> None:
+        self.practice_quest_container.visible = False
+
     # -- success / reward -----------------------------------------------------
     def _on_lesson_success(self) -> None:
         if self._lesson_passed:
@@ -480,8 +536,11 @@ class _LessonController:
             badge_newly_awarded = progress.award_badge(self.lesson.badge)
         leveled_up = progress.get_player_level().level > level_before
 
+        module_badge_lines = self._award_module_badges()
+
         if self.state.sound_player is not None:
-            for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_newly_awarded):
+            badge_earned = badge_newly_awarded or bool(module_badge_lines)
+            for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_earned):
                 self.state.sound_player.play(sound_name, self.state.settings)
 
         next_lesson = self.state.lesson_engine.next_after(self.lesson.id)
@@ -493,11 +552,36 @@ class _LessonController:
             f"🎉 Great job! You earned {'⭐' * self.lesson.reward_stars} "
             f"({self.lesson.reward_stars} stars)"
         )
-        self.badge_text.value = (
+        lesson_badge_line = (
             f"🎖️ New badge unlocked: {self.lesson.badge.replace('_', ' ').title()}!"
             if badge_newly_awarded else ""
         )
+        self.badge_text.value = "\n".join(line for line in [lesson_badge_line, *module_badge_lines] if line)
         self._victory_handle.show()
+
+    def _award_module_badges(self) -> list[str]:
+        """Awards any Python Journey module badge (and the capstone
+        "Python Journey Complete" badge) that this lesson completion just
+        satisfied. Also doubles as the migration-free "catch up" check --
+        see app/engine/learning_path.py's newly_earned_module_badges() --
+        though it only actually runs here on a fresh completion, not on
+        every Journey screen load like journey_map_flet.py's version.
+        Returns the reward-card lines to show, if any."""
+        progress = self.state.progress
+        learning_path = self.state.learning_path_engine
+        completed_ids = progress.get_completed_lesson_ids()
+        already_awarded = progress.get_badge_ids()
+
+        lines: list[str] = []
+        for badge_id in learning_path.newly_earned_module_badges(completed_ids, already_awarded):
+            progress.award_badge(badge_id)
+            lines.append(f"🎖️ Module badge unlocked: {get_badge_meta(badge_id).title}!")
+
+        if "python_journey_complete" not in already_awarded and learning_path.all_modules_complete(completed_ids):
+            progress.award_badge("python_journey_complete")
+            lines.append(f"🌟 {get_badge_meta('python_journey_complete').title}!")
+
+        return lines
 
     def _on_continue(self, e) -> None:
         if self.game_canvas is not None:

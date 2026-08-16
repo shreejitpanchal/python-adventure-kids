@@ -8,6 +8,7 @@ questions:
   - echo()
   correct: 0
   explanation: print() is Python's built-in function for showing output.
+  concept_tags: [print]
 - id: q002
   question: What will print("Hello!") display?
   options:
@@ -17,6 +18,7 @@ questions:
   - Nothing
   correct: 0
   explanation: print() shows the text inside the quotes, without the quote marks themselves.
+  concept_tags: [print, strings]
 - id: q003
   question: Which of these correctly prints the word Welcome?
   options:
@@ -26,6 +28,7 @@ questions:
   - print(Welcome);
   correct: 0
   explanation: Text needs quote marks, and Python's print function is always lowercase.
+  concept_tags: [print]
 - id: q004
   question: What symbol starts a comment in Python?
   options:
@@ -35,6 +38,7 @@ questions:
   - '**'
   correct: 0
   explanation: 'A # tells Python to ignore the rest of that line -- it''s just a note for humans.'
+  concept_tags: [comments]
 - id: q005
   question: Which quote marks can you use around text in Python?
   options:
@@ -44,6 +48,7 @@ questions:
   - Curly quotes like “ ”
   correct: 0
   explanation: Python accepts single or double quotes for text, as long as you use the same kind on both ends.
+  concept_tags: [strings]
 - id: q006
   question: What kind of value is "Hello" in Python?
   options:
@@ -53,6 +58,7 @@ questions:
   - A function
   correct: 0
   explanation: Text wrapped in quotes is called a string.
+  concept_tags: [strings]
 - id: q007
   question: What does age = 9 do?
   options:
@@ -62,6 +68,7 @@ questions:
   - Creates a function named age
   correct: 0
   explanation: The = sign stores a value in a variable -- it does not compare or print anything.
+  concept_tags: [variables]
 - id: q008
   question: After age = 9 and then age = 10, what does age hold?
   options:
@@ -71,6 +78,7 @@ questions:
   - Nothing, that's an error
   correct: 0
   explanation: Assigning a new value replaces the old one -- a variable only holds its most recent value.
+  concept_tags: [variables]
 - id: q009
   question: Which variable name is allowed in Python?
   options:
@@ -80,6 +88,7 @@ questions:
   - class
   correct: 0
   explanation: Variable names can use letters, numbers, and underscores, but can't start with a number, contain a dash, or reuse a reserved word like class.
+  concept_tags: [naming]
 - id: q010
   question: If age = 9, what does print(age) do?
   options:
@@ -89,6 +98,7 @@ questions:
   - Causes an error
   correct: 0
   explanation: print(age) shows whatever value is stored inside the age box, not the word "age" itself.
+  concept_tags: [variables, print]
 - id: q011
   question: 'What does this print?
 
@@ -104,6 +114,7 @@ questions:
   - score + 1
   correct: 0
   explanation: score + 1 is calculated first (5 + 1 = 6), then stored back into score.
+  concept_tags: [variables, expressions]
 - id: q012
   question: Which line correctly stores your name in a variable called name?
   options:
@@ -113,6 +124,7 @@ questions:
   - name := "Alex";
   correct: 0
   explanation: A single = assigns a value to a variable.
+  concept_tags: [variables]
 - id: q013
   question: What does print(3 + 4) show?
   options:
@@ -122,6 +134,7 @@ questions:
   - Error
   correct: 0
   explanation: + adds numbers together, so 3 + 4 becomes 7.
+  concept_tags: [numbers, expressions]
 - id: q014
   question: What symbol does Python use for multiplication?
   options:
@@ -131,6 +144,7 @@ questions:
   - ^
   correct: 0
   explanation: Python uses * for multiplication, not x or ×.
+  concept_tags: [numbers, expressions]
 - id: q015
   question: What does print(10 / 3) show?
   options:
@@ -140,6 +154,7 @@ questions:
   - '1'
   correct: 0
   explanation: / always gives a decimal (float) answer in Python, even when it doesn't divide evenly.
+  concept_tags: [numbers, expressions]
 - id: q016
   question: What does // do in Python?
   options:
@@ -149,6 +164,7 @@ questions:
   - Starts a comment
   correct: 0
   explanation: // is floor division -- it divides and rounds down to a whole number.
+  concept_tags: [numbers, expressions]
 - id: q017
   question: What does print(10 % 3) show?
   options:
@@ -158,6 +174,7 @@ questions:
   - '10'
   correct: 0
   explanation: '% gives the remainder after dividing -- 10 divided by 3 is 3 with 1 left over.'
+  concept_tags: [numbers, expressions]
 - id: q018
   question: What does print(2 ** 3) show?
   options:
@@ -167,6 +184,7 @@ questions:
   - '9'
   correct: 0
   explanation: '** means "to the power of" -- 2 to the power of 3 is 2 x 2 x 2 = 8.'
+  concept_tags: [numbers, expressions]
 - id: q019
   question: What does print("cat" + "fish") show?
   options:
@@ -176,6 +194,7 @@ questions:
   - Error
   correct: 0
   explanation: + joins (concatenates) two strings together with no space added automatically.
+  concept_tags: [strings]
 - id: q020
   question: How do you find how many letters are in a string called word?
   options:
@@ -185,6 +204,7 @@ questions:
   - size(word)
   correct: 0
   explanation: len() tells you the length of a string (or list).
+  concept_tags: [strings]
 - id: q021
   question: What does print("hi" * 3) show?
   options:
@@ -194,6 +214,7 @@ questions:
   - Error
   correct: 0
   explanation: Multiplying a string by a number repeats it that many times.
+  concept_tags: [strings]
 - id: q022
   question: What will print("Python".upper()) show?
   options:
@@ -203,6 +224,7 @@ questions:
   - Error
   correct: 0
   explanation: .upper() converts every letter in a string to uppercase.
+  concept_tags: [strings]
 - id: q023
   question: What data type is the value True?
   options:
@@ -212,6 +234,7 @@ questions:
   - A list
   correct: 0
   explanation: True and False are boolean values -- they represent yes/no or on/off.
+  concept_tags: [booleans]
 - id: q024
   question: What does str(5) do?
   options:
@@ -221,6 +244,7 @@ questions:
   - Adds 5 to a string
   correct: 0
   explanation: str() converts a value into a string, which is often needed before joining it with other text using +.
+  concept_tags: [type-conversion]
 - id: q025
   question: What does input() do?
   options:
@@ -230,6 +254,7 @@ questions:
   - Creates a variable automatically
   correct: 0
   explanation: input() waits for the player to type an answer and press Enter.
+  concept_tags: [input]
 - id: q026
   question: What type of value does input() always return, even if the player types a number?
   options:
@@ -239,6 +264,7 @@ questions:
   - A boolean
   correct: 0
   explanation: input() always gives back text -- you need int() or float() to use it as a number.
+  concept_tags: [input, type-conversion]
 - id: q027
   question: How do you turn what the player typed into a whole number?
   options:
@@ -248,6 +274,7 @@ questions:
   - number(input())
   correct: 0
   explanation: Wrapping input() in int() converts the typed text into a whole number.
+  concept_tags: [input, type-conversion]
 - id: q028
   question: 'What does this print if the player types Sam?
 
@@ -261,6 +288,7 @@ questions:
   - Error
   correct: 0
   explanation: The name variable now holds "Sam", so joining it with "Hi " prints "Hi Sam".
+  concept_tags: [input, strings]
 - id: q029
   question: What does 5 > 3 evaluate to?
   options:
@@ -270,6 +298,7 @@ questions:
   - Error
   correct: 0
   explanation: 5 is greater than 3, so the comparison is True.
+  concept_tags: [comparison]
 - id: q030
   question: Which symbol checks if two values are equal in Python?
   options:
@@ -279,6 +308,7 @@ questions:
   - '!='
   correct: 0
   explanation: A single = assigns a value, but a double == checks if two things are equal.
+  concept_tags: [comparison]
 - id: q031
   question: What does != mean?
   options:
@@ -288,6 +318,7 @@ questions:
   - Divides
   correct: 0
   explanation: '!= checks whether two values are different from each other.'
+  concept_tags: [comparison]
 - id: q032
   question: "What will this print?\nif 7 > 3:\n    print(\"Yes\")\nelse:\n    print(\"No\")"
   options:
@@ -297,6 +328,7 @@ questions:
   - Nothing
   correct: 0
   explanation: 7 is greater than 3, so the condition is True and the if block runs.
+  concept_tags: [conditionals, comparison]
 - id: q033
   question: What must come right after the condition in an if statement?
   options:
@@ -306,6 +338,7 @@ questions:
   - Nothing
   correct: 0
   explanation: Python requires a colon at the end of an if line, before the indented block.
+  concept_tags: [conditionals]
 - id: q034
   question: How does Python know which lines belong inside an if block?
   options:
@@ -315,6 +348,7 @@ questions:
   - They're wrapped in curly braces {}
   correct: 0
   explanation: Python uses indentation (spacing), not braces, to group lines together.
+  concept_tags: [conditionals]
 - id: q035
   question: How many times does the loop body repeat for `for i in range(5):`?
   options:
@@ -324,6 +358,7 @@ questions:
   - Forever
   correct: 0
   explanation: range(5) produces 0, 1, 2, 3, 4 -- five numbers, so the loop runs 5 times.
+  concept_tags: [for-loops]
 - id: q036
   question: What does a while loop do?
   options:
@@ -333,6 +368,7 @@ questions:
   - Stops the program
   correct: 0
   explanation: A while loop keeps repeating until its condition becomes False.
+  concept_tags: [while-loops]
 - id: q037
   question: What could cause a loop to run forever by mistake?
   options:
@@ -342,6 +378,7 @@ questions:
   - Adding a colon at the end
   correct: 0
   explanation: If nothing inside a while loop ever makes its condition False, the loop never stops.
+  concept_tags: [while-loops, debugging]
 - id: q038
   question: "What will this print?\nfor i in range(3):\n    print(i)"
   options:
@@ -351,6 +388,7 @@ questions:
   - 0, 1, 2, 3
   correct: 0
   explanation: range(3) counts 0, 1, 2 -- Python starts counting at 0 by default.
+  concept_tags: [for-loops]
 - id: q039
   question: How many times does `for i in range(1, 4):` run?
   options:
@@ -360,6 +398,7 @@ questions:
   - 1 time
   correct: 0
   explanation: range(1, 4) starts at 1 and stops before 4, giving 1, 2, 3.
+  concept_tags: [for-loops]
 - id: q040
   question: What keyword immediately exits a loop early?
   options:
@@ -369,6 +408,7 @@ questions:
   - exit
   correct: 0
   explanation: break immediately stops the loop, skipping any remaining repeats.
+  concept_tags: [loops]
 - id: q041
   question: What keyword do you use to create your own function?
   options:
@@ -378,6 +418,7 @@ questions:
   - define
   correct: 0
   explanation: 'def starts a function definition in Python, e.g. def greet():'
+  concept_tags: [functions]
 - id: q042
   question: What does return do inside a function?
   options:
@@ -387,6 +428,7 @@ questions:
   - Repeats the function
   correct: 0
   explanation: return hands a result back to whatever called the function, so it can be used elsewhere.
+  concept_tags: [functions, return-values]
 - id: q043
   question: "What does this print?\ndef double(x):\n    return x * 2\nprint(double(4))"
   options:
@@ -396,6 +438,7 @@ questions:
   - Error
   correct: 0
   explanation: double(4) runs the function with x = 4, returning 4 * 2 = 8.
+  concept_tags: [functions, return-values]
 - id: q044
   question: In def greet(name):, what is name called?
   options:
@@ -405,6 +448,7 @@ questions:
   - A comment
   correct: 0
   explanation: name is a parameter -- a placeholder for whatever value gets passed in when the function is called.
+  concept_tags: [functions, parameters]
 - id: q045
   question: How do you call (run) a function named say_hi?
   options:
@@ -414,6 +458,7 @@ questions:
   - say_hi
   correct: 0
   explanation: Parentheses after the function name is what actually runs it -- just typing the name alone does not call it.
+  concept_tags: [functions]
 - id: q046
   question: Why do functions help organize code?
   options:
@@ -423,6 +468,7 @@ questions:
   - They only work with numbers
   correct: 0
   explanation: A function packages up steps once so you can reuse them anywhere by calling its name.
+  concept_tags: [functions]
 - id: q047
   question: How do you create a list of three fruits in Python?
   options:
@@ -432,6 +478,7 @@ questions:
   - fruits = apple, banana, cherry
   correct: 0
   explanation: Square brackets with items separated by commas create a list.
+  concept_tags: [lists]
 - id: q048
   question: If fruits = ["apple", "banana", "cherry"], what does fruits[0] give you?
   options:
@@ -441,6 +488,7 @@ questions:
   - Error
   correct: 0
   explanation: Python lists start counting from index 0, so fruits[0] is the first item, "apple".
+  concept_tags: [lists, indexing]
 - id: q049
   question: How do you add "grape" to the end of a list called fruits?
   options:
@@ -450,6 +498,7 @@ questions:
   - fruits[grape]
   correct: 0
   explanation: .append() adds a new item onto the end of a list.
+  concept_tags: [lists]
 - id: q050
   question: What does len(fruits) return if fruits has 3 items?
   options:
@@ -459,6 +508,7 @@ questions:
   - The last item
   correct: 0
   explanation: len() counts how many items are in the list.
+  concept_tags: [lists]
 - id: q051
   question: If fruits = ["apple", "banana", "cherry"], what will print(fruits[1]) show?
   options:
@@ -468,6 +518,7 @@ questions:
   - Error
   correct: 0
   explanation: Index 1 is the second item, since counting starts at 0.
+  concept_tags: [lists, indexing]
 - id: q052
   question: Which module do you import to generate a random number?
   options:
@@ -477,6 +528,7 @@ questions:
   - games
   correct: 0
   explanation: import random gives access to functions like randint() for generating random numbers.
+  concept_tags: [random]
 - id: q053
   question: What does random.randint(1, 10) give you?
   options:
@@ -486,6 +538,7 @@ questions:
   - The number 1
   correct: 0
   explanation: randint(a, b) picks a random whole number, including both a and b as possible results.
+  concept_tags: [random]
 - id: q054
   question: In the Snake project, what do you use instead of a while loop for animation?
   options:
@@ -495,6 +548,7 @@ questions:
   - input() repeated forever
   correct: 0
   explanation: Graphical lessons ban while loops, so animation uses self-scheduling with game.after() instead.
+  concept_tags: [while-loops]
 - id: q055
   question: Why might code that runs with no errors still fail a lesson's challenge?
   options:
@@ -504,6 +558,7 @@ questions:
   - Lessons never check output
   correct: 0
   explanation: A lesson checks whether your program's output matches the expected result -- code can run fine and still print the wrong thing.
+  concept_tags: [debugging]
 - id: q056
   question: Why do programmers write comments in their code?
   options:
@@ -513,6 +568,7 @@ questions:
   - To print extra text on the screen
   correct: 0
   explanation: Comments explain code to people reading it -- Python skips over them completely when it runs the program.
+  concept_tags: [comments]
 - id: q057
   question: 'What happens when Python reaches a line that starts with #?'
   options:
@@ -522,6 +578,7 @@ questions:
   - It runs the line twice
   correct: 0
   explanation: 'Python treats a line starting with # as a comment and ignores it entirely.'
+  concept_tags: [comments]
 - id: q058
   question: 'What does this print?
 
@@ -537,6 +594,7 @@ questions:
   - Nothing
   correct: 0
   explanation: The first line is a comment, so Python never runs it -- only print("Bye") actually executes.
+  concept_tags: [comments, print]
 - id: q059
   question: 'Is it allowed to put a comment after real code on the same line, like print("Hi")  # says hello?'
   options:
@@ -546,6 +604,7 @@ questions:
   - No, that causes a SyntaxError
   correct: 0
   explanation: 'A # can appear anywhere on a line -- Python ignores everything from that # to the end of the line.'
+  concept_tags: [comments]
 - id: q060
   question: 'In print("Price: #1"), does the # start a comment?'
   options:
@@ -555,6 +614,7 @@ questions:
   - No, but it causes an error
   correct: 0
   explanation: 'A # only starts a comment outside of quotes -- inside a string it''s simply a regular character.'
+  concept_tags: [comments, strings]
 - id: q061
   question: What happens if you write print("Hello') with a double quote at the start and a single quote at the end?
   options:
@@ -564,6 +624,7 @@ questions:
   - Python ignores the mismatched quote
   correct: 0
   explanation: Quotes must match -- starting with " and ending with ' leaves the string unterminated, which Python can't understand.
+  concept_tags: [strings, errors]
 - id: q062
   question: Which line correctly prints the word don't, apostrophe and all?
   options:
@@ -573,6 +634,7 @@ questions:
   - print("don't')
   correct: 0
   explanation: Wrapping the text in double quotes lets the apostrophe appear safely inside without confusing Python.
+  concept_tags: [strings]
 - id: q063
   question: How can you write a string that spans several lines, like a whole paragraph?
   options:
@@ -582,6 +644,7 @@ questions:
   - Python strings can never span multiple lines
   correct: 0
   explanation: Triple quotes let a string continue across multiple lines exactly as typed.
+  concept_tags: [strings]
 - id: q064
   question: How do you include a double quote character inside a string that's also wrapped in double quotes?
   options:
@@ -591,6 +654,7 @@ questions:
   - It can't be done
   correct: 0
   explanation: A backslash before a quote tells Python to treat it as a regular character instead of ending the string.
+  concept_tags: [strings]
 - id: q065
   question: What does \n do when it appears inside a string?
   options:
@@ -600,6 +664,7 @@ questions:
   - Deletes the next character
   correct: 0
   explanation: \n is a special escape sequence that means "move to the next line" when printed.
+  concept_tags: [strings]
 - id: q066
   question: What does print() with nothing inside the parentheses do?
   options:
@@ -609,6 +674,7 @@ questions:
   - Prints the word None
   correct: 0
   explanation: Even with no arguments, print() still moves output to a new line, showing up as a blank line.
+  concept_tags: [print]
 - id: q067
   question: What does print("Hi", "There") display?
   options:
@@ -618,6 +684,7 @@ questions:
   - Error, too many arguments
   correct: 0
   explanation: print() automatically puts a single space between items separated by commas.
+  concept_tags: [print]
 - id: q068
   question: In print("a", "b", sep="-"), what does sep control?
   options:
@@ -627,6 +694,7 @@ questions:
   - How many times it prints
   correct: 0
   explanation: sep sets the separator placed between multiple items, replacing the default single space.
+  concept_tags: [print]
 - id: q069
   question: In print("Hi", end=""), what does end control?
   options:
@@ -636,6 +704,7 @@ questions:
   - Whether the text is bold
   correct: 0
   explanation: end sets what print() adds after the output -- normally a new line, but it can be changed or removed.
+  concept_tags: [print]
 - id: q070
   question: If you run print("A") and then print("B") right after, what shows on screen?
   options:
@@ -645,6 +714,7 @@ questions:
   - Only B, since it overwrites A
   correct: 0
   explanation: Each print() call ends with a new line by default, so the next output starts fresh underneath.
+  concept_tags: [print]
 - id: q071
   question: print(5) and print("5") both show 5 on screen. What's actually different about them?
   options:
@@ -654,6 +724,7 @@ questions:
   - print(5) causes an error
   correct: 0
   explanation: The quotes make "5" a string, while 5 without quotes is a number -- they look the same on screen but behave differently in code.
+  concept_tags: [numbers, strings]
 - id: q072
   question: What does the type() function tell you about a value?
   options:
@@ -663,6 +734,7 @@ questions:
   - Whether it will cause an error
   correct: 0
   explanation: type() reports the category of a value, such as int, float, str, or bool.
+  concept_tags: [type-conversion]
 - id: q073
   question: What does Python report as the type of the value 5.5?
   options:
@@ -672,6 +744,7 @@ questions:
   - bool
   correct: 0
   explanation: Numbers with a decimal point are floats, while whole numbers without a decimal point are ints.
+  concept_tags: [numbers, type-conversion]
 - id: q074
   question: What data type is the value False?
   options:
@@ -681,6 +754,7 @@ questions:
   - A list
   correct: 0
   explanation: False, like True, is a boolean value representing one of two states.
+  concept_tags: [booleans]
 - id: q075
   question: What happens if you type Print("Hi") with a capital P instead of print?
   options:
@@ -690,6 +764,7 @@ questions:
   - It only works inside comments
   correct: 0
   explanation: Python is case-sensitive, so Print and print are treated as completely different names.
+  concept_tags: [errors, print]
 - id: q076
   question: What happens if you write true instead of True in your code?
   options:
@@ -699,6 +774,7 @@ questions:
   - It becomes an empty string
   correct: 0
   explanation: Python's boolean values must start with a capital letter -- lowercase true isn't recognized as anything.
+  concept_tags: [booleans, errors]
 - id: q077
   question: 'What happens when you run print("Score: " + 5)?'
   options:
@@ -708,6 +784,7 @@ questions:
   - It prints just 5
   correct: 0
   explanation: + only joins two strings together -- mixing a string with a plain number causes a TypeError.
+  concept_tags: [strings, numbers, errors]
 - id: q078
   question: Which of these lines has a syntax error?
   options:
@@ -717,6 +794,7 @@ questions:
   - print("Hi" )
   correct: 0
   explanation: That line is missing its closing quote, so Python can't tell where the text ends.
+  concept_tags: [errors]
 - id: q079
   question: What does print(10 / 2) show?
   options:
@@ -726,6 +804,7 @@ questions:
   - Error
   correct: 0
   explanation: The / operator always produces a decimal (float) result in Python, even when the numbers divide evenly.
+  concept_tags: [numbers, expressions]
 - id: q080
   question: What does len("") return for an empty string?
   options:
@@ -735,6 +814,7 @@ questions:
   - Error
   correct: 0
   explanation: An empty string has no characters in it, so its length is 0.
+  concept_tags: [strings]
 - id: q081
   question: Is an empty string "" treated as True or False when used as a yes/no condition?
   options:
@@ -744,6 +824,7 @@ questions:
   - Neither -- it's ignored
   correct: 0
   explanation: Python treats empty text as False, while any text with at least one character counts as True.
+  concept_tags: [strings, booleans]
 - id: q082
   question: What's the main difference between an int and a float in Python?
   options:
@@ -753,6 +834,7 @@ questions:
   - There is no difference
   correct: 0
   explanation: int stores whole numbers like 7, while float stores numbers with a decimal part like 7.5.
+  concept_tags: [numbers]
 - id: q083
   question: Which of these values is stored as a string, not a number?
   options:
@@ -762,6 +844,7 @@ questions:
   - 'True'
   correct: 0
   explanation: Quote marks make a value text, even if the text happens to look like a number.
+  concept_tags: [strings, numbers]
 - id: q084
   question: According to how the app describes it, what is a computer program at its core?
   options:
@@ -771,6 +854,7 @@ questions:
   - A file that only contains numbers
   correct: 0
   explanation: A program is simply a sequence of steps written so the computer can carry them out in order.
+  concept_tags: []
 - id: q085
   question: Why does print need parentheses () right after it, like print("Hi")?
   options:
@@ -780,6 +864,7 @@ questions:
   - They tell Python to save the text instead of showing it
   correct: 0
   explanation: Parentheses after a function name hold the information you're handing it -- here, the text to display.
+  concept_tags: [print]
 - id: q086
   question: Does adding a blank line between two print() statements cause an error?
   options:
@@ -789,6 +874,7 @@ questions:
   - No, but it skips the next print() call
   correct: 0
   explanation: Python skips over empty lines -- they don't affect how the program runs.
+  concept_tags: [print]
 - id: q087
   question: What does print("5" + "5") show?
   options:
@@ -798,6 +884,7 @@ questions:
   - Error
   correct: 0
   explanation: Since both values are strings, + joins them as text instead of adding them as numbers.
+  concept_tags: [strings]
 - id: q088
   question: Which of these is written as a comment on its own line?
   options:
@@ -807,6 +894,7 @@ questions:
   - -- reminder to self
   correct: 0
   explanation: 'A line that starts with # is a comment -- Python won''t try to run it as code.'
+  concept_tags: [comments]
 - id: q089
   question: After age = 9 and name = "9", are age and name storing the same kind of value?
   options:
@@ -816,6 +904,7 @@ questions:
   - Yes, because 9 always means a number
   correct: 0
   explanation: Even though they look similar, the quotes around "9" make it a string, while age = 9 stores a plain number.
+  concept_tags: [variables, numbers, strings]
 - id: q090
   question: What does print("Hello" == "hello") show?
   options:
@@ -825,6 +914,7 @@ questions:
   - Error
   correct: 0
   explanation: Python treats uppercase and lowercase letters as different characters, so the two strings aren't equal.
+  concept_tags: [strings, comparison]
 - id: q091
   question: Which best describes what a variable is in Python?
   options:
@@ -834,6 +924,7 @@ questions:
   - A value that can never change once written
   correct: 0
   explanation: A variable is a name you give to a value so your program can remember and reuse it.
+  concept_tags: [variables]
 - id: q092
   question: In Python, why is = called an assignment operator instead of "equals"?
   options:
@@ -843,6 +934,7 @@ questions:
   - It deletes whatever a variable was holding
   correct: 0
   explanation: = assigns (stores) a value in a variable -- checking whether two things are equal is what == is for.
+  concept_tags: [variables, comparison]
 - id: q093
   question: 'What does this print?
 
@@ -858,6 +950,7 @@ questions:
   - Error
   correct: 0
   explanation: y = x copies whatever value x currently holds into y, so y also becomes 5.
+  concept_tags: [variables]
 - id: q094
   question: Which variable name is NOT allowed in Python?
   options:
@@ -867,6 +960,7 @@ questions:
   - _third
   correct: 0
   explanation: A variable name can't start with a digit -- Python would try to read 3rd as a number and get confused.
+  concept_tags: [naming]
 - id: q095
   question: Does Python treat score and Score as the same variable?
   options:
@@ -876,6 +970,7 @@ questions:
   - Only inside a function
   correct: 0
   explanation: Python is case-sensitive, so score and Score are two completely separate variables.
+  concept_tags: [naming, variables]
 - id: q096
   question: Which of these can't be used as a variable name, because it's a reserved Python keyword?
   options:
@@ -885,6 +980,7 @@ questions:
   - before
   correct: 0
   explanation: for is reserved for writing loops, so Python won't let you use it as a variable name.
+  concept_tags: [naming]
 - id: q097
   question: Can a variable name contain a space, like high score?
   options:
@@ -894,6 +990,7 @@ questions:
   - Only if it's the very first variable in the program
   correct: 0
   explanation: Python variable names can't contain spaces, so an underscore is used to join words instead.
+  concept_tags: [naming]
 - id: q098
   question: 'What does this print?
 
@@ -907,6 +1004,7 @@ questions:
   - Error
   correct: 0
   explanation: Multiple assignment matches values to names in order, so a gets 1 and b gets 2.
+  concept_tags: [variables]
 - id: q099
   question: 'What does this print?
 
@@ -920,6 +1018,7 @@ questions:
   - Error
   correct: 0
   explanation: Chaining = together assigns the same value, 5, to both variables in one line.
+  concept_tags: [variables]
 - id: q100
   question: 'What does this print?
 
@@ -933,6 +1032,7 @@ questions:
   - Error
   correct: 0
   explanation: x and y keep the values they were assigned -- printing y before x just changes the display order.
+  concept_tags: [variables]
 - id: q101
   question: 'What does this print?
 
@@ -948,6 +1048,7 @@ questions:
   - Error
   correct: 0
   explanation: a, b = b, a swaps the two values in one line, so a becomes 7 and b becomes 3.
+  concept_tags: [variables]
 - id: q102
   question: Why is writing a, b = b, a useful?
   options:
@@ -957,6 +1058,7 @@ questions:
   - It deletes both a and b
   correct: 0
   explanation: Python figures out both values on the right side first, so it can swap them directly in a single line.
+  concept_tags: [variables]
 - id: q103
   question: What does type(5) return?
   options:
@@ -966,6 +1068,7 @@ questions:
   - '5'
   correct: 0
   explanation: type() tells you what kind of value something is -- 5 is a whole number, so its type is int.
+  concept_tags: [numbers, type-conversion]
 - id: q104
   question: What does type(5.0) return?
   options:
@@ -975,6 +1078,7 @@ questions:
   - '5.0'
   correct: 0
   explanation: A number written with a decimal point, even .0, is a float in Python.
+  concept_tags: [numbers, type-conversion]
 - id: q105
   question: If word = "cat", what does type(word) return?
   options:
@@ -984,6 +1088,7 @@ questions:
   - cat
   correct: 0
   explanation: Text stored in a variable is a string, so type() reports str.
+  concept_tags: [strings, type-conversion]
 - id: q106
   question: What does the type() function help you do?
   options:
@@ -993,6 +1098,7 @@ questions:
   - Delete a variable you no longer need
   correct: 0
   explanation: type() looks at a value and tells you which category, like int or str, it belongs to.
+  concept_tags: [type-conversion]
 - id: q107
   question: 'What does this print?
 
@@ -1006,6 +1112,7 @@ questions:
   - 'True'
   correct: 0
   explanation: True and False are boolean values, so type() reports bool.
+  concept_tags: [booleans, type-conversion]
 - id: q108
   question: What does int("5") do?
   options:
@@ -1015,6 +1122,7 @@ questions:
   - Causes an error, since "5" is text
   correct: 0
   explanation: int() can turn text that looks like a whole number into an actual number Python can do math with.
+  concept_tags: [type-conversion]
 - id: q109
   question: What does float("3.14") do?
   options:
@@ -1024,6 +1132,7 @@ questions:
   - Causes an error, because of the decimal point
   correct: 0
   explanation: float() converts text into a decimal number, as long as the text looks like a valid number.
+  concept_tags: [type-conversion]
 - id: q110
   question: Why would you write str(score) before joining score with other text using +?
   options:
@@ -1033,6 +1142,7 @@ questions:
   - Because score is already stored as text
   correct: 0
   explanation: Trying to + a number and text raises an error -- str() turns the number into text first so they can join.
+  concept_tags: [type-conversion, strings]
 - id: q111
   question: What does int(3.9) give you?
   options:
@@ -1042,6 +1152,7 @@ questions:
   - Error
   correct: 0
   explanation: int() converts a float by cutting off everything after the decimal point, not by rounding.
+  concept_tags: [type-conversion, numbers]
 - id: q112
   question: What does bool(0) evaluate to?
   options:
@@ -1051,6 +1162,7 @@ questions:
   - Error
   correct: 0
   explanation: 0 is treated as False when converted to a boolean -- every other number converts to True.
+  concept_tags: [type-conversion, booleans]
 - id: q113
   question: What does int(True) give you?
   options:
@@ -1060,6 +1172,7 @@ questions:
   - Error
   correct: 0
   explanation: Booleans are secretly numbers underneath -- True converts to 1 and False converts to 0.
+  concept_tags: [type-conversion, booleans]
 - id: q114
   question: What happens if you run int("hello")?
   options:
@@ -1069,6 +1182,7 @@ questions:
   - Nothing happens, and hello is printed
   correct: 0
   explanation: int() can only convert text that actually looks like a whole number -- other text raises an error.
+  concept_tags: [type-conversion, errors]
 - id: q115
   question: 'What does this print?
 
@@ -1084,6 +1198,7 @@ questions:
   - 5five
   correct: 0
   explanation: Python lets a variable be reassigned to a completely different type -- the newest value always wins.
+  concept_tags: [variables]
 - id: q116
   question: After x = 5 and then x = "five", what does type(x) report?
   options:
@@ -1093,6 +1208,7 @@ questions:
   - Error
   correct: 0
   explanation: A variable's type is whatever its current value is -- reassigning it to text makes it a string now.
+  concept_tags: [variables, type-conversion]
 - id: q117
   question: Can the same variable hold a number at one point in a program and text later on?
   options:
@@ -1102,6 +1218,7 @@ questions:
   - Only if the variable is inside a function
   correct: 0
   explanation: Python doesn't lock a variable to one type -- reassigning it can change both its value and its type.
+  concept_tags: [variables]
 - id: q118
   question: 'What does this print?
 
@@ -1119,6 +1236,7 @@ questions:
   - 1 2 3
   correct: 0
   explanation: Each reassignment replaces the value before it, so only the final one, 3, is left when count is printed.
+  concept_tags: [variables]
 - id: q119
   question: What is an augmented assignment operator like += used for?
   options:
@@ -1128,6 +1246,7 @@ questions:
   - Deleting a variable from memory
   correct: 0
   explanation: Operators like += do the math and store the result back into the variable, all in one line.
+  concept_tags: [variables, expressions]
 - id: q120
   question: What does the /= operator do?
   options:
@@ -1137,6 +1256,7 @@ questions:
   - Divides and always rounds down to a whole number
   correct: 0
   explanation: score /= 2 is shorthand for score = score / 2.
+  concept_tags: [variables, expressions]
 - id: q121
   question: 'What does this print?
 
@@ -1152,6 +1272,7 @@ questions:
   - '4.0'
   correct: 0
   explanation: / always produces a decimal (float) result, even when the numbers divide evenly, so /= does too.
+  concept_tags: [variables, expressions]
 - id: q122
   question: 'What does this print?
 
@@ -1169,6 +1290,7 @@ questions:
   - Error
   correct: 0
   explanation: 'The operators run in order: 10 * 3 makes 30, then 30 - 5 makes 25.'
+  concept_tags: [variables, expressions]
 - id: q123
   question: What is the shortcut form of lives = lives - 1?
   options:
@@ -1178,6 +1300,7 @@ questions:
   - lives .- 1
   correct: 0
   explanation: -= subtracts a value from the variable and saves the result straight back into it.
+  concept_tags: [variables, expressions]
 - id: q124
   question: If you accidentally write x =+ 5 instead of x += 5, what happens?
   options:
@@ -1187,6 +1310,7 @@ questions:
   - x is decreased by 5 instead
   correct: 0
   explanation: =+ isn't a real operator -- Python reads it as = followed by the number +5, so x just becomes 5.
+  concept_tags: [variables, errors]
 - id: q125
   question: 'What does this print?
 
@@ -1204,6 +1328,7 @@ questions:
   - '9'
   correct: 0
   explanation: '*= doubles score to 6 first, then += 1 adds one more, making 7.'
+  concept_tags: [variables, expressions]
 - id: q126
   question: What does print(2 + 3 * 4) show?
   options:
@@ -1213,6 +1338,7 @@ questions:
   - '9'
   correct: 0
   explanation: Python does multiplication before addition, so 3 * 4 happens first, then 2 is added.
+  concept_tags: [numbers, expressions]
 - id: q127
   question: What does print((2 + 3) * 4) show?
   options:
@@ -1222,6 +1348,7 @@ questions:
   - '24'
   correct: 0
   explanation: Parentheses run first, so 2 + 3 becomes 5 before it's multiplied by 4.
+  concept_tags: [numbers, expressions]
 - id: q128
   question: What does print(3 - 10) show?
   options:
@@ -1231,6 +1358,7 @@ questions:
   - '13'
   correct: 0
   explanation: Subtracting a bigger number from a smaller one gives a negative answer.
+  concept_tags: [numbers, expressions]
 - id: q129
   question: What does print(-4 * 3) show?
   options:
@@ -1240,6 +1368,7 @@ questions:
   - '-1'
   correct: 0
   explanation: A negative number times a positive number gives a negative result.
+  concept_tags: [numbers, expressions]
 - id: q130
   question: What does print(-10 / 4) show?
   options:
@@ -1249,6 +1378,7 @@ questions:
   - '-3.0'
   correct: 0
   explanation: / always gives a decimal answer, and dividing a negative number keeps the result negative.
+  concept_tags: [numbers, expressions]
 - id: q131
   question: What does print(-7 // 2) show?
   options:
@@ -1258,6 +1388,7 @@ questions:
   - '3'
   correct: 0
   explanation: // always rounds down toward negative infinity, so -3.5 rounds down to -4, not up to -3.
+  concept_tags: [numbers, expressions]
 - id: q132
   question: What does print(-7 % 2) show?
   options:
@@ -1267,6 +1398,7 @@ questions:
   - '-3'
   correct: 0
   explanation: In Python, the result of % always matches the sign of the second number, so it comes out positive here.
+  concept_tags: [numbers, expressions]
 - id: q133
   question: What does print(abs(-8)) show?
   options:
@@ -1276,6 +1408,7 @@ questions:
   - '64'
   correct: 0
   explanation: abs() strips away the negative sign and returns the distance from zero.
+  concept_tags: [numbers, expressions]
 - id: q134
   question: What does print(min(4, 9, 2)) show?
   options:
@@ -1285,6 +1418,7 @@ questions:
   - '15'
   correct: 0
   explanation: min() looks through all the values given and returns the smallest one.
+  concept_tags: [numbers, expressions]
 - id: q135
   question: What does print(max(2, 9, 4)) show?
   options:
@@ -1294,6 +1428,7 @@ questions:
   - '15'
   correct: 0
   explanation: max() looks through all the values given and returns the largest one.
+  concept_tags: [numbers, expressions]
 - id: q136
   question: What does print(round(3.7)) show?
   options:
@@ -1303,6 +1438,7 @@ questions:
   - '4.0'
   correct: 0
   explanation: round() rounds to the nearest whole number, and 3.7 is closer to 4 than to 3.
+  concept_tags: [numbers, expressions]
 - id: q137
   question: What does print(round(2.5)) show?
   options:
@@ -1312,6 +1448,7 @@ questions:
   - '2.0'
   correct: 0
   explanation: Python rounds an exact .5 to the nearest even number, so 2.5 rounds down to 2.
+  concept_tags: [numbers, expressions]
 - id: q138
   question: What does print(round(-2.5)) show?
   options:
@@ -1321,6 +1458,7 @@ questions:
   - '2'
   correct: 0
   explanation: The same round-to-even rule applies to negative numbers, so -2.5 rounds to -2, the nearest even number.
+  concept_tags: [numbers, expressions]
 - id: q139
   question: What does print(round(3.14159, 2)) show?
   options:
@@ -1330,6 +1468,7 @@ questions:
   - '3.142'
   correct: 0
   explanation: Giving round() a second number tells it how many decimal places to keep.
+  concept_tags: [numbers, expressions]
 - id: q140
   question: What does print(5 <= 5) show?
   options:
@@ -1339,6 +1478,7 @@ questions:
   - Error
   correct: 0
   explanation: <= means "less than or equal to," and since the two values are equal, this is True.
+  concept_tags: [comparison]
 - id: q141
   question: What does print(3 >= 7) show?
   options:
@@ -1348,6 +1488,7 @@ questions:
   - Error
   correct: 0
   explanation: 3 is not greater than or equal to 7, so the comparison is False.
+  concept_tags: [comparison]
 - id: q142
   question: What does print(8 < 8) show?
   options:
@@ -1357,6 +1498,7 @@ questions:
   - Error
   correct: 0
   explanation: < means strictly less than, so a number is never less than itself.
+  concept_tags: [comparison]
 - id: q143
   question: What does print(0.1 + 0.2) show?
   options:
@@ -1366,6 +1508,7 @@ questions:
   - '0.30000000000000002'
   correct: 0
   explanation: Computers store decimals in binary, so some simple-looking sums come out with a tiny rounding error.
+  concept_tags: [numbers, expressions]
 - id: q144
   question: What does print(2 + 3 ** 2) show?
   options:
@@ -1375,6 +1518,7 @@ questions:
   - '13'
   correct: 0
   explanation: '** happens before +, so 3 ** 2 becomes 9 first, then 2 is added.'
+  concept_tags: [numbers, expressions]
 - id: q145
   question: What does print(10 - 4 // 2) show?
   options:
@@ -1384,6 +1528,7 @@ questions:
   - '6'
   correct: 0
   explanation: // happens before -, so 4 // 2 becomes 2 first, then it's subtracted from 10.
+  concept_tags: [numbers, expressions]
 - id: q146
   question: What does print(1 < 2 < 3) show?
   options:
@@ -1393,6 +1538,7 @@ questions:
   - Error
   correct: 0
   explanation: Python can chain comparisons -- this checks both 1 < 2 and 2 < 3, and both are true.
+  concept_tags: [comparison]
 - id: q147
   question: What does print(-2 ** 2) show?
   options:
@@ -1402,6 +1548,7 @@ questions:
   - '2'
   correct: 0
   explanation: '** happens before the unary minus, so this is -(2 ** 2), which is -4.'
+  concept_tags: [numbers, expressions]
 - id: q148
   question: What does print((-2) ** 2) show?
   options:
@@ -1411,6 +1558,7 @@ questions:
   - '-2'
   correct: 0
   explanation: The parentheses make Python square -2 itself, and a negative times a negative gives a positive result.
+  concept_tags: [numbers, expressions]
 - id: q149
   question: What does print(6 % 6) show?
   options:
@@ -1420,6 +1568,7 @@ questions:
   - '36'
   correct: 0
   explanation: A number divides evenly into itself, leaving no remainder.
+  concept_tags: [numbers, expressions]
 - id: q150
   question: What does print(7.0 // 2) show?
   options:
@@ -1429,6 +1578,7 @@ questions:
   - '4.0'
   correct: 0
   explanation: Floor division still rounds down to a whole number, but keeps the decimal point when one of the numbers is already a float.
+  concept_tags: [numbers, expressions]
 - id: q151
   question: What does print(2.5 + 1.5) show?
   options:
@@ -1438,6 +1588,7 @@ questions:
   - '3.0'
   correct: 0
   explanation: Adding two floats always gives a float back, even when the answer is a whole number like 4.
+  concept_tags: [numbers, expressions]
 - id: q152
   question: What does print(0.5 * 4) show?
   options:
@@ -1447,6 +1598,7 @@ questions:
   - '0.5'
   correct: 0
   explanation: Multiplying a float by a whole number still gives a float result.
+  concept_tags: [numbers, expressions]
 - id: q153
   question: What does print(min(-3, -7)) show?
   options:
@@ -1456,6 +1608,7 @@ questions:
   - '7'
   correct: 0
   explanation: -7 is further from zero in the negative direction, which makes it the smaller of the two numbers.
+  concept_tags: [numbers, expressions]
 - id: q154
   question: What does print(max(-3, -7)) show?
   options:
@@ -1465,6 +1618,7 @@ questions:
   - '7'
   correct: 0
   explanation: -3 is closer to zero than -7, which makes it the larger of the two numbers.
+  concept_tags: [numbers, expressions]
 - id: q155
   question: What does print(abs(-3.5)) show?
   options:
@@ -1474,6 +1628,7 @@ questions:
   - '4'
   correct: 0
   explanation: abs() removes the negative sign but keeps the decimal part exactly as it was.
+  concept_tags: [numbers, expressions]
 - id: q156
   question: What does print(5 + 2 * 3 - 1) show?
   options:
@@ -1483,6 +1638,7 @@ questions:
   - '6'
   correct: 0
   explanation: 'Multiplication happens first (2 * 3 = 6), then the additions and subtractions run left to right: 5 + 6 - 1 = 10.'
+  concept_tags: [numbers, expressions]
 - id: q157
   question: What does print(20 // 3) show?
   options:
@@ -1492,6 +1648,7 @@ questions:
   - '2'
   correct: 0
   explanation: 20 divided by 3 is 6 with some left over, and // keeps only the whole-number part.
+  concept_tags: [numbers, expressions]
 - id: q158
   question: What does print(20 % 3) show?
   options:
@@ -1501,6 +1658,7 @@ questions:
   - '3'
   correct: 0
   explanation: 20 divided by 3 is 6 groups with 2 left over, and % gives you that leftover.
+  concept_tags: [numbers, expressions]
 - id: q159
   question: What does print(9 ** 0.5) show?
   options:
@@ -1510,6 +1668,7 @@ questions:
   - '3'
   correct: 0
   explanation: Raising a number to the power of 0.5 is the same as taking its square root.
+  concept_tags: [numbers, expressions]
 - id: q160
   question: What does print(2 ** 10) show?
   options:
@@ -1519,6 +1678,7 @@ questions:
   - '512'
   correct: 0
   explanation: '** multiplies 2 by itself ten times, and the result doubles each time you add one more power.'
+  concept_tags: [numbers, expressions]
 - id: q161
   question: What does print("Py" + "thon") show?
   options:
@@ -1528,6 +1688,7 @@ questions:
   - An error
   correct: 0
   explanation: + joins strings together exactly as written, with no space added automatically -- "Py" and "thon" become "Python".
+  concept_tags: [strings]
 - id: q162
   question: 'How do you fix print("Score: " + 5) so it doesn''t cause an error?'
   options:
@@ -1537,6 +1698,7 @@ questions:
   - 'print("Score: " * 5)'
   correct: 0
   explanation: str(5) turns the number into text first, so it can safely join with another string using +.
+  concept_tags: [strings, type-conversion]
 - id: q163
   question: What does print("a" + "b" + "c") show?
   options:
@@ -1546,6 +1708,7 @@ questions:
   - c
   correct: 0
   explanation: You can chain + as many times as you like -- each string gets joined onto the end of the last one.
+  concept_tags: [strings]
 - id: q164
   question: Which line prints Good morning with a space between the words, using +?
   options:
@@ -1555,6 +1718,7 @@ questions:
   - print("Good" - "morning")
   correct: 0
   explanation: + only joins exactly what you give it -- to get a space between two words, you have to include " " as its own piece.
+  concept_tags: [strings]
 - id: q165
   question: What does print("=" * 5) show?
   options:
@@ -1564,6 +1728,7 @@ questions:
   - An error
   correct: 0
   explanation: Multiplying a string by a number repeats that string that many times, with nothing extra added in between.
+  concept_tags: [strings]
 - id: q166
   question: What does print("ab" * 2) show?
   options:
@@ -1573,6 +1738,7 @@ questions:
   - aabb
   correct: 0
   explanation: '"ab" * 2 repeats the whole string "ab" two times in a row.'
+  concept_tags: [strings]
 - id: q167
   question: What does print("wow" * 0) show?
   options:
@@ -1582,6 +1748,7 @@ questions:
   - An error
   correct: 0
   explanation: Repeating a string zero times gives you an empty string, so print shows a blank line.
+  concept_tags: [strings]
 - id: q168
   question: Can you multiply two strings together, like "cat" * "dog"?
   options:
@@ -1591,6 +1758,7 @@ questions:
   - Yes, it repeats each letter twice
   correct: 0
   explanation: The * operator for strings needs a number to know how many times to repeat -- it can't multiply two pieces of text together.
+  concept_tags: [strings, errors]
 - id: q169
   question: What does len("") return?
   options:
@@ -1600,6 +1768,7 @@ questions:
   - An error
   correct: 0
   explanation: An empty string has no characters in it at all, so its length is 0.
+  concept_tags: [strings]
 - id: q170
   question: What does len("Coding") return?
   options:
@@ -1609,6 +1778,7 @@ questions:
   - Coding
   correct: 0
   explanation: len() counts every letter in the string, and C-o-d-i-n-g has 6 letters.
+  concept_tags: [strings]
 - id: q171
   question: What does len("Hi there") return?
   options:
@@ -1618,6 +1788,7 @@ questions:
   - '2'
   correct: 0
   explanation: len() counts the space too, not just the letters -- H-i-space-t-h-e-r-e adds up to 8 characters.
+  concept_tags: [strings]
 - id: q172
   question: What does "cat"[0] give you?
   options:
@@ -1627,6 +1798,7 @@ questions:
   - cat
   correct: 0
   explanation: Python counts positions starting at 0, so index 0 is the very first character.
+  concept_tags: [strings, indexing]
 - id: q173
   question: What does "hello"[1] give you?
   options:
@@ -1636,6 +1808,7 @@ questions:
   - '1'
   correct: 0
   explanation: Counting from 0, position 1 is the second letter of "hello", which is e.
+  concept_tags: [strings, indexing]
 - id: q174
   question: If word = "dog", what does word[2] give you?
   options:
@@ -1645,6 +1818,7 @@ questions:
   - dog
   correct: 0
   explanation: d is at index 0, o is at index 1, and g is at index 2 -- Python starts counting from 0.
+  concept_tags: [strings, indexing]
 - id: q175
   question: What is the index number of the very first letter in a string?
   options:
@@ -1654,6 +1828,7 @@ questions:
   - It depends on the string
   correct: 0
   explanation: Python always starts indexing at 0, so the first character in any string is at position 0.
+  concept_tags: [strings, indexing]
 - id: q176
   question: What does "Python"[4] give you?
   options:
@@ -1663,6 +1838,7 @@ questions:
   - P
   correct: 0
   explanation: Counting from 0, the letters of "Python" are P(0) y(1) t(2) h(3) o(4) n(5), so index 4 is o.
+  concept_tags: [strings, indexing]
 - id: q177
   question: What happens if you run "cat"[5], where 5 is bigger than the last valid index?
   options:
@@ -1672,6 +1848,7 @@ questions:
   - It shows "cat"
   correct: 0
   explanation: '"cat" only has indexes 0, 1, and 2 -- asking for index 5 goes past the end and causes an error.'
+  concept_tags: [strings, indexing, errors]
 - id: q178
   question: What does print("HELLO".lower()) show?
   options:
@@ -1681,6 +1858,7 @@ questions:
   - hELLO
   correct: 0
   explanation: .lower() turns every letter in the string into its lowercase version.
+  concept_tags: [strings]
 - id: q179
   question: What does print("Hi There".lower()) show?
   options:
@@ -1690,6 +1868,7 @@ questions:
   - hi There
   correct: 0
   explanation: .lower() changes every letter to lowercase, including the ones that started out capitalized.
+  concept_tags: [strings]
 - id: q180
   question: If text = "Hi" and you run text.upper(), does the value stored in text change?
   options:
@@ -1699,6 +1878,7 @@ questions:
   - No, and .upper() also doesn't produce anything at all
   correct: 0
   explanation: String methods like .upper() don't change the original string -- they return a brand new one, so you'd need to store it in a variable to keep it.
+  concept_tags: [strings]
 - id: q181
   question: What does print("  hi  ".strip()) show?
   options:
@@ -1708,6 +1888,7 @@ questions:
   - 'hi  '
   correct: 0
   explanation: .strip() removes extra spaces from both the start and the end of a string, but leaves spaces in the middle alone.
+  concept_tags: [strings]
 - id: q182
   question: What is the .strip() method mainly used for?
   options:
@@ -1717,6 +1898,7 @@ questions:
   - Cutting a string in half
   correct: 0
   explanation: strip() is a cleanup tool -- it trims stray spaces off the edges of text, which is handy after someone types an answer.
+  concept_tags: [strings]
 - id: q183
   question: What does print("cat".replace("c", "b")) show?
   options:
@@ -1726,6 +1908,7 @@ questions:
   - b
   correct: 0
   explanation: .replace() swaps every match of the first piece of text for the second, so the c becomes b.
+  concept_tags: [strings]
 - id: q184
   question: What does print("I like dogs".replace("dogs", "cats")) show?
   options:
@@ -1735,6 +1918,7 @@ questions:
   - I like dogscats
   correct: 0
   explanation: .replace() finds "dogs" in the sentence and swaps it out for "cats", leaving the rest unchanged.
+  concept_tags: [strings]
 - id: q185
   question: What does print("a b c".split()) show?
   options:
@@ -1744,6 +1928,7 @@ questions:
   - abc
   correct: 0
   explanation: .split() breaks a string apart wherever there's a space, giving you back a list of the pieces.
+  concept_tags: [strings]
 - id: q186
   question: What does the .split() method do to a string, by default?
   options:
@@ -1753,6 +1938,7 @@ questions:
   - Joins its letters with spaces
   correct: 0
   explanation: Without telling it otherwise, .split() looks for spaces and uses them as the dividing points between words.
+  concept_tags: [strings]
 - id: q187
   question: What does print("hello world".title()) show?
   options:
@@ -1762,6 +1948,7 @@ questions:
   - Hello world
   correct: 0
   explanation: .title() capitalizes the first letter of every word in the string.
+  concept_tags: [strings]
 - id: q188
   question: What does print("banana".count("a")) show?
   options:
@@ -1771,6 +1958,7 @@ questions:
   - '1'
   correct: 0
   explanation: .count() tells you how many times a piece of text appears -- "banana" has three a's.
+  concept_tags: [strings]
 - id: q189
   question: What does print("mississippi".count("s")) show?
   options:
@@ -1780,6 +1968,7 @@ questions:
   - '5'
   correct: 0
   explanation: Counting each s in "mississippi" one at a time gives four matches.
+  concept_tags: [strings]
 - id: q190
   question: 'What does this print?
 
@@ -1793,6 +1982,7 @@ questions:
   - f"Hi Max!"
   correct: 0
   explanation: An f-string swaps out {name} for the value stored in the name variable, giving you Hi Max!.
+  concept_tags: [f-strings]
 - id: q191
   question: In an f-string, what do the curly braces {} do?
   options:
@@ -1802,6 +1992,7 @@ questions:
   - Cause an error if used
   correct: 0
   explanation: Anything placed inside {} in an f-string gets swapped out for its actual value when the string is printed.
+  concept_tags: [f-strings]
 - id: q192
   question: Which letter must come right before the opening quote to make a string an f-string?
   options:
@@ -1811,6 +2002,7 @@ questions:
   - x
   correct: 0
   explanation: Writing f right before the quote tells Python to look inside the string for {} and fill them in with real values.
+  concept_tags: [f-strings]
 - id: q193
   question: 'What does this print?
 
@@ -1824,6 +2016,7 @@ questions:
   - '10'
   correct: 0
   explanation: The f-string replaces {age} with the value stored in age, which is 10.
+  concept_tags: [f-strings]
 - id: q194
   question: 'What does print("Age: " + str(12)) show?'
   options:
@@ -1833,6 +2026,7 @@ questions:
   - Age:12
   correct: 0
   explanation: str(12) turns the number 12 into the text "12", so it can be safely joined with another string using +.
+  concept_tags: [strings, type-conversion]
 - id: q195
   question: What kind of value does str(3.5) return?
   options:
@@ -1842,6 +2036,7 @@ questions:
   - A boolean
   correct: 0
   explanation: str() converts whatever you give it into text, so str(3.5) produces the string "3.5", not a number anymore.
+  concept_tags: [type-conversion, strings]
 - id: q196
   question: In an if/elif/else chain, what happens once one condition is found to be True?
   options:
@@ -1851,6 +2046,7 @@ questions:
   - Python runs only the else block
   correct: 0
   explanation: As soon as Python finds a True condition, it runs that block and moves on -- the rest of the elif/else chain is skipped.
+  concept_tags: [conditionals]
 - id: q197
   question: "What does this print?\nscore = 75\nif score >= 90:\n    print(\"A\")\nelif score >= 70:\n    print(\"B\")\nelse:\n    print(\"C\")"
   options:
@@ -1860,6 +2056,7 @@ questions:
   - Nothing
   correct: 0
   explanation: score >= 90 is False, but score >= 70 is True, so the elif branch runs and prints B.
+  concept_tags: [conditionals, comparison]
 - id: q198
   question: What does the >= operator check?
   options:
@@ -1869,6 +2066,7 @@ questions:
   - Whether the left value is less than the right value
   correct: 0
   explanation: '>= is true when the left side is bigger than the right side, or exactly the same.'
+  concept_tags: [comparison]
 - id: q199
   question: What does the <= operator check?
   options:
@@ -1878,6 +2076,7 @@ questions:
   - Whether the left value is greater than the right value
   correct: 0
   explanation: <= is true when the left side is smaller than the right side, or exactly the same.
+  concept_tags: [comparison]
 - id: q200
   question: For a condition using and to be True, what must happen?
   options:
@@ -1887,6 +2086,7 @@ questions:
   - Neither condition needs to be True
   correct: 0
   explanation: and only produces True when both sides are True -- if either side is False, the whole thing is False.
+  concept_tags: [booleans, conditionals]
 - id: q201
   question: For a condition using or to be True, what must happen?
   options:
@@ -1896,6 +2096,7 @@ questions:
   - The first condition must be False
   correct: 0
   explanation: or produces True as long as one side (or both) is True.
+  concept_tags: [booleans, conditionals]
 - id: q202
   question: What does the not operator do to a boolean value?
   options:
@@ -1905,6 +2106,7 @@ questions:
   - Combines two separate conditions
   correct: 0
   explanation: not reverses a boolean -- True becomes False and False becomes True.
+  concept_tags: [booleans]
 - id: q203
   question: What does print(True and False) show?
   options:
@@ -1914,6 +2116,7 @@ questions:
   - None
   correct: 0
   explanation: and needs both sides to be True, but here one side is False, so the result is False.
+  concept_tags: [booleans]
 - id: q204
   question: What does print(True or False) show?
   options:
@@ -1923,6 +2126,7 @@ questions:
   - None
   correct: 0
   explanation: or only needs one side to be True, and the first side here is True, so the result is True.
+  concept_tags: [booleans]
 - id: q205
   question: What does print(not True) show?
   options:
@@ -1932,6 +2136,7 @@ questions:
   - None
   correct: 0
   explanation: not flips True into its opposite, False.
+  concept_tags: [booleans]
 - id: q206
   question: Which of these values is "falsy" when used as an if condition?
   options:
@@ -1941,6 +2146,7 @@ questions:
   - '"False" (the word False as text)'
   correct: 0
   explanation: An empty string has no characters, so Python treats it as falsy -- any non-empty string, even "0", is truthy.
+  concept_tags: [booleans, strings]
 - id: q207
   question: Which number is "falsy" when used as an if condition?
   options:
@@ -1950,6 +2156,7 @@ questions:
   - '100'
   correct: 0
   explanation: 0 is the only falsy number -- every other number, positive or negative, counts as truthy.
+  concept_tags: [booleans, numbers]
 - id: q208
   question: Which of these is "falsy" in Python?
   options:
@@ -1959,6 +2166,7 @@ questions:
   - '[None] (a list holding None)'
   correct: 0
   explanation: An empty list has no items, so it's falsy -- a list that contains something, even a falsy value like 0, is still truthy.
+  concept_tags: [booleans, lists]
 - id: q209
   question: Is None considered truthy or falsy when used in an if statement?
   options:
@@ -1968,6 +2176,7 @@ questions:
   - It depends on the variable's name
   correct: 0
   explanation: None represents "nothing," so Python treats it as falsy.
+  concept_tags: [booleans]
 - id: q210
   question: What is a "nested" if statement?
   options:
@@ -1977,6 +2186,7 @@ questions:
   - An if statement written all on one line
   correct: 0
   explanation: Nesting means putting one if statement's whole block inside another if's block, so the inner check only happens if the outer one passed.
+  concept_tags: [conditionals]
 - id: q211
   question: "What does this print?\nx = 10\nif x > 5:\n    if x > 8:\n        print(\"big\")\n    else:\n        print(\"medium\")\nelse:\n    print(\"small\")"
   options:
@@ -1986,6 +2196,7 @@ questions:
   - Nothing
   correct: 0
   explanation: 'x > 5 is True, so Python checks the inner if: x > 8 is also True, so it prints big.'
+  concept_tags: [conditionals]
 - id: q212
   question: What's the key difference between an elif chain and two separate if statements?
   options:
@@ -1995,6 +2206,7 @@ questions:
   - elif can only appear once in an entire program
   correct: 0
   explanation: elif links conditions together so Python stops at the first match, while separate ifs are unrelated checks that can all run.
+  concept_tags: [conditionals]
 - id: q213
   question: What does "cat" == "cat" evaluate to?
   options:
@@ -2004,6 +2216,7 @@ questions:
   - cat
   correct: 0
   explanation: Both strings have the exact same letters in the same order, so == says they're equal.
+  concept_tags: [strings, comparison]
 - id: q214
   question: What does "Cat" == "cat" evaluate to?
   options:
@@ -2013,6 +2226,7 @@ questions:
   - cat
   correct: 0
   explanation: Python compares text case-sensitively, so a capital C makes the strings different.
+  concept_tags: [strings, comparison]
 - id: q215
   question: What does 5 == "5" evaluate to?
   options:
@@ -2022,6 +2236,7 @@ questions:
   - '5'
   correct: 0
   explanation: The number 5 and the text "5" are different data types, so Python considers them not equal.
+  concept_tags: [comparison, type-conversion]
 - id: q216
   question: What does 1 < 5 < 10 evaluate to?
   options:
@@ -2031,6 +2246,7 @@ questions:
   - '5'
   correct: 0
   explanation: Python lets you chain comparisons -- it checks that 5 is bigger than 1 and smaller than 10, and both are true.
+  concept_tags: [comparison]
 - id: q217
   question: What does 10 < 5 < 20 evaluate to?
   options:
@@ -2040,6 +2256,7 @@ questions:
   - '5'
   correct: 0
   explanation: 10 < 5 is already False, so the whole chained comparison is False, no matter what comes after.
+  concept_tags: [comparison]
 - id: q218
   question: In the expression not True and False, which operator does Python apply first?
   options:
@@ -2049,6 +2266,7 @@ questions:
   - Python requires parentheses before it can decide
   correct: 0
   explanation: not binds tighter than and, so Python flips True to False first, then applies and.
+  concept_tags: [booleans]
 - id: q219
   question: In a condition like A or B, if A is already True, what does Python do with B?
   options:
@@ -2058,6 +2276,7 @@ questions:
   - It checks B before A
   correct: 0
   explanation: or short-circuits -- once one side is True, the overall result is True, so there's no need to check the rest.
+  concept_tags: [booleans]
 - id: q220
   question: In a condition like A and B, if A is already False, what does Python do with B?
   options:
@@ -2067,6 +2286,7 @@ questions:
   - It automatically makes the whole condition True
   correct: 0
   explanation: and short-circuits -- once one side is False, the overall result must be False, so Python doesn't bother checking B.
+  concept_tags: [booleans]
 - id: q221
   question: What data type does an expression like 10 > 2 always produce?
   options:
@@ -2076,6 +2296,7 @@ questions:
   - A list
   correct: 0
   explanation: Comparisons always evaluate to one of the two boolean values, True or False.
+  concept_tags: [comparison, booleans]
 - id: q222
   question: "What does this print?\ntemp = 50\nif temp > 80:\n    print(\"hot\")\nelif temp > 60:\n    print(\"warm\")\nelif temp > 40:\n    print(\"cool\")\nelse:\n    print(\"cold\")"
   options:
@@ -2085,6 +2306,7 @@ questions:
   - cold
   correct: 0
   explanation: temp > 80 and temp > 60 are both False, but temp > 40 is True, so Python prints cool and stops there.
+  concept_tags: [conditionals, comparison]
 - id: q223
   question: Is the else part of an if statement required?
   options:
@@ -2094,6 +2316,7 @@ questions:
   - No, but only if there's no condition
   correct: 0
   explanation: else is optional -- if none of the conditions are True and there's no else, Python simply runs nothing.
+  concept_tags: [conditionals]
 - id: q224
   question: Can you write an elif without a preceding if statement?
   options:
@@ -2103,6 +2326,7 @@ questions:
   - Yes, but only inside a loop
   correct: 0
   explanation: elif means "else, if this instead" -- it only makes sense as part of a chain that starts with an if.
+  concept_tags: [conditionals]
 - id: q225
   question: What does 5 != 5 evaluate to?
   options:
@@ -2112,6 +2336,7 @@ questions:
   - '5'
   correct: 0
   explanation: 5 and 5 are equal, so asking whether they are NOT equal gives False.
+  concept_tags: [comparison]
 - id: q226
   question: Is the number 0.0 truthy or falsy when used as an if condition?
   options:
@@ -2121,6 +2346,7 @@ questions:
   - Only falsy inside loops
   correct: 0
   explanation: 0.0 is Python's decimal version of zero, and like the whole number 0, it counts as falsy.
+  concept_tags: [booleans, numbers]
 - id: q227
   question: If an if statement is nested inside another if's block, how is its code indented compared to the outer if?
   options:
@@ -2130,6 +2356,7 @@ questions:
   - Indentation doesn't matter for nested ifs
   correct: 0
   explanation: Each level of nesting adds one more indent, showing Python (and you!) which if a line belongs to.
+  concept_tags: [conditionals]
 - id: q228
   question: "What does this print?\nscore = 95\npassed = score >= 60\nif passed:\n    if score >= 90:\n        print(\"Honors\")\n    else:\n        print(\"Pass\")\nelse:\n    print(\"Fail\")"
   options:
@@ -2139,6 +2366,7 @@ questions:
   - Nothing
   correct: 0
   explanation: 'passed is True, so Python checks the inner if: score >= 90 is also True, so it prints Honors.'
+  concept_tags: [conditionals, booleans]
 - id: q229
   question: Which of these correctly checks whether the boolean variable is_raining is True?
   options:
@@ -2148,6 +2376,7 @@ questions:
   - 'when is_raining:'
   correct: 0
   explanation: A boolean variable can be used directly as a condition -- no extra comparison is needed.
+  concept_tags: [conditionals, booleans]
 - id: q230
   question: "What does this print?\nage = 10\nhas_ticket = True\nif age >= 5 and has_ticket:\n    print(\"Can ride\")\nelse:\n    print(\"Cannot ride\")"
   options:
@@ -2157,6 +2386,7 @@ questions:
   - Error
   correct: 0
   explanation: age >= 5 is True and has_ticket is True, so both sides of and are True, and Python prints Can ride.
+  concept_tags: [conditionals, booleans, comparison]
 - id: q231
   question: What numbers does `range(2, 10, 2)` produce?
   options:
@@ -2166,6 +2396,7 @@ questions:
   - 2, 4, 6, 8, 10, 12
   correct: 0
   explanation: range(2, 10, 2) starts at 2 and adds 2 each time, stopping before it reaches 10.
+  concept_tags: [for-loops]
 - id: q232
   question: What does `range(10, 0, -1)` do?
   options:
@@ -2175,6 +2406,7 @@ questions:
   - Causes an error
   correct: 0
   explanation: A step of -1 counts backward one number at a time, stopping just before it reaches 0.
+  concept_tags: [for-loops]
 - id: q233
   question: How many times does the loop body run for `for i in range(5, 5):`?
   options:
@@ -2184,6 +2416,7 @@ questions:
   - Forever
   correct: 0
   explanation: Since the start and stop are the same number, range(5, 5) is empty, so there's nothing to loop over.
+  concept_tags: [for-loops]
 - id: q234
   question: In `range(start, stop, step)`, what does the step control?
   options:
@@ -2193,6 +2426,7 @@ questions:
   - Where counting stops
   correct: 0
   explanation: The step is the size of each jump, like counting by 2s or 5s instead of 1s.
+  concept_tags: [for-loops]
 - id: q235
   question: What does `range(0, 20, 5)` produce?
   options:
@@ -2202,6 +2436,7 @@ questions:
   - 0, 4, 8, 12, 16
   correct: 0
   explanation: Counting from 0 by 5s stops right before reaching 20, so 20 itself is never included.
+  concept_tags: [for-loops]
 - id: q236
   question: What does `range(-3)` produce?
   options:
@@ -2211,6 +2446,7 @@ questions:
   - An error
   correct: 0
   explanation: With only one argument, range always counts up starting at 0, so it can never reach a negative number like -3.
+  concept_tags: [for-loops]
 - id: q237
   question: What does `range(1, 10, 3)` produce?
   options:
@@ -2220,6 +2456,7 @@ questions:
   - 3, 6, 9
   correct: 0
   explanation: Starting at 1 and adding 3 each time gives 1, 4, 7 -- the next jump would land on 10, which is excluded.
+  concept_tags: [for-loops]
 - id: q238
   question: Does `range(5)` ever include the number 5?
   options:
@@ -2229,6 +2466,7 @@ questions:
   - Only on some computers
   correct: 0
   explanation: range(5) counts 0 through 4 -- the stop value is always left out.
+  concept_tags: [for-loops]
 - id: q239
   question: "What does this print?\nfor fruit in [\"apple\", \"banana\"]:\n    print(fruit)"
   options:
@@ -2238,6 +2476,7 @@ questions:
   - banana then apple
   correct: 0
   explanation: A for loop can step through a list directly, giving you one item -- in list order -- each time around.
+  concept_tags: [for-loops, lists, iteration]
 - id: q240
   question: "What does this print?\nfor letter in \"cat\":\n    print(letter)"
   options:
@@ -2247,6 +2486,7 @@ questions:
   - t, a, c on separate lines
   correct: 0
   explanation: Looping over a string visits it one character at a time, in order.
+  concept_tags: [for-loops, strings, iteration]
 - id: q241
   question: Is `for cat in range(3):` a legal for loop?
   options:
@@ -2256,6 +2496,7 @@ questions:
   - Only if the word is a real animal
   correct: 0
   explanation: The loop variable is just a regular variable name -- Python doesn't care what word you use, as long as it follows normal naming rules.
+  concept_tags: [for-loops, naming]
 - id: q242
   question: What is a for loop best used for?
   options:
@@ -2265,6 +2506,7 @@ questions:
   - Storing multiple values in one place
   correct: 0
   explanation: for loops are built for stepping through a known sequence, like a range of numbers or a list.
+  concept_tags: [for-loops]
 - id: q243
   question: When might you choose a while loop instead of a for loop?
   options:
@@ -2274,6 +2516,7 @@ questions:
   - When you want to avoid indenting your code
   correct: 0
   explanation: A while loop keeps going based on a condition, which is handy when you can't predict the number of repeats in advance.
+  concept_tags: [while-loops, for-loops]
 - id: q244
   question: "What happens with `while True:\n    print(\"Hi\")` if there's no break anywhere inside it?"
   options:
@@ -2283,6 +2526,7 @@ questions:
   - It prints Hi exactly 100 times
   correct: 0
   explanation: while True never becomes False on its own, so without a break the loop has no way to stop.
+  concept_tags: [while-loops]
 - id: q245
   question: "What line is missing to stop this loop from running forever?\ncount = 0\nwhile count < 5:\n    print(count)"
   options:
@@ -2292,6 +2536,7 @@ questions:
   - count < 5 should become count > 5
   correct: 0
   explanation: Without updating count inside the loop, the condition count < 5 never changes, so it stays True forever.
+  concept_tags: [while-loops, debugging]
 - id: q246
   question: "In a guessing game, what does this pattern do?\nwhile True:\n    guess = input(\"Guess: \")\n    if guess == secret:\n        break"
   options:
@@ -2301,6 +2546,7 @@ questions:
   - Asks the question a random number of times
   correct: 0
   explanation: Combining while True with a break inside an if is a common way to repeat something until a condition is met.
+  concept_tags: [while-loops]
 - id: q247
   question: If a break is inside the inner loop of a nested loop, which loop does it stop?
   options:
@@ -2310,6 +2556,7 @@ questions:
   - The whole program
   correct: 0
   explanation: break only stops the loop that directly contains it -- any outer loops keep going.
+  concept_tags: [loops]
 - id: q248
   question: What does the continue keyword do inside a loop?
   options:
@@ -2319,6 +2566,7 @@ questions:
   - Pauses the loop until the user presses a key
   correct: 0
   explanation: continue cuts the current lap short but lets the loop keep going for the remaining repeats.
+  concept_tags: [loops]
 - id: q249
   question: What's the key difference between break and continue?
   options:
@@ -2328,6 +2576,7 @@ questions:
   - Both stop the whole program
   correct: 0
   explanation: break ends the loop for good, while continue only skips ahead to the next round.
+  concept_tags: [loops]
 - id: q250
   question: "What will this print?\nfor i in range(5):\n    if i == 3:\n        break\n    print(i)"
   options:
@@ -2337,6 +2586,7 @@ questions:
   - Nothing prints
   correct: 0
   explanation: break fires as soon as i reaches 3, ending the loop before it can print 3 or anything after.
+  concept_tags: [for-loops]
 - id: q251
   question: "What will this print?\nfor i in range(5):\n    if i == 3:\n        continue\n    print(i)"
   options:
@@ -2346,6 +2596,7 @@ questions:
   - Only 3
   correct: 0
   explanation: continue skips just the print for i == 3, then the loop carries on normally with 4.
+  concept_tags: [for-loops]
 - id: q252
   question: After a break exits a loop, where does the program go next?
   options:
@@ -2355,6 +2606,7 @@ questions:
   - It jumps ahead to the next loop's last repeat
   correct: 0
   explanation: break only ends that one loop -- the rest of the program keeps running normally right after it.
+  concept_tags: [loops]
 - id: q253
   question: What is a nested loop?
   options:
@@ -2364,6 +2616,7 @@ questions:
   - A loop with two separate conditions
   correct: 0
   explanation: Nesting means putting one loop's whole indented block inside another loop's indented block.
+  concept_tags: [loops]
 - id: q254
   question: "How many total times does the inner loop's body run here?\nfor i in range(3):\n    for j in range(4):\n        print(\"*\")"
   options:
@@ -2373,6 +2626,7 @@ questions:
   - 4 times
   correct: 0
   explanation: The inner loop runs fully (4 times) for every single pass of the outer loop (3 times), so 3 x 4 = 12.
+  concept_tags: [loops]
 - id: q255
   question: "What will this print?\nfor i in range(2):\n    for j in range(2):\n        print(i, j)"
   options:
@@ -2382,6 +2636,7 @@ questions:
   - 0 0, 0 1, 0 0, 0 1
   correct: 0
   explanation: For every value of i, the inner loop runs completely through all its j values before i changes again.
+  concept_tags: [loops]
 - id: q256
   question: In a nested loop, does the inner loop always finish all its repeats before the outer loop moves to its next value?
   options:
@@ -2391,6 +2646,7 @@ questions:
   - It depends on how fast the computer is
   correct: 0
   explanation: Each pass through the outer loop runs the entire inner loop from start to finish before control returns.
+  concept_tags: [for-loops]
 - id: q257
   question: Which range() call correctly prints the numbers 1 through 10, inclusive?
   options:
@@ -2400,6 +2656,7 @@ questions:
   - range(1, 10, 1)
   correct: 0
   explanation: range stops before its second number, so you need one more than the last number you want -- range(1, 11) reaches 10.
+  concept_tags: [for-loops, debugging]
 - id: q258
   question: What's wrong with using `range(1, 5)` if you wanted to print the numbers 1 through 5?
   options:
@@ -2409,6 +2666,7 @@ questions:
   - It causes an error
   correct: 0
   explanation: This is a classic off-by-one mistake -- range's stop value is never included, so you'd need range(1, 6) to include 5.
+  concept_tags: [debugging, errors]
 - id: q259
   question: In general, what is an "off-by-one" error?
   options:
@@ -2418,6 +2676,7 @@ questions:
   - A typo in a print() statement
   correct: 0
   explanation: Off-by-one errors happen when the start or stop of a loop is set just one number away from what you actually meant.
+  concept_tags: [for-loops, errors]
 - id: q260
   question: What happens if you forget the colon at the end of a for line, like `for i in range(5)`?
   options:
@@ -2427,6 +2686,7 @@ questions:
   - The loop runs but skips the first number
   correct: 0
   explanation: Just like if statements, every for and while line must end with a colon before its indented block.
+  concept_tags: [for-loops]
 - id: q261
   question: What does `range(4, 1)` produce (no step given)?
   options:
@@ -2436,6 +2696,7 @@ questions:
   - 1, 2, 3, 4
   correct: 0
   explanation: Without a negative step, range can't count downward, so a start bigger than the stop just produces an empty range.
+  concept_tags: [for-loops]
 - id: q262
   question: How would you fix `range(4, 1)` so it correctly counts down from 4 to 2?
   options:
@@ -2445,6 +2706,7 @@ questions:
   - range(4, 1, 1)
   correct: 0
   explanation: Counting downward needs a negative step -- range(4, 1, -1) gives 4, 3, 2.
+  concept_tags: [for-loops, while-loops]
 - id: q263
   question: Which loop type knows exactly how many times it will repeat before it even starts?
   options:
@@ -2454,6 +2716,7 @@ questions:
   - Neither loop type ever knows in advance
   correct: 0
   explanation: range(...) calculates its exact list of numbers before the loop begins, while a while loop's repeat count depends on when its condition happens to turn False.
+  concept_tags: [iteration]
 - id: q264
   question: In loop talk, what does it mean to "iterate" over something?
   options:
@@ -2463,6 +2726,7 @@ questions:
   - To stop the loop early
   correct: 0
   explanation: Iterating just means visiting each item in turn, which is exactly what a loop does.
+  concept_tags: [while-loops, errors]
 - id: q265
   question: What's wrong with writing `while count = 5:` as a loop condition?
   options:
@@ -2472,6 +2736,7 @@ questions:
   - It only runs when count is not 5
   correct: 0
   explanation: A single = assigns a value, but a loop condition needs == to compare values instead.
+  concept_tags: [functions]
 - id: q266
   question: What must come at the end of a def line, right after the parentheses?
   options:
@@ -2481,6 +2746,7 @@ questions:
   - An equals sign =
   correct: 0
   explanation: Python uses a colon to show that an indented block of code follows, just like with if and for.
+  concept_tags: [functions, return-values]
 - id: q267
   question: "What does this print?\ndef do_nothing():\n    pass\nprint(do_nothing())"
   options:
@@ -2490,6 +2756,7 @@ questions:
   - Error
   correct: 0
   explanation: A function with no return statement automatically gives back None.
+  concept_tags: [functions, parameters]
 - id: q268
   question: Which line correctly defines a function named add that takes two parameters, a and b?
   options:
@@ -2499,6 +2766,7 @@ questions:
   - 'function add(a, b):'
   correct: 0
   explanation: Function definitions use def, the name, and parameters inside parentheses, ending with a colon.
+  concept_tags: [functions, parameters]
 - id: q269
   question: "def greet(name=\"friend\"):\n    print(\"Hi \" + name)\ngreet()\nWhat does this print?"
   options:
@@ -2508,6 +2776,7 @@ questions:
   - Hi None
   correct: 0
   explanation: Since no argument was given, Python uses the default value "friend" for name.
+  concept_tags: [functions, parameters]
 - id: q270
   question: "def greet(name=\"friend\"):\n    print(\"Hi \" + name)\ngreet(\"Sam\")\nWhat does this print?"
   options:
@@ -2517,6 +2786,7 @@ questions:
   - Error, too many arguments
   correct: 0
   explanation: Passing "Sam" overrides the default value, so name becomes "Sam" instead of "friend".
+  concept_tags: [functions, parameters]
 - id: q271
   question: In greet("Sam"), what do you call the value "Sam" that you're passing in?
   options:
@@ -2526,6 +2796,7 @@ questions:
   - A return value
   correct: 0
   explanation: The value you plug in when calling a function is called an argument; the placeholder in the def line is the parameter.
+  concept_tags: [functions, parameters, errors]
 - id: q272
   question: "def greet(name):\n    print(name)\ngreet()\nWhat happens when this runs?"
   options:
@@ -2535,6 +2806,7 @@ questions:
   - It prints "name"
   correct: 0
   explanation: Since name has no default value, Python needs an argument for it and raises an error when none is given.
+  concept_tags: [functions, return-values]
 - id: q273
   question: "What does this print?\ndef add(a, b):\n    return a + b\nprint(add(3, 5))"
   options:
@@ -2544,6 +2816,7 @@ questions:
   - '3'
   correct: 0
   explanation: add(3, 5) runs with a = 3 and b = 5, returning 3 + 5 = 8.
+  concept_tags: [functions, return-values]
 - id: q274
   question: "What does this print?\ndef triple(x):\n    return x * 3\nprint(triple(5))"
   options:
@@ -2553,6 +2826,7 @@ questions:
   - Error
   correct: 0
   explanation: triple(5) runs with x = 5, returning 5 * 3 = 15.
+  concept_tags: [functions]
 - id: q275
   question: If you call say_hi() and then call say_hi() again right after, what happens?
   options:
@@ -2562,6 +2836,7 @@ questions:
   - Both calls happen at once and only print once
   correct: 0
   explanation: A function runs its code every single time it's called, no matter how many times you call it.
+  concept_tags: [functions]
 - id: q276
   question: In a program that runs top to bottom, where must a function's def line appear compared to where you call it?
   options:
@@ -2571,6 +2846,7 @@ questions:
   - Inside the call itself
   correct: 0
   explanation: Python must read a function's definition before it can be called, or it won't know what the name means yet.
+  concept_tags: [functions, naming]
 - id: q277
   question: Which of these is a valid name for a function?
   options:
@@ -2580,6 +2856,7 @@ questions:
   - class
   correct: 0
   explanation: Function names can use letters, numbers, and underscores, but can't start with a digit, contain a hyphen, or reuse a reserved word like class.
+  concept_tags: [functions, return-values]
 - id: q278
   question: If you want to use a function's result later in a calculation, what should the function do?
   options:
@@ -2589,6 +2866,7 @@ questions:
   - use input() to ask for it
   correct: 0
   explanation: print() only shows text on screen -- return hands the actual value back so your code can use it.
+  concept_tags: [functions, parameters]
 - id: q279
   question: "def greet(name, greeting=\"Hello\"):\n    print(greeting + \", \" + name + \"!\")\ngreet(\"Max\")\nWhat does this print?"
   options:
@@ -2598,6 +2876,7 @@ questions:
   - Error, greeting is missing
   correct: 0
   explanation: name gets "Max" from the call, and greeting keeps its default value "Hello" since nothing else was given.
+  concept_tags: [lists]
 - id: q280
   question: What does numbers = [] create?
   options:
@@ -2607,6 +2886,7 @@ questions:
   - A list containing the number 0
   correct: 0
   explanation: Square brackets with nothing inside make an empty list, ready for items to be added later.
+  concept_tags: [lists]
 - id: q281
   question: What type of value does numbers = [10, 20, 30] create?
   options:
@@ -2616,6 +2896,7 @@ questions:
   - A tuple
   correct: 0
   explanation: Square brackets containing items separated by commas create a list.
+  concept_tags: [lists]
 - id: q282
   question: 'fruits = ["apple", "banana", "cherry"]
 
@@ -2629,6 +2910,7 @@ questions:
   - It prints the last item, "cherry"
   correct: 0
   explanation: fruits only has positions 0, 1, and 2, so asking for position 5 goes out of range and causes an error.
+  concept_tags: [lists, indexing, errors]
 - id: q283
   question: If fruits = ["apple", "banana", "cherry"] has 3 items, what index gets you the LAST item?
   options:
@@ -2638,6 +2920,7 @@ questions:
   - '0'
   correct: 0
   explanation: With 3 items at positions 0, 1, and 2, the last item sits at index 2 -- one less than the total count.
+  concept_tags: [lists, indexing]
 - id: q284
   question: Why does fruits[1] give you the SECOND item instead of the first?
   options:
@@ -2647,6 +2930,7 @@ questions:
   - Because fruits[1] is a typo for fruits[2]
   correct: 0
   explanation: Python lists are indexed starting at 0, so position 1 is actually the second item.
+  concept_tags: [lists, indexing]
 - id: q285
   question: 'pets = ["dog", "cat", "fish"]
 
@@ -2660,6 +2944,7 @@ questions:
   - Error
   correct: 0
   explanation: pets[1] is the second item, "cat", which gets joined onto the end of the string.
+  concept_tags: [lists, indexing]
 - id: q286
   question: If fruits has 3 items and you run fruits.append("grape"), how many items does fruits have now?
   options:
@@ -2669,6 +2954,7 @@ questions:
   - '0'
   correct: 0
   explanation: .append() adds one new item onto the end, so the list grows by exactly 1.
+  concept_tags: [lists]
 - id: q287
   question: 'fruits = ["apple", "banana"]
 
@@ -2682,6 +2968,7 @@ questions:
   - It replaces "banana"
   correct: 0
   explanation: .append() always adds the new item onto the end of the list, after everything already there.
+  concept_tags: [lists]
 - id: q288
   question: Does fruits.append("grape") create a brand-new list, or change fruits itself?
   options:
@@ -2691,6 +2978,7 @@ questions:
   - It only works if fruits is empty
   correct: 0
   explanation: .append() modifies the original list in place rather than making a separate copy.
+  concept_tags: [lists]
 - id: q289
   question: What does len(my_list) return if my_list = []?
   options:
@@ -2700,6 +2988,7 @@ questions:
   - Error
   correct: 0
   explanation: An empty list has zero items, so len() returns 0.
+  concept_tags: [lists]
 - id: q290
   question: Why might you write range(len(my_list)) inside a for loop?
   options:
@@ -2709,6 +2998,7 @@ questions:
   - To delete every item in the list
   correct: 0
   explanation: len(my_list) gives the number of items, so range(len(my_list)) counts through every valid index position.
+  concept_tags: [lists, for-loops]
 - id: q291
   question: "fruits = [\"apple\", \"banana\", \"cherry\"]\nfor fruit in fruits:\n    print(fruit)\nWhat does this print?"
   options:
@@ -2726,6 +3016,7 @@ questions:
   - Error
   correct: 0
   explanation: The loop runs once for each item in the list, printing apple, then banana, then cherry.
+  concept_tags: [for-loops, lists, iteration]
 - id: q292
   question: In for fruit in fruits:, what happens to fruit each time the loop repeats?
   options:
@@ -2735,6 +3026,7 @@ questions:
   - It stays equal to the whole fruits list
   correct: 0
   explanation: Each time around, the loop variable fruit takes on the next item from the list, one at a time.
+  concept_tags: [for-loops, lists, iteration]
 - id: q293
   question: 'If my_list has 5 items, how many times does for item in my_list: repeat?'
   options:
@@ -2744,6 +3036,7 @@ questions:
   - 1 time
   correct: 0
   explanation: A for loop over a list runs exactly once per item, so 5 items means 5 repeats.
+  concept_tags: [for-loops, lists, iteration]
 - id: q294
   question: What does random.choice(["rock", "paper", "scissors"]) do?
   options:
@@ -2753,6 +3046,7 @@ questions:
   - Removes an item from the list
   correct: 0
   explanation: random.choice() looks at a list and randomly picks one of its items.
+  concept_tags: [random, lists]
 - id: q295
   question: Why do you need to write import random before using random.randint()?
   options:
@@ -2762,6 +3056,7 @@ questions:
   - import makes your program run faster
   correct: 0
   explanation: Extra tools like randint() live in modules that Python only loads when you import them.
+  concept_tags: [random]
 - id: q296
   question: If you run random.randint(1, 6) twice in the same program, will you always get the same number both times?
   options:
@@ -2771,6 +3066,7 @@ questions:
   - No, the second call always returns 1
   correct: 0
   explanation: Each call to randint() is a fresh random pick, so two calls can match or differ -- there's no fixed pattern.
+  concept_tags: [random]
 - id: q297
   question: In the Snake project, what does game.after(300, move_snake) actually do?
   options:
@@ -2780,6 +3076,7 @@ questions:
   - Runs move_snake exactly 300 times
   correct: 0
   explanation: game.after(ms, function) schedules that function to run again after the given number of milliseconds.
+  concept_tags: [while-loops, functions]
 - id: q298
   question: Why does the Snake project avoid using a while loop to keep the snake moving?
   options:
@@ -2789,6 +3086,7 @@ questions:
   - The game window can't run any code at all
   correct: 0
   explanation: A while loop would run nonstop and lock up the game window, so self-scheduling with game.after() is used instead.
+  concept_tags: [while-loops]
 - id: q299
   question: What does game.draw_rect(x, y, width, height, color) do in the Snake project?
   options:
@@ -2798,6 +3096,7 @@ questions:
   - Changes the game window's background color
   correct: 0
   explanation: draw_rect() creates a new rectangle shape on the game screen using the position, size, and color you give it.
+  concept_tags: []
 - id: q300
   question: "def move_snake():\n    game.move_shape(snake, 10, 0)\n    game.after(300, move_snake)\nWhy does move_snake call game.after(300, move_snake) on itself?"
   options:
@@ -2807,3 +3106,4 @@ questions:
   - Because game.after() requires exactly two functions
   correct: 0
   explanation: By scheduling itself again each time it runs, move_snake keeps the snake moving in an ongoing game loop.
+  concept_tags: [functions, while-loops]

@@ -24,3 +24,4 @@ next_lesson_id: null
 category: code_crackers
 category_level: 4
 main_path: false
+concept_tags: [debugging, errors, strings]
