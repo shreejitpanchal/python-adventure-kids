@@ -10,6 +10,7 @@ import flet as ft
 
 from app.ui.app_state_flet import AppState
 from app.ui.theme_flet import THEME_PRESETS, ThemePreset
+from app.version import get_version_label
 
 
 def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
@@ -31,8 +32,12 @@ def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
         bgcolor=theme.bg,
         scroll=ft.ScrollMode.AUTO,
         padding=24,
-        controls=[header, _build_sound_card(page, state), _build_theme_card(page, state)],
+        controls=[header, _build_sound_card(page, state), _build_theme_card(page, state), _build_version_row(state)],
     )
+
+
+def _build_version_row(state: AppState) -> ft.Control:
+    return ft.Text(get_version_label(), size=12, color=state.theme.text_muted)
 
 
 def _build_sound_card(page: ft.Page, state: AppState) -> ft.Control:

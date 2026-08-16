@@ -45,7 +45,26 @@ if ! command -v flutter >/dev/null 2>&1; then
     fi
 fi
 
-echo "Building Android APK from main_flet.py..."
+# BUILD_NUMBER is a plain repo-root file holding a single integer, bumped
+# on every build so app/version.py (shown in Settings) and the APK's
+# Android versionCode both advance together -- see app/version.py's
+# docstring for why this lives in a file instead of being hardcoded.
+BUILD_NUMBER_FILE="BUILD_NUMBER"
+if [ -f "$BUILD_NUMBER_FILE" ]; then
+    PREV_BUILD="$(cat "$BUILD_NUMBER_FILE")"
+else
+    PREV_BUILD=0
+fi
+NEW_BUILD=$((PREV_BUILD + 1))
+echo "$NEW_BUILD" > "$BUILD_NUMBER_FILE"
+
+# Read [project].version out of pyproject.toml the same way app/version.py
+# does at runtime (stdlib tomllib), so the APK filename and the
+# --build-version passed to Flutter can never drift from what Settings
+# displays.
+APP_VERSION="$("$PYEXE" -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")"
+
+echo "Building Android APK from main_flet.py (v$APP_VERSION build $NEW_BUILD)..."
 echo
 
 # flet build's own CLI output (via `rich`) includes emoji (checkmarks etc.);
@@ -56,7 +75,14 @@ export PYTHONUTF8=1
 
 # --module-name is required: flet build defaults to main.py, which is the
 # unrelated CustomTkinter app in this repo, not the Flet one.
-"$FLETEXE" build apk --module-name main_flet --yes "$@"
+# --build-number/--build-version set the Android versionCode/versionName
+# and are what app/version.py reads back out of the running app (via
+# BUILD_NUMBER and pyproject.toml respectively) to show in Settings.
+"$FLETEXE" build apk --module-name main_flet --yes \
+    --build-number "$NEW_BUILD" --build-version "$APP_VERSION" "$@"
+
+TAGGED_APK="build/apk/python-adventure-v${APP_VERSION}-build${NEW_BUILD}.apk"
+mv "build/apk/python-adventure.apk" "$TAGGED_APK"
 
 echo
-echo "Done -- APK at build/apk/python-adventure.apk"
+echo "Done -- APK at $TAGGED_APK"

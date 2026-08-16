@@ -4,6 +4,7 @@ from __future__ import annotations
 import customtkinter as ctk
 
 from app.ui import theme
+from app.version import get_version_label
 
 
 class SettingsFrame(ctk.CTkFrame):
@@ -18,6 +19,7 @@ class SettingsFrame(ctk.CTkFrame):
 
         self._build_sound_card()
         self._build_theme_card()
+        self._build_version_label()
 
     def _build_sound_card(self) -> None:
         card = ctk.CTkFrame(self.body, fg_color=theme.COLOR_CARD, corner_radius=20)
@@ -131,6 +133,12 @@ class SettingsFrame(ctk.CTkFrame):
             return  # defense in depth -- the button should already be disabled
         self.app.apply_and_persist_theme(theme_key)
         self.app.show_settings()
+
+    def _build_version_label(self) -> None:
+        ctk.CTkLabel(
+            self.body, text=get_version_label(), font=theme.font_body(12),
+            text_color=theme.COLOR_TEXT_MUTED,
+        ).pack(anchor="w", pady=(0, 8))
 
     def _on_menu(self) -> None:
         self.app.show_dashboard()
