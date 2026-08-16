@@ -13,6 +13,16 @@ from app.engine.lesson import Lesson
 
 DEFAULT_CONTENT_DIR = Path(__file__).resolve().parent.parent.parent / "content" / "lessons"
 
+TODAYS_MISSION_INTRO_CATEGORY = "basics"
+TODAYS_MISSION_CATEGORIES = [
+    "numbers", "addition", "subtraction", "multiplication", "division",
+    "variables", "strings", "input", "conditionals", "loops", "functions", "lists",
+]
+"""The categories "Today's Mission" cycles through, in order, after the
+one-time basics intro -- level 1 of every category here, then level 2 of
+every category, and so on. Games, Snake, and every other bonus category
+stay reachable through the category browser but are never auto-assigned."""
+
 
 class LessonEngine:
     def __init__(self, content_dir: Path = DEFAULT_CONTENT_DIR):
@@ -43,23 +53,39 @@ class LessonEngine:
         return self._lessons[self._order[0]]
 
     def next_after(self, lesson_id: str) -> Optional[Lesson]:
-        """The next lesson in the guided main-path chain, or None at the end.
+        """The next lesson in "Today's Mission" after lesson_id, or None if
+        lesson_id isn't part of that sequence or was its last step.
 
-        Follows next_lesson_id only -- no order-based fallback -- so bonus
-        category levels (main_path=False) never leak into the guided
-        "Today's Mission" flow just because they happen to sort after the
-        last main-path lesson.
+        Positional lookup into main_path_lessons() (the computed
+        round-robin order) rather than a hand-authored next_lesson_id
+        chain -- see that method.
         """
-        lesson = self.get(lesson_id)
-        if lesson.next_lesson_id:
-            return self._lessons.get(lesson.next_lesson_id)
-        return None
+        sequence = self.main_path_lessons()
+        ids = [lesson.id for lesson in sequence]
+        try:
+            index = ids.index(lesson_id)
+        except ValueError:
+            return None
+        return sequence[index + 1] if index + 1 < len(sequence) else None
 
     def all_in_order(self) -> list[Lesson]:
         return [self._lessons[lesson_id] for lesson_id in self._order]
 
     def main_path_lessons(self) -> list[Lesson]:
-        return [lesson for lesson in self.all_in_order() if lesson.main_path]
+        """Today's Mission: the basics intro lesson(s) once, then every
+        category_level of TODAYS_MISSION_CATEGORIES in turn -- level 1 of
+        every category, then level 2 of every category, and so on, up to
+        however many levels each category actually has. Computed live from
+        category/category_level rather than a stored chain, so the guided
+        sequence and the category browser can never drift apart."""
+        sequence = list(self.lessons_in_category(TODAYS_MISSION_INTRO_CATEGORY))
+        by_category = [self.lessons_in_category(category) for category in TODAYS_MISSION_CATEGORIES]
+        max_level = max((len(lessons) for lessons in by_category), default=0)
+        for level_index in range(max_level):
+            for lessons in by_category:
+                if level_index < len(lessons):
+                    sequence.append(lessons[level_index])
+        return sequence
 
     def resolve_current(
         self, completed_ids: Collection[str], stored_current_id: Optional[str] = None
@@ -67,11 +93,12 @@ class LessonEngine:
         """The lesson a child should land on next for "Today's Mission".
 
         Trusts a stored pointer only if it's still valid and not already
-        completed; otherwise falls back to the first incomplete main-path
-        lesson, or the last main-path lesson if everything is done. This
+        completed; otherwise falls back to the first incomplete lesson in
+        main_path_lessons(), or the last one if everything is done. This
         keeps old progress data working even after lessons are added,
-        removed, or reordered. Bonus category levels are never chosen here
-        -- they're reached through the category browser instead.
+        removed, or reordered. Categories outside TODAYS_MISSION_CATEGORIES
+        (games, Snake, Code Crackers, ...) are never chosen here -- they're
+        reached through the category browser instead.
         """
         completed = set(completed_ids)
         if stored_current_id and self.has(stored_current_id) and stored_current_id not in completed:

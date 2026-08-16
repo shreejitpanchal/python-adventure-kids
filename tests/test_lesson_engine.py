@@ -1,4 +1,4 @@
-from app.engine.lesson_engine import LessonEngine
+from app.engine.lesson_engine import TODAYS_MISSION_CATEGORIES, LessonEngine
 
 
 def test_loads_lesson_01_from_content_dir():
@@ -19,6 +19,33 @@ def test_next_after_last_lesson_is_none():
     engine = LessonEngine()
     last = engine.all_in_order()[-1]
     assert engine.next_after(last.id) is None
+
+
+# -- Today's Mission: main_path_lessons() round-robin -----------------------
+def test_main_path_lessons_starts_with_the_basics_intro():
+    engine = LessonEngine()
+    assert engine.main_path_lessons()[0].id == "lesson_01"
+
+
+def test_main_path_lessons_does_every_categorys_level_1_before_any_level_2():
+    engine = LessonEngine()
+    sequence = engine.main_path_lessons()
+    level_1_positions = [
+        i for i, lesson in enumerate(sequence)
+        if lesson.category in TODAYS_MISSION_CATEGORIES and lesson.category_level == 1
+    ]
+    level_2_positions = [
+        i for i, lesson in enumerate(sequence)
+        if lesson.category in TODAYS_MISSION_CATEGORIES and lesson.category_level == 2
+    ]
+    assert len(level_1_positions) == len(TODAYS_MISSION_CATEGORIES)
+    assert max(level_1_positions) < min(level_2_positions)
+
+
+def test_main_path_lessons_excludes_categories_outside_the_rotation():
+    engine = LessonEngine()
+    sequence_categories = {lesson.category for lesson in engine.main_path_lessons()}
+    assert sequence_categories == {"basics", *TODAYS_MISSION_CATEGORIES}
 
 
 def test_loading_from_custom_dir(tmp_path):

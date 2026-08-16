@@ -6,7 +6,6 @@ import threading
 import customtkinter as ctk
 
 from app.audio.player import play_sound_ctk, success_sound_for
-from app.engine.badges import get_badge_meta
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_window import GameWindow
@@ -394,10 +393,7 @@ class LessonScreen(ctk.CTkFrame):
             badge_newly_awarded = progress.award_badge(self.lesson.badge)
         leveled_up = progress.get_player_level().level > level_before
 
-        module_badge_lines = self._award_module_badges()
-
-        badge_earned = badge_newly_awarded or bool(module_badge_lines)
-        for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_earned):
+        for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_newly_awarded):
             play_sound_ctk(sound_name, self.app.settings)
 
         next_lesson = self.app.lesson_engine.next_after(self.lesson.id)
@@ -409,34 +405,12 @@ class LessonScreen(ctk.CTkFrame):
             text=f"🎉 Great job! You earned {'⭐' * self.lesson.reward_stars} "
                  f"({self.lesson.reward_stars} stars)"
         )
-        lesson_badge_line = (
-            f"🎖️ New badge unlocked: {self.lesson.badge.replace('_', ' ').title()}!"
-            if badge_newly_awarded else ""
-        )
         self.badge_label.configure(
-            text="\n".join(line for line in [lesson_badge_line, *module_badge_lines] if line)
+            text=f"🎖️ New badge unlocked: {self.lesson.badge.replace('_', ' ').title()}!"
+            if badge_newly_awarded else ""
         )
 
         self.reward_card.pack(fill="x", pady=10)
-
-    def _award_module_badges(self) -> list[str]:
-        """CTk equivalent of lesson_screen_flet.py's _award_module_badges()
-        -- see that docstring for the migration-free "catch up" rationale."""
-        progress = self.app.progress
-        learning_path = self.app.learning_path_engine
-        completed_ids = progress.get_completed_lesson_ids()
-        already_awarded = progress.get_badge_ids()
-
-        lines: list[str] = []
-        for badge_id in learning_path.newly_earned_module_badges(completed_ids, already_awarded):
-            progress.award_badge(badge_id)
-            lines.append(f"🎖️ Module badge unlocked: {get_badge_meta(badge_id).title}!")
-
-        if "python_journey_complete" not in already_awarded and learning_path.all_modules_complete(completed_ids):
-            progress.award_badge("python_journey_complete")
-            lines.append(f"🌟 {get_badge_meta('python_journey_complete').title}!")
-
-        return lines
 
     def _on_continue(self) -> None:
         self.app.show_dashboard()

@@ -17,11 +17,12 @@ def engine():
     return LessonEngine()
 
 
-def test_chain_from_lesson_13_through_lesson_15(engine):
-    assert engine.next_after("lesson_13").id == "lesson_14"
-    assert engine.next_after("lesson_14").id == "lesson_15"
-    # lesson_15 continues on into the Snake project (see test_snake_lessons.py)
-    # rather than ending the curriculum.
+def test_games_are_not_part_of_todays_mission(engine):
+    # Games are reachable only through the category browser now -- see
+    # test_categories.py's TODAYS_MISSION_CATEGORIES coverage for why.
+    mission_ids = {lesson.id for lesson in engine.main_path_lessons()}
+    assert "lesson_14" not in mission_ids
+    assert "lesson_15" not in mission_ids
 
 
 def test_lesson_15_awards_game_creator_badge(engine):
@@ -112,7 +113,6 @@ def test_games_category_has_five_lessons_bonus_levels_correctly_configured(engin
         assert lesson.main_path is False
         assert lesson.next_lesson_id is None
 
-    # The original two remain untouched: still on the guided main path.
-    main_path_lessons = [lesson for lesson in lessons if lesson.category_level < 3]
-    for lesson in main_path_lessons:
-        assert lesson.main_path is True
+    # The original two remain untouched, category_level-wise.
+    original_lessons = [lesson for lesson in lessons if lesson.category_level < 3]
+    assert {lesson.id for lesson in original_lessons} == {"lesson_14", "lesson_15"}

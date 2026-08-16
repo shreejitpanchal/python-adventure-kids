@@ -71,33 +71,50 @@ def test_next_unlocked_in_category_none_when_all_complete(engine):
     assert engine.next_unlocked_in_category("addition", completed_ids=all_addition_ids) is None
 
 
-# -- main path vs bonus levels ---------------------------------------------
-def test_main_path_lessons_excludes_bonus_levels(engine):
+# -- Today's Mission: the computed round-robin across TODAYS_MISSION_CATEGORIES
+def test_main_path_lessons_includes_every_level_of_the_core_categories(engine):
     main_path_ids = {lesson.id for lesson in engine.main_path_lessons()}
-    assert "lesson_03" in main_path_ids  # addition level 1 is on the guided path
-    assert "lesson_21" not in main_path_ids  # addition level 2 is bonus-only
-    assert "lesson_22" not in main_path_ids
+    assert "lesson_03" in main_path_ids  # addition level 1
+    assert "lesson_21" in main_path_ids  # addition level 2 -- part of the round-robin
+    assert "lesson_22" in main_path_ids  # addition level 3
 
 
-def test_bonus_levels_are_not_chained_via_next_after(engine):
-    bonus = engine.get("lesson_21")
-    assert bonus.next_lesson_id is None
-    assert engine.next_after("lesson_21") is None
+def test_main_path_lessons_excludes_categories_outside_the_rotation(engine):
+    main_path_ids = {lesson.id for lesson in engine.main_path_lessons()}
+    games_ids = {lesson.id for lesson in engine.lessons_in_category("games")}
+    snake_ids = {lesson.id for lesson in engine.lessons_in_category("snake")}
+    assert not (games_ids & main_path_ids)
+    assert not (snake_ids & main_path_ids)
 
 
-def test_main_path_lesson_18_has_no_next_even_though_bonus_levels_sort_after_it(engine):
-    # lesson_18 is the last main-path lesson; bonus levels 19-28 sort after it
-    # by `level`, but next_after must not fall through to them.
+def test_next_after_continues_into_the_next_categorys_same_level(engine):
+    # lesson_03 = addition level 1; subtraction is next in
+    # TODAYS_MISSION_CATEGORIES order, still at level 1.
+    next_lesson = engine.next_after("lesson_03")
+    assert next_lesson.category == "subtraction"
+    assert next_lesson.category_level == 1
+
+
+def test_next_after_moves_to_level_2_once_every_categorys_level_1_is_done(engine):
+    # lesson_13 = lists level 1, the last category in TODAYS_MISSION_CATEGORIES
+    # order -- the next mission step should wrap to numbers' level 2, not
+    # spill into games/Snake just because they sort after lesson_13 by `level`.
+    next_lesson = engine.next_after("lesson_13")
+    assert next_lesson.category == "numbers"
+    assert next_lesson.category_level == 2
+
+
+def test_next_after_a_lesson_outside_the_rotation_is_none(engine):
+    # lesson_18 (Snake) isn't part of TODAYS_MISSION_CATEGORIES or the basics
+    # intro, so it's simply not found in the computed sequence.
     assert engine.next_after("lesson_18") is None
 
 
-def test_resolve_current_never_returns_a_bonus_level(engine):
+def test_resolve_current_stays_within_the_computed_mission_sequence(engine):
+    mission_ids = {lesson.id for lesson in engine.main_path_lessons()}
     lesson = engine.resolve_current(completed_ids=[], stored_current_id=None)
-    assert lesson.main_path is True
+    assert lesson.id in mission_ids
 
-    # even if a bonus level id is (incorrectly) passed as the stored pointer,
-    # it's still a valid lookup -- but resolve_current's *fallback* path
-    # must never land on one.
     all_main_ids = [l.id for l in engine.main_path_lessons()]
     lesson = engine.resolve_current(completed_ids=all_main_ids, stored_current_id=None)
-    assert lesson.main_path is True
+    assert lesson.id == engine.main_path_lessons()[-1].id

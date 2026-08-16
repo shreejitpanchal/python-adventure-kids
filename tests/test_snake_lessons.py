@@ -26,10 +26,12 @@ def game_canvas():
     root.destroy()
 
 
-def test_chain_from_lesson_15_through_lesson_18(engine):
-    assert engine.next_after("lesson_15").id == "lesson_16"
-    assert engine.next_after("lesson_16").id == "lesson_17"
-    assert engine.next_after("lesson_17").id == "lesson_18"
+def test_snake_lessons_are_not_part_of_todays_mission(engine):
+    # Snake is reachable only through the category browser now -- see
+    # test_categories.py's TODAYS_MISSION_CATEGORIES coverage for why.
+    mission_ids = {lesson.id for lesson in engine.main_path_lessons()}
+    for lesson_id in SNAKE_LESSON_IDS:
+        assert lesson_id not in mission_ids
     assert engine.next_after("lesson_18") is None
 
 

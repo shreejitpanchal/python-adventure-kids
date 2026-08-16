@@ -33,8 +33,8 @@ def state(tmp_path, monkeypatch):
 
 
 def _stack(view):
-    # controls = [header, journey_tile, quiz_tile, Row([Stack])]
-    return view.controls[3].controls[0]
+    # controls = [header, quiz_tile, Row([Stack])]
+    return view.controls[2].controls[0]
 
 
 def test_view_has_one_node_pair_per_category_plus_the_connector_layer(state):
@@ -47,20 +47,11 @@ def test_view_has_one_node_pair_per_category_plus_the_connector_layer(state):
     assert len(stack.controls) == 1 + 2 * len(categories)
 
 
-def test_journey_tile_is_a_separate_card_not_a_path_node(state):
-    page = FakePage()
-    view = build_category_map_view(page, state)
-
-    journey_tile = view.controls[1]
-    journey_tile.on_click(None)
-    assert page.routes_visited == ["/journey"]
-
-
 def test_quiz_tile_is_a_separate_card_not_a_path_node(state):
     page = FakePage()
     view = build_category_map_view(page, state)
 
-    quiz_tile = view.controls[2]
+    quiz_tile = view.controls[1]
     quiz_tile.on_click(None)
     assert page.routes_visited == ["/quiz"]
 

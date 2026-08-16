@@ -25,7 +25,6 @@ import flet as ft
 import flet.canvas as cv
 
 from app.audio.player import success_sound_for
-from app.engine.badges import get_badge_meta
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_canvas_flet import GameCanvas
@@ -536,11 +535,8 @@ class _LessonController:
             badge_newly_awarded = progress.award_badge(self.lesson.badge)
         leveled_up = progress.get_player_level().level > level_before
 
-        module_badge_lines = self._award_module_badges()
-
         if self.state.sound_player is not None:
-            badge_earned = badge_newly_awarded or bool(module_badge_lines)
-            for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_earned):
+            for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_newly_awarded):
                 self.state.sound_player.play(sound_name, self.state.settings)
 
         next_lesson = self.state.lesson_engine.next_after(self.lesson.id)
@@ -552,36 +548,11 @@ class _LessonController:
             f"🎉 Great job! You earned {'⭐' * self.lesson.reward_stars} "
             f"({self.lesson.reward_stars} stars)"
         )
-        lesson_badge_line = (
+        self.badge_text.value = (
             f"🎖️ New badge unlocked: {self.lesson.badge.replace('_', ' ').title()}!"
             if badge_newly_awarded else ""
         )
-        self.badge_text.value = "\n".join(line for line in [lesson_badge_line, *module_badge_lines] if line)
         self._victory_handle.show()
-
-    def _award_module_badges(self) -> list[str]:
-        """Awards any Python Journey module badge (and the capstone
-        "Python Journey Complete" badge) that this lesson completion just
-        satisfied. Also doubles as the migration-free "catch up" check --
-        see app/engine/learning_path.py's newly_earned_module_badges() --
-        though it only actually runs here on a fresh completion, not on
-        every Journey screen load like journey_map_flet.py's version.
-        Returns the reward-card lines to show, if any."""
-        progress = self.state.progress
-        learning_path = self.state.learning_path_engine
-        completed_ids = progress.get_completed_lesson_ids()
-        already_awarded = progress.get_badge_ids()
-
-        lines: list[str] = []
-        for badge_id in learning_path.newly_earned_module_badges(completed_ids, already_awarded):
-            progress.award_badge(badge_id)
-            lines.append(f"🎖️ Module badge unlocked: {get_badge_meta(badge_id).title}!")
-
-        if "python_journey_complete" not in already_awarded and learning_path.all_modules_complete(completed_ids):
-            progress.award_badge("python_journey_complete")
-            lines.append(f"🌟 {get_badge_meta('python_journey_complete').title}!")
-
-        return lines
 
     def _on_continue(self, e) -> None:
         if self.game_canvas is not None:

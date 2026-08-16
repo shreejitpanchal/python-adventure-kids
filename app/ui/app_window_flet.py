@@ -13,9 +13,7 @@ from app.ui.app_state_flet import AppState
 from app.ui.category_levels_flet import build_category_levels_view
 from app.ui.category_map_flet import build_category_map_view
 from app.ui.dashboard_flet import build_dashboard_view
-from app.ui.journey_map_flet import build_journey_map_view
 from app.ui.lesson_screen_flet import build_lesson_view
-from app.ui.module_detail_flet import build_module_detail_view
 from app.ui.parent_dashboard_flet import build_parent_view
 from app.ui.quiz_screen_flet import build_quiz_view
 from app.ui.settings_screen_flet import build_settings_view
@@ -59,11 +57,6 @@ def main(page: ft.Page) -> None:
             page.views.append(build_category_levels_view(page, state, category))
         elif route == "/categories":
             page.views.append(build_category_map_view(page, state))
-        elif route.startswith("/journey/"):
-            module_id = route.removeprefix("/journey/")
-            page.views.append(build_module_detail_view(page, state, module_id))
-        elif route == "/journey":
-            page.views.append(build_journey_map_view(page, state))
         elif route == "/settings":
             page.views.append(build_settings_view(page, state))
         elif route == "/parent":

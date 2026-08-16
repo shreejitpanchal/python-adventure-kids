@@ -20,6 +20,11 @@ class Lesson:
     reward_stars: int = 1
     badge: Optional[str] = None
     next_lesson_id: Optional[str] = None
+    """Legacy/unused: LessonEngine.next_after() no longer reads this --
+    "Today's Mission" order is computed live from category/category_level
+    (see LessonEngine.main_path_lessons()) instead of a hand-authored
+    chain. Kept on the schema only because some existing lesson YAML still
+    sets it; not worth rewriting those files just to clear an inert field."""
     input_prompt: Optional[str] = None
     """If set, the lesson screen shows a labeled input box and feeds its value
     to the sandboxed code's stdin. expected_output may contain "{input}" as a
@@ -38,9 +43,12 @@ class Lesson:
     unlocked once every lower category_level in the same category is
     completed."""
     main_path: bool = True
-    """Whether this lesson is part of the single guided curriculum sequence
-    (shown as "Today's Mission" / chained via next_lesson_id) versus a bonus
-    practice level only reachable through the category browser."""
+    """Legacy/unused: LessonEngine.main_path_lessons() no longer reads this
+    -- "Today's Mission" is now computed live from category/category_level
+    (see that method and LessonEngine.TODAYS_MISSION_CATEGORIES) instead of
+    this flag. Kept on the schema only because ~240 bonus-level YAML files
+    already set main_path: false; removing the field would mean rewriting
+    every one of them just to drop an inert key."""
     ast_contains: Optional[list[str]] = None
     """Structural constructs the submitted code must contain (see
     app.engine.validator.validate_ast_contains) -- checked in addition to
@@ -52,22 +60,13 @@ class Lesson:
     """If true (graphical lessons only), the lesson also requires
     game.robot_at_goal() to be True after running -- not just "ran without
     raising" -- see app/ui/lesson_screen_flet.py's _on_run_graphical()."""
-    learning_path_module: Optional[str] = None
-    """The Python Journey module this lesson belongs to (see
-    content/learning_path.yaml / app/engine/learning_path.py), if any.
-    Most lessons -- especially bonus practice levels -- aren't referenced
-    by a module and leave this unset."""
-    lesson_type: str = "learn"
-    """One of learn/practice/challenge/project -- purely descriptive
-    (shown in the Python Journey UI), doesn't change validation behavior."""
     concept_tags: list[str] = field(default_factory=list)
-    """Which Python Journey concepts this lesson teaches (see
-    docs/AUTHORING_GUIDE.md for the fixed vocabulary) -- used by
-    LessonEngine.recommend_practice() to suggest relevant practice after
-    repeated failures or a quiz. Empty is the common case; only lessons
-    wired into the adaptive-practice pool need this set."""
-    prerequisite_lesson_ids: list[str] = field(default_factory=list)
-    """Documented for content authors, not enforced by the engine --
-    real sequencing comes from main_path/next_lesson_id (guided chain),
-    category_level (bonus tracks), and a module's required_lesson_ids
-    list order (Python Journey) -- see docs/AUTHORING_GUIDE.md."""
+    """Which concepts this lesson teaches, from a fixed vocabulary (print,
+    strings, numbers, comments, expressions, variables, naming, input,
+    type-conversion, f-strings, comparison, booleans, conditionals, loops,
+    for-loops, while-loops, functions, parameters, return-values, lists,
+    indexing, slicing, dictionaries, iteration, debugging, errors,
+    algorithms, random, classes) -- used by LessonEngine.recommend_practice()
+    to suggest relevant practice after repeated failures or a quiz. Empty
+    is the common case; only lessons wired into the adaptive-practice pool
+    need this set."""

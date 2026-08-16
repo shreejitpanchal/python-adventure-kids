@@ -1,6 +1,6 @@
 """Coverage checks for the concept_tags field used by
-LessonEngine.recommend_practice() (the Python Journey "practice quest"
-recommendation feature).
+LessonEngine.recommend_practice() (the "Practice Quest" recommendation
+feature).
 
 Verifies that concept_tags added to existing lesson YAML files (a) parse
 into a list, (b) stick to the fixed tag vocabulary, (c) actually cover a

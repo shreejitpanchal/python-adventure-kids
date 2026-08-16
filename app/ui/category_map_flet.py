@@ -60,7 +60,6 @@ def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
         padding=24,
         controls=[
             header,
-            _build_journey_tile(page, state),
             _build_quiz_tile(page, state),
             ft.Row([ft.Stack(stack_children, width=PATH_WIDTH, height=path_height)], alignment=ft.MainAxisAlignment.CENTER),
         ],
@@ -100,39 +99,6 @@ def _build_node(page, theme, category, position, engine, completed_ids) -> list[
     )
 
     return [circle, caption]
-
-
-def _build_journey_tile(page: ft.Page, state: AppState) -> ft.Control:
-    """A second entry point into Python Journey (the dashboard has the
-    primary one) -- like the quiz tile below, this is a standalone card
-    above the winding map rather than a node on it, since Journey is its
-    own separate guided path, not one of the categories this map browses."""
-    theme = state.theme
-    engine = state.learning_path_engine
-    completed_ids = state.progress.get_completed_lesson_ids()
-    current = engine.current_module(completed_ids)
-    done, total = engine.progress_summary(completed_ids)
-    status = f"Module {current.order} of {total} — {done} completed"
-    text_color = contrasting_text_color(theme.primary)
-
-    return ft.Container(
-        content=ft.Row(
-            [
-                ft.Text("🗺️", size=28),
-                ft.Column(
-                    [
-                        ft.Text("Python Journey", size=18, weight=ft.FontWeight.BOLD, color=text_color),
-                        ft.Text(status, size=13, color=text_color),
-                    ],
-                    spacing=4,
-                ),
-            ],
-            spacing=12,
-        ),
-        bgcolor=theme.primary, border_radius=16, padding=16,
-        on_click=lambda _e: page.go("/journey"),
-        ink=True,
-    )
 
 
 def _build_quiz_tile(page: ft.Page, state: AppState) -> ft.Control:

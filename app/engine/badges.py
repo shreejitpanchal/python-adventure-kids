@@ -33,34 +33,6 @@ BADGE_META: dict[str, BadgeMeta] = {
     "game_creator": BadgeMeta(
         "Game Creator", "🕹️", "Built mini-games using randomness!",
     ),
-    # -- Python Journey module badges (app/engine/learning_path.py) --------
-    "module_python_starter": BadgeMeta(
-        "Python Starter", "🚀", "Completed the Python Starter module!",
-    ),
-    "module_variables_and_input": BadgeMeta(
-        "Variables and Input", "📦", "Completed the Variables and Input module!",
-    ),
-    "module_decisions": BadgeMeta(
-        "Decisions", "🚦", "Completed the Decisions module!",
-    ),
-    "module_loops": BadgeMeta(
-        "Loops", "🔁", "Completed the Loops module!",
-    ),
-    "module_functions": BadgeMeta(
-        "Functions", "⚙️", "Completed the Functions module!",
-    ),
-    "module_collections": BadgeMeta(
-        "Collections", "🎒", "Completed the Collections module!",
-    ),
-    "module_problem_solving": BadgeMeta(
-        "Problem Solving", "🧩", "Completed the Problem Solving module!",
-    ),
-    "module_python_creator": BadgeMeta(
-        "Python Creator", "🏆", "Completed the Python Creator module!",
-    ),
-    "python_journey_complete": BadgeMeta(
-        "Python Journey Complete", "🌟", "Finished all 8 modules of the Python Journey!",
-    ),
 }
 
 DEFAULT_BADGE_META = BadgeMeta("Mystery Badge", "🏅", "A special achievement!")
