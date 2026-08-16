@@ -1,6 +1,7 @@
-"""Exercises _ParentController's real PIN-gate, summary, activity, and
-reset logic against the real progress store -- with a fake Page standing
-in for a live Flet session, same pattern as test_lesson_screen_flet.py."""
+"""Exercises _ParentController's real PIN-gate (including first-visit PIN
+creation), summary, activity, rename, and reset logic against the real
+progress store -- with a fake Page standing in for a live Flet session,
+same pattern as test_lesson_screen_flet.py."""
 from __future__ import annotations
 
 import pytest
@@ -40,14 +41,13 @@ def state(tmp_path, monkeypatch):
     s.close()
 
 
-def test_no_pin_set_shows_summary_directly_with_a_warning(state):
+def test_no_pin_set_shows_create_pin_step_not_summary(state):
     controller = _ParentController(FakePage(), state)
     controller.build_view()
 
     assert not hasattr(controller, "pin_field")
-    assert "level" in controller.value_texts
-    texts = [c.value for c in controller.body.controls if hasattr(c, "value")]
-    assert any("No PIN is set" in t for t in texts)
+    assert controller.create_pin_field is not None
+    assert controller.value_texts == {}
 
 
 def test_pin_set_shows_pin_step_first_not_summary(state):
@@ -84,13 +84,86 @@ def test_wrong_pin_shows_error_and_stays_locked(state):
     assert controller.value_texts == {}  # still locked, summary never built
 
 
+def test_creating_a_pin_requires_typing_it_twice_then_unlocks_summary(state):
+    controller = _ParentController(FakePage(), state)
+    controller.build_view()
+
+    controller.create_pin_field.value = "1234"
+    controller._submit_create_pin()
+    assert controller.create_pin_error_text.value == "Type it again to confirm."
+    assert controller.value_texts == {}  # still on the create-PIN step
+
+    controller.create_pin_field.value = "1234"
+    controller._submit_create_pin()
+
+    assert state.settings.has_parent_pin()
+    assert state.settings.verify_parent_pin("1234")
+    assert "level" in controller.value_texts  # summary shown immediately after
+
+
+def test_creating_a_pin_with_mismatched_confirmation_restarts(state):
+    controller = _ParentController(FakePage(), state)
+    controller.build_view()
+
+    controller.create_pin_field.value = "1234"
+    controller._submit_create_pin()
+    controller.create_pin_field.value = "9999"
+    controller._submit_create_pin()
+
+    assert controller.create_pin_error_text.value == "PINs didn't match. Try again."
+    assert not state.settings.has_parent_pin()
+    assert controller.value_texts == {}
+
+
+def test_creating_a_pin_rejects_non_4_digit_input(state):
+    controller = _ParentController(FakePage(), state)
+    controller.build_view()
+
+    controller.create_pin_field.value = "12"
+    controller._submit_create_pin()
+
+    assert controller.create_pin_error_text.value == "Please enter exactly 4 digits."
+    assert not state.settings.has_parent_pin()
+
+
+# -- Child's Name rename card -------------------------------------------------
+def test_rename_field_prefilled_with_current_child_name(state):
+    controller = _ParentController(FakePage(), state)
+    controller._show_summary_step()
+
+    assert controller.rename_field.value == "Avyaan"
+
+
+def test_saving_a_new_name_updates_settings_and_summary(state):
+    controller = _ParentController(FakePage(), state)
+    controller._show_summary_step()
+
+    controller.rename_field.value = "Priya"
+    controller._save_child_name()
+
+    assert state.settings.child_name == "Priya"
+    assert controller.value_texts["child"].value == "Priya"
+    assert controller.rename_status_text.value == "Name updated."
+
+
+def test_saving_a_blank_name_is_rejected(state):
+    controller = _ParentController(FakePage(), state)
+    controller._show_summary_step()
+
+    controller.rename_field.value = "   "
+    controller._save_child_name()
+
+    assert state.settings.child_name == "Avyaan"
+    assert controller.rename_status_text.value == "Name can't be empty."
+
+
 def test_summary_reflects_real_progress(state):
     state.progress.complete_lesson("lesson_01", 3)
     state.progress.award_badge("first_program")
     state.progress.set_level(2)
 
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     assert controller.value_texts["level"].value == "2"
     assert controller.value_texts["stars"].value == "⭐ 3"
@@ -103,7 +176,7 @@ def test_activity_log_shows_friendly_labels_with_icons(state):
     state.progress.log_event(None, "hint_used", "some hint")
 
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     texts = [c.value for c in controller.activity_column.controls]
     assert any("✅" in t and "Completed a lesson" in t and "lesson_01" in t for t in texts)
@@ -112,7 +185,7 @@ def test_activity_log_shows_friendly_labels_with_icons(state):
 
 def test_empty_activity_shows_placeholder_text(state):
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     texts = [c.value for c in controller.activity_column.controls]
     assert any("Nothing yet" in t for t in texts)
@@ -121,7 +194,7 @@ def test_empty_activity_shows_placeholder_text(state):
 def test_reset_progress_shows_a_confirmation_dialog_first(state):
     state.progress.complete_lesson("lesson_01", 3)
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     controller._confirm_reset(None)
 
@@ -134,7 +207,7 @@ def test_confirming_reset_clears_progress_and_updates_the_summary(state):
     state.progress.complete_lesson("lesson_01", 3)
     state.progress.award_badge("first_program")
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     controller._do_reset()
 
@@ -148,7 +221,7 @@ def test_confirming_reset_clears_progress_and_updates_the_summary(state):
 def test_cancelling_reset_leaves_progress_untouched(state):
     state.progress.complete_lesson("lesson_01", 3)
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     controller._cancel_reset()
 
@@ -158,7 +231,7 @@ def test_cancelling_reset_leaves_progress_untouched(state):
 
 def test_menu_navigates_to_dashboard(state):
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     controller._on_menu(None)
 
@@ -172,7 +245,7 @@ def test_weekly_card_reflects_recent_activity(state):
     state.progress.record_quiz_attempt(9, 10)
 
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     assert controller.weekly_value_texts["lessons"].value == "1"
     assert controller.weekly_value_texts["stars"].value == "⭐ 3"
@@ -183,7 +256,7 @@ def test_weekly_card_reflects_recent_activity(state):
 
 def test_weekly_card_is_zeroed_with_no_activity(state):
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     assert controller.weekly_value_texts["lessons"].value == "0"
     assert controller.weekly_value_texts["active_days"].value == "0/7"
@@ -191,7 +264,7 @@ def test_weekly_card_is_zeroed_with_no_activity(state):
 
 def test_mastery_card_has_a_row_for_every_category(state):
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     basics_total = len(state.lesson_engine.lessons_in_category("basics"))
     assert set(controller.mastery_texts) == set(state.lesson_engine.categories())
@@ -205,7 +278,7 @@ def test_mastery_card_reflects_completed_lessons(state):
         state.progress.complete_lesson(lesson_id, 3)
 
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     assert controller.mastery_texts["basics"].value == f"{len(basics_ids)}/{len(basics_ids)}"
     assert controller.mastery_bars["basics"].value == 1.0
@@ -214,7 +287,7 @@ def test_mastery_card_reflects_completed_lessons(state):
 def test_reset_zeroes_the_weekly_and_mastery_cards(state):
     state.progress.complete_lesson("lesson_01", 3)
     controller = _ParentController(FakePage(), state)
-    controller.build_view()
+    controller._show_summary_step()
 
     controller._do_reset()
 

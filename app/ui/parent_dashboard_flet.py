@@ -53,7 +53,7 @@ class _ParentController:
         if self.state.settings.has_parent_pin():
             self._show_pin_step()
         else:
-            self._show_summary_step()
+            self._show_create_pin_step()
 
         return ft.View(
             route="/parent",
@@ -115,6 +115,68 @@ class _ParentController:
             self.pin_field.value = ""
             self.page.update()
 
+    # -- create-PIN step (first-ever visit, no PIN exists yet) ------------------
+    def _show_create_pin_step(self) -> None:
+        theme = self.theme
+        self.create_pin_field = ft.TextField(
+            hint_text="••••", width=200, text_align=ft.TextAlign.CENTER,
+            password=True, max_length=4, autofocus=True,
+        )
+        self.create_pin_error_text = ft.Text("", size=13, color=theme.danger)
+        self._create_pin_first_entry: str | None = None
+        self.create_pin_field.on_submit = self._submit_create_pin
+
+        self._set([
+            self._menu_row(),
+            ft.Row([
+                ft.Container(
+                    content=ft.Column(
+                        [
+                            ft.Text("🔒 Set a Parent PIN", size=22, weight=ft.FontWeight.BOLD, color=theme.text),
+                            ft.Text(
+                                "This is your first time here — choose a 4-digit PIN to protect the Parent Area.",
+                                size=13, color=theme.text_muted, text_align=ft.TextAlign.CENTER,
+                            ),
+                            self.create_pin_field,
+                            self.create_pin_error_text,
+                            ft.Button(
+                                "Set PIN", on_click=self._submit_create_pin, height=48,
+                                style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+                            ),
+                        ],
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
+                    ),
+                    bgcolor=theme.card, border_radius=18, padding=40, width=380,
+                ),
+            ], alignment=ft.MainAxisAlignment.CENTER),
+        ])
+
+    def _submit_create_pin(self, e=None) -> None:
+        pin = (self.create_pin_field.value or "").strip()
+        if not (pin.isdigit() and len(pin) == 4):
+            self.create_pin_error_text.value = "Please enter exactly 4 digits."
+            self.create_pin_error_text.color = self.theme.danger
+            self.create_pin_field.value = ""
+            self.page.update()
+            return
+        if self._create_pin_first_entry is None:
+            self._create_pin_first_entry = pin
+            self.create_pin_field.value = ""
+            self.create_pin_error_text.value = "Type it again to confirm."
+            self.create_pin_error_text.color = self.theme.success
+            self.page.update()
+            return
+        if pin != self._create_pin_first_entry:
+            self._create_pin_first_entry = None
+            self.create_pin_field.value = ""
+            self.create_pin_error_text.value = "PINs didn't match. Try again."
+            self.create_pin_error_text.color = self.theme.danger
+            self.page.update()
+            return
+        self.state.settings.set_parent_pin(pin)
+        self.state.save_settings()
+        self._show_summary_step()
+
     # -- summary step -----------------------------------------------------------
     def _show_summary_step(self) -> None:
         theme = self.theme
@@ -148,6 +210,7 @@ class _ParentController:
             bgcolor=theme.card, border_radius=16, padding=20, width=380,
         )
 
+        rename_card = self._build_rename_card()
         weekly_card = self._build_weekly_card()
         mastery_card = self._build_mastery_card()
 
@@ -163,16 +226,12 @@ class _ParentController:
             self._menu_row(),
             ft.Text("👋 Parent Area", size=22, weight=ft.FontWeight.BOLD, color=theme.text),
             ft.Row([summary_card], alignment=ft.MainAxisAlignment.CENTER),
+            ft.Row([rename_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([weekly_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([mastery_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Text("Recent Activity", size=16, weight=ft.FontWeight.BOLD, color=theme.text),
             activity_card,
         ]
-
-        if not self.state.settings.has_parent_pin():
-            controls.append(
-                ft.Text("No PIN is set yet — anyone can open this area.", size=13, color=theme.warning)
-            )
 
         controls.append(self.status_text)
         controls.append(
@@ -183,6 +242,44 @@ class _ParentController:
         )
 
         self._set(controls)
+
+    def _build_rename_card(self) -> ft.Control:
+        theme = self.theme
+        self.rename_field = ft.TextField(
+            value=self.state.settings.child_name, width=220, text_align=ft.TextAlign.CENTER,
+        )
+        self.rename_status_text = ft.Text("", size=12, color=theme.success)
+
+        return ft.Container(
+            content=ft.Column(
+                [
+                    ft.Text("✏️ Child's Name", size=18, weight=ft.FontWeight.BOLD, color=theme.text),
+                    self.rename_field,
+                    ft.Button(
+                        "Save", on_click=self._save_child_name, height=44,
+                        style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+                    ),
+                    self.rename_status_text,
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
+            ),
+            bgcolor=theme.card, border_radius=16, padding=20, width=380,
+        )
+
+    def _save_child_name(self, e=None) -> None:
+        theme = self.theme
+        new_name = (self.rename_field.value or "").strip()
+        if not new_name:
+            self.rename_status_text.value = "Name can't be empty."
+            self.rename_status_text.color = theme.danger
+            self.page.update()
+            return
+        self.state.settings.child_name = new_name
+        self.state.save_settings()
+        self.value_texts["child"].value = new_name
+        self.rename_status_text.value = "Name updated."
+        self.rename_status_text.color = theme.success
+        self.page.update()
 
     def _build_weekly_card(self) -> ft.Control:
         theme = self.theme
