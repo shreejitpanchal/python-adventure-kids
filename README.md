@@ -4,9 +4,21 @@ A GUI-based Python learning app for kids, built with CustomTkinter.
 
 ## Look & feel
 
-| Dashboard | Lesson | Code editor |
-|---|---|---|
-| ![Dashboard](docs/app-screenshots/welcome-screen.png) | ![Lesson explanation](docs/app-screenshots/learn-python-1.png) | ![Code editor](docs/app-screenshots/learn-python-2.png) |
+**Dashboard**
+
+![Dashboard](docs/app-screenshots/welcome-screen.jpg)
+
+**Practice by Category**
+
+![Practice by Category](docs/app-screenshots/learn-python-1.jpg)
+
+**Lesson: Meet Python**
+
+![Lesson: Meet Python](docs/app-screenshots/learn-python-2.jpg)
+
+**Settings**
+
+![Settings](docs/app-screenshots/learn-python-3.jpg)
 
 ## Status
 
