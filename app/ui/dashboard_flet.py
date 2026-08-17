@@ -1,5 +1,7 @@
 """Main screen: greets the child, shows level/progress, starts today's lesson,
-and lists completed missions so the child can replay any of them.
+and lists completed missions grouped by category (not one row per lesson --
+that grows too long once a category can have dozens of levels) so the child
+can jump back into any category they've made progress in.
 
 Layout note: `expand=True` on Row children currently renders incorrectly in
 this Flet version (first child consumes all space, siblings vanish --
@@ -34,9 +36,9 @@ def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
             ft.Container(height=16),
             _build_mission_card(page, state),
             ft.Container(height=16),
-            _build_missions_sidebar(page, state),
-            ft.Container(height=16),
             _build_quiz_card(page, state),
+            ft.Container(height=16),
+            _build_missions_sidebar(page, state),
             ft.Container(height=16),
             ft.Text("More lessons are on their way! 🚀", size=fs(13), color=theme.text_muted),
         ],
@@ -125,37 +127,40 @@ def _build_missions_sidebar(page: ft.Page, state: AppState) -> ft.Control:
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     engine = state.lesson_engine
-    completed_ids = set(state.progress.get_completed_lesson_ids())
-    stars_by_lesson = state.progress.get_stars_by_lesson()
-    completed_lessons = [lesson for lesson in engine.all_in_order() if lesson.id in completed_ids]
+    completed_ids = state.progress.get_completed_lesson_ids()
+    completion = engine.category_completion(completed_ids)
+    started_categories = [(category, done, total) for category, (done, total) in completion.items() if done > 0]
 
     items: list[ft.Control] = [
         ft.Text("✅ Completed Missions", size=fs(16), weight=ft.FontWeight.BOLD, color=theme.text),
     ]
 
-    if not completed_lessons:
+    if not started_categories:
         items.append(
             ft.Text(
-                "Finish your first mission to see it here — then you can replay it anytime!",
+                "Finish your first mission to see it here — then you can jump back into any category!",
                 size=fs(12), color=theme.text_muted,
             )
         )
     else:
         chips: list[ft.Control] = []
-        for lesson in completed_lessons:
-            stars = stars_by_lesson.get(lesson.id, 0)
-            meta = get_category_meta(lesson.category)
+        for category, done, total in started_categories:
+            meta = get_category_meta(category)
             text_color = contrasting_text_color(meta.color)
+            status = "✅ All levels complete!" if done == total else f"{done}/{total} completed"
             chips.append(
                 ft.Button(
                     content=ft.Column(
                         [
-                            ft.Text(lesson.title, size=fs(13), color=text_color),
-                            ft.Text("⭐" * stars if stars else " ", size=fs(13), color=text_color),
+                            ft.Text(
+                                f"{meta.icon} {meta.title}", size=fs(13), weight=ft.FontWeight.BOLD,
+                                color=text_color,
+                            ),
+                            ft.Text(status, size=fs(12), color=text_color),
                         ],
                         spacing=2,
                     ),
-                    on_click=lambda _e, lesson_id=lesson.id: page.go(f"/lesson/{lesson_id}"),
+                    on_click=lambda _e, cat=category: page.go(f"/categories/{cat}"),
                     style=ft.ButtonStyle(bgcolor=meta.color),
                 )
             )

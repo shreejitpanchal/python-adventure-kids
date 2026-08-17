@@ -1,5 +1,7 @@
 """Main screen: greets the child, shows level/progress, starts today's lesson,
-and lists completed missions on the left so the child can replay any of them.
+and lists completed missions on the left, grouped by category (not one row
+per lesson -- that grows too long once a category can have dozens of levels)
+so the child can jump back into any category they've made progress in.
 
 The whole thing is wrapped in a scrollable frame, since content height varies
 with font/DPI scaling and grows as more lessons are completed -- this keeps
@@ -106,11 +108,11 @@ class DashboardFrame(ctk.CTkFrame):
         left_column = ctk.CTkFrame(container, fg_color="transparent", width=260)
         left_column.pack(side="left", fill="y", padx=(0, 16))
 
-        self._build_missions_sidebar(left_column)
         self._build_quiz_card(left_column)
+        self._build_missions_sidebar(left_column)
         self._build_mission_card(container)
 
-    # -- left column: completed missions, replayable, then quick-access quiz ---
+    # -- left column: quick-access quiz, then completed missions by category ---
     def _build_missions_sidebar(self, parent) -> None:
         sidebar = ctk.CTkFrame(parent, fg_color=theme.COLOR_CARD, corner_radius=20)
         sidebar.pack(fill="x", pady=(0, 16))
@@ -121,14 +123,14 @@ class DashboardFrame(ctk.CTkFrame):
         ).pack(anchor="w", padx=16, pady=(20, 10))
 
         engine = self.app.lesson_engine
-        completed_ids = set(self.app.progress.get_completed_lesson_ids())
-        stars_by_lesson = self.app.progress.get_stars_by_lesson()
-        completed_lessons = [lesson for lesson in engine.all_in_order() if lesson.id in completed_ids]
+        completed_ids = self.app.progress.get_completed_lesson_ids()
+        completion = engine.category_completion(completed_ids)
+        started_categories = [(category, done, total) for category, (done, total) in completion.items() if done > 0]
 
-        if not completed_lessons:
+        if not started_categories:
             ctk.CTkLabel(
                 sidebar,
-                text="Finish your first mission to see it here — then you can replay it anytime!",
+                text="Finish your first mission to see it here — then you can jump back into any category!",
                 font=theme.font_body(12), text_color=theme.COLOR_TEXT_MUTED,
                 wraplength=210, justify="left",
             ).pack(anchor="w", padx=16, pady=(0, 16))
@@ -143,19 +145,19 @@ class DashboardFrame(ctk.CTkFrame):
         list_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
         list_frame.pack(fill="x", padx=8, pady=(0, 12))
 
-        for lesson in completed_lessons:
-            stars = stars_by_lesson.get(lesson.id, 0)
-            meta = get_category_meta(lesson.category)
+        for category, done, total in started_categories:
+            meta = get_category_meta(category)
+            status = "✅ All levels complete!" if done == total else f"{done}/{total} completed"
             ctk.CTkButton(
-                list_frame, text=f"{lesson.title}\n{'⭐' * stars}",
+                list_frame, text=f"{meta.icon} {meta.title}\n{status}",
                 font=theme.font_body(13), anchor="w",
                 fg_color=meta.color, hover_color=darken(meta.color),
                 text_color=contrasting_text_color(meta.color), height=52, corner_radius=10,
-                command=lambda lesson_id=lesson.id: self._on_replay(lesson_id),
+                command=lambda category=category: self._on_open_category(category),
             ).pack(fill="x", pady=4, padx=4)
 
-    def _on_replay(self, lesson_id: str) -> None:
-        self.app.show_lesson(lesson_id)
+    def _on_open_category(self, category: str) -> None:
+        self.app.show_category_levels(category)
 
     def _build_quiz_card(self, parent) -> None:
         """Same tile pattern as the Quiz entry in the category browser
@@ -171,7 +173,7 @@ class DashboardFrame(ctk.CTkFrame):
             fg_color=meta.color, hover_color=darken(meta.color),
             text_color=contrasting_text_color(meta.color),
             command=self._on_open_quiz,
-        ).pack(fill="x")
+        ).pack(fill="x", pady=(0, 16))
 
     # -- right side: today's mission --------------------------------------------
     def _build_mission_card(self, parent) -> None:
