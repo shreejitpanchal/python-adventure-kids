@@ -1,0 +1,61 @@
+id: advanced_cracker_02
+title: "Advanced Code Cracker: The Loop That Remembers Wrong 🕵️"
+level: 477
+objective: "Fix a late-binding closure bug where every function built in a loop captures the loop variable's final value instead of its own."
+explanation: |
+  A closure captures the VARIABLE, not the value it held at creation time.
+  When you build several functions inside a for loop and each one reads the
+  loop variable, they all look up that same variable -- and by the time you
+  call any of them, the loop has finished and the variable holds its last
+  value. This is "late binding."
+
+  The classic fix is to force early binding: give the inner function a
+  keyword argument that defaults to the loop variable's CURRENT value.
+  Default values are evaluated immediately, once per definition, so each
+  function gets its own frozen copy.
+example_code: |
+  def make_multipliers():
+      multipliers = []
+      for i in range(3):
+          def multiplier(x, factor=i):
+              return x * factor
+          multipliers.append(multiplier)
+      return multipliers
+
+
+  funcs = make_multipliers()
+  for f in funcs:
+      print(f(10))
+starter_code: |
+  def make_multipliers():
+      multipliers = []
+      for i in range(3):
+          def multiplier(x):
+              return x * i
+          multipliers.append(multiplier)
+      return multipliers
+
+
+  funcs = make_multipliers()
+  for f in funcs:
+      print(f(10))
+challenge: |
+  🎯 This should build three multiplier functions -- times 0, times 1, times
+  2. Instead every single one behaves like times 2. Find the late-binding
+  bug and pin each function to its own loop value.
+expected_output: |
+  0
+  10
+  20
+ast_contains: ["def", "for", "return"]
+hints:
+  - "All three functions share the same free variable `i`, and they don't look it up until you call them -- long after the loop is done."
+  - "By the time you call any of the functions, the loop has already finished with i == 2."
+  - "Give the inner function a parameter like `factor=i` -- default values are captured immediately, at definition time."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 2
+main_path: false
+concept_tags: [debugging, errors, functions, loops, for-loops]

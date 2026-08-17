@@ -1,0 +1,50 @@
+id: advanced_cracker_05
+title: "Advanced Code Cracker: The Empty Leaderboard 🕵️"
+level: 480
+objective: "Fix a bug where an in-place mutating method (.sort()) is used as if it returned the sorted result, when it actually returns None."
+explanation: |
+  Several list methods -- `.sort()`, `.append()`, `.reverse()`, `.extend()`,
+  dict's `.update()` -- mutate the object in place and return None on
+  purpose, as a signal that they're side-effecting rather than value-
+  producing. Assigning their return value (`x = my_list.sort()`) is a
+  classic trap: x ends up None, and the actual sorted list is sitting,
+  unused, in the original variable.
+
+  The non-mutating counterpart, `sorted(...)`, is what you want when you
+  need the result as a value -- it leaves the original untouched and
+  returns a new list.
+example_code: |
+  def get_top_scores(scores):
+      ordered = sorted(scores, reverse=True)
+      return ordered
+
+
+  scores = [42, 17, 99, 8]
+  top_scores = get_top_scores(scores)
+  print(top_scores)
+starter_code: |
+  def get_top_scores(scores):
+      ordered = scores.sort(reverse=True)
+      return ordered
+
+
+  scores = [42, 17, 99, 8]
+  top_scores = get_top_scores(scores)
+  print(top_scores)
+challenge: |
+  🎯 top_scores comes out as None instead of a sorted list. scores.sort()
+  is the culprit -- it sorts in place and hands back nothing. Fix
+  get_top_scores so it actually returns the sorted scores.
+expected_output: "[99, 42, 17, 8]"
+ast_contains: ["def", "sorted", "return"]
+hints:
+  - "print(top_scores) shows None -- trace that back to where ordered gets assigned."
+  - "list.sort() sorts scores in place and returns None; it's not the same as producing a sorted value."
+  - "Use sorted(scores, reverse=True) instead, which returns the sorted list without touching the original."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 5
+main_path: false
+concept_tags: [debugging, errors, lists, functions, return-values]

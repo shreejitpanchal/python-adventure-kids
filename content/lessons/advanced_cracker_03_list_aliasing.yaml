@@ -1,0 +1,46 @@
+id: advanced_cracker_03
+title: "Advanced Code Cracker: The Shared Playlist 🕵️"
+level: 478
+objective: "Fix a bug where assigning one list to another name aliases the same object instead of copying it."
+explanation: |
+  `b = a` doesn't create a new list -- it just gives the SAME list object a
+  second name. Both names point at identical memory, so mutating through
+  either one (append, sort, clear, item assignment...) is visible through
+  the other too.
+
+  If you actually want an independent copy, you have to ask for one
+  explicitly: a full slice `a[:]`, `list(a)`, or `a.copy()` all build a new
+  list with the same contents but a distinct identity.
+example_code: |
+  original = ["rock", "jazz", "blues"]
+  backup = original[:]
+  backup.append("pop")
+
+  print(original)
+  print(backup)
+starter_code: |
+  original = ["rock", "jazz", "blues"]
+  backup = original
+  backup.append("pop")
+
+  print(original)
+  print(backup)
+challenge: |
+  🎯 backup is meant to be an independent snapshot of original, safe to
+  modify without touching the source list. Right now it isn't. Fix the
+  assignment so appending to backup leaves original untouched.
+expected_output: |
+  ['rock', 'jazz', 'blues']
+  ['rock', 'jazz', 'blues', 'pop']
+ast_contains: ["append", "print"]
+hints:
+  - "backup = original doesn't copy anything -- it's a second label on the exact same list object."
+  - "Check whether original changed too after you appended to backup. If it did, they're aliased."
+  - "Use a real copy: `backup = original[:]` (or list(original), or original.copy())."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 3
+main_path: false
+concept_tags: [debugging, errors, lists, slicing]

@@ -1,0 +1,29 @@
+id: cracker_32
+title: "Code Cracker: The Curly Braces That Didn't Work 🧩"
+level: 467
+objective: "Fix a string missing its f prefix, so {name} prints literally instead of its value."
+explanation: |
+  Curly braces {} only insert a variable's value when the string
+  has an f right before the opening quote. Without the f, Python
+  treats {name} as plain text and prints it exactly as typed.
+example_code: |
+  name = "Zoe"
+  print(f"Hello, {name}!")
+starter_code: |
+  name = "Zoe"
+  print("Hello, {name}!")
+challenge: |
+  🎯 This prints {name} instead of Zoe! Add what's missing so the value shows up.
+expected_output: "Hello, Zoe!"
+ast_contains: ["f-string", "print"]
+hints:
+  - "The curly braces {} only work inside a special kind of string."
+  - "Add an f right before the opening quote to make it an f-string."
+  - "It should look like: print(f\"Hello, {name}!\")"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 32
+main_path: false
+concept_tags: [debugging, errors, f-strings, strings]

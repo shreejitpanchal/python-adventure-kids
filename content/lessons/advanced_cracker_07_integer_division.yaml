@@ -1,0 +1,59 @@
+id: advanced_cracker_07
+title: "Advanced Code Cracker: The Off Average 🕵️"
+level: 482
+objective: "Fix two related numeric bugs in one function: floor division used where true division was intended, and a brittle exact-equality float comparison covering it up."
+explanation: |
+  `//` always floors to a whole number (even on floats -- 28.0 // 3 is
+  9.0, not 9.333...), while `/` gives you the true division result. Using
+  `//` where you actually wanted a precise average is a silent bug: no
+  crash, just a wrong number that looks plausible.
+
+  This function has that bug, plus a second one that was hiding it: the
+  sanity check compares the average to a literal with `==`, which is
+  exactly the float-equality trap -- it would have failed to flag the wrong
+  average as wrong even once the division is fixed, unless it also switches
+  to a tolerance-based comparison.
+example_code: |
+  def average_price(total_cost, item_count):
+      return total_cost / item_count
+
+
+  costs = [19.99, 5.00, 3.01]
+  total = sum(costs)
+  avg = average_price(total, len(costs))
+
+  if abs(avg - 9.3333) < 0.001:
+      print("Average looks right")
+  else:
+      print(round(avg, 2))
+starter_code: |
+  def average_price(total_cost, item_count):
+      return total_cost // item_count
+
+
+  costs = [19.99, 5.00, 3.01]
+  total = sum(costs)
+  avg = average_price(total, len(costs))
+
+  if avg == 9.3333:
+      print("Average looks right")
+  else:
+      print(round(avg, 2))
+challenge: |
+  🎯 This should print "Average looks right" but prints a plain number
+  instead -- two bugs are stacked here. Fix the division so average_price
+  returns a true average, and fix the sanity check so it doesn't rely on
+  exact float equality.
+expected_output: "Average looks right"
+ast_contains: ["def", "if", "abs", "round"]
+hints:
+  - "// floors the result to a whole number, even for floats -- that's not what an average needs."
+  - "Switch average_price to use / instead of //."
+  - "Separately, `avg == 9.3333` has the same exact-float-equality problem as always -- compare with abs(avg - 9.3333) < some small tolerance."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 7
+main_path: false
+concept_tags: [debugging, errors, numbers, comparison, functions]

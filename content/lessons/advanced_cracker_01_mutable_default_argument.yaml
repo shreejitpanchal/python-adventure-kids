@@ -1,0 +1,54 @@
+id: advanced_cracker_01
+title: "Advanced Code Cracker: The Sticky Shopping Cart 🕵️"
+level: 476
+objective: "Fix a bug where a mutable default argument persists across calls instead of starting fresh each time."
+explanation: |
+  Default argument values are evaluated exactly once -- at function definition
+  time, not on every call. When that default is a mutable object like a list
+  or dict, every call that doesn't pass its own argument shares the SAME
+  object, and mutations from one call leak into the next.
+
+  The standard fix is to default to None and create the fresh mutable object
+  inside the function body when None is seen. This is such a common gotcha
+  that most linters flag `def f(x=[])` on sight.
+example_code: |
+  def add_item(item, cart=None):
+      if cart is None:
+          cart = []
+      cart.append(item)
+      return cart
+
+
+  first_cart = add_item("apple")
+  second_cart = add_item("bread")
+  print(first_cart)
+  print(second_cart)
+starter_code: |
+  def add_item(item, cart=[]):
+      cart.append(item)
+      return cart
+
+
+  first_cart = add_item("apple")
+  second_cart = add_item("bread")
+  print(first_cart)
+  print(second_cart)
+challenge: |
+  🎯 Two calls with no explicit cart should each start with an empty list --
+  instead they're sharing one. Find why, and fix add_item so first_cart and
+  second_cart come out independent.
+expected_output: |
+  ['apple']
+  ['bread']
+ast_contains: ["def", "if", "append"]
+hints:
+  - "cart=[] only runs once, at def time -- not once per call."
+  - "Every call that doesn't pass its own cart is mutating that same original list object."
+  - "Default cart to None, then do `if cart is None: cart = []` inside the function body."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 1
+main_path: false
+concept_tags: [debugging, errors, functions, parameters, lists]

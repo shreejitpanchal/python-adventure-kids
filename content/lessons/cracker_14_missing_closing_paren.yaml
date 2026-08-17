@@ -1,0 +1,33 @@
+id: cracker_14
+title: "Code Cracker: The Unfinished Call 🧩"
+level: 449
+objective: "Fix a SyntaxError caused by a missing closing parenthesis in a function call."
+explanation: |
+  Every opening parenthesis ( needs a matching closing one ). When
+  you call a function, Python keeps waiting for the closing )
+  before it thinks the line is finished.
+example_code: |
+  def greet(name):
+      print("Hello, " + name + "!")
+
+  greet("Maya")
+starter_code: |
+  def greet(name):
+      print("Hello, " + name + "!")
+
+  greet("Maya"
+challenge: |
+  🎯 This code won't run! Count the parentheses on the last line and fix the missing one.
+expected_output: "Hello, Maya!"
+ast_contains: ["def", "print"]
+hints:
+  - "Count the parentheses on the last line -- there should be a matching pair."
+  - "greet(\"Maya\" is missing its closing parenthesis."
+  - "It should look like: greet(\"Maya\")"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 14
+main_path: false
+concept_tags: [debugging, errors, functions]

@@ -1,0 +1,33 @@
+id: cracker_16
+title: "Code Cracker: The Loop That Quit Early 🧩"
+level: 451
+objective: "Fix a while loop that's stopping one number too soon."
+explanation: |
+  while count < 5 stops as soon as count reaches 5 -- it never
+  lets count equal 5 inside the loop. Using <= instead of < lets
+  the loop run one more time, so the last number gets included.
+example_code: |
+  count = 1
+  while count <= 5:
+      print(count)
+      count += 1
+starter_code: |
+  count = 1
+  while count < 5:
+      print(count)
+      count += 1
+challenge: |
+  🎯 This loop is missing a number! Fix the condition so it prints 1 through 5.
+expected_output: "1\n2\n3\n4\n5"
+ast_contains: ["while"]
+hints:
+  - "count < 5 stops before count ever reaches 5 -- count how many numbers actually print."
+  - "You need a condition that lets count equal 5 too."
+  - "It should look like: while count <= 5:"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 16
+main_path: false
+concept_tags: [debugging, errors, while-loops, loops]

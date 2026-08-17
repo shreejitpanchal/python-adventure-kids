@@ -1,0 +1,30 @@
+id: cracker_31
+title: "Code Cracker: The Extra Line 🧩"
+level: 466
+objective: "Fix output that has an extra, unwanted print() call."
+explanation: |
+  Every print() adds another line to the output. An extra print
+  left over from testing something out can make the output not
+  match what's actually expected, even though nothing crashes.
+example_code: |
+  name = "Robo"
+  print("Hello, " + name + "!")
+starter_code: |
+  name = "Robo"
+  print("Loading...")
+  print("Hello, " + name + "!")
+challenge: |
+  🎯 This prints an extra line! Remove the print call that shouldn't be there.
+expected_output: "Hello, Robo!"
+ast_contains: ["print"]
+hints:
+  - "Count the print() calls -- how many lines of output do you actually want?"
+  - "The \"Loading...\" line isn't part of the expected output."
+  - "It should look like: just one print(\"Hello, \" + name + \"!\") line."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 31
+main_path: false
+concept_tags: [debugging, errors, print]

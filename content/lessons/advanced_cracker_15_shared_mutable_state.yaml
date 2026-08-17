@@ -1,0 +1,61 @@
+id: advanced_cracker_15
+title: "Advanced Code Cracker: The Shared Inventory Bug 🕵️"
+level: 490
+objective: "Fix a bug where every 'instance' ends up sharing one mutable list because it's built from a single shared object instead of a fresh one per instance."
+explanation: |
+  This is the same failure mode Python classes hit when a mutable value is
+  defined once at class body scope instead of per-instance inside
+  `__init__`: `class Player: inventory = []` creates exactly ONE list
+  object attached to the class, and every instance that doesn't shadow it
+  with its own `self.inventory = []` reads and writes that same shared
+  list. One player picking up an item shows up in every other player's
+  inventory too.
+
+  The snippet below models the identical bug with a factory function
+  instead: a "template" list created once, outside the function, that
+  every player dict ends up referencing rather than each getting its own.
+  The fix in both cases is the same idea -- build the fresh mutable object
+  freshly for each instance, not once and shared.
+example_code: |
+  def make_player(name):
+      return {"name": name, "inventory": []}
+
+
+  alice = make_player("Alice")
+  bob = make_player("Bob")
+  alice["inventory"].append("sword")
+  print(alice["inventory"])
+  print(bob["inventory"])
+starter_code: |
+  shared_inventory = []
+
+
+  def make_player(name):
+      return {"name": name, "inventory": shared_inventory}
+
+
+  alice = make_player("Alice")
+  bob = make_player("Bob")
+  alice["inventory"].append("sword")
+  print(alice["inventory"])
+  print(bob["inventory"])
+challenge: |
+  🎯 Alice picks up a sword, but Bob's inventory shows it too -- they're
+  meant to be independent players. Find where every player ends up
+  referencing the same list, and make make_player build a fresh one each
+  time instead.
+expected_output: |
+  ['sword']
+  []
+ast_contains: ["def", "return", "append", "print"]
+hints:
+  - "shared_inventory is created once, outside make_player -- every call reuses that exact same list object, the same way `class Player: inventory = []` would."
+  - "alice[\"inventory\"] and bob[\"inventory\"] are literally the same list under two different names -- appending through one shows up in the other."
+  - "Build the list fresh inside make_player -- `return {\"name\": name, \"inventory\": []}` -- so each call gets its own, the way `self.inventory = []` inside __init__ would for a real class."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 15
+main_path: false
+concept_tags: [debugging, errors, classes, dictionaries, functions]

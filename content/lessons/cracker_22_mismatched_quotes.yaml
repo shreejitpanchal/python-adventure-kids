@@ -1,0 +1,27 @@
+id: cracker_22
+title: "Code Cracker: The Quote Mix-Up 🧩"
+level: 457
+objective: "Fix a SyntaxError caused by opening a string with one quote type and closing it with another."
+explanation: |
+  A string has to start and end with the SAME kind of quote mark
+  -- both single ' or both double ". Starting with one and ending
+  with the other confuses Python about where the text ends.
+example_code: |
+  print('Welcome, adventurer!')
+starter_code: |
+  print('Welcome, adventurer!")
+challenge: |
+  🎯 This code won't run! Look closely at the quote marks and make them match.
+expected_output: "Welcome, adventurer!"
+ast_contains: ["print"]
+hints:
+  - "Look closely at the quote mark at the start versus the end of the text."
+  - "The line starts with ' but ends with \" -- they need to match."
+  - "It should look like: print('Welcome, adventurer!')"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 22
+main_path: false
+concept_tags: [debugging, errors, strings]

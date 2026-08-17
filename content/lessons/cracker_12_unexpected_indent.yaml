@@ -1,0 +1,30 @@
+id: cracker_12
+title: "Code Cracker: The Line Out of Place 🧩"
+level: 447
+objective: "Fix an IndentationError caused by a line that's indented when it shouldn't be."
+explanation: |
+  Python only expects indentation right after a line that opens a
+  block, like an if or a for. A line indented for no reason --
+  even by a few spaces -- confuses Python about what block it's
+  supposed to belong to.
+example_code: |
+  print("Starting game...")
+  print("Player ready!")
+starter_code: |
+  print("Starting game...")
+      print("Player ready!")
+challenge: |
+  🎯 This code won't run! Remove the extra spaces before the second print so it lines up with the first.
+expected_output: "Starting game...\nPlayer ready!"
+ast_contains: ["print"]
+hints:
+  - "Look closely at the spaces before the second print line."
+  - "Nothing here opens a block, so nothing should be indented."
+  - "It should look like:\nprint(\"Starting game...\")\nprint(\"Player ready!\")"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 12
+main_path: false
+concept_tags: [debugging, errors, print]

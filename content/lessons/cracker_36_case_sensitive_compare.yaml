@@ -1,0 +1,31 @@
+id: cracker_36
+title: "Code Cracker: Capital Trouble 🧩"
+level: 471
+objective: "Fix a comparison bug caused by mismatched letter case."
+explanation: |
+  Python compares text exactly, letter by letter, including
+  capitalization -- "yes" and "Yes" are NOT equal. A single
+  capital letter in the wrong place makes a comparison fail.
+example_code: |
+  answer = "yes"
+  if answer == "yes":
+      print("Great choice!")
+starter_code: |
+  answer = "yes"
+  if answer == "Yes":
+      print("Great choice!")
+challenge: |
+  🎯 Nothing prints, even though answer is "yes"! Fix the capitalization in the comparison.
+expected_output: "Great choice!"
+ast_contains: ["if"]
+hints:
+  - "answer is \"yes\" with a lowercase y -- what does the if line compare it to?"
+  - "\"yes\" and \"Yes\" are different text to Python because of the capital letter."
+  - "It should look like: if answer == \"yes\":"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 36
+main_path: false
+concept_tags: [debugging, errors, strings, comparison]

@@ -1,0 +1,53 @@
+id: advanced_cracker_14
+title: "Advanced Code Cracker: The Broken Invite List 🕵️"
+level: 489
+objective: "Fix a TypeError caused by unpacking a list with ** (which requires a mapping) instead of * (which spreads positional items)."
+explanation: |
+  `*` and `**` unpack different shapes of data into a call: `*iterable`
+  spreads a sequence into positional arguments, while `**mapping` spreads a
+  dict's key/value pairs into keyword arguments -- and specifically
+  requires something dict-like, not a list. Using `**` on a list raises
+  `TypeError: argument after ** must be a mapping, not list` immediately,
+  before the function body ever runs.
+
+  Matching the unpacking operator to the data structure it's meant for --
+  `*` for a plain sequence of positional values, `**` for a mapping of
+  named ones -- is what makes `*args, **kwargs`-style calls work at all.
+example_code: |
+  def send_invites(*names, **details):
+      for name in names:
+          print(f"Inviting {name} to {details['event']}")
+
+
+  guest_list = ["Ana", "Beto", "Cid"]
+  event_info = {"event": "Launch Party"}
+  send_invites(*guest_list, **event_info)
+starter_code: |
+  def send_invites(*names, **details):
+      for name in names:
+          print(f"Inviting {name} to {details['event']}")
+
+
+  guest_list = ["Ana", "Beto", "Cid"]
+  event_info = {"event": "Launch Party"}
+  send_invites(**guest_list, **event_info)
+challenge: |
+  🎯 The call to send_invites crashes with a TypeError before a single
+  invite gets printed. guest_list is a plain list, not a mapping -- fix the
+  unpacking operator used on it.
+expected_output: |
+  Inviting Ana to Launch Party
+  Inviting Beto to Launch Party
+  Inviting Cid to Launch Party
+ast_contains: ["def", "for", "f-string", "details"]
+hints:
+  - "guest_list is a list of names, not key/value pairs -- ** expects something dict-like."
+  - "The error happens at the call site, before send_invites even starts running."
+  - "Use a single * to spread guest_list's items as positional arguments: send_invites(*guest_list, **event_info)."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 14
+main_path: false
+concept_tags: [debugging, errors, functions, parameters, lists, dictionaries]

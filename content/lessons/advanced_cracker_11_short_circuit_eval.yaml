@@ -1,0 +1,72 @@
+id: advanced_cracker_11
+title: "Advanced Code Cracker: The Fallback That Wasn't 🕵️"
+level: 486
+objective: "Fix two related bugs in one snippet: code that assumes `and`/`or` always produce True/False, and a fallback chain that checks `is not None` instead of relying on short-circuit truthiness."
+explanation: |
+  `and` and `or` don't evaluate to True/False -- they return whichever
+  OPERAND short-circuited the expression. `x or y` returns x if x is
+  truthy, otherwise y, whatever type either happens to be. `x and y`
+  returns x if x is falsy, otherwise y. That makes `a or b or c` a handy
+  "first truthy value" fallback chain, but it also means `is_admin and
+  is_verified` can hand back a plain 0 instead of False if is_admin happens
+  to be 0 -- callers expecting a real bool get a surprise.
+
+  This snippet has that bug, plus a second one in the fallback chain: it
+  checks `is not None` explicitly instead of using a plain `or` chain, so
+  an empty string (falsy, but not None) slips through as a "valid" nickname
+  instead of triggering the fallback.
+example_code: |
+  def choose_display_name(nickname, username):
+      name = nickname or username or "Guest"
+      return name
+
+
+  def has_access(is_admin, is_verified):
+      return bool(is_admin and is_verified)
+
+
+  print(choose_display_name("", "shree99"))
+  print(choose_display_name(None, None))
+  print(has_access(True, True))
+  print(has_access(0, True))
+starter_code: |
+  def choose_display_name(nickname, username):
+      if nickname is not None:
+          name = nickname
+      elif username is not None:
+          name = username
+      else:
+          name = "Guest"
+      return name
+
+
+  def has_access(is_admin, is_verified):
+      return is_admin and is_verified
+
+
+  print(choose_display_name("", "shree99"))
+  print(choose_display_name(None, None))
+  print(has_access(True, True))
+  print(has_access(0, True))
+challenge: |
+  🎯 choose_display_name("", "shree99") should fall back to the username
+  since "" isn't a usable nickname -- it prints blank instead. Separately,
+  has_access(0, True) should clearly print False -- it prints 0. Find and
+  fix both short-circuit-related bugs.
+expected_output: |
+  shree99
+  Guest
+  True
+  False
+ast_contains: ["def", "return", "bool"]
+hints:
+  - "`nickname is not None` treats an empty string as a valid nickname, since '' is not None -- but '' is falsy and should fall through to username."
+  - "A plain `nickname or username or 'Guest'` chain naturally skips any falsy value (None or ''), landing on the first truthy one."
+  - "`is_admin and is_verified` returns is_admin itself when it's falsy (like 0), not the boolean False -- wrap the result in bool(...)."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 11
+main_path: false
+concept_tags: [debugging, errors, booleans, conditionals, functions]

@@ -1,0 +1,33 @@
+id: cracker_19
+title: "Code Cracker: Too Early to Cheer 🧩"
+level: 454
+objective: "Fix a NameError caused by calling a function before it's defined."
+explanation: |
+  Python reads a file top to bottom. A function has to be defined
+  with def BEFORE the line that calls it -- calling it any earlier
+  means Python doesn't know that name yet.
+example_code: |
+  def cheer():
+      print("Go team!")
+
+  cheer()
+starter_code: |
+  cheer()
+
+  def cheer():
+      print("Go team!")
+challenge: |
+  🎯 This code won't run! Move the function call so it comes after the function is defined.
+expected_output: "Go team!"
+ast_contains: ["def"]
+hints:
+  - "Python reads top to bottom -- cheer() runs before cheer is even defined."
+  - "Move the def cheer(): block above the line that calls it."
+  - "It should look like: def cheer(): ... then cheer() below it."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 19
+main_path: false
+concept_tags: [debugging, errors, functions]

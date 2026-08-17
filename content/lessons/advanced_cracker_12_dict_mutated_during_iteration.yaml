@@ -1,0 +1,53 @@
+id: advanced_cracker_12
+title: "Advanced Code Cracker: The Shrinking Inventory 🕵️"
+level: 487
+objective: "Fix a RuntimeError caused by deleting dictionary keys while iterating directly over the dictionary."
+explanation: |
+  Iterating `for key in some_dict:` walks the dict's internal key view
+  live. Deleting (or adding) a key while that iterator is still active
+  changes the dict's size mid-walk, and Python detects it and raises
+  `RuntimeError: dictionary changed size during iteration` rather than let
+  you get silently wrong results.
+
+  The fix is to iterate over a separate, static snapshot of the keys --
+  `list(some_dict.keys())` -- so the loop walks a plain list that's
+  completely disconnected from the dict you're mutating.
+example_code: |
+  def remove_out_of_stock(inventory):
+      for item in list(inventory.keys()):
+          if inventory[item] == 0:
+              del inventory[item]
+      return inventory
+
+
+  stock = {"apples": 5, "bananas": 0, "cherries": 3, "dates": 0}
+  result = remove_out_of_stock(stock)
+  print(result)
+starter_code: |
+  def remove_out_of_stock(inventory):
+      for item in inventory:
+          if inventory[item] == 0:
+              del inventory[item]
+      return inventory
+
+
+  stock = {"apples": 5, "bananas": 0, "cherries": 3, "dates": 0}
+  result = remove_out_of_stock(stock)
+  print(result)
+challenge: |
+  🎯 This crashes with "dictionary changed size during iteration" the
+  moment it tries to remove the first out-of-stock item. Fix the loop so
+  it can safely delete keys while going through the inventory.
+expected_output: "{'apples': 5, 'cherries': 3}"
+ast_contains: ["def", "for", "if", "list", "return"]
+hints:
+  - "The crash happens as soon as del inventory[item] runs while `for item in inventory:` is still walking that same dict."
+  - "You need to iterate over something that isn't the live dict itself -- a snapshot of its keys, taken before the loop starts."
+  - "Loop over `list(inventory.keys())` instead of `inventory` directly; deleting from inventory won't disturb that separate list."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 12
+main_path: false
+concept_tags: [debugging, errors, dictionaries, iteration, for-loops]

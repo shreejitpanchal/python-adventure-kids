@@ -1,0 +1,31 @@
+id: cracker_40
+title: "Code Cracker: Numbers Instead of Names 🧩"
+level: 475
+objective: "Fix a for loop that prints list positions instead of the items themselves."
+explanation: |
+  for snack in range(len(snacks)) loops over POSITIONS (0, 1, 2,
+  ...), not the items themselves. To print the actual items, loop
+  directly over the list instead.
+example_code: |
+  snacks = ["chips", "grapes", "pretzels"]
+  for snack in snacks:
+      print(snack)
+starter_code: |
+  snacks = ["chips", "grapes", "pretzels"]
+  for snack in range(len(snacks)):
+      print(snack)
+challenge: |
+  🎯 This prints 0, 1, 2 instead of snack names! Fix what the loop goes through.
+expected_output: "chips\ngrapes\npretzels"
+ast_contains: ["for"]
+hints:
+  - "range(len(snacks)) gives you positions, not the snacks themselves."
+  - "Loop directly over the list to get each item instead of its position."
+  - "It should look like: for snack in snacks:"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 40
+main_path: false
+concept_tags: [debugging, errors, for-loops, loops, lists]

@@ -1,0 +1,89 @@
+id: advanced_cracker_08
+title: "Advanced Code Cracker: The Confused Counters 🕵️"
+level: 483
+objective: "Fix two related scoping bugs: a module-level variable incremented with += inside a function without `global`, and a nested closure counter that needs `nonlocal` to update its enclosing variable."
+explanation: |
+  If a function assigns to a name anywhere in its body -- including via
+  `total += amount`, which is `total = total + amount` -- Python treats
+  that name as local to the WHOLE function, for every line, not just after
+  the assignment. So the read half of `total += amount` tries to read a
+  local that doesn't exist yet: UnboundLocalError. Declaring `global total`
+  tells Python "no, I mean the module-level one."
+
+  The nested function below has the same shape of bug one level in: an
+  inner function assigning to a variable from its enclosing (not global)
+  scope needs `nonlocal`, not `global`, to say "modify the enclosing
+  function's variable, don't create a new local one."
+example_code: |
+  total_sales = 0
+
+
+  def record_sale(amount):
+      global total_sales
+      total_sales += amount
+
+
+  def make_counter():
+      count = 0
+
+      def increment():
+          nonlocal count
+          count += 1
+          return count
+
+      return increment
+
+
+  record_sale(100)
+  record_sale(50)
+  print(total_sales)
+
+  counter = make_counter()
+  print(counter())
+  print(counter())
+starter_code: |
+  total_sales = 0
+
+
+  def record_sale(amount):
+      total_sales += amount
+
+
+  def make_counter():
+      count = 0
+
+      def increment():
+          count += 1
+          return count
+
+      return increment
+
+
+  record_sale(100)
+  record_sale(50)
+  print(total_sales)
+
+  counter = make_counter()
+  print(counter())
+  print(counter())
+challenge: |
+  🎯 This blows up with UnboundLocalError on the very first record_sale
+  call. There's a second, matching bug waiting in make_counter's inner
+  increment function too. Fix both places so each function correctly
+  updates the variable from its enclosing scope.
+expected_output: |
+  150
+  1
+  2
+ast_contains: ["global", "def", "return"]
+hints:
+  - "Assigning to total_sales anywhere inside record_sale makes Python treat it as local for the entire function -- including the read in `total_sales += amount`."
+  - "Declare `global total_sales` at the top of record_sale so += modifies the module-level variable instead."
+  - "increment() has the identical problem one scope level in -- it needs `nonlocal count`, not global, since count lives in make_counter's scope, not the module's."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 8
+main_path: false
+concept_tags: [debugging, errors, functions, variables]

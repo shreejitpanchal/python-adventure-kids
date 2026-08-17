@@ -1,0 +1,32 @@
+id: cracker_25
+title: "Code Cracker: The Text That Looked Like a Number 🧩"
+level: 460
+objective: "Fix a TypeError caused by using text typed by input() directly in math."
+explanation: |
+  input() always hands back text (a string), even if someone
+  types digits. age_text below stands in for that typed text --
+  you still need int() to turn it into a real number before doing
+  math with it.
+example_code: |
+  age_text = "10"
+  age = int(age_text) + 5
+  print(age)
+starter_code: |
+  age_text = "10"
+  age = age_text + 5
+  print(age)
+challenge: |
+  🎯 This code won't run! age_text is text typed in by a player -- convert it to a number first.
+expected_output: "15"
+ast_contains: ["int", "print"]
+hints:
+  - "age_text looks like a number, but it's actually text (in quotes)."
+  - "Text and numbers can't be added together directly."
+  - "It should look like: age = int(age_text) + 5"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 25
+main_path: false
+concept_tags: [debugging, errors, input, type-conversion]

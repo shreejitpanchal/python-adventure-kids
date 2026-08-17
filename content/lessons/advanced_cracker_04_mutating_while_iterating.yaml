@@ -1,0 +1,64 @@
+id: advanced_cracker_04
+title: "Advanced Code Cracker: The Vanishing Queue 🕵️"
+level: 479
+objective: "Fix two related bugs in one function: removing items from a list while iterating over it (which silently skips elements), and aliasing a list instead of backing it up."
+explanation: |
+  A for loop over a list tracks position by index under the hood. Remove an
+  item mid-iteration and every later element shifts down one slot -- but the
+  loop's internal index keeps counting up, so it skips whatever just slid
+  into the spot you already passed. No exception, no warning, just silently
+  wrong results.
+
+  The safe pattern is to iterate over a separate list (a copy, or a fresh
+  list you build up) while only ever removing from -- or checking against --
+  the original. This function has that bug PLUS a second, related one:
+  it "backs up" the queue with a plain assignment instead of a real copy,
+  so the backup isn't actually independent of the list being mutated.
+example_code: |
+  def process_queue(queue):
+      backup = queue[:]
+      remaining = []
+      for ticket in queue:
+          if ticket != "CANCELLED":
+              remaining.append(ticket)
+      return remaining, backup
+
+
+  tickets = ["A1", "CANCELLED", "A2", "CANCELLED", "A3"]
+  active, saved_backup = process_queue(tickets)
+  print(active)
+  print(saved_backup)
+starter_code: |
+  def process_queue(queue):
+      backup = queue
+      for ticket in queue:
+          if ticket == "CANCELLED":
+              queue.remove(ticket)
+      return queue, backup
+
+
+  tickets = ["A1", "CANCELLED", "A2", "CANCELLED", "A3"]
+  active, saved_backup = process_queue(tickets)
+  print(active)
+  print(saved_backup)
+challenge: |
+  🎯 This queue processor has two bugs at once: it mutates `queue` while
+  looping over it (so removals skip elements), and its "backup" is just an
+  alias of the same list being mutated, so the backup gets corrupted too.
+  Fix both -- build a fresh `remaining` list instead of removing in place,
+  and make `backup` a real, independent copy.
+expected_output: |
+  ['A1', 'A2', 'A3']
+  ['A1', 'CANCELLED', 'A2', 'CANCELLED', 'A3']
+ast_contains: ["def", "for", "if", "append", "return"]
+hints:
+  - "Removing from a list while a for loop is walking over that same list skips elements -- the indices shift under you."
+  - "backup = queue doesn't copy anything either -- it's the same list object, so mutating queue mutates backup too."
+  - "Build a new `remaining` list by appending the tickets you want to keep, and make backup with `queue[:]` before any mutation happens."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 4
+main_path: false
+concept_tags: [debugging, errors, lists, iteration, for-loops]

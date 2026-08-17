@@ -1,0 +1,31 @@
+id: cracker_23
+title: "Code Cracker: The Empty Teams 🧩"
+level: 458
+objective: "Fix a ZeroDivisionError caused by a bug in how a divisor is computed."
+explanation: |
+  Dividing by zero has no answer, so Python raises an error
+  instead of guessing. Sometimes the zero isn't typed directly --
+  it sneaks in from a calculation that accidentally ends up at 0.
+example_code: |
+  players = 12
+  teams = 3
+  print(players / teams)
+starter_code: |
+  players = 12
+  teams = 3 - 3
+  print(players / teams)
+challenge: |
+  🎯 This code won't run! teams ends up as 0 -- fix how it's calculated.
+expected_output: "4.0"
+ast_contains: ["print"]
+hints:
+  - "What does 3 - 3 actually equal? What happens when you divide by that?"
+  - "teams should just be the number 3, not a calculation that cancels itself out."
+  - "It should look like: teams = 3"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 23
+main_path: false
+concept_tags: [debugging, errors, numbers]

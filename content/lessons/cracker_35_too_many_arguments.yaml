@@ -1,0 +1,33 @@
+id: cracker_35
+title: "Code Cracker: One Too Many 🧩"
+level: 470
+objective: "Fix a TypeError caused by calling a function with too many arguments."
+explanation: |
+  A function only accepts as many arguments as it lists in its
+  def line. Passing extra ones crashes with a TypeError, even if
+  the extra information seems harmless.
+example_code: |
+  def square(number):
+      return number * number
+
+  print(square(5))
+starter_code: |
+  def square(number):
+      return number * number
+
+  print(square(5, 2))
+challenge: |
+  🎯 This code won't run! square only takes one argument -- remove the extra one.
+expected_output: "25"
+ast_contains: ["def", "return", "print"]
+hints:
+  - "def square(number): only lists one piece of information it needs."
+  - "square(5, 2) is giving it two -- one too many."
+  - "It should look like: square(5)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 35
+main_path: false
+concept_tags: [debugging, errors, functions, parameters]

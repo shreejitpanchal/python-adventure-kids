@@ -1,0 +1,29 @@
+id: cracker_27
+title: "Code Cracker: The Missing Key 🧩"
+level: 462
+objective: "Fix a KeyError caused by a typo in a dictionary key."
+explanation: |
+  Dictionary keys have to be spelled exactly right, just like
+  variable names. A single typo makes Python think you're asking
+  for a key that was never created.
+example_code: |
+  inventory = {"sword": 1, "shield": 2}
+  print(inventory["shield"])
+starter_code: |
+  inventory = {"sword": 1, "shield": 2}
+  print(inventory["sheild"])
+challenge: |
+  🎯 This code won't run! Compare the spelling of the key and fix the typo.
+expected_output: "2"
+ast_contains: ["print"]
+hints:
+  - "Compare the spelling of the key you're looking up with the keys in the dictionary."
+  - "\"sheild\" is missing -- the real key has the letters in a different order."
+  - "It should look like: inventory[\"shield\"]"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 27
+main_path: false
+concept_tags: [debugging, errors, dictionaries]

@@ -1,0 +1,29 @@
+id: cracker_15
+title: "Code Cracker: The Open Bracket 🧩"
+level: 450
+objective: "Fix a SyntaxError caused by a missing closing bracket in a list."
+explanation: |
+  A list starts with [ and has to end with a matching ]. Forget
+  the closing bracket and Python keeps reading, waiting for it to
+  show up -- and gets confused about where your code ends.
+example_code: |
+  colors = ["red", "green", "blue"]
+  print(colors)
+starter_code: |
+  colors = ["red", "green", "blue"
+  print(colors)
+challenge: |
+  🎯 This code won't run! Count the square brackets and fix the missing one.
+expected_output: "['red', 'green', 'blue']"
+ast_contains: ["print"]
+hints:
+  - "Count the square brackets around the list of colors."
+  - "Every [ needs a matching ] right after the last item."
+  - "It should look like: colors = [\"red\", \"green\", \"blue\"]"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 15
+main_path: false
+concept_tags: [debugging, errors, lists]

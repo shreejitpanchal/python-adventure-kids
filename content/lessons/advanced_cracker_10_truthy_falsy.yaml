@@ -1,0 +1,56 @@
+id: advanced_cracker_10
+title: "Advanced Code Cracker: The Empty Cart Trap 🕵️"
+level: 485
+objective: "Fix a bug where `if some_list:` is used to mean 'is not None', but an empty (non-None) list is also falsy, collapsing two distinct cases into one."
+explanation: |
+  `if cart:` doesn't ask "is cart not None" -- it asks "is cart truthy,"
+  and an empty list, empty string, empty dict, 0, and None are ALL falsy.
+  When "no cart was ever provided" and "a cart was provided but it's empty"
+  are meant to be different outcomes, a plain truthiness check quietly
+  merges them into one branch.
+
+  The fix is to be explicit about which condition you actually mean: use
+  `is None` / `is not None` for "does this exist," and reserve plain
+  truthiness checks for genuinely "is this empty or zero-ish" questions.
+example_code: |
+  def describe_cart(cart):
+      if cart is not None:
+          if cart:
+              return f"Cart has {len(cart)} item(s)"
+          return "Cart is empty"
+      return "No cart provided"
+
+
+  print(describe_cart(["apple"]))
+  print(describe_cart([]))
+  print(describe_cart(None))
+starter_code: |
+  def describe_cart(cart):
+      if cart:
+          return f"Cart has {len(cart)} item(s)"
+      return "No cart provided"
+
+
+  print(describe_cart(["apple"]))
+  print(describe_cart([]))
+  print(describe_cart(None))
+challenge: |
+  🎯 describe_cart should tell apart three cases: items present, an empty
+  cart, and no cart at all (None). Right now it only tells apart two. Find
+  the missing distinction and add the third branch back in.
+expected_output: |
+  Cart has 1 item(s)
+  Cart is empty
+  No cart provided
+ast_contains: ["def", "if", "f-string", "return"]
+hints:
+  - "`if cart:` is False for both cart == [] and cart is None -- it can't tell those two apart."
+  - "describe_cart([]) and describe_cart(None) both fall into the same branch right now -- they should print different messages."
+  - "Check `cart is not None` first, and only ask about truthiness (an empty list) inside that branch."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 10
+main_path: false
+concept_tags: [debugging, errors, conditionals, booleans, lists]

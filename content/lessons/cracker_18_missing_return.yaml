@@ -1,0 +1,35 @@
+id: cracker_18
+title: "Code Cracker: The Function That Forgot 🧩"
+level: 453
+objective: "Fix a function that never sends its result back with return."
+explanation: |
+  A function that computes something but never uses return just
+  hands back None -- Python's way of saying "nothing." You need
+  return so the value actually leaves the function.
+example_code: |
+  def double(number):
+      return number * 2
+
+  result = double(4)
+  print(result)
+starter_code: |
+  def double(number):
+      number * 2
+
+  result = double(4)
+  print(result)
+challenge: |
+  🎯 This prints None instead of a number! Add the missing return.
+expected_output: "8"
+ast_contains: ["def", "return"]
+hints:
+  - "double(4) computes number * 2 but never sends it back out."
+  - "A function needs return to hand its answer back to whoever called it."
+  - "It should look like: return number * 2"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 18
+main_path: false
+concept_tags: [debugging, errors, functions, return-values]

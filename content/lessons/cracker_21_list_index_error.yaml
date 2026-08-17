@@ -1,0 +1,29 @@
+id: cracker_21
+title: "Code Cracker: One Item Too Far 🧩"
+level: 456
+objective: "Fix an IndexError caused by reading one position past the end of a list."
+explanation: |
+  A 3-item list only has positions 0, 1, and 2 -- there's no
+  position 3. Asking for a position that doesn't exist crashes
+  with an IndexError.
+example_code: |
+  fruits = ["apple", "banana", "cherry"]
+  print(fruits[2])
+starter_code: |
+  fruits = ["apple", "banana", "cherry"]
+  print(fruits[3])
+challenge: |
+  🎯 This code won't run! Count the items in the list and fix the index.
+expected_output: "cherry"
+ast_contains: ["print"]
+hints:
+  - "Count the items in fruits -- how many positions does that give you?"
+  - "Positions start at 0, so the last item isn't at position 3."
+  - "It should look like: fruits[2]"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 21
+main_path: false
+concept_tags: [debugging, errors, lists, indexing]

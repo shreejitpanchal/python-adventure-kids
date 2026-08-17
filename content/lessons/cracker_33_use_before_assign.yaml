@@ -1,0 +1,30 @@
+id: cracker_33
+title: "Code Cracker: Too Soon 🧩"
+level: 468
+objective: "Fix a NameError caused by using a variable before it's ever been assigned."
+explanation: |
+  A variable has to be given a value with = before it can be used
+  in an expression. Using it on the right-hand side before it
+  exists at all crashes with a NameError.
+example_code: |
+  score = 0
+  score = score + 10
+  print(score)
+starter_code: |
+  score = score + 10
+  print(score)
+challenge: |
+  🎯 This code won't run! score is used before it's ever been given a starting value.
+expected_output: "10"
+ast_contains: ["print"]
+hints:
+  - "score is used in score + 10, but has it been given a value yet?"
+  - "Give score a starting value before using it in a calculation."
+  - "It should look like: score = 0\nscore = score + 10"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 33
+main_path: false
+concept_tags: [debugging, errors, variables]

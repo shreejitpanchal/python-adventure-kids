@@ -1,0 +1,39 @@
+id: cracker_11
+title: "Code Cracker: The Elif That Wouldn't Run 🧩"
+level: 446
+objective: "Fix a SyntaxError caused by a missing colon after an elif."
+explanation: |
+  if, elif, and else lines ALL need a colon : at the end, not just
+  if. It's easy to remember the colon on the first line and forget
+  it further down.
+example_code: |
+  grade = 85
+  if grade >= 90:
+      print("A")
+  elif grade >= 80:
+      print("B")
+  else:
+      print("C")
+starter_code: |
+  grade = 85
+  if grade >= 90:
+      print("A")
+  elif grade >= 80
+      print("B")
+  else:
+      print("C")
+challenge: |
+  🎯 This code won't run! Something's missing right after the condition on the elif line.
+expected_output: "B"
+ast_contains: ["if"]
+hints:
+  - "Look right after the condition grade >= 80 on the elif line."
+  - "elif lines need a colon : at the end, just like if lines do."
+  - "It should look like: elif grade >= 80:"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 11
+main_path: false
+concept_tags: [debugging, errors, conditionals]

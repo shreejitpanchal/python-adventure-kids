@@ -1,0 +1,31 @@
+id: cracker_17
+title: "Code Cracker: The Mixed-Up Loop 🧩"
+level: 452
+objective: "Fix a loop that prints the whole list instead of one name at a time."
+explanation: |
+  for name in names gives you one item at a time in name. Printing
+  names (the whole list) inside the loop instead of name is an
+  easy mix-up -- Python won't complain, but the output is wrong.
+example_code: |
+  names = ["Ann", "Ben", "Cy"]
+  for name in names:
+      print(name)
+starter_code: |
+  names = ["Ann", "Ben", "Cy"]
+  for name in names:
+      print(names)
+challenge: |
+  🎯 This loop prints the whole list three times! Fix it so it prints one name at a time.
+expected_output: "Ann\nBen\nCy"
+ast_contains: ["for"]
+hints:
+  - "Look at what's inside the print() call -- is it the list or the single item?"
+  - "The loop variable is name (one item), not names (the whole list)."
+  - "It should look like: print(name)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 17
+main_path: false
+concept_tags: [debugging, errors, for-loops, loops, lists]

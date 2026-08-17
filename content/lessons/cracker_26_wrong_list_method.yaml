@@ -1,0 +1,31 @@
+id: cracker_26
+title: "Code Cracker: The Wrong Command 🧩"
+level: 461
+objective: "Fix an AttributeError caused by using the wrong list method name."
+explanation: |
+  Lists don't have an add() method -- the method for putting a
+  new item on the end of a list is called append(). Using the
+  wrong method name crashes the program.
+example_code: |
+  pets = ["cat", "dog"]
+  pets.append("fish")
+  print(pets)
+starter_code: |
+  pets = ["cat", "dog"]
+  pets.add("fish")
+  print(pets)
+challenge: |
+  🎯 This code won't run! Fix the method name so it actually adds fish to the list.
+expected_output: "['cat', 'dog', 'fish']"
+ast_contains: ["append"]
+hints:
+  - "Lists don't have a method called add()."
+  - "The method that adds a new item to the end of a list is append()."
+  - "It should look like: pets.append(\"fish\")"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 26
+main_path: false
+concept_tags: [debugging, errors, lists]

@@ -1,0 +1,49 @@
+id: advanced_cracker_06
+title: "Advanced Code Cracker: The Almost-Right Total 🕵️"
+level: 481
+objective: "Fix a bug where comparing floats with == fails due to binary floating-point representation, instead of using a tolerance-based comparison."
+explanation: |
+  Most decimal fractions -- 0.1, 0.2, 0.3 -- can't be represented exactly in
+  binary floating point, the same way 1/3 can't be written exactly in
+  decimal. 0.1 + 0.2 actually evaluates to 0.30000000000000004, so
+  `0.1 + 0.2 == 0.3` is False even though it "should" be True.
+
+  The fix isn't to avoid floats -- it's to stop comparing them for exact
+  equality. Compare the absolute difference against a small tolerance
+  (epsilon) instead, or round both sides to a sane number of decimal places
+  before comparing.
+example_code: |
+  price_a = 0.1
+  price_b = 0.2
+  total = price_a + price_b
+
+  if abs(total - 0.3) < 1e-9:
+      print("Totals match")
+  else:
+      print("Totals do not match")
+starter_code: |
+  price_a = 0.1
+  price_b = 0.2
+  total = price_a + price_b
+
+  if total == 0.3:
+      print("Totals match")
+  else:
+      print("Totals do not match")
+challenge: |
+  🎯 0.1 + 0.2 really should equal 0.3, but this prints "Totals do not
+  match." Find out why exact float equality fails here and fix the
+  comparison so it tolerates floating-point rounding error.
+expected_output: "Totals match"
+ast_contains: ["if", "abs", "print"]
+hints:
+  - "Try printing total by itself -- it isn't exactly 0.3 in binary floating point."
+  - "== on floats checks for bit-for-bit equality, which rounding error breaks."
+  - "Compare abs(total - 0.3) against a tiny epsilon like 1e-9 instead of using ==."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 6
+main_path: false
+concept_tags: [debugging, errors, numbers, comparison, conditionals]

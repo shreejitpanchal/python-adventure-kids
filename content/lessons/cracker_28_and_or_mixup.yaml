@@ -1,0 +1,31 @@
+id: cracker_28
+title: "Code Cracker: The Impossible Condition 🧩"
+level: 463
+objective: "Fix a logic bug caused by using and where or was needed."
+explanation: |
+  and needs BOTH sides to be true. or only needs ONE side to be
+  true. day can't equal both "Saturday" and "Sunday" at the same
+  time, so a condition using and there can never be true.
+example_code: |
+  day = "Saturday"
+  if day == "Saturday" or day == "Sunday":
+      print("It's the weekend!")
+starter_code: |
+  day = "Saturday"
+  if day == "Saturday" and day == "Sunday":
+      print("It's the weekend!")
+challenge: |
+  🎯 Nothing prints, even though it IS Saturday! Fix the condition so either day counts.
+expected_output: "It's the weekend!"
+ast_contains: ["if"]
+hints:
+  - "day can't be equal to \"Saturday\" and \"Sunday\" at the same time."
+  - "You only need ONE of the two to be true, not both."
+  - "It should look like: if day == \"Saturday\" or day == \"Sunday\":"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 28
+main_path: false
+concept_tags: [debugging, errors, booleans, conditionals]

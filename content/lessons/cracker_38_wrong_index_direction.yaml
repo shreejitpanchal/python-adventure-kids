@@ -1,0 +1,29 @@
+id: cracker_38
+title: "Code Cracker: The Wrong End 🧩"
+level: 473
+objective: "Fix a bug caused by using a positive index where a negative one was needed."
+explanation: |
+  Positive indexes count from the front (0, 1, 2, ...). Negative
+  indexes count from the back, so -1 always means "the last
+  item," no matter how long the list is.
+example_code: |
+  scores = [10, 25, 40, 55]
+  print(scores[-1])
+starter_code: |
+  scores = [10, 25, 40, 55]
+  print(scores[1])
+challenge: |
+  🎯 This prints the wrong score! Fix the index so it prints the LAST score in the list.
+expected_output: "55"
+ast_contains: ["print"]
+hints:
+  - "scores[1] gives the second item, not the last one."
+  - "Negative indexes count from the end -- -1 is always the last item."
+  - "It should look like: scores[-1]"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 38
+main_path: false
+concept_tags: [debugging, errors, lists, indexing]

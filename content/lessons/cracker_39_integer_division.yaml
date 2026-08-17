@@ -1,0 +1,33 @@
+id: cracker_39
+title: "Code Cracker: The Missing Decimal 🧩"
+level: 474
+objective: "Fix a wrong average caused by using integer division // instead of regular division /."
+explanation: |
+  / divides and keeps the decimal part. // divides and throws the
+  decimal part away, keeping only the whole number. Using // when
+  you actually need the exact answer loses information.
+example_code: |
+  total_candy = 17
+  kids = 5
+  average = total_candy / kids
+  print(average)
+starter_code: |
+  total_candy = 17
+  kids = 5
+  average = total_candy // kids
+  print(average)
+challenge: |
+  🎯 This prints the wrong average! Fix the division so it keeps the decimal part.
+expected_output: "3.4"
+ast_contains: ["print"]
+hints:
+  - "// divides but throws away anything after the decimal point."
+  - "17 kids of candy split 5 ways doesn't divide evenly -- you need the decimal."
+  - "It should look like: total_candy / kids"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 39
+main_path: false
+concept_tags: [debugging, errors, numbers]

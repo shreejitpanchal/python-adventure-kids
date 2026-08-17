@@ -1,0 +1,29 @@
+id: cracker_37
+title: "Code Cracker: The Stuck-Together Words 🧩"
+level: 472
+objective: "Fix a list where a missing comma glues two items into one."
+explanation: |
+  Items in a list need a comma between them. Leave one out
+  between two pieces of text and Python doesn't error -- it just
+  silently joins them into a single, merged piece of text.
+example_code: |
+  fruits = ["apple", "banana", "cherry"]
+  print(fruits)
+starter_code: |
+  fruits = ["apple", "banana" "cherry"]
+  print(fruits)
+challenge: |
+  🎯 This list only has 2 items instead of 3! Add the missing comma.
+expected_output: "['apple', 'banana', 'cherry']"
+ast_contains: ["print"]
+hints:
+  - "Count the items printed -- there should be 3, not 2."
+  - "Two pieces of text right next to each other with no comma get glued together."
+  - "It should look like: [\"apple\", \"banana\", \"cherry\"]"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 37
+main_path: false
+concept_tags: [debugging, errors, lists]

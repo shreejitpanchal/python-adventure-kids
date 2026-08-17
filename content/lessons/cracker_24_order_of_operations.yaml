@@ -1,0 +1,36 @@
+id: cracker_24
+title: "Code Cracker: The Math Mix-Up 🧩"
+level: 459
+objective: "Fix a wrong total caused by missing parentheses in a math expression."
+explanation: |
+  Python does multiplication before addition, just like in math
+  class. If you want the addition to happen first, you need
+  parentheses ( ) around it -- otherwise the order of operations
+  gives you the wrong answer.
+example_code: |
+  price = 10
+  tax = 2
+  quantity = 3
+  total = (price + tax) * quantity
+  print(total)
+starter_code: |
+  price = 10
+  tax = 2
+  quantity = 3
+  total = price + tax * quantity
+  print(total)
+challenge: |
+  🎯 This prints the wrong total! Add parentheses so the price and tax get added together first.
+expected_output: "36"
+ast_contains: ["print"]
+hints:
+  - "Python multiplies before it adds -- that's not the order you want here."
+  - "Wrap the part you want done first in parentheses."
+  - "It should look like: total = (price + tax) * quantity"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 24
+main_path: false
+concept_tags: [debugging, errors, numbers, expressions]

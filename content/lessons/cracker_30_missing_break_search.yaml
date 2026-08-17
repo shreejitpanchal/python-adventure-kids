@@ -1,0 +1,38 @@
+id: cracker_30
+title: "Code Cracker: The Loop That Kept Going 🧩"
+level: 465
+objective: "Fix a search loop that reports the last match instead of the first."
+explanation: |
+  break stops a loop the moment it finds what it's looking for.
+  Without it, the loop keeps going and can overwrite the answer
+  with a later match -- so you end up with the wrong result.
+example_code: |
+  numbers = [3, 12, 8, 20, 5]
+  result = None
+  for number in numbers:
+      if number > 10:
+          result = number
+          break
+  print(result)
+starter_code: |
+  numbers = [3, 12, 8, 20, 5]
+  result = None
+  for number in numbers:
+      if number > 10:
+          result = number
+  print(result)
+challenge: |
+  🎯 This prints the wrong number! Add something so the loop stops at the FIRST match.
+expected_output: "12"
+ast_contains: ["for", "if"]
+hints:
+  - "The loop keeps checking numbers even after it finds one bigger than 10."
+  - "Something is missing that would stop the loop right when it finds a match."
+  - "It should look like: result = number\n        break"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: code_crackers
+category_level: 30
+main_path: false
+concept_tags: [debugging, errors, for-loops, loops]

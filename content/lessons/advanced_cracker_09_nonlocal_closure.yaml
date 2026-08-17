@@ -1,0 +1,67 @@
+id: advanced_cracker_09
+title: "Advanced Code Cracker: The Silent Accumulator 🕵️"
+level: 484
+objective: "Fix a bug where a nested function silently fails to update an enclosing variable because it's missing a nonlocal declaration."
+explanation: |
+  A nested function can READ a variable from its enclosing function's scope
+  without any special declaration -- that's just a normal closure. But the
+  moment it ASSIGNS to that name (including via +=), Python treats it as a
+  brand-new local variable inside the nested function, shadowing the outer
+  one entirely. Reading it before that local assignment then raises
+  UnboundLocalError, since Python decides a name is local for a function's
+  entire body, not just after the line that assigns it.
+
+  `nonlocal` tells Python explicitly: "this name refers to the nearest
+  enclosing function's variable, not a new local one" -- which is exactly
+  what a stateful closure (like a running total) needs.
+example_code: |
+  def make_accumulator():
+      total = 0
+
+      def add(amount):
+          nonlocal total
+          total += amount
+          return total
+
+      return add
+
+
+  acc = make_accumulator()
+  print(acc(10))
+  print(acc(5))
+  print(acc(2))
+starter_code: |
+  def make_accumulator():
+      total = 0
+
+      def add(amount):
+          total += amount
+          return total
+
+      return add
+
+
+  acc = make_accumulator()
+  print(acc(10))
+  print(acc(5))
+  print(acc(2))
+challenge: |
+  🎯 make_accumulator is supposed to return a running total across calls,
+  but calling acc(10) blows up immediately. Find the missing declaration
+  that would let add() update total in its enclosing scope.
+expected_output: |
+  10
+  15
+  17
+ast_contains: ["def", "return", "total"]
+hints:
+  - "add() only reads total by way of total += amount, but that += also assigns -- and any assignment makes total local to add(), shadowing the outer one."
+  - "That's why acc(10) raises UnboundLocalError: the local `total` inside add() hasn't been assigned yet when += tries to read it."
+  - "Add `nonlocal total` as the first line of add() so it modifies make_accumulator's total instead of creating a shadow."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: advanced_code_crackers
+category_level: 9
+main_path: false
+concept_tags: [debugging, errors, functions, variables]
