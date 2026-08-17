@@ -381,7 +381,7 @@ sequenceDiagram
     State->>State: mutate Settings in memory
     State->>Cfg: save_settings() (JSON write to disk)
     Note over Screen,State: Neither UI has live-reactive widgets --<br/>colors/fonts are read fresh only when a screen is (re)built.
-    Screen->>Screen: rebuild the current screen<br/>(CTk: destroy+recreate frame; Flet: page.views.clear()+append())
+    Screen->>Screen: rebuild the current screen<br/>CTk destroys+recreates the frame, Flet does page.views.clear()+append()
     Screen-->>User: new theme/font visible immediately
 ```
 
@@ -413,7 +413,7 @@ sequenceDiagram
     end
     opt Parent renames child or resets progress
         Parent->>Area: edit name / confirm reset
-        Area->>Cfg: settings.child_name = new_name; save_settings()
+        Area->>Cfg: settings.child_name = new_name, then save_settings()
         Area->>Area: ProgressStore.reset_progress() (on confirmed reset)
     end
 ```
