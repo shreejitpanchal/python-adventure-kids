@@ -1,7 +1,6 @@
-"""Exercises _ParentController's real PIN-gate (including first-visit PIN
-creation), summary, activity, rename, and reset logic against the real
-progress store -- with a fake Page standing in for a live Flet session,
-same pattern as test_lesson_screen_flet.py."""
+"""Exercises _ParentController's summary, activity, rename, and reset logic
+against the real progress store -- with a fake Page standing in for a live
+Flet session, same pattern as test_lesson_screen_flet.py."""
 from __future__ import annotations
 
 import pytest
@@ -41,89 +40,12 @@ def state(tmp_path, monkeypatch):
     s.close()
 
 
-def test_no_pin_set_shows_create_pin_step_not_summary(state):
+def test_build_view_shows_the_summary_directly(state):
     controller = _ParentController(FakePage(), state)
     controller.build_view()
-
-    assert not hasattr(controller, "pin_field")
-    assert controller.create_pin_field is not None
-    assert controller.value_texts == {}
-
-
-def test_pin_set_shows_pin_step_first_not_summary(state):
-    state.settings.set_parent_pin("1234")
-    controller = _ParentController(FakePage(), state)
-    controller.build_view()
-
-    assert controller.pin_field is not None
-    assert controller.value_texts == {}
-
-
-def test_correct_pin_unlocks_the_summary(state):
-    state.settings.set_parent_pin("1234")
-    controller = _ParentController(FakePage(), state)
-    controller.build_view()
-
-    controller.pin_field.value = "1234"
-    controller._submit_pin()
 
     assert "level" in controller.value_texts
     assert controller.value_texts["child"].value == "Avyaan"
-
-
-def test_wrong_pin_shows_error_and_stays_locked(state):
-    state.settings.set_parent_pin("1234")
-    controller = _ParentController(FakePage(), state)
-    controller.build_view()
-
-    controller.pin_field.value = "0000"
-    controller._submit_pin()
-
-    assert controller.pin_error_text.value == "Incorrect PIN."
-    assert controller.pin_field.value == ""
-    assert controller.value_texts == {}  # still locked, summary never built
-
-
-def test_creating_a_pin_requires_typing_it_twice_then_unlocks_summary(state):
-    controller = _ParentController(FakePage(), state)
-    controller.build_view()
-
-    controller.create_pin_field.value = "1234"
-    controller._submit_create_pin()
-    assert controller.create_pin_error_text.value == "Type it again to confirm."
-    assert controller.value_texts == {}  # still on the create-PIN step
-
-    controller.create_pin_field.value = "1234"
-    controller._submit_create_pin()
-
-    assert state.settings.has_parent_pin()
-    assert state.settings.verify_parent_pin("1234")
-    assert "level" in controller.value_texts  # summary shown immediately after
-
-
-def test_creating_a_pin_with_mismatched_confirmation_restarts(state):
-    controller = _ParentController(FakePage(), state)
-    controller.build_view()
-
-    controller.create_pin_field.value = "1234"
-    controller._submit_create_pin()
-    controller.create_pin_field.value = "9999"
-    controller._submit_create_pin()
-
-    assert controller.create_pin_error_text.value == "PINs didn't match. Try again."
-    assert not state.settings.has_parent_pin()
-    assert controller.value_texts == {}
-
-
-def test_creating_a_pin_rejects_non_4_digit_input(state):
-    controller = _ParentController(FakePage(), state)
-    controller.build_view()
-
-    controller.create_pin_field.value = "12"
-    controller._submit_create_pin()
-
-    assert controller.create_pin_error_text.value == "Please enter exactly 4 digits."
-    assert not state.settings.has_parent_pin()
 
 
 # -- Child's Name rename card -------------------------------------------------
@@ -229,13 +151,13 @@ def test_cancelling_reset_leaves_progress_untouched(state):
     assert controller.page.dialogs_popped == 1
 
 
-def test_menu_navigates_to_dashboard(state):
+def test_menu_navigates_to_hub(state):
     controller = _ParentController(FakePage(), state)
     controller._show_summary_step()
 
     controller._on_menu(None)
 
-    assert controller.page.routes_visited == ["/dashboard"]
+    assert controller.page.routes_visited == ["/hub"]
 
 
 # -- This Week / Category Mastery cards --------------------------------------

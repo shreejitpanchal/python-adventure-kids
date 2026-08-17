@@ -443,4 +443,4 @@ class LessonScreen(ctk.CTkFrame):
         if self._run_handle is not None:
             self._run_handle.cancel()
         self._close_game_window()
-        self.app.show_dashboard()
+        self.app.show_hub()

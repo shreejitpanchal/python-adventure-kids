@@ -1,13 +1,12 @@
-"""PIN-gated parent area: progress summary and basic controls.
+"""Parent area: progress summary and basic controls.
 
-Ported from app/parent/dashboard.py. The old CTk version opened two
-nested CTkToplevel popups (a PIN prompt, then a summary/activity/reset
-window) -- Android has no equivalent of a second OS window, so this is a
-full redesign, not a like-for-like port: a single /parent route that
-internally swaps between a PIN-entry step and the summary step (the same
+Ported from app/parent/dashboard.py. The old CTk version opened a
+CTkToplevel popup; Android has no equivalent of a second OS window, so
+this is a full redesign, not a like-for-like port: a single /parent route
+showing the summary/activity/reset content directly (the same
 mutable-body pattern setup_wizard_flet.py uses for its steps), with the
 reset confirmation shown as a page.show_dialog(ft.AlertDialog(...)) modal
-instead of a third nested popup.
+instead of a nested popup.
 """
 from __future__ import annotations
 
@@ -56,16 +55,16 @@ class _ParentController:
         return scaled(base_size, self.scale)
 
     def build_view(self) -> ft.View:
-        if self.state.settings.has_parent_pin():
-            self._show_pin_step()
-        else:
-            self._show_create_pin_step()
+        self._show_summary_step()
 
         return ft.View(
             route="/parent",
             bgcolor=self.theme.bg,
             scroll=ft.ScrollMode.AUTO,
-            padding=24,
+            # Extra bottom clearance so Reset Progress isn't hidden behind
+            # Android's gesture/navigation bar -- see learning_hub_flet.py's
+            # build_learning_hub_view() for the full rationale.
+            padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
             controls=[self.body],
         )
 
@@ -80,108 +79,6 @@ class _ParentController:
                 style=ft.ButtonStyle(bgcolor=self.theme.text_muted, color="#FFFFFF"),
             )],
         )
-
-    # -- PIN step -------------------------------------------------------------
-    def _show_pin_step(self) -> None:
-        theme = self.theme
-        self.pin_field = ft.TextField(
-            hint_text="••••", width=200, text_align=ft.TextAlign.CENTER,
-            password=True, max_length=4, autofocus=True,
-        )
-        self.pin_error_text = ft.Text("", size=self._fs(13), color=theme.danger)
-        self.pin_field.on_submit = self._submit_pin
-
-        self._set([
-            self._menu_row(),
-            ft.Row([
-                ft.Container(
-                    content=ft.Column(
-                        [
-                            ft.Text("🔒 Parent Area", size=self._fs(22), weight=ft.FontWeight.BOLD, color=theme.text),
-                            ft.Text("Enter the 4-digit PIN", size=self._fs(14), color=theme.text_muted),
-                            self.pin_field,
-                            self.pin_error_text,
-                            ft.Button(
-                                "Unlock", on_click=self._submit_pin, height=48,
-                                style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
-                            ),
-                        ],
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
-                    ),
-                    bgcolor=theme.card, border_radius=18, padding=40, width=380,
-                ),
-            ], alignment=ft.MainAxisAlignment.CENTER),
-        ])
-
-    def _submit_pin(self, e=None) -> None:
-        if self.state.settings.verify_parent_pin((self.pin_field.value or "").strip()):
-            self._show_summary_step()
-        else:
-            self.pin_error_text.value = "Incorrect PIN."
-            self.pin_field.value = ""
-            self.page.update()
-
-    # -- create-PIN step (first-ever visit, no PIN exists yet) ------------------
-    def _show_create_pin_step(self) -> None:
-        theme = self.theme
-        self.create_pin_field = ft.TextField(
-            hint_text="••••", width=200, text_align=ft.TextAlign.CENTER,
-            password=True, max_length=4, autofocus=True,
-        )
-        self.create_pin_error_text = ft.Text("", size=self._fs(13), color=theme.danger)
-        self._create_pin_first_entry: str | None = None
-        self.create_pin_field.on_submit = self._submit_create_pin
-
-        self._set([
-            self._menu_row(),
-            ft.Row([
-                ft.Container(
-                    content=ft.Column(
-                        [
-                            ft.Text("🔒 Set a Parent PIN", size=self._fs(22), weight=ft.FontWeight.BOLD, color=theme.text),
-                            ft.Text(
-                                "This is your first time here — choose a 4-digit PIN to protect the Parent Area.",
-                                size=self._fs(13), color=theme.text_muted, text_align=ft.TextAlign.CENTER,
-                            ),
-                            self.create_pin_field,
-                            self.create_pin_error_text,
-                            ft.Button(
-                                "Set PIN", on_click=self._submit_create_pin, height=48,
-                                style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
-                            ),
-                        ],
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
-                    ),
-                    bgcolor=theme.card, border_radius=18, padding=40, width=380,
-                ),
-            ], alignment=ft.MainAxisAlignment.CENTER),
-        ])
-
-    def _submit_create_pin(self, e=None) -> None:
-        pin = (self.create_pin_field.value or "").strip()
-        if not (pin.isdigit() and len(pin) == 4):
-            self.create_pin_error_text.value = "Please enter exactly 4 digits."
-            self.create_pin_error_text.color = self.theme.danger
-            self.create_pin_field.value = ""
-            self.page.update()
-            return
-        if self._create_pin_first_entry is None:
-            self._create_pin_first_entry = pin
-            self.create_pin_field.value = ""
-            self.create_pin_error_text.value = "Type it again to confirm."
-            self.create_pin_error_text.color = self.theme.success
-            self.page.update()
-            return
-        if pin != self._create_pin_first_entry:
-            self._create_pin_first_entry = None
-            self.create_pin_field.value = ""
-            self.create_pin_error_text.value = "PINs didn't match. Try again."
-            self.create_pin_error_text.color = self.theme.danger
-            self.page.update()
-            return
-        self.state.settings.set_parent_pin(pin)
-        self.state.save_settings()
-        self._show_summary_step()
 
     # -- summary step -----------------------------------------------------------
     def _show_summary_step(self) -> None:
@@ -220,10 +117,12 @@ class _ParentController:
         weekly_card = self._build_weekly_card()
         mastery_card = self._build_mastery_card()
 
-        self.activity_column = ft.Column(spacing=4, scroll=ft.ScrollMode.AUTO)
+        # No scroll=AUTO / fixed height here either -- see _build_mastery_card()'s
+        # comment; this card grows naturally as part of the page's own scroll.
+        self.activity_column = ft.Column(spacing=4)
         self._refresh_activity()
         activity_card = ft.Container(
-            content=self.activity_column, bgcolor=theme.card, border_radius=16, padding=16, height=200,
+            content=self.activity_column, bgcolor=theme.card, border_radius=16, padding=16,
         )
 
         self.status_text = ft.Text("", size=self._fs(13), color=theme.success)
@@ -340,15 +239,21 @@ class _ParentController:
                 )
             )
 
+        # Not a nested-scrollable Column (no scroll=AUTO, no fixed height) --
+        # a scrollable inside a fixed-height box only ever showed a few rows
+        # before clipping, since touch scroll on Android doesn't reliably
+        # hand off between nested scroll regions. Letting this card grow to
+        # its full natural height and scroll as part of the page's own
+        # scroll (like every other card here) shows every category.
         return ft.Container(
             content=ft.Column(
                 [
                     ft.Text("📊 Category Mastery", size=self._fs(18), weight=ft.FontWeight.BOLD, color=theme.text),
-                    ft.Column(category_rows, spacing=12, scroll=ft.ScrollMode.AUTO),
+                    ft.Column(category_rows, spacing=12),
                 ],
                 spacing=10,
             ),
-            bgcolor=theme.card, border_radius=16, padding=20, width=380, height=320,
+            bgcolor=theme.card, border_radius=16, padding=20, width=380,
         )
 
     def _refresh_weekly_and_mastery(self) -> None:
@@ -421,4 +326,4 @@ class _ParentController:
         self.page.update()
 
     def _on_menu(self, e) -> None:
-        self.page.go("/dashboard")
+        self.page.go("/hub")

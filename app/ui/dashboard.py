@@ -41,21 +41,15 @@ class DashboardFrame(ctk.CTkFrame):
         ).pack(side="left")
 
         ctk.CTkButton(
-            header, text="👋 Parent Area", font=theme.font_body(13), width=140, height=36,
-            fg_color=theme.COLOR_TEXT_MUTED, hover_color=theme.COLOR_TEXT,
-            command=self._open_parent_area,
-        ).pack(side="right")
-
-        ctk.CTkButton(
-            header, text="⚙️ Settings", font=theme.font_body(13), width=120, height=36,
-            fg_color=theme.COLOR_TEXT_MUTED, hover_color=theme.COLOR_TEXT,
-            command=self._open_settings,
-        ).pack(side="right", padx=(0, 10))
-
-        ctk.CTkButton(
             header, text="🗺️ Categories", font=theme.font_body(13), width=140, height=36,
             fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
             command=self._open_category_map,
+        ).pack(side="right", padx=(0, 10))
+
+        ctk.CTkButton(
+            header, text="🏠 Menu", font=theme.font_body(13), width=100, height=36,
+            fg_color=theme.COLOR_TEXT_MUTED, hover_color=theme.COLOR_TEXT,
+            command=self._on_menu,
         ).pack(side="right", padx=(0, 10))
 
         name = self.app.settings.child_name or "Explorer"
@@ -247,16 +241,11 @@ class DashboardFrame(ctk.CTkFrame):
     def _on_continue(self) -> None:
         self.app.show_lesson(self.current_lesson.id)
 
-    def _open_parent_area(self) -> None:
-        from app.parent.dashboard import open_parent_area
-
-        open_parent_area(self.app)
-
     def _open_category_map(self) -> None:
         self.app.show_category_map()
 
+    def _on_menu(self) -> None:
+        self.app.show_hub()
+
     def _on_open_quiz(self) -> None:
         self.app.show_quiz()
-
-    def _open_settings(self) -> None:
-        self.app.show_settings()

@@ -9,9 +9,11 @@ from app.ui.color_utils import contrasting_text_color, darken
 
 
 class CategoryMapFrame(ctk.CTkFrame):
-    def __init__(self, app) -> None:
+    def __init__(self, app, category_filter: list[str] | None = None, heading: str | None = None) -> None:
         super().__init__(app, fg_color=theme.COLOR_BG)
         self.app = app
+        self.category_filter = category_filter
+        self.heading = heading
 
         self._build_header()
 
@@ -31,7 +33,7 @@ class CategoryMapFrame(ctk.CTkFrame):
         ).pack(side="left")
 
         ctk.CTkLabel(
-            header, text="🗺️ Practice by Category", font=theme.font_title(26),
+            header, text=self.heading or "🗺️ Practice by Category", font=theme.font_title(26),
             text_color=theme.COLOR_PRIMARY,
         ).pack(side="left", padx=20)
 
@@ -39,9 +41,15 @@ class CategoryMapFrame(ctk.CTkFrame):
         engine = self.app.lesson_engine
         completed_ids = set(self.app.progress.get_completed_lesson_ids())
 
-        self._build_quiz_tile()
+        if self.category_filter is None:
+            self._build_quiz_tile()
 
-        for category in engine.categories():
+        categories = engine.categories()
+        if self.category_filter is not None:
+            allowed = set(self.category_filter)
+            categories = [category for category in categories if category in allowed]
+
+        for category in categories:
             lessons = engine.lessons_in_category(category)
             meta = get_category_meta(category)
             completed_count = sum(1 for lesson in lessons if lesson.id in completed_ids)
@@ -85,4 +93,4 @@ class CategoryMapFrame(ctk.CTkFrame):
         self.app.show_quiz()
 
     def _on_menu(self) -> None:
-        self.app.show_dashboard()
+        self.app.show_hub()

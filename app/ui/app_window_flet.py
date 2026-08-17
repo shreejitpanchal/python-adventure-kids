@@ -1,18 +1,31 @@
 """Root Flet application: route-based navigation between full-screen views.
 
 The Flet analogue of app/ui/app_window.py's show_frame() destroy/recreate
-pattern -- here it's page.views.clear() + page.views.append(...) on every
-route change, which is Flet's own idiomatic navigation model and also
-gives correct Android back-button behavior for free.
+pattern -- page.views.clear() + page.views.append(...) on every route
+change, rebuilding exactly one view fresh each time (cheap, and avoids
+ever showing stale progress/XP numbers on a view built earlier).
+
+Because page.views is deliberately kept at length 1, it can't double as
+Flet's own back-navigation stack (Flet's on_view_pop pattern expects
+page.views to hold real history to pop from -- with only ever one entry,
+the system/hardware back button on Android had nothing to pop and closed
+the app instead of returning to the previous screen). `history` below is
+a small Python-side stack of prior routes that stands in for that: every
+ordinary forward navigation (any page.go(...) from a button, not a back
+step) pushes the screen being left; on_view_pop pops it and re-navigates
+there; at the true root (Hub, history empty) the back button closes the
+app, matching normal Android behavior for a top-level screen.
 """
 from __future__ import annotations
 
 import flet as ft
 
+from app.engine.categories import PROJECT_CATEGORIES
 from app.ui.app_state_flet import AppState
 from app.ui.category_levels_flet import build_category_levels_view
 from app.ui.category_map_flet import build_category_map_view
 from app.ui.dashboard_flet import build_dashboard_view
+from app.ui.learning_hub_flet import build_learning_hub_view
 from app.ui.lesson_screen_flet import build_lesson_view
 from app.ui.parent_dashboard_flet import build_parent_view
 from app.ui.quiz_screen_flet import build_quiz_view
@@ -46,11 +59,31 @@ def main(page: ft.Page) -> None:
     # itself, the Settings toggle) is untouched and ready to re-wire with
     # a one-line change once that's confirmed.
 
+    # Python-side back-navigation stack -- see module docstring. Holds
+    # previous routes, most recent last; "/setup" is never pushed since
+    # it's a one-time onboarding flow, not a screen to return to.
+    history: list[str] = []
+    navigating_back = {"value": False}
+
     def route_change(_e: ft.RouteChangeEvent) -> None:
-        page.views.clear()
         route = page.route
 
-        if route.startswith("/categories/"):
+        if not navigating_back["value"] and page.views and page.views[-1].route != "/setup":
+            history.append(page.views[-1].route)
+        navigating_back["value"] = False
+
+        page.views.clear()
+
+        if route == "/hub":
+            page.views.append(build_learning_hub_view(page, state))
+        elif route == "/dashboard":
+            state.progress.record_play_today()
+            page.views.append(build_dashboard_view(page, state))
+        elif route == "/projects":
+            page.views.append(build_category_map_view(
+                page, state, category_filter=PROJECT_CATEGORIES, heading="🛠️ Build a Project",
+            ))
+        elif route.startswith("/categories/"):
             category = route.removeprefix("/categories/")
             page.views.append(build_category_levels_view(page, state, category))
         elif route == "/categories":
@@ -69,8 +102,7 @@ def main(page: ft.Page) -> None:
         elif route == "/setup":
             page.views.append(build_setup_wizard_view(page, state))
         else:
-            state.progress.record_play_today()
-            page.views.append(build_dashboard_view(page, state))
+            page.views.append(build_learning_hub_view(page, state))
 
         page.bgcolor = state.theme.bg
         page.theme_mode = ft.ThemeMode.DARK if state.theme.is_dark else ft.ThemeMode.LIGHT
@@ -79,10 +111,14 @@ def main(page: ft.Page) -> None:
         page.update()
 
     def view_pop(_e: ft.ViewPopEvent) -> None:
-        page.views.pop()
-        page.go(page.views[-1].route)
+        if history:
+            previous_route = history.pop()
+            navigating_back["value"] = True
+            page.go(previous_route)
+        else:
+            page.run_task(page.window.close)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
 
-    page.go("/setup" if not state.settings.setup_complete else "/dashboard")
+    page.go("/setup" if not state.settings.setup_complete else "/hub")

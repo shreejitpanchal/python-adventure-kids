@@ -17,12 +17,17 @@ from app.ui.theme_flet import scaled
 _CAPTION_WIDTH = 160.0
 
 
-def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
+def build_category_map_view(
+    page: ft.Page, state: AppState,
+    category_filter: list[str] | None = None, heading: str | None = None,
+) -> ft.View:
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     engine = state.lesson_engine
     completed_ids = set(state.progress.get_completed_lesson_ids())
     categories = engine.categories()
+    if category_filter is not None:
+        categories = [category for category in categories if category in category_filter]
 
     positions = zigzag_positions(len(categories))
     path_height = total_path_height(len(categories))
@@ -47,10 +52,10 @@ def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
     header = ft.Row(
         [
             ft.Button(
-                "🏠 Menu", on_click=lambda _e: page.go("/dashboard"), height=48,
+                "🏠 Menu", on_click=lambda _e: page.go("/hub"), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
-            ft.Text("🗺️ Practice by Category", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary),
+            ft.Text(heading or "🗺️ Practice by Category", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary),
         ],
         spacing=16,
     )
@@ -59,7 +64,10 @@ def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
         route="/categories",
         bgcolor=theme.bg,
         scroll=ft.ScrollMode.AUTO,
-        padding=24,
+        # Extra bottom clearance so the last control isn't hidden behind
+        # Android's gesture/navigation bar -- see learning_hub_flet.py's
+        # build_learning_hub_view() for the full rationale.
+        padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
         controls=[
             header,
             _build_quiz_tile(page, state),

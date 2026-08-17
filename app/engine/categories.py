@@ -50,3 +50,10 @@ DEFAULT_META = CategoryMeta("More Adventures", "⭐", "#78909C")
 
 def get_category_meta(category: str) -> CategoryMeta:
     return CATEGORY_META.get(category, DEFAULT_META)
+
+
+PROJECT_CATEGORIES = ["games", "snake", "creative_arts", "rpg_quests", "arcade_lab", "robot_adventure"]
+"""The "Build a Project" grouping for the Learning Hub -- every category
+that isn't a core skill-practice track (see LessonEngine.TODAYS_MISSION_
+CATEGORIES), "basics", or one of the two Code Crackers tracks (which get
+their own direct Hub cards instead of being lumped in here)."""

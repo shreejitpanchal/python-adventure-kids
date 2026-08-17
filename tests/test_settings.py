@@ -17,6 +17,38 @@ def test_default_font_family_and_size():
     assert settings.font_size == "medium"
 
 
+def test_default_hub_fields_are_unset():
+    settings = Settings()
+    assert settings.last_learning_route == ""
+    assert settings.preferred_learning_mode == ""
+
+
+def test_save_and_load_settings_round_trips_hub_fields(tmp_path, monkeypatch):
+    import app.config.settings as settings_module
+
+    monkeypatch.setattr(settings_module, "get_data_dir", lambda: tmp_path)
+
+    settings = settings_module.Settings(last_learning_route="skills", preferred_learning_mode="advanced")
+    settings_module.save_settings(settings)
+
+    loaded = settings_module.load_settings()
+    assert loaded.last_learning_route == "skills"
+    assert loaded.preferred_learning_mode == "advanced"
+
+
+def test_load_settings_missing_hub_fields_falls_back_to_unset(tmp_path, monkeypatch):
+    import json
+
+    import app.config.settings as settings_module
+
+    monkeypatch.setattr(settings_module, "get_data_dir", lambda: tmp_path)
+    (tmp_path / "settings.json").write_text(json.dumps({"child_name": "Sam"}), encoding="utf-8")
+
+    loaded = settings_module.load_settings()
+    assert loaded.last_learning_route == ""
+    assert loaded.preferred_learning_mode == ""
+
+
 def test_save_and_load_settings_round_trips_font_choices(tmp_path, monkeypatch):
     import app.config.settings as settings_module
 

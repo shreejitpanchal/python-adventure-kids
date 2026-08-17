@@ -64,7 +64,10 @@ def build_category_levels_view(page: ft.Page, state: AppState, category: str) ->
         route=f"/categories/{category}",
         bgcolor=theme.bg,
         scroll=ft.ScrollMode.AUTO,
-        padding=24,
+        # Extra bottom clearance so the last control isn't hidden behind
+        # Android's gesture/navigation bar -- see learning_hub_flet.py's
+        # build_learning_hub_view() for the full rationale.
+        padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
         controls=[
             header,
             ft.Row([ft.Stack(stack_children, width=PATH_WIDTH, height=path_height)], alignment=ft.MainAxisAlignment.CENTER),

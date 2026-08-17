@@ -36,7 +36,7 @@ def build_trophy_room_view(page: ft.Page, state: AppState) -> ft.View:
     header = ft.Row(
         [
             ft.Button(
-                "🏠 Menu", on_click=lambda _e: page.go("/dashboard"), height=48,
+                "🏠 Menu", on_click=lambda _e: page.go("/hub"), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
             ft.Text("🏆 Trophy Room", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary),
@@ -65,7 +65,10 @@ def build_trophy_room_view(page: ft.Page, state: AppState) -> ft.View:
         route="/trophy-room",
         bgcolor=theme.bg,
         scroll=ft.ScrollMode.AUTO,
-        padding=24,
+        # Extra bottom clearance so the last control isn't hidden behind
+        # Android's gesture/navigation bar -- see learning_hub_flet.py's
+        # build_learning_hub_view() for the full rationale.
+        padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
         controls=[
             header,
             progress_text,

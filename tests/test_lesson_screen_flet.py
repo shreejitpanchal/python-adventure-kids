@@ -227,7 +227,7 @@ def test_hint_cycles_through_lesson_hints(controller, state):
 def test_menu_cancels_any_in_flight_run_and_navigates_home(controller):
     controller.build_view()
     controller._on_menu(None)
-    assert controller.page.routes_visited == ["/dashboard"]
+    assert controller.page.routes_visited == ["/hub"]
 
 
 def test_second_run_does_not_double_award_stars_or_badges(controller, state):

@@ -43,7 +43,7 @@ class App(ctk.CTk):
         if not self.settings.setup_complete:
             self.show_setup_wizard()
         else:
-            self.show_dashboard()
+            self.show_hub()
 
     def show_frame(self, frame: ctk.CTkFrame) -> None:
         if self._current_frame is not None:
@@ -55,7 +55,12 @@ class App(ctk.CTk):
     def show_setup_wizard(self) -> None:
         from app.ui.setup_wizard import SetupWizardFrame
 
-        self.show_frame(SetupWizardFrame(self, on_complete=self.show_dashboard))
+        self.show_frame(SetupWizardFrame(self, on_complete=self.show_hub))
+
+    def show_hub(self) -> None:
+        from app.ui.learning_hub import HubFrame
+
+        self.show_frame(HubFrame(self))
 
     def show_dashboard(self) -> None:
         from app.ui.dashboard import DashboardFrame
@@ -72,6 +77,12 @@ class App(ctk.CTk):
         from app.ui.category_map import CategoryMapFrame
 
         self.show_frame(CategoryMapFrame(self))
+
+    def show_project_categories(self) -> None:
+        from app.engine.categories import PROJECT_CATEGORIES
+        from app.ui.category_map import CategoryMapFrame
+
+        self.show_frame(CategoryMapFrame(self, category_filter=PROJECT_CATEGORIES, heading="🛠️ Build a Project"))
 
     def show_category_levels(self, category: str) -> None:
         from app.ui.category_levels import CategoryLevelsFrame

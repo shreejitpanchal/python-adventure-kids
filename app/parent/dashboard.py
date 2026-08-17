@@ -1,4 +1,4 @@
-"""PIN-gated parent area: progress summary and basic controls.
+"""Parent area: progress summary and basic controls.
 
 Full detail (activity log, per-lesson drill-down, settings) lands in a later phase;
 this gives parents a real, working entry point today.
@@ -33,115 +33,7 @@ EVENT_LABELS = {
 
 
 def open_parent_area(app) -> None:
-    if app.settings.has_parent_pin():
-        _open_pin_prompt(app)
-    else:
-        _open_pin_create_prompt(app)
-
-
-def _open_pin_create_prompt(app) -> None:
-    """First-ever visit to Parent Area: no PIN exists yet, so ask the parent
-    to set one (with confirm-by-retyping) before opening the area at all."""
-    dialog = ctk.CTkToplevel(app)
-    dialog.title("Parent Area")
-    dialog.geometry("380x300")
-    dialog.configure(fg_color=theme.COLOR_BG)
-    dialog.transient(app)
-    dialog.grab_set()
-
-    ctk.CTkLabel(
-        dialog, text="🔒 Set a Parent PIN", font=theme.font_heading(20), text_color=theme.COLOR_TEXT,
-    ).pack(pady=(28, 6))
-
-    ctk.CTkLabel(
-        dialog, text="This is your first time here — choose a\n4-digit PIN to protect the Parent Area.",
-        font=theme.font_body(13), text_color=theme.COLOR_TEXT_MUTED, justify="center",
-    ).pack(pady=(0, 14))
-
-    pin_entry = ctk.CTkEntry(
-        dialog, font=theme.font_body(22), width=160, height=44,
-        justify="center", show="•",
-    )
-    pin_entry.pack()
-    pin_entry.focus_set()
-
-    error_label = ctk.CTkLabel(dialog, text="", font=theme.font_body(13), text_color=theme.COLOR_DANGER)
-    error_label.pack(pady=8)
-
-    first_entry: list[str | None] = [None]
-
-    def submit(_event=None) -> None:
-        pin = pin_entry.get().strip()
-        if not (pin.isdigit() and len(pin) == 4):
-            error_label.configure(text_color=theme.COLOR_DANGER, text="Please enter exactly 4 digits.")
-            pin_entry.delete(0, "end")
-            return
-        if first_entry[0] is None:
-            first_entry[0] = pin
-            pin_entry.delete(0, "end")
-            error_label.configure(text_color=theme.COLOR_SUCCESS, text="Type it again to confirm.")
-            return
-        if pin != first_entry[0]:
-            first_entry[0] = None
-            pin_entry.delete(0, "end")
-            error_label.configure(text_color=theme.COLOR_DANGER, text="PINs didn't match. Try again.")
-            return
-        app.settings.set_parent_pin(pin)
-        app.save_settings()
-        dialog.destroy()
-        _open_parent_window(app)
-
-    pin_entry.bind("<Return>", submit)
-
-    ctk.CTkButton(
-        dialog, text="Set PIN", font=theme.font_button(16), width=140, height=40,
-        fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
-        command=submit,
-    ).pack(pady=10)
-
-
-def _open_pin_prompt(app) -> None:
-    dialog = ctk.CTkToplevel(app)
-    dialog.title("Parent Area")
-    dialog.geometry("360x260")
-    dialog.configure(fg_color=theme.COLOR_BG)
-    dialog.transient(app)
-    dialog.grab_set()
-
-    ctk.CTkLabel(
-        dialog, text="🔒 Parent Area", font=theme.font_heading(22), text_color=theme.COLOR_TEXT,
-    ).pack(pady=(30, 10))
-
-    ctk.CTkLabel(
-        dialog, text="Enter the 4-digit PIN", font=theme.font_body(14),
-        text_color=theme.COLOR_TEXT_MUTED,
-    ).pack(pady=(0, 10))
-
-    pin_entry = ctk.CTkEntry(
-        dialog, font=theme.font_body(22), width=160, height=44,
-        justify="center", show="•",
-    )
-    pin_entry.pack()
-    pin_entry.focus_set()
-
-    error_label = ctk.CTkLabel(dialog, text="", font=theme.font_body(13), text_color=theme.COLOR_DANGER)
-    error_label.pack(pady=8)
-
-    def submit(_event=None) -> None:
-        if app.settings.verify_parent_pin(pin_entry.get().strip()):
-            dialog.destroy()
-            _open_parent_window(app)
-        else:
-            error_label.configure(text="Incorrect PIN.")
-            pin_entry.delete(0, "end")
-
-    pin_entry.bind("<Return>", submit)
-
-    ctk.CTkButton(
-        dialog, text="Unlock", font=theme.font_button(16), width=140, height=40,
-        fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
-        command=submit,
-    ).pack(pady=10)
+    _open_parent_window(app)
 
 
 def _open_parent_window(app) -> None:
@@ -332,7 +224,7 @@ def _open_parent_window(app) -> None:
 
     def close_window() -> None:
         if progress_changed:
-            app.show_dashboard()
+            app.show_hub()
         win.destroy()
 
     win.protocol("WM_DELETE_WINDOW", close_window)

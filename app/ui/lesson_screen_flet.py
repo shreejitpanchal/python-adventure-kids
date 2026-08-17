@@ -127,7 +127,10 @@ class _LessonController:
 
         content = ft.Container(
             content=ft.Column(controls, scroll=ft.ScrollMode.AUTO, spacing=10, expand=True),
-            padding=24, expand=True,
+            # Extra bottom clearance so the reward card isn't hidden behind
+            # Android's gesture/navigation bar -- see learning_hub_flet.py's
+            # build_learning_hub_view() for the full rationale.
+            padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80), expand=True,
         )
 
         return ft.View(
@@ -615,4 +618,4 @@ class _LessonController:
             self._run_handle.cancel()
         if self.game_canvas is not None:
             self.game_canvas.cancel_pending()
-        self.page.go("/dashboard")
+        self.page.go("/hub")

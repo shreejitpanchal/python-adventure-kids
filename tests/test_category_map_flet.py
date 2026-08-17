@@ -94,3 +94,50 @@ def test_caption_shows_all_complete_once_every_lesson_in_category_is_done(state)
     _circle, caption = stack.controls[1], stack.controls[2]
     _title_text, status_text = caption.content.controls
     assert status_text.value == "✅ All levels complete!"
+
+
+def test_category_filter_restricts_node_count_to_the_filtered_categories(state):
+    from app.engine.categories import PROJECT_CATEGORIES
+
+    page = FakePage()
+    view = build_category_map_view(page, state, category_filter=PROJECT_CATEGORIES)
+
+    all_categories = state.lesson_engine.categories()
+    expected = [c for c in all_categories if c in PROJECT_CATEGORIES]
+
+    stack = _stack(view)
+    assert len(stack.controls) == 1 + 2 * len(expected)
+
+
+def test_category_filter_preserves_engine_categories_order(state):
+    from app.engine.categories import PROJECT_CATEGORIES
+
+    page = FakePage()
+    view = build_category_map_view(page, state, category_filter=PROJECT_CATEGORIES)
+
+    all_categories = state.lesson_engine.categories()
+    expected_first = next(c for c in all_categories if c in PROJECT_CATEGORIES)
+    expected_meta = get_category_meta(expected_first)
+
+    stack = _stack(view)
+    circle = stack.controls[1]
+    assert circle.content.value == expected_meta.icon
+    assert circle.bgcolor == expected_meta.color
+
+
+def test_custom_heading_renders_in_place_of_default_title(state):
+    page = FakePage()
+    view = build_category_map_view(page, state, heading="🎯 Practise a Skill")
+
+    header = view.controls[0]
+    heading_text = header.controls[1]
+    assert heading_text.value == "🎯 Practise a Skill"
+
+
+def test_default_heading_unchanged_when_heading_not_passed(state):
+    page = FakePage()
+    view = build_category_map_view(page, state)
+
+    header = view.controls[0]
+    heading_text = header.controls[1]
+    assert heading_text.value == "🗺️ Practice by Category"

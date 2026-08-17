@@ -1,5 +1,5 @@
-"""First-run setup wizard: just the child's name. The parent PIN is set the
-first time Parent Area is opened instead -- see app/parent/dashboard.py."""
+"""First-run setup wizard: just the child's name and, optionally, a
+preferred learning mode -- see app/parent/dashboard.py for Parent Area."""
 from __future__ import annotations
 
 from typing import Callable
@@ -58,7 +58,7 @@ class SetupWizardFrame(ctk.CTkFrame):
                 error_label.configure(text="Please type your name first! 😊")
                 return
             self.app.settings.child_name = name
-            self._show_finish_step()
+            self._show_mode_step()
 
         name_entry.bind("<Return>", lambda _e: go_next())
 
@@ -68,7 +68,53 @@ class SetupWizardFrame(ctk.CTkFrame):
             command=go_next,
         ).pack(pady=30)
 
-    # -- Step 2: finish ----------------------------------------------------------
+    # -- Step 2: preferred learning mode (skippable) -----------------------------
+    _MODE_OPTIONS = [
+        ("guided", "🚀 Learn Python from the beginning"),
+        ("projects", "🛠️ Make games and creative projects"),
+        ("crackers", "🐛 Practise coding puzzles"),
+        ("advanced", "🧠 I already know some Python"),
+    ]
+
+    def _show_mode_step(self) -> None:
+        self._clear_body()
+
+        ctk.CTkLabel(
+            self._body, text="What sounds most fun today?", font=theme.font_title(28),
+            text_color=theme.COLOR_PRIMARY,
+        ).pack(pady=(40, 10))
+
+        ctk.CTkLabel(
+            self._body, text="Pick whatever you're most excited about — you can always try\neverything else from the Learning Hub later.",
+            font=theme.font_body(14), text_color=theme.COLOR_TEXT_MUTED, justify="center",
+        ).pack(pady=(0, 30))
+
+        card = ctk.CTkFrame(self._body, fg_color=theme.COLOR_CARD, corner_radius=20)
+        card.pack(fill="x", padx=40, pady=(0, 20))
+
+        for index, (mode_key, label) in enumerate(self._MODE_OPTIONS):
+            top_pad = 20 if index == 0 else 0
+            ctk.CTkButton(
+                card, text=label, font=theme.font_heading(16), height=52, corner_radius=14,
+                fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
+                command=lambda key=mode_key: self._on_select_mode(key),
+            ).pack(fill="x", padx=20, pady=(top_pad, 10))
+
+        ctk.CTkButton(
+            self._body, text="Skip for now", font=theme.font_body(14), width=200, height=40,
+            fg_color=theme.COLOR_TEXT_MUTED, hover_color=theme.COLOR_TEXT,
+            command=self._on_skip_mode,
+        ).pack(pady=(0, 20))
+
+    def _on_select_mode(self, mode_key: str) -> None:
+        self.app.settings.preferred_learning_mode = mode_key
+        self._show_finish_step()
+
+    def _on_skip_mode(self) -> None:
+        self.app.settings.preferred_learning_mode = ""
+        self._show_finish_step()
+
+    # -- Step 3: finish ----------------------------------------------------------
     def _show_finish_step(self) -> None:
         self._clear_body()
 

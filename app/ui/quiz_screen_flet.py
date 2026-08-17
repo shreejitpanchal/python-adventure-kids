@@ -125,7 +125,10 @@ class _QuizController:
             route="/quiz",
             bgcolor=theme.bg,
             scroll=ft.ScrollMode.AUTO,
-            padding=24,
+            # Extra bottom clearance so the last control isn't hidden behind
+            # Android's gesture/navigation bar -- see learning_hub_flet.py's
+            # build_learning_hub_view() for the full rationale.
+            padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
             controls=[header, self.setup_card, self.question_card, self.results_card],
         )
 
@@ -263,4 +266,4 @@ class _QuizController:
         self.page.update()
 
     def _on_menu(self, e) -> None:
-        self.page.go("/dashboard")
+        self.page.go("/hub")

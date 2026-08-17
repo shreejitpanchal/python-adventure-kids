@@ -203,4 +203,4 @@ class SettingsFrame(ctk.CTkFrame):
         ).pack(pady=10)
 
     def _on_menu(self) -> None:
-        self.app.show_dashboard()
+        self.app.show_hub()
