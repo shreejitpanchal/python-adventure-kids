@@ -92,7 +92,9 @@ class _LessonController:
                     "🏠 Menu", on_click=self._on_menu, height=48,
                     style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
                 ),
-                ft.Text(lesson.title, size=self._fs(22), weight=ft.FontWeight.BOLD, color=theme.primary),
+                # expand=True lets the title wrap onto a second line at large
+                # font scales instead of overflowing past the screen edge.
+                ft.Text(lesson.title, size=self._fs(22), weight=ft.FontWeight.BOLD, color=theme.primary, expand=True),
             ],
             spacing=16,
         )

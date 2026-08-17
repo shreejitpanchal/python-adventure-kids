@@ -55,7 +55,12 @@ def build_category_map_view(
                 "🏠 Menu", on_click=lambda _e: page.go("/hub"), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
-            ft.Text(heading or "🗺️ Practice by Category", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary),
+            # expand=True lets the title wrap onto a second line at large
+            # font scales instead of overflowing past the screen edge.
+            ft.Text(
+                heading or "🗺️ Practice by Category", size=fs(26), weight=ft.FontWeight.BOLD,
+                color=theme.primary, expand=True,
+            ),
         ],
         spacing=16,
     )
@@ -97,6 +102,12 @@ def _build_node(page, theme, category, position, engine, completed_ids, scale: f
     )
 
     status = "✅ All levels complete!" if all_done else f"{completed_count}/{total} levels complete"
+    # Clamped, not just centered on the node -- for the leftmost/rightmost
+    # zigzag column, a caption centered on the node's x would start left of
+    # the Stack's own x=0 (or end past its right edge), clipping the first
+    # or last few characters off-screen (reported at "Extra Large" font,
+    # but the underlying overflow exists at every font size).
+    caption_left = max(0.0, min(position.center_x - _CAPTION_WIDTH / 2, PATH_WIDTH - _CAPTION_WIDTH))
     caption = ft.Container(
         content=ft.Column(
             [
@@ -105,7 +116,7 @@ def _build_node(page, theme, category, position, engine, completed_ids, scale: f
             ],
             spacing=2, horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         ),
-        width=_CAPTION_WIDTH, left=position.center_x - _CAPTION_WIDTH / 2, top=position.y + NODE_SIZE + 4,
+        width=_CAPTION_WIDTH, left=caption_left, top=position.y + NODE_SIZE + 4,
         on_click=go_to_category, ink=True,
     )
 

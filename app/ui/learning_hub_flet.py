@@ -70,7 +70,12 @@ def _build_header(page: ft.Page, state: AppState) -> ft.Control:
             ft.Row(
                 [
                     ft.Image(src="main-icon.png", width=40, height=40),
-                    ft.Text("Python Adventure", size=fs(22), weight=ft.FontWeight.BOLD, color=theme.primary),
+                    # expand=True lets the title wrap onto a second line at
+                    # large font scales instead of overflowing the screen edge.
+                    ft.Text(
+                        "Python Adventure", size=fs(22), weight=ft.FontWeight.BOLD, color=theme.primary,
+                        expand=True,
+                    ),
                 ],
                 spacing=8,
             ),

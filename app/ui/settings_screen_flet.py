@@ -23,7 +23,9 @@ def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
                 "🏠 Menu", on_click=lambda _e: page.go("/hub"), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
-            ft.Text("⚙️ Settings", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary),
+            # expand=True lets the title wrap onto a second line at large
+            # font scales instead of overflowing past the screen edge.
+            ft.Text("⚙️ Settings", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary, expand=True),
         ],
         spacing=16,
     )
