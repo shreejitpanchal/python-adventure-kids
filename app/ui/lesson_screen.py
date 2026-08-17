@@ -29,6 +29,7 @@ class LessonScreen(ctk.CTkFrame):
         self._run_handle: RunHandle | None = None
         self._hint_index = 0
         self._lesson_passed = False
+        self._next_in_category_id: str | None = None
         self._current_input_value: str | None = None
         self.input_entry: ctk.CTkEntry | None = None
         self.game_window: GameWindow | None = None
@@ -165,7 +166,7 @@ class LessonScreen(ctk.CTkFrame):
         self.details_button.pack_forget()
 
         self.details_box = ctk.CTkTextbox(
-            card, height=100, font=ctk.CTkFont(family="Consolas", size=12),
+            card, height=100, font=theme.font_mono(12),
             fg_color="#1E1E2E", text_color="#F1F1F1",
         )
         self._details_visible = False
@@ -190,11 +191,21 @@ class LessonScreen(ctk.CTkFrame):
         )
         self.badge_label.pack(pady=(0, 10))
 
+        button_row = ctk.CTkFrame(self.reward_card, fg_color="transparent")
+        button_row.pack(pady=(0, 24))
+
         ctk.CTkButton(
-            self.reward_card, text="CONTINUE ➜", font=theme.font_button(20), width=240, height=56,
+            button_row, text="ONWARD ➜", font=theme.font_button(20), width=200, height=56,
             fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
             command=self._on_continue,
-        ).pack(pady=(0, 24))
+        ).pack(side="left", padx=6)
+
+        self.next_lesson_button = ctk.CTkButton(
+            button_row, text="NEXT LESSON ➜", font=theme.font_button(20), width=200, height=56,
+            fg_color=theme.COLOR_SUCCESS, hover_color=theme.COLOR_SUCCESS_HOVER,
+            command=self._on_next_lesson,
+        )
+        self.next_lesson_button.pack(side="left", padx=6)
 
     # -- run flow -------------------------------------------------------------
     def _on_run(self) -> None:
@@ -410,10 +421,23 @@ class LessonScreen(ctk.CTkFrame):
             if badge_newly_awarded else ""
         )
 
+        next_in_category = self.app.lesson_engine.next_unlocked_in_category(
+            self.lesson.category, progress.get_completed_lesson_ids(),
+        )
+        self._next_in_category_id = next_in_category.id if next_in_category else None
+        if next_in_category is not None:
+            self.next_lesson_button.pack(side="left", padx=6)
+        else:
+            self.next_lesson_button.pack_forget()
+
         self.reward_card.pack(fill="x", pady=10)
 
     def _on_continue(self) -> None:
         self.app.show_dashboard()
+
+    def _on_next_lesson(self) -> None:
+        if self._next_in_category_id:
+            self.app.show_lesson(self._next_in_category_id)
 
     def _on_menu(self) -> None:
         if self._run_handle is not None:
