@@ -1,0 +1,25 @@
+id: lesson_556
+title: "Subtraction: Level 37 ➖"
+level: 556
+objective: "Combine min() of two differences with a separate comparison, printed together."
+explanation: |
+  You can print the result of min() and the result of a comparison side by side.
+
+  print(min(10 - 2, 15 - 8), 10 - 2 == 8) works out min(8, 7) (which is 7), and checks if 8 == 8 (True), then shows both.
+example_code: |
+  print(min(10 - 2, 15 - 8), 10 - 2 == 8)
+starter_code: |
+  print(min(10 - 2, 15 - 8), 10 - 2 == 8)
+challenge: |
+  🎯 Challenge: Can you print the smaller of 20 - 9 and 30 - 25, and whether 20 - 9 equals 10 -- both together?
+expected_output: "5 False"
+hints:
+  - "Change the min() numbers to 20 - 9 and 30 - 25, and the comparison to 20 - 9 == 10."
+  - "There are two pieces separated by a comma -- change both."
+  - "It should look like: print(min(20 - 9, 30 - 25), 20 - 9 == 10)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 37
+main_path: false

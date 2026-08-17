@@ -1,0 +1,25 @@
+id: lesson_532
+title: "Addition: Level 33 ➕"
+level: 532
+objective: "Find the absolute value of a longer chain of addition that ends up negative."
+explanation: |
+  abs() can wrap around a whole chain of addition, not just two numbers -- Python adds everything up first, then strips away any minus sign.
+
+  abs(-10 + 3 + -8) adds first (getting -15), then shows how far -15 is from zero: 15.
+example_code: |
+  print(abs(-10 + 3 + -8))
+starter_code: |
+  print(abs(-10 + 3 + -8))
+challenge: |
+  🎯 Challenge: Add -20, 5, and -12 together, then find the absolute value of the result.
+expected_output: "27"
+hints:
+  - "Change the numbers to -20, 5, and -12."
+  - "abs() waits for the whole chain to finish adding first."
+  - "It should look like: print(abs(-20 + 5 + -12))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 33
+main_path: false

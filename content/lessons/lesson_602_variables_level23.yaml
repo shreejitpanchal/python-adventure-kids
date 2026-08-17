@@ -1,0 +1,24 @@
+id: lesson_602
+title: "Variables: Level 23 📦"
+level: 602
+objective: "Put a math expression, not just a variable name, inside an f-string's curly braces."
+explanation: |
+  You can put a full expression inside {}, not just a bare variable — Python works it out before dropping it into the text.
+example_code: |
+  price = 5
+  print(f"Total: {price + 2}")
+starter_code: |
+  price = 5
+  print(f"Total: {price + 2}")
+challenge: |
+  🎯 Challenge: Store 12 in price, then print an f-string showing "Total: 15" using price + 3.
+expected_output: "Total: 15"
+hints:
+  - "Change price to 12, and 2 to 3 inside the braces."
+  - "It should look like: price = 12, print(f\"Total: {price + 3}\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 23
+main_path: false

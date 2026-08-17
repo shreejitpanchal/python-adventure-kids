@@ -1,0 +1,36 @@
+id: lesson_666
+title: "Decisions: Level 27 🚦"
+level: 666
+objective: "Use .isdigit() to guard against converting text that isn't actually a number."
+explanation: |
+  Before converting text to a number with int(), it's smart to check it's really a number first — otherwise int() would crash.
+
+  if age_text.isdigit(): only converts and uses age_text when every character in it really is a digit.
+example_code: |
+  age_text = "abc"
+  if age_text.isdigit():
+      age = int(age_text)
+      print("You are " + str(age) + " years old.")
+  else:
+      print("That doesn't look like a number.")
+starter_code: |
+  age_text = "abc"
+  if age_text.isdigit():
+      age = int(age_text)
+      print("You are " + str(age) + " years old.")
+  else:
+      print("That doesn't look like a number.")
+challenge: |
+  🎯 Challenge: Change age_text so Python prints "You are 12 years old." instead.
+expected_output: "You are 12 years old."
+hints:
+  - "age_text needs to be a string of digits, not letters."
+  - ".isdigit() only lets the if branch run when the text is all digits."
+  - "Try age_text = \"12\"."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 27
+main_path: false
+concept_tags: [conditionals, type-conversion]

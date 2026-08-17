@@ -1,0 +1,23 @@
+id: lesson_596
+title: "Division: Level 37 ➗"
+level: 596
+objective: "Compare two order-of-operations expressions built from division and addition."
+explanation: |
+  Python works out both sides completely — dividing and adding as needed — before comparing them.
+example_code: |
+  print(20 / 4 + 1 > 15 / 3)
+starter_code: |
+  print(20 / 4 + 1 > 15 / 3)
+challenge: |
+  🎯 Challenge: Is 30 divided by 5, plus 2, greater than 24 divided by 3, plus 1? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 30 / 5 + 2 > 24 / 3 + 1."
+  - "Python works out each side first, then compares."
+  - "It should look like: print(30 / 5 + 2 > 24 / 3 + 1)"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: division
+category_level: 37
+main_path: false

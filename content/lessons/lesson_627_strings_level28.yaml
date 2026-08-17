@@ -1,0 +1,28 @@
+id: lesson_627
+title: "Strings: Level 28 🔤"
+level: 627
+objective: "Reverse a whole string using a slice with a step of -1."
+explanation: |
+  A step of -1 tells Python to walk through the string backwards, one character at a time — which reverses the whole thing.
+
+  word[::-1] means "start at the end, go to the beginning, stepping backwards by 1." It's the fastest way to reverse a string in Python.
+example_code: |
+  word = "stressed"
+  print(word[::-1])
+starter_code: |
+  word = "stressed"
+  print(word[::-1])
+challenge: |
+  🎯 Challenge: Change word to "level" and print it reversed.
+expected_output: "level"
+hints:
+  - "Change word to \"level\", keeping the quotes."
+  - "word[::-1] doesn't need to change — it always reverses the string."
+  - "It should look like: word = \"level\", print(word[::-1])"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 28
+main_path: false
+concept_tags: [strings, slicing]

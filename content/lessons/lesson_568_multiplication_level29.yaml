@@ -1,0 +1,23 @@
+id: lesson_568
+title: "Multiplication: Level 29 ✖️"
+level: 568
+objective: "See that multiplication also happens before subtraction."
+explanation: |
+  The same rule applies to subtraction: Python multiplies first, then subtracts.
+example_code: |
+  print(3 * 4 - 5)
+starter_code: |
+  print(3 * 4 - 5)
+challenge: |
+  🎯 Challenge: Multiply 6 by 7, then subtract 12 from the result.
+expected_output: "30"
+hints:
+  - "Change the numbers to 6, 7, and 12."
+  - "Python multiplies 6 * 7 first, then subtracts."
+  - "It should look like: print(6 * 7 - 12)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 29
+main_path: false

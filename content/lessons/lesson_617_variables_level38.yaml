@@ -1,0 +1,24 @@
+id: lesson_617
+title: "Variables: Level 38 📦"
+level: 617
+objective: "Put a round() call, not just a variable, inside an f-string's curly braces."
+explanation: |
+  The curly braces in an f-string can hold any expression, including a function call like round().
+example_code: |
+  speed = 55.678
+  print(f"Speed: {round(speed, 1)} mph")
+starter_code: |
+  speed = 55.678
+  print(f"Speed: {round(speed, 1)} mph")
+challenge: |
+  🎯 Challenge: Store 12.345 in a variable called distance, then print f"Distance: {rounded value} miles" rounded to 1 decimal place.
+expected_output: "Distance: 12.3 miles"
+hints:
+  - "Change speed to distance = 12.345, and \"Speed\" to \"Distance\"."
+  - "It should look like: distance = 12.345, print(f\"Distance: {round(distance, 1)} miles\")"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 38
+main_path: false

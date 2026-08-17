@@ -1,0 +1,26 @@
+id: lesson_603
+title: "Variables: Level 24 📦"
+level: 603
+objective: "Use //= as a shortcut for floor-dividing a variable."
+explanation: |
+  total //= 3 is a shortcut for total = total // 3 — it floor-divides whatever is inside total.
+example_code: |
+  total = 20
+  total //= 3
+  print(total)
+starter_code: |
+  total = 20
+  total //= 3
+  print(total)
+challenge: |
+  🎯 Challenge: Start coins at 50, then use //= to floor-divide by 7. Print coins.
+expected_output: "7"
+hints:
+  - "Change coins to 50, then write coins //= 7."
+  - "It should look like: coins = 50, coins //= 7, print(coins)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 24
+main_path: false

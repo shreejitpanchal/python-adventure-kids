@@ -1,0 +1,35 @@
+id: lesson_698
+title: "Loops: Level 39 🔁"
+level: 698
+objective: "Understand that break only exits the loop it's directly inside, using a nested loop search."
+explanation: |
+  break only stops the loop it's written inside -- not every loop around it. In a nested loop, break inside the inner loop only stops the INNER loop; the outer loop just keeps going to its next value.
+
+  That's why this program can print more than one match: each time the outer i finds an inner j that works, it prints the pair and breaks out of just the inner loop, then the outer loop moves on to try the next i.
+example_code: |
+  for i in range(1, 6):
+      for j in range(1, 6):
+          if i * j == 12:
+              print(i, j)
+              break
+starter_code: |
+  for i in range(1, 6):
+      for j in range(1, 6):
+          if i * j == 12:
+              print(i, j)
+              break
+challenge: |
+  🎯 Challenge: Can you make it search for pairs that multiply to 8 instead of 12?
+expected_output: |
+  2 4
+  4 2
+hints:
+  - "Change i * j == 12 to i * j == 8."
+  - "break still only stops the inner loop -- the outer loop keeps trying every i from 1 to 5."
+  - "Pairs multiplying to 8 in this range are (2, 4) and (4, 2)."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 39
+main_path: false

@@ -1,0 +1,26 @@
+id: lesson_609
+title: "Variables: Level 30 📦"
+level: 609
+objective: "Update a variable, then weave its new value into an f-string."
+explanation: |
+  You can update a variable with a shortcut like *=, then use an f-string to show off its new value.
+example_code: |
+  score = 10
+  score += 5
+  print(f"Score: {score}")
+starter_code: |
+  score = 10
+  score += 5
+  print(f"Score: {score}")
+challenge: |
+  🎯 Challenge: Start coins at 20, multiply it by 3 using *=, then print an f-string showing "Coins: 60".
+expected_output: "Coins: 60"
+hints:
+  - "Change coins to 20, then write coins *= 3."
+  - "It should look like: coins = 20, coins *= 3, print(f\"Coins: {coins}\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 30
+main_path: false

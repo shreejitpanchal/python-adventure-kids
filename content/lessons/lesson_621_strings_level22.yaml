@@ -1,0 +1,27 @@
+id: lesson_621
+title: "Strings: Level 22 🔤"
+level: 621
+objective: "Count how many words are in a sentence using len() and .split() together."
+explanation: |
+  You already know len() counts things, and .split() breaks a sentence into a list of words. Put them together and you can count words instead of letters!
+
+  len(sentence.split()) first splits the sentence into a list, then counts how many items are in that list.
+example_code: |
+  sentence = "The sun is bright"
+  print(len(sentence.split()))
+starter_code: |
+  sentence = "The sun is bright"
+  print(len(sentence.split()))
+challenge: |
+  🎯 Challenge: Change sentence to "The big yellow sun is warm" and print how many words it has.
+expected_output: "6"
+hints:
+  - "Change the sentence to \"The big yellow sun is warm\", keeping the quotes."
+  - "sentence.split() turns the sentence into a list of words first, then len() counts them."
+  - "It should look like: sentence = \"The big yellow sun is warm\", print(len(sentence.split()))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 22
+main_path: false

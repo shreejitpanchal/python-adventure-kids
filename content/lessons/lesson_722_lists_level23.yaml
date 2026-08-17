@@ -1,0 +1,33 @@
+id: lesson_722
+title: "Lists: Level 23 🎒"
+level: 722
+objective: "Remove an item from a specific position with .pop(index)."
+explanation: |
+  .pop() can also take a position number and remove the item sitting AT that position, instead of always grabbing the last one. fruits.pop(0) removes and returns whatever is at index 0.
+
+  Just like plain indexing, position 0 means the very first item in the backpack.
+example_code: |
+  fruits = ["apple", "banana", "orange"]
+  removed = fruits.pop(0)
+  print(removed)
+  print(fruits)
+starter_code: |
+  fruits = ["apple", "banana", "orange"]
+  removed = fruits.pop(0)
+  print(removed)
+  print(fruits)
+challenge: |
+  🎯 Challenge: Can you pop the item at position 1 instead, so it removes "banana"?
+expected_output: |
+  banana
+  ['apple', 'orange']
+hints:
+  - "Change fruits.pop(0) to fruits.pop(1)."
+  - "Position 1 is the second item, since counting starts at 0."
+  - "It should look like: removed = fruits.pop(1)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 23
+main_path: false

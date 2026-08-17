@@ -1,0 +1,25 @@
+id: lesson_531
+title: "Addition: Level 32 ➕"
+level: 531
+objective: "Convert text to a number, add to it, then find the remainder."
+explanation: |
+  You can chain int(), +, and % together -- Python converts the text first, then adds, then finds the remainder.
+
+  (int("15") + 10) % 4 converts "15" to 15, adds 10 (getting 25), then finds the remainder when divided by 4: 1.
+example_code: |
+  print((int("15") + 10) % 4)
+starter_code: |
+  print((int("15") + 10) % 4)
+challenge: |
+  🎯 Challenge: Convert the text "22" into a number, add 13 to it, then find the remainder when divided by 5.
+expected_output: "0"
+hints:
+  - "Change \"15\" to \"22\", 10 to 13, and 4 to 5."
+  - "int() runs first, then +, then %."
+  - "It should look like: print((int(\"22\") + 13) % 5)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 32
+main_path: false

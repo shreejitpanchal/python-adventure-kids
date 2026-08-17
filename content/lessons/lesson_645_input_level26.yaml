@@ -1,0 +1,29 @@
+id: lesson_645
+title: "Ask a Question: Level 26 🙋"
+level: 645
+objective: "Count the words in a typed sentence using .split() and len()."
+explanation: |
+  A sentence you type in can be split into words too, just like one written in the code.
+
+  sentence = input("Type a short sentence: ") stores what you typed. print(len(sentence.split())) counts how many words it has.
+example_code: |
+  sentence = input("Type a short sentence: ")
+  print(len(sentence.split()))
+starter_code: |
+  sentence = input("Type a short sentence: ")
+  print(len(sentence.split()))
+challenge: |
+  🎯 Challenge: Type "the cat sat down" in the box below, then press RUN to see how many words it has!
+expected_output: "Type a short sentence: 4"
+input_prompt: "Type a short sentence:"
+hints:
+  - "Type the cat sat down in the answer box above the RUN button."
+  - ".split() breaks your sentence into a list of words, then len() counts them."
+  - "You don't need to change the code — just type the cat sat down and press RUN!"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: input
+category_level: 26
+main_path: false
+concept_tags: [input, strings]

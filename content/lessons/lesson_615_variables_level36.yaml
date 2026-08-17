@@ -1,0 +1,28 @@
+id: lesson_615
+title: "Variables: Level 36 📦"
+level: 615
+objective: "Build a boolean variable from two comparisons on other variables, joined with and."
+explanation: |
+  Instead of comparing plain numbers, you can compare variables — and combine two of those comparisons with and.
+example_code: |
+  age = 10
+  height = 140
+  can_ride = age >= 8 and height >= 130
+  print(can_ride)
+starter_code: |
+  age = 10
+  height = 140
+  can_ride = age >= 8 and height >= 130
+  print(can_ride)
+challenge: |
+  🎯 Challenge: Make age = 6 and height = 125. Store whether age >= 8 and height >= 130 in can_ride, and print it.
+expected_output: "False"
+hints:
+  - "Change age to 6 and height to 125, keep the rest the same."
+  - "It should look like: age = 6, height = 125, can_ride = age >= 8 and height >= 130, print(can_ride)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 36
+main_path: false

@@ -1,0 +1,31 @@
+id: lesson_700
+title: "Functions: Level 21 ⚙️"
+level: 700
+objective: "Give a function three parameters and average them."
+explanation: |
+  A function isn't limited to one or two parameters -- it can take as many labeled boxes as you need, each separated by a comma.
+
+  average3(a, b, c) adds all three numbers together and divides by 3, working out the average of whatever three numbers you pass in.
+example_code: |
+  def average3(a, b, c):
+      return (a + b + c) / 3
+
+  print(average3(4, 8, 12))
+starter_code: |
+  def average3(a, b, c):
+      return (a + b + c) / 3
+
+  print(average3(4, 8, 12))
+challenge: |
+  🎯 Challenge: Can you call average3 with 10, 20, and 30 instead, so it prints 20.0?
+expected_output: "20.0"
+hints:
+  - "Change all three numbers you pass into average3(...)."
+  - "average3(10, 20, 30) returns (10 + 20 + 30) / 3."
+  - "It should look like: print(average3(10, 20, 30))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 21
+main_path: false

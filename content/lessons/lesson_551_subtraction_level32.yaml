@@ -1,0 +1,25 @@
+id: lesson_551
+title: "Subtraction: Level 32 ➖"
+level: 551
+objective: "Convert text to a number, subtract from it, then find the remainder."
+explanation: |
+  You can chain int(), -, and % together -- Python converts the text first, then subtracts, then finds the remainder.
+
+  (int("30") - 5) % 4 converts "30" to 30, subtracts 5 (getting 25), then finds the remainder when divided by 4: 1.
+example_code: |
+  print((int("30") - 5) % 4)
+starter_code: |
+  print((int("30") - 5) % 4)
+challenge: |
+  🎯 Challenge: Convert the text "42" into a number, subtract 7 from it, then find the remainder when divided by 6.
+expected_output: "5"
+hints:
+  - "Change \"30\" to \"42\", 5 to 7, and 4 to 6."
+  - "int() runs first, then -, then %."
+  - "It should look like: print((int(\"42\") - 7) % 6)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 32
+main_path: false

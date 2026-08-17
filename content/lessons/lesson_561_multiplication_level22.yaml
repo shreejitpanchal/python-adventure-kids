@@ -1,0 +1,25 @@
+id: lesson_561
+title: "Multiplication: Level 22 ✖️"
+level: 561
+objective: "Multiply two numbers, then use % to find the remainder left over."
+explanation: |
+  % works on a multiplication result the same way it works on a plain number.
+
+  Python multiplies first, then tells you what's left over after dividing by the third number.
+example_code: |
+  print((6 * 7) % 4)
+starter_code: |
+  print((6 * 7) % 4)
+challenge: |
+  🎯 Challenge: Multiply 9 by 7, then find the remainder when the result is divided by 5.
+expected_output: "3"
+hints:
+  - "Change the numbers to 9, 7, and 5."
+  - "% gives you what's left over, not the answer itself."
+  - "It should look like: print((9 * 7) % 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 22
+main_path: false

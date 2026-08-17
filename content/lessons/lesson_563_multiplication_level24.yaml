@@ -1,0 +1,23 @@
+id: lesson_563
+title: "Multiplication: Level 24 ✖️"
+level: 563
+objective: "Chain multiplication mixing a negative number and a decimal number together."
+explanation: |
+  You've chained multiplication before, and you've used negatives and decimals separately — now mix them in the same chain.
+example_code: |
+  print(-2 * 3.5 * 2)
+starter_code: |
+  print(-2 * 3.5 * 2)
+challenge: |
+  🎯 Challenge: Can you make Python multiply -1.5, then 4, then -2?
+expected_output: "12.0"
+hints:
+  - "Change the numbers to -1.5, 4, and -2."
+  - "Two negative signs in the chain will cancel out."
+  - "It should look like: print(-1.5 * 4 * -2)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 24
+main_path: false

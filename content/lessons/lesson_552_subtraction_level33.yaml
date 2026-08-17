@@ -1,0 +1,25 @@
+id: lesson_552
+title: "Subtraction: Level 33 ➖"
+level: 552
+objective: "Find the absolute value of a longer chain of subtraction that ends up negative."
+explanation: |
+  abs() can wrap around a whole chain of subtraction, not just two numbers -- Python subtracts everything first, then strips away any minus sign.
+
+  abs(5 - 10 - 8) subtracts first (getting -13), then shows how far -13 is from zero: 13.
+example_code: |
+  print(abs(5 - 10 - 8))
+starter_code: |
+  print(abs(5 - 10 - 8))
+challenge: |
+  🎯 Challenge: Subtract 20 and then 9 from 6, then find the absolute value of the result.
+expected_output: "23"
+hints:
+  - "Change the numbers to 6, 20, and 9."
+  - "abs() waits for the whole chain to finish subtracting first."
+  - "It should look like: print(abs(6 - 20 - 9))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 33
+main_path: false

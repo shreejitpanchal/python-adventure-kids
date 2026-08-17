@@ -11,7 +11,9 @@ from app.engine.lesson_engine import LessonEngine
 from app.engine.validator import validate_output
 from app.sandbox.inprocess_runner import run_code
 
-NEW_STRINGS_IDS = [f"lesson_{300 + n}" for n in range(19)]  # lesson_300..lesson_318
+NEW_STRINGS_IDS = [f"lesson_{300 + n}" for n in range(19)] + [
+    f"lesson_{620 + n}" for n in range(20)
+]  # lesson_300..lesson_318, lesson_620..lesson_639
 
 # The intended solution for each challenge -- what a child's edited
 # starter_code should look like once the level is solved.
@@ -35,6 +37,30 @@ SOLUTIONS = {
     "lesson_316": 'phrase = "the lost city"\nprint(phrase.title())',
     "lesson_317": 'raw = "   quiet please   "\nprint(raw.strip().upper())',
     "lesson_318": 'name = "Explorer"\nprint(f"{name.upper()} has {len(name)} letters")',
+    "lesson_620": 'sentence = "I like dogs"\nprint(sentence.split())',
+    "lesson_621": 'sentence = "The big yellow sun is warm"\nprint(len(sentence.split()))',
+    "lesson_622": 'colors = "pink,purple,gold"\nprint(colors.split(","))',
+    "lesson_623": 'crew = ["Sam", "Max", "Ivy"]\nprint("-".join(crew))',
+    "lesson_624": 'word = "backpack"\nprint(word.find("pack"))',
+    "lesson_625": 'code = "77042"\nprint(code.isdigit())\nprint(code.isalpha())',
+    "lesson_626": 'word = "roadtrip"\nprint(word[::2])',
+    "lesson_627": 'word = "level"\nprint(word[::-1])',
+    "lesson_628": 'password = "python"\nguess = "python"\nprint(password == guess)',
+    "lesson_629": 'title = "GO"\nprint(title.center(8, "-"))',
+    "lesson_630": 'num = "42"\nprint(num.zfill(5))',
+    "lesson_631": 'a = 3\nb = 4\nc = 5\nprint(f"{a}-{b}-{c} sum={a + b + c}")',
+    "lesson_632": 'text = "banana"\nprint(text.replace("a", "4").replace("e", "3"))',
+    "lesson_633": 'sentence = "See you later alligator"\nprint(sentence.split()[-1])',
+    "lesson_634": 'fruit = "pineapple"\nprint("apple" in fruit)',
+    "lesson_635": 'sentence = "Python is super duper fun"\nprint(f"That sentence has {len(sentence.split())} words")',
+    "lesson_636": 'print("=" * 6 + ">")',
+    "lesson_637": 'raw = "  GOOD MORNING SUNSHINE  "\nprint(raw.strip().lower().title())',
+    "lesson_638": 'sentence = "welcome to the jungle"\nprint(sentence.split()[0].upper())',
+    "lesson_639": (
+        'sentence = "the lost city of gold"\n'
+        "words = sentence.split()\n"
+        'print(f"The sentence has {len(words)} words and the first word is {words[0].upper()}")'
+    ),
 }
 
 
@@ -43,11 +69,11 @@ def engine():
     return LessonEngine()
 
 
-def test_strings_category_has_a_full_1_to_20_level_progression(engine):
+def test_strings_category_has_a_full_1_to_40_level_progression(engine):
     lessons = engine.lessons_in_category("strings")
-    assert len(lessons) == 20
+    assert len(lessons) == 40
     levels = sorted(lesson.category_level for lesson in lessons)
-    assert levels == list(range(1, 21))
+    assert levels == list(range(1, 41))
 
 
 @pytest.mark.parametrize("lesson_id", NEW_STRINGS_IDS)
@@ -80,5 +106,5 @@ def test_intended_solution_satisfies_the_challenge(engine, lesson_id, solution):
     )
 
 
-def test_all_19_new_lesson_ids_are_covered_by_the_solutions_map():
+def test_all_39_new_lesson_ids_are_covered_by_the_solutions_map():
     assert set(SOLUTIONS.keys()) == set(NEW_STRINGS_IDS)

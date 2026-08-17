@@ -1,0 +1,25 @@
+id: lesson_501
+title: "Numbers: Level 22 🔢"
+level: 501
+objective: "Use % to find the remainder left over after dividing."
+explanation: |
+  % is called modulo -- instead of the answer to a division, it gives you the remainder left over.
+
+  17 % 5 is 2, because 5 goes into 17 three times with 2 left over.
+example_code: |
+  print(17 % 5)
+starter_code: |
+  print(17 % 5)
+challenge: |
+  🎯 Challenge: You pack 23 candies into bags of 5. Can you make Python print how many candies are left over?
+expected_output: "3"
+hints:
+  - "Change 17 % 5 to 23 % 5."
+  - "% gives you the leftover, not the number of groups."
+  - "It should look like: print(23 % 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 22
+main_path: false

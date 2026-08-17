@@ -1,0 +1,25 @@
+id: lesson_543
+title: "Subtraction: Level 24 ➖"
+level: 543
+objective: "Use an f-string to show the result of a subtraction inside a sentence."
+explanation: |
+  An f-string lets you drop a calculation right inside text -- put an f right before the quotes, and wrap the calculation in curly braces {}.
+
+  f"Left: {10 - 3}" shows the words "Left: " followed by the answer, 7.
+example_code: |
+  print(f"Left: {10 - 3}")
+starter_code: |
+  print(f"Left: {10 - 3}")
+challenge: |
+  🎯 Challenge: Can you make Python print "Left: " followed by 30 - 12?
+expected_output: "Left: 18"
+hints:
+  - "Change 10 - 3 to 30 - 12, inside the curly braces."
+  - "Keep the f right before the quotes, and the curly braces {} around the math."
+  - "It should look like: print(f\"Left: {30 - 12}\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 24
+main_path: false

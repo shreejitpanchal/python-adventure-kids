@@ -1,0 +1,35 @@
+id: lesson_718
+title: "Functions: Level 39 ⚙️"
+level: 718
+objective: "Combine multiple parameters, a default value, and a conditional mutation in one function."
+explanation: |
+  A function can combine several parameters, a default value, and an if that changes a variable partway through, all at once. total_cost(price, quantity, discount=0, tax_rate=0.1) works out a subtotal, subtracts a discount if one is given, then adds tax on top.
+
+  Because discount and tax_rate both have defaults, you can call the function with just price and quantity and it still works.
+example_code: |
+  def total_cost(price, quantity, discount=0, tax_rate=0.1):
+      subtotal = price * quantity - discount
+      total = subtotal + subtotal * tax_rate
+      return total
+
+  print(total_cost(10, 5))
+starter_code: |
+  def total_cost(price, quantity, discount=0, tax_rate=0.1):
+      subtotal = price * quantity - discount
+      total = subtotal + subtotal * tax_rate
+      return total
+
+  print(total_cost(10, 5))
+challenge: |
+  🎯 Challenge: Can you call total_cost with price 10, quantity 5, and discount 10 instead, so it prints 44.0?
+expected_output: "44.0"
+hints:
+  - "Add a third value when you call total_cost(...): total_cost(10, 5, 10)."
+  - "The discount is subtracted from the subtotal before tax is added: (10 * 5 - 10) is the new subtotal."
+  - "It should look like: print(total_cost(10, 5, 10))"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 39
+main_path: false

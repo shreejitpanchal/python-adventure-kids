@@ -1,0 +1,37 @@
+id: lesson_712
+title: "Functions: Level 33 ⚙️"
+level: 712
+objective: "Override a default parameter on a function that builds a string with a loop."
+explanation: |
+  Default parameters work just as well with loop-building functions as they do with simple ones. repeat_word(word, times=3) repeats a word 3 times unless you tell it a different number.
+
+  .strip() at the end trims off the extra space left over from the loop, so the final result doesn't have a trailing gap.
+example_code: |
+  def repeat_word(word, times=3):
+      result = ""
+      for i in range(times):
+          result += word + " "
+      return result.strip()
+
+  print(repeat_word("Go"))
+starter_code: |
+  def repeat_word(word, times=3):
+      result = ""
+      for i in range(times):
+          result += word + " "
+      return result.strip()
+
+  print(repeat_word("Go"))
+challenge: |
+  🎯 Challenge: Can you call repeat_word with "Go" and 5 instead, so it prints "Go Go Go Go Go"?
+expected_output: "Go Go Go Go Go"
+hints:
+  - "Call repeat_word(\"Go\", 5) instead of repeat_word(\"Go\")."
+  - "Passing a second value overrides the default of 3."
+  - "It should look like: print(repeat_word(\"Go\", 5))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 33
+main_path: false

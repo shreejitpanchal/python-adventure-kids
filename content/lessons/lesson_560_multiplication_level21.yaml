@@ -1,0 +1,25 @@
+id: lesson_560
+title: "Multiplication: Level 21 ✖️"
+level: 560
+objective: "Multiply two numbers, then use // to floor-divide the result by a third number."
+explanation: |
+  You've used // to floor-divide plain numbers before — it works just as well on the result of a multiplication.
+
+  Python works out the multiplication first, then floor-divides that answer, throwing away anything after the decimal point.
+example_code: |
+  print((6 * 7) // 4)
+starter_code: |
+  print((6 * 7) // 4)
+challenge: |
+  🎯 Challenge: Multiply 8 by 9, then floor-divide the result by 5.
+expected_output: "14"
+hints:
+  - "Change the numbers to 8, 9, and 5."
+  - "Python multiplies first because of the parentheses, then floor-divides."
+  - "It should look like: print((8 * 9) // 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 21
+main_path: false

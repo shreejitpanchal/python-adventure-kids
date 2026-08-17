@@ -1,0 +1,37 @@
+id: lesson_661
+title: "Decisions: Level 22 🚦"
+level: 661
+objective: "Combine and and or in one condition using parentheses."
+explanation: |
+  You can mix and and or together in one condition. Parentheses show Python which part to check first, just like in math.
+
+  (age >= 13 and has_pass == "yes") or is_vip == "yes" lets someone in if EITHER they meet the age-and-pass rule, OR they're a VIP.
+example_code: |
+  age = 10
+  has_pass = "no"
+  is_vip = "no"
+  if (age >= 13 and has_pass == "yes") or is_vip == "yes":
+      print("Welcome to the concert!")
+  else:
+      print("Sorry, you can't come in.")
+starter_code: |
+  age = 10
+  has_pass = "no"
+  is_vip = "no"
+  if (age >= 13 and has_pass == "yes") or is_vip == "yes":
+      print("Welcome to the concert!")
+  else:
+      print("Sorry, you can't come in.")
+challenge: |
+  🎯 Challenge: Change is_vip so Python prints "Welcome to the concert!" instead.
+expected_output: "Welcome to the concert!"
+hints:
+  - "The or means either side being true is enough — you don't have to change age or has_pass."
+  - "is_vip == \"yes\" alone can make the whole condition true."
+  - "Try is_vip = \"yes\"."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 22
+main_path: false

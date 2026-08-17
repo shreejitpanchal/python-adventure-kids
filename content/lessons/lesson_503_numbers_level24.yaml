@@ -1,0 +1,25 @@
+id: lesson_503
+title: "Numbers: Level 24 🔢"
+level: 503
+objective: "Use round() with a second number to keep a set number of decimal places."
+explanation: |
+  round() can take a second argument -- how many digits to keep after the decimal point.
+
+  round(3.14159, 2) keeps just 2 digits after the point: 3.14.
+example_code: |
+  print(round(3.14159, 2))
+starter_code: |
+  print(round(3.14159, 2))
+challenge: |
+  🎯 Challenge: Can you round 8.36219 to 2 decimal places?
+expected_output: "8.36"
+hints:
+  - "Change 3.14159 to 8.36219, and keep the 2."
+  - "The second number tells round() how many digits to keep."
+  - "It should look like: print(round(8.36219, 2))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 24
+main_path: false

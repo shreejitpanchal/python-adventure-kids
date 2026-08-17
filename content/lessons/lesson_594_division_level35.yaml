@@ -1,0 +1,22 @@
+id: lesson_594
+title: "Division: Level 35 ➗"
+level: 594
+objective: "Use min() to find the smallest of three division results."
+explanation: |
+  Just like max(), min() can compare three quotients at once and hand back the smallest.
+example_code: |
+  print(min(20 / 4, 18 / 3, 10 / 2))
+starter_code: |
+  print(min(20 / 4, 18 / 3, 10 / 2))
+challenge: |
+  🎯 Challenge: Which is smallest: 42 / 6, 45 / 5, or 18 / 3? Make Python find out.
+expected_output: "6.0"
+hints:
+  - "Change the three problems to 42 / 6, 45 / 5, and 18 / 3."
+  - "It should look like: print(min(42 / 6, 45 / 5, 18 / 3))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: division
+category_level: 35
+main_path: false

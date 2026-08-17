@@ -1,0 +1,25 @@
+id: lesson_557
+title: "Subtraction: Level 38 ➖"
+level: 557
+objective: "Use an f-string with round() and decimal places to show a precise difference."
+explanation: |
+  round() with a digit count works inside f-strings too.
+
+  f"Diff: {round(9.8765 - 2.4321, 2)}" subtracts first (getting 7.4444), then rounds to 2 decimal places: 7.44.
+example_code: |
+  print(f"Diff: {round(9.8765 - 2.4321, 2)}")
+starter_code: |
+  print(f"Diff: {round(9.8765 - 2.4321, 2)}")
+challenge: |
+  🎯 Challenge: Can you show "Diff: " followed by 12.6789 - 4.1234, rounded to 2 decimal places?
+expected_output: "Diff: 8.56"
+hints:
+  - "Change the numbers to 12.6789 and 4.1234, and keep the 2."
+  - "Subtraction happens first, then round() tidies it to 2 decimal places."
+  - "It should look like: print(f\"Diff: {round(12.6789 - 4.1234, 2)}\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 38
+main_path: false

@@ -1,0 +1,43 @@
+id: lesson_707
+title: "Functions: Level 28 ⚙️"
+level: 707
+objective: "Pass a function's *args along into another function using *."
+explanation: |
+  A function that receives *args can pass those same arguments straight along to another function, by putting a * in front of args when calling it -- this unpacks the collected values back into separate arguments.
+
+  average(*args) calls total(*args) to do the adding, then divides by how many numbers there were -- reusing one function's work inside another.
+example_code: |
+  def total(*args):
+      result = 0
+      for n in args:
+          result += n
+      return result
+
+  def average(*args):
+      return total(*args) / len(args)
+
+  print(average(4, 8, 12))
+starter_code: |
+  def total(*args):
+      result = 0
+      for n in args:
+          result += n
+      return result
+
+  def average(*args):
+      return total(*args) / len(args)
+
+  print(average(4, 8, 12))
+challenge: |
+  🎯 Challenge: Can you call average with 10, 20, 30, and 40 instead, so it prints 25.0?
+expected_output: "25.0"
+hints:
+  - "Change the numbers you pass into average(...)."
+  - "average(10, 20, 30, 40) adds all four numbers, then divides by 4."
+  - "It should look like: print(average(10, 20, 30, 40))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 28
+main_path: false

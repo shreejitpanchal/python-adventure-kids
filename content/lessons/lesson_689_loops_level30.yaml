@@ -1,0 +1,33 @@
+id: lesson_689
+title: "Loops: Level 30 🔁"
+level: 689
+objective: "Build a reversed string by concatenating characters while looping backwards."
+explanation: |
+  Instead of printing each backwards letter on its own line, you can glue them together into ONE reversed string, just like building up a total with +=.
+
+  reversed_word starts empty, and each trip through the backwards loop adds one more letter onto the end, until the whole word has been rebuilt in reverse.
+example_code: |
+  word = "python"
+  reversed_word = ""
+  for i in range(len(word) - 1, -1, -1):
+      reversed_word = reversed_word + word[i]
+  print(reversed_word)
+starter_code: |
+  word = "python"
+  reversed_word = ""
+  for i in range(len(word) - 1, -1, -1):
+      reversed_word = reversed_word + word[i]
+  print(reversed_word)
+challenge: |
+  🎯 Challenge: Can you make it reverse the word "hello" instead?
+expected_output: "olleh"
+hints:
+  - "Change word = \"python\" to word = \"hello\"."
+  - "The loop and the concatenation don't need to change -- they already work for any word."
+  - "\"hello\" reversed should print as olleh."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 30
+main_path: false

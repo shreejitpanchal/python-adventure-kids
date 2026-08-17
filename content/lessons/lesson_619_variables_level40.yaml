@@ -1,0 +1,38 @@
+id: lesson_619
+title: "Variables: Level 40 📦"
+level: 619
+objective: "Combine several variables, augmented updates, and a boolean check in one small 'receipt' program — the ultimate variables challenge."
+explanation: |
+  This final challenge mixes almost everything you've learned about variables: text and number variables, += and -= updates, a boolean built from and, and one f-string summary line.
+example_code: |
+  item = "Book"
+  price = 10
+  price += 5
+  qty = 2
+  total = price * qty
+  total -= 3
+  in_stock = qty > 0 and total > 0
+  print(f"{item}: {total} (in stock: {in_stock})")
+starter_code: |
+  item = "Book"
+  price = 10
+  price += 5
+  qty = 2
+  total = price * qty
+  total -= 3
+  in_stock = qty > 0 and total > 0
+  print(f"{item}: {total} (in stock: {in_stock})")
+challenge: |
+  🎯 Challenge: Make item hold "Toy". Start price at 8, add 4 to it. Set qty to 3, store price * qty in total, then subtract 6 from total. Store whether qty > 0 and total > 0 in in_stock, then print the same f-string summary.
+expected_output: "Toy: 30 (in stock: True)"
+hints:
+  - "Change item to \"Toy\", price to 8, price += 4, qty to 3, and total -= 6."
+  - "total should be price * qty, updated afterward with -= 6."
+  - "It should look like: item = \"Toy\", price = 8, price += 4, qty = 3, total = price * qty, total -= 6, in_stock = qty > 0 and total > 0, print(f\"{item}: {total} (in stock: {in_stock})\")"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 40
+main_path: false
+concept_tags: [variables, f-strings, booleans, expressions]

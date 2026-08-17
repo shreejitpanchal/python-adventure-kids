@@ -1,0 +1,29 @@
+id: lesson_657
+title: "Ask a Question: Level 38 🙋"
+level: 657
+objective: "Title-case a typed sentence using .title()."
+explanation: |
+  .title() works on typed text too, capitalizing the first letter of every word.
+
+  sentence = input("Type a short sentence: ") stores what you typed. print(sentence.title()) prints it with every word capitalized.
+example_code: |
+  sentence = input("Type a short sentence: ")
+  print(sentence.title())
+starter_code: |
+  sentence = input("Type a short sentence: ")
+  print(sentence.title())
+challenge: |
+  🎯 Challenge: Type "the lost city" in the box below, then press RUN to see it title-cased!
+expected_output: "Type a short sentence: The Lost City"
+input_prompt: "Type a short sentence:"
+hints:
+  - "Type the lost city in the answer box above the RUN button."
+  - ".title() capitalizes every single word, not just the first one."
+  - "You don't need to change the code — just type the lost city and press RUN!"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: input
+category_level: 38
+main_path: false
+concept_tags: [input, strings]

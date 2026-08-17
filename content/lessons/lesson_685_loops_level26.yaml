@@ -1,0 +1,31 @@
+id: lesson_685
+title: "Loops: Level 26 🔁"
+level: 685
+objective: "Search for the first number matching a condition using a loop with break."
+explanation: |
+  A loop doesn't always need to check every number -- once you've found what you're looking for, break lets you stop immediately instead of wasting time checking the rest.
+
+  This loop checks numbers one at a time until it finds the very first one divisible by 7, then stops right there.
+example_code: |
+  for i in range(1, 50):
+      if i % 7 == 0:
+          print(i)
+          break
+starter_code: |
+  for i in range(1, 50):
+      if i % 7 == 0:
+          print(i)
+          break
+challenge: |
+  🎯 Challenge: Can you find and print the first number divisible by 9 instead?
+expected_output: "9"
+hints:
+  - "Change i % 7 == 0 to i % 9 == 0."
+  - "break stops the loop the moment a match is found -- no need to change that part."
+  - "The first multiple of 9 is 9 itself."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 26
+main_path: false

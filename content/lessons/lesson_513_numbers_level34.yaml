@@ -1,0 +1,25 @@
+id: lesson_513
+title: "Numbers: Level 34 🔢"
+level: 513
+objective: "Compare a floor-division result with a modulo result using max()."
+explanation: |
+  max() doesn't care what kind of calculations you give it -- it just compares the final numbers.
+
+  max(17 // 3, 17 % 3) works out both (5 and 2), then picks the bigger.
+example_code: |
+  print(max(17 // 3, 17 % 3))
+starter_code: |
+  print(max(17 // 3, 17 % 3))
+challenge: |
+  🎯 Challenge: Can you compare 37 // 5 and 37 % 5, and print the bigger one?
+expected_output: "7"
+hints:
+  - "Change every 17 to 37, and every 3 to 5."
+  - "max() works out // and % first, then compares them."
+  - "It should look like: print(max(37 // 5, 37 % 5))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 34
+main_path: false

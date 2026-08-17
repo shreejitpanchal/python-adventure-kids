@@ -1,0 +1,27 @@
+id: lesson_608
+title: "Variables: Level 29 📦"
+level: 608
+objective: "Combine two boolean variables with or."
+explanation: |
+  or only needs one side to be True — it's False only when both sides are False.
+example_code: |
+  a = 10 > 3
+  b = 4 > 9
+  print(a or b)
+starter_code: |
+  a = 10 > 3
+  b = 4 > 9
+  print(a or b)
+challenge: |
+  🎯 Challenge: Make a check whether 2 is greater than 9, and b check whether 7 is greater than 10. Print a or b together.
+expected_output: "False"
+hints:
+  - "Change the comparisons to a = 2 > 9 and b = 7 > 10."
+  - "or is only False when both sides are False."
+  - "It should look like: a = 2 > 9, b = 7 > 10, print(a or b)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 29
+main_path: false

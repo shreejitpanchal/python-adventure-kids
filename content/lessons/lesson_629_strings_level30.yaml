@@ -1,0 +1,27 @@
+id: lesson_629
+title: "Strings: Level 30 🔤"
+level: 629
+objective: "Center a string inside extra padding characters using .center()."
+explanation: |
+  .center() pads a string with extra characters on both sides so it's centered inside a wider width.
+
+  title.center(10, "*") makes the result 10 characters wide, filling in extra "*" symbols evenly on the left and right.
+example_code: |
+  title = "HI"
+  print(title.center(10, "*"))
+starter_code: |
+  title = "HI"
+  print(title.center(10, "*"))
+challenge: |
+  🎯 Challenge: Change title to "GO", the width to 8, and the fill character to "-".
+expected_output: "---GO---"
+hints:
+  - "Change \"HI\" to \"GO\", 10 to 8, and \"*\" to \"-\"."
+  - ".center() adds extra characters evenly on both sides until it reaches the width you ask for."
+  - "It should look like: title = \"GO\", print(title.center(8, \"-\"))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 30
+main_path: false

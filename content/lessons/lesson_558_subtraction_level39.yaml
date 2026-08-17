@@ -1,0 +1,25 @@
+id: lesson_558
+title: "Subtraction: Level 39 ➖"
+level: 558
+objective: "Convert two pieces of text into numbers, then subtract them along with a plain number."
+explanation: |
+  You can use int() more than once in the same line -- Python converts each piece of text separately, then subtracts.
+
+  int("30") - int("5") - 3 converts both pieces of text to numbers, then subtracts them one after another: 22.
+example_code: |
+  print(int("30") - int("5") - 3)
+starter_code: |
+  print(int("30") - int("5") - 3)
+challenge: |
+  🎯 Challenge: Convert the text "50" and "12" into numbers, then subtract 8 more from the result.
+expected_output: "30"
+hints:
+  - "Change \"30\" to \"50\", \"5\" to \"12\", and 3 to 8."
+  - "Each int(...) converts its own piece of text before the subtracting happens."
+  - "It should look like: print(int(\"50\") - int(\"12\") - 8)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 39
+main_path: false

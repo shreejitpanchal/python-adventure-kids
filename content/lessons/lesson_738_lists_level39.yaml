@@ -1,0 +1,33 @@
+id: lesson_738
+title: "Lists: Level 39 🎒"
+level: 738
+objective: "Write a function combining a filtering comprehension with sorted() and a cutoff parameter."
+explanation: |
+  A function can combine a comprehension's if-filter with sorted(...), taking both a list and a cutoff number as parameters. top_scores(scores, cutoff) keeps only the scores at or above cutoff, then returns them in sorted order.
+
+  Changing either the list or the cutoff changes what comes back, without touching the function itself.
+example_code: |
+  def top_scores(scores, cutoff):
+      passing = [s for s in scores if s >= cutoff]
+      return sorted(passing)
+
+  print(top_scores([55, 92, 78, 61, 40], 60))
+starter_code: |
+  def top_scores(scores, cutoff):
+      passing = [s for s in scores if s >= cutoff]
+      return sorted(passing)
+
+  print(top_scores([55, 92, 78, 61, 40], 60))
+challenge: |
+  🎯 Challenge: Can you call top_scores with [88, 45, 72, 90, 33, 67] and a cutoff of 50 instead, so it prints [67, 72, 88, 90]?
+expected_output: "[67, 72, 88, 90]"
+hints:
+  - "Change both the list and the cutoff number you pass into top_scores(...)."
+  - "Only scores 50 or higher make it through the filter: 88, 72, 90, and 67."
+  - "It should look like: print(top_scores([88, 45, 72, 90, 33, 67], 50))"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 39
+main_path: false

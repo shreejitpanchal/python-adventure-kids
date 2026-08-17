@@ -1,0 +1,38 @@
+id: lesson_681
+title: "Loops: Level 22 🔁"
+level: 681
+objective: "Use continue together with a modulo condition to skip a whole group of numbers."
+explanation: |
+  continue works with any condition, not just ==. Combined with %, you can skip an entire group of numbers -- like every multiple of something -- instead of just one.
+
+  i % 5 == 0 is true for 5 and 10, so continue skips both of them, leaving everything else to print normally.
+example_code: |
+  for i in range(1, 11):
+      if i % 5 == 0:
+          continue
+      print(i)
+starter_code: |
+  for i in range(1, 11):
+      if i % 5 == 0:
+          continue
+      print(i)
+challenge: |
+  🎯 Challenge: Can you make it skip every multiple of 3 instead of every multiple of 5?
+expected_output: |
+  1
+  2
+  4
+  5
+  7
+  8
+  10
+hints:
+  - "Change i % 5 == 0 to i % 3 == 0."
+  - "Multiples of 3 between 1 and 10 are 3, 6, and 9 -- those should be the only ones missing."
+  - "It should look like: if i % 3 == 0: continue"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 22
+main_path: false

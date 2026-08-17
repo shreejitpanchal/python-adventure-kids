@@ -1,0 +1,29 @@
+id: lesson_641
+title: "Ask a Question: Level 22 🙋"
+level: 641
+objective: "Use an f-string instead of + to build a sentence with a typed age."
+explanation: |
+  You've joined text with + before — now try an f-string instead. It's often shorter and easier to read.
+
+  age = int(input("How old are you? ")) stores your age. print(f"You are {age} years old!") drops your age straight into the sentence.
+example_code: |
+  age = int(input("How old are you? "))
+  print(f"You are {age} years old!")
+starter_code: |
+  age = int(input("How old are you? "))
+  print(f"You are {age} years old!")
+challenge: |
+  🎯 Challenge: Type your age (like 9) in the box below, then press RUN to see it in a sentence!
+expected_output: "How old are you? You are {input} years old!"
+input_prompt: "How old are you?"
+hints:
+  - "Type your age, like 9, in the answer box above the RUN button."
+  - "The f-string drops {age} straight into the sentence — no + needed."
+  - "You don't need to change the code — just type your age and press RUN!"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: input
+category_level: 22
+main_path: false
+concept_tags: [input, f-strings]

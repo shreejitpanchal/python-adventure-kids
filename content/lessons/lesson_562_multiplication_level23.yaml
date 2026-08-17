@@ -1,0 +1,23 @@
+id: lesson_562
+title: "Multiplication: Level 23 ✖️"
+level: 562
+objective: "Use // and % together on a multiplication result, printed side by side."
+explanation: |
+  You've used // and % separately on a multiplication result — now print them together, just like you did for plain division.
+example_code: |
+  print((6 * 7) // 4, (6 * 7) % 4)
+starter_code: |
+  print((6 * 7) // 4, (6 * 7) % 4)
+challenge: |
+  🎯 Challenge: Multiply 9 by 8, then print how many whole times 5 fits into the result, and the remainder.
+expected_output: "14 2"
+hints:
+  - "Change all three numbers: 9, 8, and 5, in both places."
+  - "The first part uses //, the second part uses %."
+  - "It should look like: print((9 * 8) // 5, (9 * 8) % 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 23
+main_path: false

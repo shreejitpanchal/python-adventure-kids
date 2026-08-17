@@ -1,0 +1,27 @@
+id: lesson_623
+title: "Strings: Level 24 🔤"
+level: 623
+objective: "Glue a list of strings back together into one string using .join()."
+explanation: |
+  .join() is like the opposite of .split() — it takes a list of strings and glues them into one, with your chosen separator placed between each piece.
+
+  "-".join(crew) puts a dash between every name in the crew list and combines them into a single string.
+example_code: |
+  crew = ["Al", "Bo", "Cy"]
+  print("-".join(crew))
+starter_code: |
+  crew = ["Al", "Bo", "Cy"]
+  print("-".join(crew))
+challenge: |
+  🎯 Challenge: Change the names in crew to "Sam", "Max", and "Ivy", and print them joined with dashes.
+expected_output: "Sam-Max-Ivy"
+hints:
+  - "Change the three names in the list to \"Sam\", \"Max\", and \"Ivy\"."
+  - "\"-\".join(crew) puts a dash between every name in the list."
+  - "It should look like: crew = [\"Sam\", \"Max\", \"Ivy\"], print(\"-\".join(crew))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 24
+main_path: false

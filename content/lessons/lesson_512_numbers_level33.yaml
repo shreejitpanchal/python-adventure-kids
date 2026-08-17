@@ -1,0 +1,25 @@
+id: lesson_512
+title: "Numbers: Level 33 🔢"
+level: 512
+objective: "Combine abs() and round() with decimal places in one expression."
+explanation: |
+  You can wrap round() around an abs() result -- Python works from the inside out.
+
+  round(abs(-7.5678), 2) first strips the minus sign (7.5678), then rounds to 2 decimal places: 7.57.
+example_code: |
+  print(round(abs(-7.5678), 2))
+starter_code: |
+  print(round(abs(-7.5678), 2))
+challenge: |
+  🎯 Challenge: Can you find the absolute value of -12.3456, rounded to 2 decimal places?
+expected_output: "12.35"
+hints:
+  - "Change -7.5678 to -12.3456, and keep the 2."
+  - "abs() runs first (inside), then round() rounds the result."
+  - "It should look like: print(round(abs(-12.3456), 2))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 33
+main_path: false

@@ -1,0 +1,23 @@
+id: lesson_580
+title: "Division: Level 21 ➗"
+level: 580
+objective: "Divide two numbers, then also floor-divide them, printed side by side."
+explanation: |
+  / gives you the exact answer with decimals, while // gives you just the whole number part. Printing both together shows the difference.
+example_code: |
+  print(17 / 5, 17 // 5)
+starter_code: |
+  print(17 / 5, 17 // 5)
+challenge: |
+  🎯 Challenge: Divide 23 by 5 both ways — print the exact answer and the floor-divided answer together.
+expected_output: "4.6 4"
+hints:
+  - "Change the numbers to 23 and 5, in both places."
+  - "The first part uses /, the second part uses //."
+  - "It should look like: print(23 / 5, 23 // 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 21
+main_path: false

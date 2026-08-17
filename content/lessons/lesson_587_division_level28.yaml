@@ -1,0 +1,25 @@
+id: lesson_587
+title: "Division: Level 28 ➗"
+level: 587
+objective: "Learn that Python divides before it adds, without needing parentheses."
+explanation: |
+  Just like multiplication, division happens before addition in Python's order of operations.
+
+  print(20 / 4 + 3) works out 20 / 4 first (5.0), then adds 3 — giving 8.0, not 5.75.
+example_code: |
+  print(20 / 4 + 3)
+starter_code: |
+  print(20 / 4 + 3)
+challenge: |
+  🎯 Challenge: Divide 30 by 5, then add 10 to the result — all in one print, no parentheses needed.
+expected_output: "16.0"
+hints:
+  - "Change the numbers to 30, 5, and 10."
+  - "Python divides first automatically, even without parentheses."
+  - "It should look like: print(30 / 5 + 10)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: division
+category_level: 28
+main_path: false

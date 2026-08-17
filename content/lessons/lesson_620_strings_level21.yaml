@@ -1,0 +1,27 @@
+id: lesson_620
+title: "Strings: Level 21 🔤"
+level: 620
+objective: "Split a sentence into a list of separate words using .split()."
+explanation: |
+  .split() breaks a string apart wherever there's a space, and hands you back a list of the separate pieces.
+
+  sentence.split() takes the whole sentence and turns it into a list of words, so you can see each one on its own.
+example_code: |
+  sentence = "I like cats"
+  print(sentence.split())
+starter_code: |
+  sentence = "I like cats"
+  print(sentence.split())
+challenge: |
+  🎯 Challenge: Change sentence to "I like dogs" and print the list of words.
+expected_output: "['I', 'like', 'dogs']"
+hints:
+  - "Change \"I like cats\" to \"I like dogs\", keeping the quotes."
+  - ".split() doesn't need any changes — it always breaks text apart at the spaces."
+  - "It should look like: sentence = \"I like dogs\", print(sentence.split())"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 21
+main_path: false

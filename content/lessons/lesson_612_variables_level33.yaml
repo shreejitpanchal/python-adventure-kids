@@ -1,0 +1,32 @@
+id: lesson_612
+title: "Variables: Level 33 📦"
+level: 612
+objective: "Swap two variables with a temp box, then show both new values in an f-string."
+explanation: |
+  You've swapped two variables before — now report the result with an f-string instead of a plain print(a, b).
+example_code: |
+  a = 1
+  b = 2
+  temp = a
+  a = b
+  b = temp
+  print(f"a={a}, b={b}")
+starter_code: |
+  a = 1
+  b = 2
+  temp = a
+  a = b
+  b = temp
+  print(f"a={a}, b={b}")
+challenge: |
+  🎯 Challenge: Start a at 6 and b at 15. Swap them using a temp box, then print f"a={a}, b={b}".
+expected_output: "a=15, b=6"
+hints:
+  - "Change a to 6 and b to 15, keep the swap steps the same."
+  - "It should look like: a = 6, b = 15, temp = a, a = b, b = temp, print(f\"a={a}, b={b}\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 33
+main_path: false

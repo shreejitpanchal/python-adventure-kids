@@ -1,0 +1,28 @@
+id: lesson_633
+title: "Strings: Level 34 🔤"
+level: 633
+objective: "Grab the last word of a sentence by combining .split() with negative indexing."
+explanation: |
+  You already know [-1] grabs the last character of a string, and .split() breaks a sentence into a list of words. Put them together and [-1] grabs the LAST WORD instead.
+
+  sentence.split()[-1] first splits the sentence into a list, then [-1] grabs the final item in that list.
+example_code: |
+  sentence = "Hello there friend"
+  print(sentence.split()[-1])
+starter_code: |
+  sentence = "Hello there friend"
+  print(sentence.split()[-1])
+challenge: |
+  🎯 Challenge: Change sentence to "See you later alligator" and print its last word.
+expected_output: "alligator"
+hints:
+  - "Change the sentence to \"See you later alligator\", keeping the quotes."
+  - "sentence.split()[-1] doesn't need to change — it always grabs the last word."
+  - "It should look like: sentence = \"See you later alligator\", print(sentence.split()[-1])"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 34
+main_path: false
+concept_tags: [strings, indexing]

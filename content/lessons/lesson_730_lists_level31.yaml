@@ -1,0 +1,33 @@
+id: lesson_730
+title: "Lists: Level 31 🎒"
+level: 730
+objective: "Use enumerate() to get both the index and the item while looping."
+explanation: |
+  enumerate(...) hands you BOTH the position number and the item together, every time around the loop -- no need for range(len(...)) and separate indexing anymore.
+
+  for index, fruit in enumerate(fruits): unpacks each pair automatically, giving you index starting at 0 and fruit as the item at that position.
+example_code: |
+  fruits = ["apple", "banana", "orange"]
+  for index, fruit in enumerate(fruits):
+      print(index, fruit)
+starter_code: |
+  fruits = ["apple", "banana", "orange"]
+  for index, fruit in enumerate(fruits):
+      print(index, fruit)
+challenge: |
+  🎯 Challenge: Can you change the list to ["cat", "dog", "bird", "fish"] and print each one with its position?
+expected_output: |
+  0 cat
+  1 dog
+  2 bird
+  3 fish
+hints:
+  - "Change fruits = [...] to the new list of four animals."
+  - "The enumerate(...) loop doesn't need to change -- it already works for any list."
+  - "It should print 0 cat, 1 dog, 2 bird, then 3 fish."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 31
+main_path: false

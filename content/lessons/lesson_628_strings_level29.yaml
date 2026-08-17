@@ -1,0 +1,30 @@
+id: lesson_628
+title: "Strings: Level 29 🔤"
+level: 628
+objective: "Compare two strings with == to check whether they're exactly the same."
+explanation: |
+  == checks whether two strings are exactly equal — same letters, same order, same capitalization. It gives back True or False, just like number comparisons do.
+
+  password == guess is only True when guess matches password letter for letter.
+example_code: |
+  password = "python"
+  guess = "cobra"
+  print(password == guess)
+starter_code: |
+  password = "python"
+  guess = "cobra"
+  print(password == guess)
+challenge: |
+  🎯 Challenge: Change guess to "python" so it matches password exactly.
+expected_output: "True"
+hints:
+  - "Change guess to \"python\" so it matches password exactly."
+  - "== checks if two strings are exactly the same — capital letters matter too."
+  - "It should look like: password = \"python\", guess = \"python\", print(password == guess)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 29
+main_path: false
+concept_tags: [strings, comparison, booleans]

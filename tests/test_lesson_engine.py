@@ -15,6 +15,15 @@ def test_first_lesson_is_lowest_level():
     assert engine.first().id == "lesson_01"
 
 
+def test_every_lesson_has_a_unique_level_and_id():
+    engine = LessonEngine()
+    all_lessons = engine.all_in_order()
+    levels = [lesson.level for lesson in all_lessons]
+    assert len(levels) == len(set(levels)), "Duplicate lesson levels found"
+    ids = [lesson.id for lesson in all_lessons]
+    assert len(ids) == len(set(ids)), "Duplicate lesson ids found"
+
+
 def test_next_after_last_lesson_is_none():
     engine = LessonEngine()
     last = engine.all_in_order()[-1]
@@ -155,7 +164,7 @@ def test_category_completion_is_fully_done_when_every_lesson_in_it_is_completed(
     strings_ids = [lesson.id for lesson in engine.lessons_in_category("strings")]
     completion = engine.category_completion(completed_ids=strings_ids)
     done, total = completion["strings"]
-    assert done == total == 20
+    assert done == total == len(strings_ids)
 
 
 def test_category_completion_ignores_unrelated_completed_ids():

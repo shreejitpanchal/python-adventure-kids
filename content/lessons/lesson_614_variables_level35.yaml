@@ -1,0 +1,28 @@
+id: lesson_614
+title: "Variables: Level 35 📦"
+level: 614
+objective: "Combine three variables across a couple of arithmetic steps, then report the result with an f-string."
+explanation: |
+  Real programs often build up a total from several variables, one step at a time, before showing the final answer.
+example_code: |
+  price = 5
+  tax = 1
+  total = price + tax
+  print(f"Total: {total}")
+starter_code: |
+  price = 5
+  tax = 1
+  total = price + tax
+  print(f"Total: {total}")
+challenge: |
+  🎯 Challenge: Make price = 12, tax = 3, and discount = 2. Store price + tax - discount in total, then print f"Total: {total}".
+expected_output: "Total: 13"
+hints:
+  - "Change the three numbers, then total = price + tax - discount."
+  - "It should look like: price = 12, tax = 3, discount = 2, total = price + tax - discount, print(f\"Total: {total}\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 35
+main_path: false

@@ -87,6 +87,99 @@ SOLUTIONS: dict[str, tuple[str, str]] = {
         'n = int(input("Type a number: "))\nprint(n + 4)\nprint(n - 4)\nprint(n * 4)',
         "10",
     ),
+    "lesson_640": (
+        'n = int(input("Type a number: "))\nprint(round(n / 3, 1))',
+        "7",
+    ),
+    "lesson_641": (
+        'age = int(input("How old are you? "))\nprint(f"You are {age} years old!")',
+        "9",
+    ),
+    "lesson_642": (
+        'age = int(input("How old are you? "))\nprint(f"Next year you will be {age + 1}!")',
+        "9",
+    ),
+    "lesson_643": (
+        'word = input("Type a word: ")\nprint(word[::-1])',
+        "otter",
+    ),
+    "lesson_644": (
+        'word = input("Type a word: ")\nprint(word[0] + word[-1])',
+        "python",
+    ),
+    "lesson_645": (
+        'sentence = input("Type a short sentence: ")\nprint(len(sentence.split()))',
+        "the cat sat down",
+    ),
+    "lesson_646": (
+        'price = float(input("What is the price? "))\nprint(price - price * 0.1)',
+        "20",
+    ),
+    "lesson_647": (
+        'n = int(input("Type a number: "))\nprint(n // 3)\nprint(n % 3)',
+        "17",
+    ),
+    "lesson_648": (
+        'line = input("Type two numbers separated by a space: ")\n'
+        "parts = line.split()\na = int(parts[0])\nb = int(parts[1])\nprint(a + b)",
+        "4 7",
+    ),
+    "lesson_649": (
+        'line = input("Type two numbers separated by a space: ")\n'
+        "parts = line.split()\na = int(parts[0])\nb = int(parts[1])\nprint(a * b)",
+        "3 6",
+    ),
+    "lesson_650": (
+        'line = input("Type your first and last name separated by a space: ")\n'
+        'parts = line.split()\nprint(f"Hello {parts[0]} {parts[1]}!")',
+        "Maya Rivera",
+    ),
+    "lesson_651": (
+        'line = input("Type the length and width separated by a space: ")\n'
+        "parts = line.split()\nlength = int(parts[0])\nwidth = int(parts[1])\n"
+        'print(f"Area: {length * width}")',
+        "6 4",
+    ),
+    "lesson_652": (
+        'text = input("Type a number: ")\nprint(text.isdigit())',
+        "42",
+    ),
+    "lesson_653": (
+        'word = input("Type a word: ")\nprint("a" in word)',
+        "banana",
+    ),
+    "lesson_654": (
+        'n = input("Type a number: ")\nprint(n.zfill(5))',
+        "42",
+    ),
+    "lesson_655": (
+        'celsius = float(input("What is the temperature in Celsius? "))\n'
+        "fahrenheit = round(celsius * 9 / 5 + 32, 1)\n"
+        'print(f"{celsius} C is {fahrenheit} F")',
+        "25",
+    ),
+    "lesson_656": (
+        'line = input("Type three numbers separated by spaces: ")\n'
+        "parts = line.split()\na = int(parts[0])\nb = int(parts[1])\nc = int(parts[2])\n"
+        "print(a + b + c)",
+        "2 5 9",
+    ),
+    "lesson_657": (
+        'sentence = input("Type a short sentence: ")\nprint(sentence.title())',
+        "the lost city",
+    ),
+    "lesson_658": (
+        'line = input("Type your first and last name separated by a space: ")\n'
+        "parts = line.split()\nfirst = parts[0]\nlast = parts[1]\n"
+        'print(f"{first.upper()} {last.upper()}")',
+        "maya rivera",
+    ),
+    "lesson_659": (
+        'line = input("Type your name and age separated by a space: ")\n'
+        "parts = line.split()\nname = parts[0]\nage = int(parts[1])\n"
+        'print(f"Hello {name.upper()}!")\nprint(f"Next year you will be {age + 1}.")',
+        "nova 9",
+    ),
 }
 
 
@@ -117,9 +210,9 @@ def test_new_input_level_is_marked_correctly(engine, lesson_id):
     assert lesson.category_level >= 2
 
 
-def test_input_category_has_a_full_1_to_20_level_progression():
+def test_input_category_has_a_full_1_to_40_level_progression():
     engine = LessonEngine()
     lessons = engine.lessons_in_category("input")
-    assert len(lessons) == 20
+    assert len(lessons) == 40
     levels = sorted(lesson.category_level for lesson in lessons)
-    assert levels == list(range(1, 21))
+    assert levels == list(range(1, 41))

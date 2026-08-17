@@ -1,0 +1,31 @@
+id: lesson_625
+title: "Strings: Level 26 🔤"
+level: 625
+objective: "Check whether a string is all digits or all letters using .isdigit() and .isalpha()."
+explanation: |
+  .isdigit() checks whether every character in a string is a digit (0-9), and gives back True or False. .isalpha() does the same thing, but checks for letters instead.
+
+  A string can fail both checks if it mixes the two, like "abc123" — it isn't all digits, and it isn't all letters either.
+example_code: |
+  code = "abc123"
+  print(code.isdigit())
+  print(code.isalpha())
+starter_code: |
+  code = "abc123"
+  print(code.isdigit())
+  print(code.isalpha())
+challenge: |
+  🎯 Challenge: Change code to "77042" and check whether it's all digits and all letters.
+expected_output: |
+  True
+  False
+hints:
+  - "Change code to \"77042\", keeping the quotes."
+  - ".isdigit() is True only when every single character is a number."
+  - "It should look like: code = \"77042\", print(code.isdigit()), print(code.isalpha())"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 26
+main_path: false

@@ -1,0 +1,25 @@
+id: lesson_534
+title: "Addition: Level 35 ➕"
+level: 534
+objective: "Add a chain of three numbers, then raise the total to a power."
+explanation: |
+  You can combine chained addition with ** -- Python adds everything first, then raises that total to a power.
+
+  (1 + 2 + 3) ** 2 adds first (getting 6), then squares it: 36.
+example_code: |
+  print((1 + 2 + 3) ** 2)
+starter_code: |
+  print((1 + 2 + 3) ** 2)
+challenge: |
+  🎯 Challenge: Add 2 + 3 + 4, then raise the result to the power of 2.
+expected_output: "81"
+hints:
+  - "Change the chain to 2 + 3 + 4, keep ** 2."
+  - "The parentheses make sure all the adding happens before the power."
+  - "It should look like: print((2 + 3 + 4) ** 2)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 35
+main_path: false

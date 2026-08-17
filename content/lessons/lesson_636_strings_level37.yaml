@@ -1,0 +1,25 @@
+id: lesson_636
+title: "Strings: Level 37 🔤"
+level: 636
+objective: "Combine * and + to build a small pattern out of text."
+explanation: |
+  You already know * repeats a string and + joins strings together — you can use both in the very same line.
+
+  "=" * 3 + ">" repeats "=" three times, then glues a ">" onto the end, like a little loading bar.
+example_code: |
+  print("=" * 3 + ">")
+starter_code: |
+  print("=" * 3 + ">")
+challenge: |
+  🎯 Challenge: Make the loading bar six "=" characters long instead of three.
+expected_output: "======>"
+hints:
+  - "Change the 3 to a 6."
+  - "* repeats the \"=\" character, and + glues the \">\" onto the end."
+  - "It should look like: print(\"=\" * 6 + \">\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 37
+main_path: false

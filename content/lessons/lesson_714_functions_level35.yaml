@@ -1,0 +1,39 @@
+id: lesson_714
+title: "Functions: Level 35 ⚙️"
+level: 714
+objective: "Write a function that filters a list of numbers by a threshold parameter and returns the result."
+explanation: |
+  A function can combine a list parameter with another parameter that controls how it's filtered. filter_above(numbers, threshold) loops through numbers and only keeps the ones bigger than threshold.
+
+  Changing either the list or the threshold changes what gets returned, without changing the function itself.
+example_code: |
+  def filter_above(numbers, threshold):
+      result = []
+      for n in numbers:
+          if n > threshold:
+              result.append(n)
+      return result
+
+  print(filter_above([3, 8, 15, 6, 20], 7))
+starter_code: |
+  def filter_above(numbers, threshold):
+      result = []
+      for n in numbers:
+          if n > threshold:
+              result.append(n)
+      return result
+
+  print(filter_above([3, 8, 15, 6, 20], 7))
+challenge: |
+  🎯 Challenge: Can you call filter_above with [12, 4, 30, 7, 18] and 10 instead, so it prints [12, 30, 18]?
+expected_output: "[12, 30, 18]"
+hints:
+  - "Change both the list and the number you pass into filter_above(...)."
+  - "Only numbers bigger than 10 make it into the result: 12, 30, and 18."
+  - "It should look like: print(filter_above([12, 4, 30, 7, 18], 10))"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 35
+main_path: false

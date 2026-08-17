@@ -1,0 +1,31 @@
+id: lesson_737
+title: "Lists: Level 38 🎒"
+level: 737
+objective: "Combine .sort() with a slice to pull out the top few items from a list."
+explanation: |
+  Sorting a list first, then slicing off just the end of it, is a handy way to find the biggest few values. scores.sort() puts everything in order from smallest to largest, and scores[-3:] then grabs just the last 3 -- the biggest ones.
+
+  Together, .sort() and a slice replace what would otherwise take a much longer loop to work out by hand.
+example_code: |
+  scores = [55, 92, 78, 61, 88, 45]
+  scores.sort()
+  top_three = scores[-3:]
+  print(top_three)
+starter_code: |
+  scores = [55, 92, 78, 61, 88, 45]
+  scores.sort()
+  top_three = scores[-3:]
+  print(top_three)
+challenge: |
+  🎯 Challenge: Can you change scores to [70, 95, 60, 85, 100, 55, 90] and print its top three instead?
+expected_output: "[90, 95, 100]"
+hints:
+  - "Change scores = [...] to the new list of seven numbers."
+  - ".sort() and scores[-3:] don't need to change -- they already work for any list."
+  - "It should print [90, 95, 100] -- the three biggest, smallest to largest."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 38
+main_path: false

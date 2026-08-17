@@ -1,0 +1,25 @@
+id: lesson_504
+title: "Numbers: Level 25 🔢"
+level: 504
+objective: "Check whether a floor-division result equals a target number."
+explanation: |
+  You can compare the result of // just like any other calculation.
+
+  17 // 5 == 3 first works out 17 // 5 (which is 3), then checks if that equals 3.
+example_code: |
+  print(17 // 5 == 3)
+starter_code: |
+  print(17 // 5 == 3)
+challenge: |
+  🎯 Challenge: Can you make Python check if 22 // 6 is equal to 4?
+expected_output: "False"
+hints:
+  - "Change the problem to 22 // 6 == 4."
+  - "Python works out 22 // 6 first, then compares it to 4."
+  - "It should look like: print(22 // 6 == 4)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 25
+main_path: false

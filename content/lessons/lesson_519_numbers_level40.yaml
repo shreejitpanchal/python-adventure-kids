@@ -1,0 +1,24 @@
+id: lesson_519
+title: "Numbers: Level 40 🔢"
+level: 519
+objective: "Combine everything you've learned in the Numbers track into one final program."
+explanation: |
+  You've learned floor division, modulo, rounding with decimal places, and comparisons. This final challenge mixes several of them together in one print.
+example_code: |
+  print(round(17.4567, 2), 23 // 5, 23 % 5 == 3)
+starter_code: |
+  print(round(17.4567, 2), 23 // 5, 23 % 5 == 3)
+challenge: |
+  🎯 Challenge: Can you print round(9.8765, 2), how many groups of 6 fit into 34 (34 // 6), and whether 34 % 6 equals 4 -- all together?
+expected_output: "9.88 5 True"
+hints:
+  - "Change each part: round(9.8765, 2), 34 // 6, and 34 % 6 == 4."
+  - "There are three pieces separated by commas -- change all three."
+  - "It should look like: print(round(9.8765, 2), 34 // 6, 34 % 6 == 4)"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 40
+main_path: false
+concept_tags: [numbers, expressions, comparison]

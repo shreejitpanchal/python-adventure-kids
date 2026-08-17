@@ -1,0 +1,25 @@
+id: lesson_550
+title: "Subtraction: Level 31 ➖"
+level: 550
+objective: "Compare two chains of subtraction, each made of three numbers, using max()."
+explanation: |
+  max() works on longer chains of subtraction too -- Python works out each full chain first, then hands back the bigger one.
+
+  max(20 - 5 - 3, 10 - 1 - 1) works out both chains (12 and 8), then picks the bigger.
+example_code: |
+  print(max(20 - 5 - 3, 10 - 1 - 1))
+starter_code: |
+  print(max(20 - 5 - 3, 10 - 1 - 1))
+challenge: |
+  🎯 Challenge: Which is bigger: 30 - 6 - 4 or 25 - 2 - 8? Make Python find out.
+expected_output: "20"
+hints:
+  - "Change the two chains to 30 - 6 - 4 and 25 - 2 - 8."
+  - "max() works out both full chains first, then compares them."
+  - "It should look like: print(max(30 - 6 - 4, 25 - 2 - 8))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 31
+main_path: false

@@ -1,0 +1,22 @@
+id: lesson_597
+title: "Division: Level 38 ➗"
+level: 597
+objective: "Combine int() conversion, order of operations, and == in one check."
+explanation: |
+  Everything you've learned comes together here: convert text to a number, do the math, then check it with ==.
+example_code: |
+  print(int("20") / 4 + 1 == 6.0)
+starter_code: |
+  print(int("20") / 4 + 1 == 6.0)
+challenge: |
+  🎯 Challenge: Convert the text "30" into a number, divide it by 5, add 3, then check if the result equals 10.0.
+expected_output: "False"
+hints:
+  - "Change \"20\" to \"30\", 4 to 5, 1 to 3, and 6.0 to 10.0."
+  - "It should look like: print(int(\"30\") / 5 + 3 == 10.0)"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: division
+category_level: 38
+main_path: false

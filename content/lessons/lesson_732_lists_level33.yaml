@@ -1,0 +1,27 @@
+id: lesson_732
+title: "Lists: Level 33 🎒"
+level: 732
+objective: "Build a list in one line with a list comprehension instead of a loop and .append()."
+explanation: |
+  A list comprehension builds a whole new list in a single line: [n * n for n in range(1, 6)] means "for every n in this range, put n * n into a new list" -- it's a shortcut for the loop-and-append pattern you already know.
+
+  It produces exactly the same result as writing squares = [] and appending inside a loop, just in one compact line.
+example_code: |
+  squares = [n * n for n in range(1, 6)]
+  print(squares)
+starter_code: |
+  squares = [n * n for n in range(1, 6)]
+  print(squares)
+challenge: |
+  🎯 Challenge: Can you change the range to 1 through 7 instead, so it builds seven squares?
+expected_output: "[1, 4, 9, 16, 25, 36, 49]"
+hints:
+  - "Change range(1, 6) to range(1, 8)."
+  - "The comprehension pattern [n * n for n in ...] doesn't need to change."
+  - "It should print [1, 4, 9, 16, 25, 36, 49]."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 33
+main_path: false

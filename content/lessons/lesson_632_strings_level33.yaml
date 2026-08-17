@@ -1,0 +1,27 @@
+id: lesson_632
+title: "Strings: Level 33 🔤"
+level: 632
+objective: "Chain two .replace() calls together to swap out two different letters."
+explanation: |
+  Just like .strip().upper() chains two methods together, you can chain two .replace() calls to make two swaps in a row.
+
+  text.replace("a", "4").replace("e", "3") first swaps every "a" for "4", then swaps every "e" for "3" in what's left.
+example_code: |
+  text = "apple"
+  print(text.replace("a", "4").replace("e", "3"))
+starter_code: |
+  text = "apple"
+  print(text.replace("a", "4").replace("e", "3"))
+challenge: |
+  🎯 Challenge: Change text to "banana" and print it with the same two swaps.
+expected_output: "b4n4n4"
+hints:
+  - "Change text to \"banana\", keeping the quotes."
+  - "The two .replace() calls don't need to change — they already swap a for 4 and e for 3."
+  - "It should look like: text = \"banana\", print(text.replace(\"a\", \"4\").replace(\"e\", \"3\"))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 33
+main_path: false

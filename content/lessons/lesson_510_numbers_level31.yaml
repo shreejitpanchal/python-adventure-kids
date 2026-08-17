@@ -1,0 +1,25 @@
+id: lesson_510
+title: "Numbers: Level 31 🔢"
+level: 510
+objective: "Use min() to compare the results of two modulo problems."
+explanation: |
+  min() works on % results too -- it hands back whichever remainder is smaller.
+
+  min(17 % 5, 22 % 6) works out both remainders (2 and 4), then picks the smaller.
+example_code: |
+  print(min(17 % 5, 22 % 6))
+starter_code: |
+  print(min(17 % 5, 22 % 6))
+challenge: |
+  🎯 Challenge: Can you find the smaller remainder of 29 % 8 and 25 % 4?
+expected_output: "1"
+hints:
+  - "Change the two problems to 29 % 8 and 25 % 4."
+  - "min() works out both % problems first, then compares them."
+  - "It should look like: print(min(29 % 8, 25 % 4))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 31
+main_path: false

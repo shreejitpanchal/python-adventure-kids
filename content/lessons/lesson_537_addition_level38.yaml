@@ -1,0 +1,25 @@
+id: lesson_537
+title: "Addition: Level 38 ➕"
+level: 537
+objective: "Use an f-string with round() and decimal places to show a precise total."
+explanation: |
+  round() with a digit count works inside f-strings too.
+
+  f"Total: {round(3.14159 + 2.71828, 2)}" adds first (getting 5.85987), then rounds to 2 decimal places: 5.86.
+example_code: |
+  print(f"Total: {round(3.14159 + 2.71828, 2)}")
+starter_code: |
+  print(f"Total: {round(3.14159 + 2.71828, 2)}")
+challenge: |
+  🎯 Challenge: Can you show "Total: " followed by 4.5678 + 1.2345, rounded to 2 decimal places?
+expected_output: "Total: 5.8"
+hints:
+  - "Change the numbers to 4.5678 and 1.2345, and keep the 2."
+  - "Addition happens first, then round() tidies it to 2 decimal places."
+  - "It should look like: print(f\"Total: {round(4.5678 + 1.2345, 2)}\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 38
+main_path: false

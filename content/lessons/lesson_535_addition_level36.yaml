@@ -1,0 +1,25 @@
+id: lesson_535
+title: "Addition: Level 36 ➕"
+level: 535
+objective: "Compare a chain of decimal addition, some negative, against a target."
+explanation: |
+  You can compare the result of a whole decimal chain, not just a single addition.
+
+  5.5 + -2.5 + 1.0 > 3 adds everything first (getting 4.0), then checks if that's greater than 3.
+example_code: |
+  print(5.5 + -2.5 + 1.0 > 3)
+starter_code: |
+  print(5.5 + -2.5 + 1.0 > 3)
+challenge: |
+  🎯 Challenge: Can you check if 10.5 + -8.5 + 1.0 is greater than 5?
+expected_output: "False"
+hints:
+  - "Change the numbers to 10.5, -8.5, 1.0, and 5."
+  - "Python adds the whole chain first, then compares."
+  - "It should look like: print(10.5 + -8.5 + 1.0 > 5)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 36
+main_path: false

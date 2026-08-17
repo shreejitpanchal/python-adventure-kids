@@ -1,0 +1,31 @@
+id: lesson_734
+title: "Lists: Level 35 🎒"
+level: 734
+objective: "Use the min() and max() functions directly on a list."
+explanation: |
+  min(...) and max(...) are shortcuts that hand you the smallest or largest item in a list instantly -- no loop or if needed at all, unlike the manual "biggest" pattern from earlier.
+
+  min(scores) and max(scores) both look through the whole list in one step and return a single number each.
+example_code: |
+  scores = [12, 45, 7, 39, 21]
+  print(min(scores))
+  print(max(scores))
+starter_code: |
+  scores = [12, 45, 7, 39, 21]
+  print(min(scores))
+  print(max(scores))
+challenge: |
+  🎯 Challenge: Can you change the list to [88, 12, 56, 3, 71, 40] and print its minimum and maximum?
+expected_output: |
+  3
+  88
+hints:
+  - "Change scores = [...] to the new list of six numbers."
+  - "min(scores) and max(scores) don't need to change -- they work on any list."
+  - "It should print 3, then 88."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 35
+main_path: false

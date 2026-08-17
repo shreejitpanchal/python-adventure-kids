@@ -1,0 +1,35 @@
+id: lesson_709
+title: "Functions: Level 30 ⚙️"
+level: 709
+objective: "Write a recursive function that returns a value built from a smaller call to itself."
+explanation: |
+  Recursion can build up a returned value too, not just print things. factorial(n) returns n multiplied by factorial(n - 1) -- each call waits for a smaller call to finish before it can compute its own answer.
+
+  The base case (n <= 1 returns 1) is what eventually stops the chain of waiting calls and lets every answer get computed.
+example_code: |
+  def factorial(n):
+      if n <= 1:
+          return 1
+      return n * factorial(n - 1)
+
+  print(factorial(4))
+starter_code: |
+  def factorial(n):
+      if n <= 1:
+          return 1
+      return n * factorial(n - 1)
+
+  print(factorial(4))
+challenge: |
+  🎯 Challenge: Can you call factorial with 5 instead of 4, so it prints 120?
+expected_output: "120"
+hints:
+  - "Change the number you pass into factorial(...)."
+  - "factorial(5) is 5 x 4 x 3 x 2 x 1."
+  - "It should look like: print(factorial(5))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 30
+main_path: false

@@ -1,0 +1,23 @@
+id: lesson_592
+title: "Division: Level 33 ➗"
+level: 592
+objective: "See that ** happens before / in the order of operations."
+explanation: |
+  Exponents run even before division. print(20 / 2 ** 2) works out 2 ** 2 first (4), then divides 20 by that — giving 5.0.
+example_code: |
+  print(20 / 2 ** 2)
+starter_code: |
+  print(20 / 2 ** 2)
+challenge: |
+  🎯 Challenge: Divide 50 by 5 squared, without using parentheses.
+expected_output: "2.0"
+hints:
+  - "Change the numbers to 50 and 5, keep ** 2."
+  - "Python raises 5 to the power of 2 before dividing."
+  - "It should look like: print(50 / 5 ** 2)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: division
+category_level: 33
+main_path: false

@@ -1,0 +1,27 @@
+id: lesson_624
+title: "Strings: Level 25 🔤"
+level: 624
+objective: "Find the position of a piece of text inside a string using .find()."
+explanation: |
+  .find() searches a string for a smaller piece of text and tells you the position where it starts, counting from 0. If it isn't found at all, .find() gives back -1.
+
+  word.find("co") looks for "co" inside word and returns the index where it begins.
+example_code: |
+  word = "chocolate"
+  print(word.find("co"))
+starter_code: |
+  word = "chocolate"
+  print(word.find("co"))
+challenge: |
+  🎯 Challenge: Change word to "backpack" and find the position where "pack" starts.
+expected_output: "4"
+hints:
+  - "Change word to \"backpack\", and change the text you're searching for to \"pack\"."
+  - ".find() counts positions starting at 0, just like indexing."
+  - "It should look like: word = \"backpack\", print(word.find(\"pack\"))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 25
+main_path: false

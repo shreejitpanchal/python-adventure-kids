@@ -1,0 +1,39 @@
+id: lesson_659
+title: "Ask a Question: Level 40 🙋"
+level: 659
+objective: "Combine splitting one line, int(), f-strings, arithmetic, and .upper() into one multi-part program."
+explanation: |
+  This capstone puts everything from this track together: reading a name and an age from a single typed line, splitting them apart, converting the age to a number, and building two messages with f-strings.
+
+  parts = line.split() separates the name from the age. print(f"Hello {name.upper()}!") shouts the name, and print(f"Next year you will be {age + 1}.") does the math for the age.
+example_code: |
+  line = input("Type your name and age separated by a space: ")
+  parts = line.split()
+  name = parts[0]
+  age = int(parts[1])
+  print(f"Hello {name.upper()}!")
+  print(f"Next year you will be {age + 1}.")
+starter_code: |
+  line = input("Type your name and age separated by a space: ")
+  parts = line.split()
+  name = parts[0]
+  age = int(parts[1])
+  print(f"Hello {name.upper()}!")
+  print(f"Next year you will be {age + 1}.")
+challenge: |
+  🎯 Challenge: Type nova 9 (with a space between them) in the box below, then press RUN to see both messages!
+expected_output: |
+  Type your name and age separated by a space: Hello NOVA!
+  Next year you will be 10.
+input_prompt: "Type your name and age separated by a space:"
+hints:
+  - "Type nova 9 in the answer box above the RUN button, with a space between the name and age."
+  - "parts[0] is the name and parts[1] is the age — int() turns the age into a real number."
+  - "You don't need to change the code — just type nova 9 and press RUN!"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: input
+category_level: 40
+main_path: false
+concept_tags: [input, type-conversion, f-strings, strings]

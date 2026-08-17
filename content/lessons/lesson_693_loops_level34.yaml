@@ -1,0 +1,35 @@
+id: lesson_693
+title: "Loops: Level 34 🔁"
+level: 693
+objective: "Combine an accumulator with break so a loop stops once a running total passes a threshold."
+explanation: |
+  A loop can keep an eye on its own running total and stop itself with break the moment that total crosses a line you set -- instead of running through every number no matter what.
+
+  Here total keeps growing by i each trip, and as soon as total is bigger than the threshold, break stops the loop immediately.
+example_code: |
+  total = 0
+  for i in range(1, 100):
+      total += i
+      if total > 20:
+          break
+  print(total)
+starter_code: |
+  total = 0
+  for i in range(1, 100):
+      total += i
+      if total > 20:
+          break
+  print(total)
+challenge: |
+  🎯 Challenge: Can you change the threshold to 50 instead of 20?
+expected_output: "55"
+hints:
+  - "Change if total > 20: to if total > 50:."
+  - "The loop keeps adding 1, then 2, then 3, and so on until the total finally passes your new threshold."
+  - "1 + 2 + ... + 10 = 55, which is the first running total bigger than 50."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 34
+main_path: false

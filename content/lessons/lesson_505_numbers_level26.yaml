@@ -1,0 +1,25 @@
+id: lesson_505
+title: "Numbers: Level 26 🔢"
+level: 505
+objective: "Use a chained comparison to check if a number is between two others."
+explanation: |
+  Python lets you chain two comparisons together -- 3 < 7 < 10 checks both "3 is less than 7" AND "7 is less than 10" at the same time.
+
+  It's only True if both parts are true.
+example_code: |
+  print(3 < 7 < 10)
+starter_code: |
+  print(3 < 7 < 10)
+challenge: |
+  🎯 Challenge: Can you make Python check if 5 is between 10 and 20? (Write it as 10 < 5 < 20.)
+expected_output: "False"
+hints:
+  - "Change the numbers to 10, 5, and 20."
+  - "A chained comparison checks both sides at once."
+  - "It should look like: print(10 < 5 < 20)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 26
+main_path: false

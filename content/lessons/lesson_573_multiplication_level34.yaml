@@ -1,0 +1,22 @@
+id: lesson_573
+title: "Multiplication: Level 34 ✖️"
+level: 573
+objective: "Use max() to find the biggest of three multiplication results."
+explanation: |
+  max() isn't limited to two numbers — it can compare three products at once and hand back the biggest.
+example_code: |
+  print(max(2 * 3, 4 * 5, 1 * 9))
+starter_code: |
+  print(max(2 * 3, 4 * 5, 1 * 9))
+challenge: |
+  🎯 Challenge: Which is biggest: 3 * 3, 2 * 8, or 5 * 5? Make Python find out.
+expected_output: "25"
+hints:
+  - "Change the three problems to 3 * 3, 2 * 8, and 5 * 5."
+  - "It should look like: print(max(3 * 3, 2 * 8, 5 * 5))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 34
+main_path: false

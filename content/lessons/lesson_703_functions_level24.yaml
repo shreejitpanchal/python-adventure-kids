@@ -1,0 +1,41 @@
+id: lesson_703
+title: "Functions: Level 24 ⚙️"
+level: 703
+objective: "Return a quotient and remainder as a tuple using // and %."
+explanation: |
+  // is floor division -- it divides two numbers and throws away any leftover, keeping just the whole-number answer. % gives you that leftover on its own. Together, they split a division into two useful pieces.
+
+  divide(a, b) returns both the quotient and the remainder as a tuple, exactly like doing long division by hand.
+example_code: |
+  def divide(a, b):
+      quotient = a // b
+      remainder = a % b
+      return quotient, remainder
+
+  q, r = divide(17, 5)
+  print(q)
+  print(r)
+starter_code: |
+  def divide(a, b):
+      quotient = a // b
+      remainder = a % b
+      return quotient, remainder
+
+  q, r = divide(17, 5)
+  print(q)
+  print(r)
+challenge: |
+  🎯 Challenge: Can you call divide with 23 and 4 instead, so it prints the correct quotient and remainder?
+expected_output: |
+  5
+  3
+hints:
+  - "Change the numbers you pass into divide(...)."
+  - "23 // 4 is the quotient, and 23 % 4 is the remainder."
+  - "It should look like: divide(23, 4)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 24
+main_path: false

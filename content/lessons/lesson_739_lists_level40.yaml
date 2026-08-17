@@ -1,0 +1,46 @@
+id: lesson_739
+title: "Lists: Level 40 🎒"
+level: 739
+objective: "Capstone: combine a list of nested pairs, a nested loop, an accumulator, and a function to compute a class average."
+explanation: |
+  This final lists challenge combines everything from the whole extended track: a list holding structured data (each item pairs a name with a list of scores), a nested loop to reach every number, an accumulator, and a function that returns the result.
+
+  class_average(students) walks through every student's scores, adding each one into total and counting them in count, then returns the overall average once every score has been visited.
+example_code: |
+  def class_average(students):
+      total = 0
+      count = 0
+      for name, scores in students:
+          for s in scores:
+              total += s
+              count += 1
+      return total / count
+
+  students = [("Ana", [80, 90]), ("Ben", [70, 60, 100])]
+  print(class_average(students))
+starter_code: |
+  def class_average(students):
+      total = 0
+      count = 0
+      for name, scores in students:
+          for s in scores:
+              total += s
+              count += 1
+      return total / count
+
+  students = [("Ana", [80, 90]), ("Ben", [70, 60, 100])]
+  print(class_average(students))
+challenge: |
+  🎯 Challenge: Can you add a third student, ("Cara", [90, 90, 90, 90, 90]), to the students list and print the new class average?
+expected_output: "85.0"
+hints:
+  - "Add a third tuple inside the students list: (\"Cara\", [90, 90, 90, 90, 90])."
+  - "The function itself doesn't need to change -- it already loops through however many students are in the list."
+  - "With Cara added, the total becomes 850 across 10 scores, so the average is 85.0."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 40
+main_path: false
+concept_tags: [lists, functions, iteration, loops]

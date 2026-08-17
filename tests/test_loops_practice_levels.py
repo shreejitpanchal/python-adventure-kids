@@ -1,10 +1,10 @@
 """Content checks for the loops category's bonus practice levels (category_level
-2-20, lesson_360 through lesson_378), bringing loops up to a full 1-20
-progression alongside the always-present category_level-1 lesson_11. Same
-precedent as test_bonus_levels_extended.py: a SOLUTIONS dict maps each lesson
-id to a hand-written solved-challenge code string, verified against the
-lesson's real expected_output via app.sandbox.runner.run_code +
-app.engine.validator.validate_output."""
+2-40, lesson_360 through lesson_378 and lesson_680 through lesson_699),
+bringing loops up to a full 1-40 progression alongside the always-present
+category_level-1 lesson_11. Same precedent as test_bonus_levels_extended.py: a
+SOLUTIONS dict maps each lesson id to a hand-written solved-challenge code
+string, verified against the lesson's real expected_output via
+app.sandbox.runner.run_code + app.engine.validator.validate_output."""
 import pytest
 
 from app.engine.lesson_engine import LessonEngine
@@ -51,6 +51,84 @@ SOLUTIONS = {
         "total = 0\nfor i in range(1, 21):\n    if i % 4 == 0:\n        total += i\nprint(total)",
         None,
     ),
+    "lesson_680": ("for i in range(1, 8):\n    if i == 6:\n        continue\n    print(i)", None),
+    "lesson_681": (
+        "for i in range(1, 11):\n    if i % 3 == 0:\n        continue\n    print(i)",
+        None,
+    ),
+    "lesson_682": (
+        "n = 0\nwhile n < 8:\n    n += 1\n    if n == 3:\n        continue\n    print(n)",
+        None,
+    ),
+    "lesson_683": (
+        'for row in range(4):\n    line = ""\n    for col in range(3):\n        line = line + "*"\n    print(line)',
+        None,
+    ),
+    "lesson_684": (
+        'size = 4\nfor row in range(size):\n    line = ""\n    for col in range(size):\n'
+        '        if row == 0 or row == size - 1 or col == 0 or col == size - 1:\n'
+        '            line = line + "*"\n        else:\n            line = line + " "\n    print(line)',
+        None,
+    ),
+    "lesson_685": ("for i in range(1, 50):\n    if i % 9 == 0:\n        print(i)\n        break", None),
+    "lesson_686": (
+        "for i in range(1, 100):\n    if i % 3 == 0 and i % 5 == 0:\n        print(i)\n        break",
+        None,
+    ),
+    "lesson_687": ("n = 1\nwhile n < 100:\n    print(n)\n    n = n * 2", None),
+    "lesson_688": ('word = "code"\nfor i in range(len(word) - 1, -1, -1):\n    print(word[i])', None),
+    "lesson_689": (
+        'word = "hello"\nreversed_word = ""\nfor i in range(len(word) - 1, -1, -1):\n'
+        '    reversed_word = reversed_word + word[i]\nprint(reversed_word)',
+        None,
+    ),
+    "lesson_690": (
+        "for i in range(0, 2):\n    for j in range(0, 2):\n        for k in range(0, 2):\n            print(i, j, k)",
+        None,
+    ),
+    "lesson_691": (
+        "for i in range(1, 4):\n    for j in range(1, 4):\n        if i == j:\n            print(i, j)",
+        None,
+    ),
+    "lesson_692": (
+        "total = 0\nfor i in range(1, 5):\n    for j in range(1, 5):\n        total += i * j\nprint(total)",
+        None,
+    ),
+    "lesson_693": (
+        "total = 0\nfor i in range(1, 100):\n    total += i\n    if total > 50:\n        break\nprint(total)",
+        None,
+    ),
+    "lesson_694": (
+        'numbers = range(1, 9)\nresult = ""\nfor n in numbers:\n    if result != "":\n'
+        '        result = result + ", "\n    result = result + str(n)\nprint(result)',
+        None,
+    ),
+    "lesson_695": (
+        'for i in range(1, 11):\n    if i % 4 == 0:\n        print("Fizz")\n    elif i % 5 == 0:\n'
+        '        print("Buzz")\n    else:\n        print(i)',
+        None,
+    ),
+    "lesson_696": (
+        'for i in range(1, 16):\n    if i % 2 == 0 and i % 7 == 0:\n        print("FizzBuzz")\n'
+        '    elif i % 2 == 0:\n        print("Fizz")\n    elif i % 7 == 0:\n        print("Buzz")\n'
+        '    else:\n        print(i)',
+        None,
+    ),
+    "lesson_697": (
+        "product = 1\nn = 1\nwhile True:\n    product = product * n\n    if product > 500:\n"
+        "        break\n    n += 1\nprint(product)\nprint(n)",
+        None,
+    ),
+    "lesson_698": (
+        "for i in range(1, 6):\n    for j in range(1, 6):\n        if i * j == 8:\n            print(i, j)\n            break",
+        None,
+    ),
+    "lesson_699": (
+        "total = 0\nfor i in range(1, 100):\n    if i % 7 == 0:\n        continue\n"
+        "    if i % 3 == 0 or i % 5 == 0:\n        total += i\n    if total > 200:\n"
+        "        break\nprint(total)\nprint(i)",
+        None,
+    ),
 }
 
 
@@ -78,9 +156,9 @@ def test_intended_solution_satisfies_the_challenge(engine, lesson_id, solution):
     )
 
 
-def test_loops_category_has_a_full_1_to_20_level_progression():
+def test_loops_category_has_a_full_1_to_40_level_progression():
     engine = LessonEngine()
     lessons = engine.lessons_in_category("loops")
-    assert len(lessons) == 20
+    assert len(lessons) == 40
     levels = sorted(lesson.category_level for lesson in lessons)
-    assert levels == list(range(1, 21))
+    assert levels == list(range(1, 41))

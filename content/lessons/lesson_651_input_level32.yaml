@@ -1,0 +1,34 @@
+id: lesson_651
+title: "Ask a Question: Level 32 🙋"
+level: 651
+objective: "Split typed length and width apart and multiply them to find an area."
+explanation: |
+  This is the same split-and-convert trick, but now the two numbers feed straight into a math expression inside an f-string.
+
+  length = int(parts[0]) and width = int(parts[1]) store the two numbers. print(f"Area: {length * width}") multiplies them inside the braces.
+example_code: |
+  line = input("Type the length and width separated by a space: ")
+  parts = line.split()
+  length = int(parts[0])
+  width = int(parts[1])
+  print(f"Area: {length * width}")
+starter_code: |
+  line = input("Type the length and width separated by a space: ")
+  parts = line.split()
+  length = int(parts[0])
+  width = int(parts[1])
+  print(f"Area: {length * width}")
+challenge: |
+  🎯 Challenge: Type 6 4 (with a space between them) in the box below, then press RUN to see the area!
+expected_output: "Type the length and width separated by a space: Area: 24"
+input_prompt: "Type the length and width separated by a space:"
+hints:
+  - "Type 6 4 in the answer box above the RUN button, with a space between the two numbers."
+  - "{length * width} multiplies the two numbers right inside the f-string."
+  - "You don't need to change the code — just type 6 4 and press RUN!"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: input
+category_level: 32
+main_path: false

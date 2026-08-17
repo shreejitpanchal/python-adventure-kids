@@ -1,0 +1,41 @@
+id: lesson_673
+title: "Decisions: Level 34 🚦"
+level: 673
+objective: "Sort a value into one of four outcomes using an elif chain of string comparisons."
+explanation: |
+  An elif chain can compare strings just as easily as numbers — Python still checks each one top to bottom.
+
+  This chain checks pet against four possible animals, printing a different sound for each one, with a fallback for anything else.
+example_code: |
+  pet = "fish"
+  if pet == "dog":
+      print("Woof!")
+  elif pet == "cat":
+      print("Meow!")
+  elif pet == "hamster":
+      print("Squeak!")
+  else:
+      print("Interesting pet!")
+starter_code: |
+  pet = "fish"
+  if pet == "dog":
+      print("Woof!")
+  elif pet == "cat":
+      print("Meow!")
+  elif pet == "hamster":
+      print("Squeak!")
+  else:
+      print("Interesting pet!")
+challenge: |
+  🎯 Challenge: Change pet so Python prints "Woof!" instead.
+expected_output: "Woof!"
+hints:
+  - "The very first if branch checks whether pet equals \"dog\"."
+  - "String comparisons with == need to match exactly, including capitalization."
+  - "Try pet = \"dog\"."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 34
+main_path: false

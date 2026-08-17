@@ -1,0 +1,24 @@
+id: lesson_559
+title: "Subtraction: Level 40 ➖"
+level: 559
+objective: "Combine everything you've learned about subtraction into one final program."
+explanation: |
+  You've learned chained subtraction, f-strings, rounding, and comparisons. This final challenge mixes several of them together in one print.
+example_code: |
+  print(f"{round(10.5 - 2.5 - 1.0)}", 20 - 5 - 3 > 10)
+starter_code: |
+  print(f"{round(10.5 - 2.5 - 1.0)}", 20 - 5 - 3 > 10)
+challenge: |
+  🎯 Challenge: Can you show the rounded result of 15.75 - 4.25 - 3.5, and whether 30 - 8 - 10 is greater than 15 -- both together?
+expected_output: "8 False"
+hints:
+  - "Change the f-string's chain to 15.75 - 4.25 - 3.5, and the comparison to 30 - 8 - 10 > 15."
+  - "There are two pieces separated by a comma -- change both."
+  - "It should look like: print(f\"{round(15.75 - 4.25 - 3.5)}\", 30 - 8 - 10 > 15)"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 40
+main_path: false
+concept_tags: [numbers, expressions, f-strings, comparison]

@@ -1,0 +1,28 @@
+id: lesson_626
+title: "Strings: Level 27 🔤"
+level: 626
+objective: "Grab every other character in a string using a slice step."
+explanation: |
+  A slice can take a third number called a step. word[::2] means "start at the beginning, go to the end, but only take every 2nd character."
+
+  Leaving the start and stop blank means "the whole string," so word[::2] grabs positions 0, 2, 4, and so on.
+example_code: |
+  word = "abcdefgh"
+  print(word[::2])
+starter_code: |
+  word = "abcdefgh"
+  print(word[::2])
+challenge: |
+  🎯 Challenge: Change word to "roadtrip" and print every other letter.
+expected_output: "rati"
+hints:
+  - "Change word to \"roadtrip\", keeping the quotes."
+  - "word[::2] doesn't need to change — it always grabs every 2nd letter."
+  - "It should look like: word = \"roadtrip\", print(word[::2])"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 27
+main_path: false
+concept_tags: [strings, slicing]

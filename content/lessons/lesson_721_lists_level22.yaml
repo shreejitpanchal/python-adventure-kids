@@ -1,0 +1,33 @@
+id: lesson_721
+title: "Lists: Level 22 🎒"
+level: 721
+objective: "Remove and return the last item of a list with .pop()."
+explanation: |
+  .pop() takes the LAST item out of a list and hands it back to you, shrinking the list by one -- unlike .remove(), which needs to know WHAT to take out, .pop() just grabs whatever's at the end.
+
+  fruits.pop() removes "orange" from the backpack and returns it, so it can be stored in a variable and printed.
+example_code: |
+  fruits = ["apple", "banana", "orange"]
+  last = fruits.pop()
+  print(last)
+  print(fruits)
+starter_code: |
+  fruits = ["apple", "banana", "orange"]
+  last = fruits.pop()
+  print(last)
+  print(fruits)
+challenge: |
+  🎯 Challenge: Can you change the backpack to ["cat", "dog", "fish", "bird"] and pop the last item off instead?
+expected_output: |
+  bird
+  ['cat', 'dog', 'fish']
+hints:
+  - "Change fruits = [...] to a new list: [\"cat\", \"dog\", \"fish\", \"bird\"]."
+  - ".pop() still removes and returns whatever is last -- you don't need to change that line."
+  - "The last item, \"bird\", should print first, then the remaining three-item list."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 22
+main_path: false

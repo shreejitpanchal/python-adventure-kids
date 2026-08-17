@@ -1,0 +1,28 @@
+id: lesson_616
+title: "Variables: Level 37 📦"
+level: 616
+objective: "Update the same variable using += and then //=, one after another."
+explanation: |
+  You can mix any of the update shortcuts you've learned on the same variable, in any order.
+example_code: |
+  total = 10
+  total += 20
+  total //= 3
+  print(total)
+starter_code: |
+  total = 10
+  total += 20
+  total //= 3
+  print(total)
+challenge: |
+  🎯 Challenge: Start stash at 8, add 16 to it with +=, then floor-divide it by 4 with //=. Print stash.
+expected_output: "6"
+hints:
+  - "Change stash to 8, then stash += 16, then stash //= 4."
+  - "It should look like: stash = 8, stash += 16, stash //= 4, print(stash)"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 37
+main_path: false

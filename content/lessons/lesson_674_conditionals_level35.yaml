@@ -1,0 +1,37 @@
+id: lesson_674
+title: "Decisions: Level 35 🚦"
+level: 674
+objective: "Combine chained-comparison ranges with an elif chain to sort an age into a band."
+explanation: |
+  You've used a chained comparison like 10 <= age <= 15 before. Now try one inside an elif chain, sorting an age into Kid, Teenager, or Adult.
+
+  Each branch checks its own range, and the else at the bottom catches anything left over.
+example_code: |
+  age = 25
+  if 0 <= age <= 12:
+      print("Kid")
+  elif 13 <= age <= 19:
+      print("Teenager")
+  else:
+      print("Adult")
+starter_code: |
+  age = 25
+  if 0 <= age <= 12:
+      print("Kid")
+  elif 13 <= age <= 19:
+      print("Teenager")
+  else:
+      print("Adult")
+challenge: |
+  🎯 Challenge: Change age so Python prints "Teenager" instead.
+expected_output: "Teenager"
+hints:
+  - "age needs to land between 13 and 19, including both ends."
+  - "13 <= age <= 19 is the range checked by the elif branch."
+  - "Try age = 15."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 35
+main_path: false

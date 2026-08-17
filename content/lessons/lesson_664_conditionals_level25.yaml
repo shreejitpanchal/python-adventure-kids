@@ -1,0 +1,34 @@
+id: lesson_664
+title: "Decisions: Level 25 🚦"
+level: 664
+objective: "Check whether a value is in a list of options using in."
+explanation: |
+  in works with a list too, not just a single piece of text — it checks whether your value matches ANY item in the list.
+
+  day in ["Saturday", "Sunday"] is true if day equals "Saturday" OR "Sunday" — much shorter than writing two separate == checks joined with or.
+example_code: |
+  day = "Monday"
+  if day in ["Saturday", "Sunday"]:
+      print("It's the weekend!")
+  else:
+      print("It's a weekday.")
+starter_code: |
+  day = "Monday"
+  if day in ["Saturday", "Sunday"]:
+      print("It's the weekend!")
+  else:
+      print("It's a weekday.")
+challenge: |
+  🎯 Challenge: Change day so Python prints "It's the weekend!" instead.
+expected_output: "It's the weekend!"
+hints:
+  - "day needs to match one of the items in the list [\"Saturday\", \"Sunday\"]."
+  - "in checks the whole list at once, so any matching item makes it true."
+  - "Try day = \"Saturday\"."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 25
+main_path: false
+concept_tags: [conditionals, booleans]

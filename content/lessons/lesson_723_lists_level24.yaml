@@ -1,0 +1,29 @@
+id: lesson_723
+title: "Lists: Level 24 🎒"
+level: 723
+objective: "Insert a new item at a specific position with .insert(index, item)."
+explanation: |
+  .insert(index, item) squeezes a new item into a list at an exact position, pushing everything after it one spot to the right -- unlike .append(...), which always adds to the very end.
+
+  colors.insert(1, "yellow") slides "yellow" into position 1, between whatever was already there.
+example_code: |
+  colors = ["red", "green", "blue"]
+  colors.insert(1, "yellow")
+  print(colors)
+starter_code: |
+  colors = ["red", "green", "blue"]
+  colors.insert(1, "yellow")
+  print(colors)
+challenge: |
+  🎯 Challenge: Can you insert "purple" at position 2 instead?
+expected_output: "['red', 'green', 'purple', 'blue']"
+hints:
+  - "Change colors.insert(1, \"yellow\") to colors.insert(2, \"purple\")."
+  - "Position 2 means it lands between \"green\" and \"blue\"."
+  - "It should look like: colors.insert(2, \"purple\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 24
+main_path: false

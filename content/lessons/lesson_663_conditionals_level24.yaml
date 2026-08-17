@@ -1,0 +1,34 @@
+id: lesson_663
+title: "Decisions: Level 24 🚦"
+level: 663
+objective: "Check a boolean variable directly in an if, without comparing it to anything."
+explanation: |
+  A variable that's already True or False can be used directly in an if — no == needed.
+
+  if is_member: runs its block whenever is_member is True, and skips straight to else when it's False.
+example_code: |
+  is_member = False
+  if is_member:
+      print("Welcome back, member!")
+  else:
+      print("Please sign up to continue.")
+starter_code: |
+  is_member = False
+  if is_member:
+      print("Welcome back, member!")
+  else:
+      print("Please sign up to continue.")
+challenge: |
+  🎯 Challenge: Change is_member so Python prints "Welcome back, member!" instead.
+expected_output: "Welcome back, member!"
+hints:
+  - "if is_member: is true whenever is_member itself is True."
+  - "You don't need == True anywhere — the variable's value is enough on its own."
+  - "Try is_member = True."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 24
+main_path: false
+concept_tags: [conditionals, booleans]

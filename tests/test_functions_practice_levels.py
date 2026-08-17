@@ -1,7 +1,8 @@
 """Content checks for the extended functions bonus practice levels
-(category_level 2-20, lesson_380-lesson_398): same edit-required invariant
-as test_bonus_levels_extended.py -- unedited starter code must not already
-satisfy the challenge, and the intended solution must."""
+(category_level 2-40, lesson_380-lesson_398 and lesson_700-lesson_719): same
+edit-required invariant as test_bonus_levels_extended.py -- unedited starter
+code must not already satisfy the challenge, and the intended solution
+must."""
 import pytest
 
 from app.engine.lesson_engine import LessonEngine
@@ -93,6 +94,102 @@ SOLUTIONS = {
         "print(total_cost(4, 2, 5))\n"
         "print(total_cost(20, 4, 15))"
     ),
+    "lesson_700": "def average3(a, b, c):\n    return (a + b + c) / 3\n\nprint(average3(10, 20, 30))",
+    "lesson_701": "def power(base, exponent=2):\n    return base ** exponent\n\nprint(power(2, 5))",
+    "lesson_702": (
+        'def split_name(full_name):\n    parts = full_name.split(" ")\n'
+        "    return parts[0], parts[1]\n\n"
+        'first, last = split_name("Grace Hopper")\nprint(first)\nprint(last)'
+    ),
+    "lesson_703": (
+        "def divide(a, b):\n    quotient = a // b\n    remainder = a % b\n"
+        "    return quotient, remainder\n\n"
+        "q, r = divide(23, 4)\nprint(q)\nprint(r)"
+    ),
+    "lesson_704": (
+        "def make_multiples(n, count):\n    result = []\n"
+        "    for i in range(1, count + 1):\n        result.append(n * i)\n"
+        "    return result\n\nprint(make_multiples(4, 6))"
+    ),
+    "lesson_705": (
+        "def total(*args):\n    result = 0\n    for n in args:\n        result += n\n"
+        "    return result\n\nprint(total(5, 10, 15, 20))"
+    ),
+    "lesson_706": (
+        "def biggest(*args):\n    result = args[0]\n    for n in args:\n"
+        "        if n > result:\n            result = n\n    return result\n\n"
+        "print(biggest(15, 3, 22, 8, 11))"
+    ),
+    "lesson_707": (
+        "def total(*args):\n    result = 0\n    for n in args:\n        result += n\n"
+        "    return result\n\ndef average(*args):\n    return total(*args) / len(args)\n\n"
+        "print(average(10, 20, 30, 40))"
+    ),
+    "lesson_708": (
+        'def countdown(n):\n    if n <= 0:\n        print("Liftoff!")\n    else:\n'
+        "        print(n)\n        countdown(n - 1)\n\ncountdown(5)"
+    ),
+    "lesson_709": (
+        "def factorial(n):\n    if n <= 1:\n        return 1\n"
+        "    return n * factorial(n - 1)\n\nprint(factorial(5))"
+    ),
+    "lesson_710": (
+        "def sum_to(n):\n    if n <= 0:\n        return 0\n"
+        "    return n + sum_to(n - 1)\n\nprint(sum_to(6))"
+    ),
+    "lesson_711": (
+        "def min_and_max(numbers):\n    smallest = numbers[0]\n    largest = numbers[0]\n"
+        "    for n in numbers:\n        if n < smallest:\n            smallest = n\n"
+        "        if n > largest:\n            largest = n\n    return smallest, largest\n\n"
+        "low, high = min_and_max([10, 3, 25, 1, 18])\nprint(high - low)"
+    ),
+    "lesson_712": (
+        'def repeat_word(word, times=3):\n    result = ""\n    for i in range(times):\n'
+        '        result += word + " "\n    return result.strip()\n\n'
+        'print(repeat_word("Go", 5))'
+    ),
+    "lesson_713": (
+        "def sum_evens(n):\n    if n <= 0:\n        return 0\n"
+        "    if n % 2 == 0:\n        return n + sum_evens(n - 1)\n"
+        "    else:\n        return sum_evens(n - 1)\n\nprint(sum_evens(10))"
+    ),
+    "lesson_714": (
+        "def filter_above(numbers, threshold):\n    result = []\n    for n in numbers:\n"
+        "        if n > threshold:\n            result.append(n)\n    return result\n\n"
+        "print(filter_above([12, 4, 30, 7, 18], 10))"
+    ),
+    "lesson_715": (
+        "def stats(*args):\n    total = 0\n    for n in args:\n        total += n\n"
+        "    return total, total / len(args)\n\n"
+        "def show_stats(*args):\n    s, avg = stats(*args)\n"
+        '    print("Sum:", s)\n    print("Average:", avg)\n\nshow_stats(10, 20, 30)'
+    ),
+    "lesson_716": (
+        "def power(base, exponent):\n    if exponent == 0:\n        return 1\n"
+        "    return base * power(base, exponent - 1)\n\nprint(power(3, 4))"
+    ),
+    "lesson_717": (
+        "def count_even_odd(numbers):\n    evens = 0\n    odds = 0\n    for n in numbers:\n"
+        "        if n % 2 == 0:\n            evens += 1\n        else:\n            odds += 1\n"
+        "    return evens, odds\n\n"
+        "e, o = count_even_odd([10, 15, 20, 25, 30, 35, 40, 45])\n"
+        'print("Evens:", e)\nprint("Odds:", o)'
+    ),
+    "lesson_718": (
+        "def total_cost(price, quantity, discount=0, tax_rate=0.1):\n"
+        "    subtotal = price * quantity - discount\n"
+        "    total = subtotal + subtotal * tax_rate\n    return total\n\n"
+        "print(total_cost(10, 5, 10))"
+    ),
+    "lesson_719": (
+        "def order_summary(price, quantity, discount=0):\n"
+        "    subtotal = price * quantity\n"
+        "    if subtotal > 100:\n        subtotal -= discount\n"
+        "    return subtotal, subtotal / quantity\n\n"
+        "total1, unit1 = order_summary(10, 3)\nprint(total1, unit1)\n"
+        "total2, unit2 = order_summary(20, 6, 15)\nprint(total2, unit2)\n"
+        "total3, unit3 = order_summary(8, 20, 25)\nprint(total3, unit3)"
+    ),
 }
 
 
@@ -131,10 +228,10 @@ def test_bonus_level_is_marked_correctly(engine, lesson_id):
     assert lesson.category_level >= 2
 
 
-def test_functions_category_has_a_full_1_to_20_level_progression(engine):
+def test_functions_category_has_a_full_1_to_40_level_progression(engine):
     lessons = engine.lessons_in_category("functions")
-    assert len(lessons) == 20
+    assert len(lessons) == 40
     levels = sorted(lesson.category_level for lesson in lessons)
-    assert levels == list(range(1, 21))
+    assert levels == list(range(1, 41))
     ids = {lesson.id for lesson in lessons}
     assert ids == {"lesson_12"} | set(SOLUTIONS)

@@ -1,0 +1,28 @@
+id: lesson_677
+title: "Decisions: Level 38 🚦"
+level: 677
+objective: "Put a conditional expression directly inside an f-string."
+explanation: |
+  A conditional expression can live right inside an f-string's curly braces, just like any other expression.
+
+  f"You are a {'kid' if age < 13 else 'teen'}" picks one of two words and drops it straight into the sentence.
+example_code: |
+  age = 10
+  print(f"You are a {'kid' if age < 13 else 'teen'}")
+starter_code: |
+  age = 10
+  print(f"You are a {'kid' if age < 13 else 'teen'}")
+challenge: |
+  🎯 Challenge: Change age so Python prints "You are a teen" instead.
+expected_output: "You are a teen"
+hints:
+  - "age needs to be 13 or more for the \"teen\" side to be chosen."
+  - "Notice the inner quotes use single quotes ' ' since the f-string itself uses double quotes."
+  - "Try age = 15."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 38
+main_path: false
+concept_tags: [conditionals, f-strings]

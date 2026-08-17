@@ -1,0 +1,23 @@
+id: lesson_569
+title: "Multiplication: Level 30 ✖️"
+level: 569
+objective: "Add together the results of two separate multiplications in one expression."
+explanation: |
+  Python works out both multiplications first, left to right, then adds the two answers together.
+example_code: |
+  print(2 * 3 + 4 * 5)
+starter_code: |
+  print(2 * 3 + 4 * 5)
+challenge: |
+  🎯 Challenge: Multiply 3 by 4, and separately multiply 5 by 6 — then add both results together.
+expected_output: "42"
+hints:
+  - "Change the numbers to 3, 4, 5, and 6."
+  - "Both multiplications happen before the addition."
+  - "It should look like: print(3 * 4 + 5 * 6)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 30
+main_path: false

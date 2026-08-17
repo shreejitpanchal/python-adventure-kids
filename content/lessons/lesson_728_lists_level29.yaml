@@ -1,0 +1,32 @@
+id: lesson_728
+title: "Lists: Level 29 🎒"
+level: 728
+objective: "Loop over a nested list, printing each inner list as a whole row."
+explanation: |
+  A for loop over a nested list visits each inner list one at a time, just like it would visit any other item -- except here, each item happens to be a whole list of its own.
+
+  for row in grid: print(row) prints each inner list on its own line, exactly as it's stored.
+example_code: |
+  grid = [[1, 2, 3], [4, 5, 6]]
+  for row in grid:
+      print(row)
+starter_code: |
+  grid = [[1, 2, 3], [4, 5, 6]]
+  for row in grid:
+      print(row)
+challenge: |
+  🎯 Challenge: Can you change grid to [[7, 8], [9, 10], [11, 12]] and print each row?
+expected_output: |
+  [7, 8]
+  [9, 10]
+  [11, 12]
+hints:
+  - "Change grid = [...] to the new nested list."
+  - "The loop itself doesn't need to change -- it already works for any nested list."
+  - "It should print three lines: [7, 8], then [9, 10], then [11, 12]."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 29
+main_path: false

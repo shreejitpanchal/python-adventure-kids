@@ -1,0 +1,45 @@
+id: lesson_708
+title: "Functions: Level 29 ⚙️"
+level: 708
+objective: "Write a small recursive function that calls itself with a smaller number until it reaches a stopping point."
+explanation: |
+  A function can call ITSELF -- this is called recursion. It needs a base case that stops the calling (n <= 0 here), or it would call itself forever.
+
+  countdown(n) prints n, then calls countdown(n - 1) on a smaller number. Each call is a little closer to the base case, so the chain of calls is guaranteed to end.
+example_code: |
+  def countdown(n):
+      if n <= 0:
+          print("Liftoff!")
+      else:
+          print(n)
+          countdown(n - 1)
+
+  countdown(3)
+starter_code: |
+  def countdown(n):
+      if n <= 0:
+          print("Liftoff!")
+      else:
+          print(n)
+          countdown(n - 1)
+
+  countdown(3)
+challenge: |
+  🎯 Challenge: Can you call countdown with 5 instead of 3, so it counts down from 5?
+expected_output: |
+  5
+  4
+  3
+  2
+  1
+  Liftoff!
+hints:
+  - "Change the number you pass into countdown(...)."
+  - "countdown(5) prints 5, then calls countdown(4), then countdown(3), and so on down to 0."
+  - "It should look like: countdown(5)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 29
+main_path: false

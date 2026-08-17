@@ -1,0 +1,45 @@
+id: lesson_684
+title: "Loops: Level 25 🔁"
+level: 684
+objective: "Combine a nested loop with an if/else to draw a hollow box."
+explanation: |
+  A nested loop's if can look at BOTH row and col together to decide what to print. Checking whether a cell is on the edge of the grid (the first/last row or the first/last column) lets you draw a hollow box instead of a solid one.
+
+  Every edge cell becomes a "*", and everything else becomes a space, so the middle of the box stays empty.
+example_code: |
+  size = 5
+  for row in range(size):
+      line = ""
+      for col in range(size):
+          if row == 0 or row == size - 1 or col == 0 or col == size - 1:
+              line = line + "*"
+          else:
+              line = line + " "
+      print(line)
+starter_code: |
+  size = 5
+  for row in range(size):
+      line = ""
+      for col in range(size):
+          if row == 0 or row == size - 1 or col == 0 or col == size - 1:
+              line = line + "*"
+          else:
+              line = line + " "
+      print(line)
+challenge: |
+  🎯 Challenge: Can you make the box size 4 instead of 5?
+expected_output: |
+  ****
+  *  *
+  *  *
+  ****
+hints:
+  - "Change size = 5 to size = 4."
+  - "The if/else logic doesn't need to change at all -- it already works for any size."
+  - "A smaller box just means fewer rows and fewer columns get drawn."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 25
+main_path: false

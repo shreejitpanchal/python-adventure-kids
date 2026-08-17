@@ -1,0 +1,24 @@
+id: lesson_579
+title: "Multiplication: Level 40 ✖️"
+level: 579
+objective: "Combine rounding, order of operations, floor division, and a comparison in one program — the ultimate multiplication challenge."
+explanation: |
+  This final challenge mixes almost everything you've learned about multiplication: rounding to a set number of digits, floor division, and comparing two order-of-operations expressions — all in one print.
+example_code: |
+  print(round(2 * 3.5, 1), (4 * 5) // 3, 2 * 3 + 1 > 3 * 2)
+starter_code: |
+  print(round(2 * 3.5, 1), (4 * 5) // 3, 2 * 3 + 1 > 3 * 2)
+challenge: |
+  🎯 Challenge: Print three things together: 1.5 multiplied by 4 rounded to 1 decimal place, how many whole times 4 fits into 5 * 6, and whether 3 * 4 + 1 is greater than 2 * 5.
+expected_output: "6.0 7 True"
+hints:
+  - "There are three parts, separated by commas — change the numbers in each one."
+  - "The first part rounds, the second uses //, the third compares two expressions."
+  - "It should look like: print(round(1.5 * 4, 1), (5 * 6) // 4, 3 * 4 + 1 > 2 * 5)"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 40
+main_path: false
+concept_tags: [numbers, expressions, comparison]

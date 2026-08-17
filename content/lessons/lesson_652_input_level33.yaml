@@ -1,0 +1,29 @@
+id: lesson_652
+title: "Ask a Question: Level 33 🙋"
+level: 652
+objective: "Check whether typed text is all digits using .isdigit(), before converting it."
+explanation: |
+  Before converting text to a number, it's smart to check whether it's really a number first. .isdigit() does exactly that.
+
+  text = input("Type a number: ") keeps your answer as text. print(text.isdigit()) checks if every character in it is a digit.
+example_code: |
+  text = input("Type a number: ")
+  print(text.isdigit())
+starter_code: |
+  text = input("Type a number: ")
+  print(text.isdigit())
+challenge: |
+  🎯 Challenge: Type the number 42 in the box below, then press RUN to check that it's all digits!
+expected_output: "Type a number: True"
+input_prompt: "Type a number:"
+hints:
+  - "Type 42 in the answer box above the RUN button."
+  - ".isdigit() is True only when every character you typed is a digit."
+  - "You don't need to change the code — just type 42 and press RUN!"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: input
+category_level: 33
+main_path: false
+concept_tags: [input, strings, booleans]

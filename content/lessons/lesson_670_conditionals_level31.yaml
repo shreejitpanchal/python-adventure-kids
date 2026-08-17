@@ -1,0 +1,33 @@
+id: lesson_670
+title: "Decisions: Level 31 🚦"
+level: 670
+objective: "Use not in to check that something does NOT appear inside a string."
+explanation: |
+  not in is the opposite of in — it's true when the text you're looking for does NOT appear anywhere inside the other string.
+
+  if "z" not in word: runs its block only when the letter z is missing from word entirely.
+example_code: |
+  word = "python"
+  if "z" not in word:
+      print("No z here!")
+  else:
+      print("Found a z!")
+starter_code: |
+  word = "python"
+  if "z" not in word:
+      print("No z here!")
+  else:
+      print("Found a z!")
+challenge: |
+  🎯 Challenge: Change word so Python prints "Found a z!" instead.
+expected_output: "Found a z!"
+hints:
+  - "word needs to contain the letter z somewhere in it this time."
+  - "not in flips the usual in check — now z being PRESENT makes the else run."
+  - "Try word = \"zebra\"."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 31
+main_path: false

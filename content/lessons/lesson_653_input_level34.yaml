@@ -1,0 +1,28 @@
+id: lesson_653
+title: "Ask a Question: Level 34 🙋"
+level: 653
+objective: "Check whether a typed word contains a certain letter, using in."
+explanation: |
+  in checks whether one piece of text appears anywhere inside another — including something you just typed in.
+
+  word = input("Type a word: ") stores your word. print("a" in word) checks whether the letter a shows up anywhere in it.
+example_code: |
+  word = input("Type a word: ")
+  print("a" in word)
+starter_code: |
+  word = input("Type a word: ")
+  print("a" in word)
+challenge: |
+  🎯 Challenge: Type the word banana in the box below, then press RUN to check for the letter a!
+expected_output: "Type a word: True"
+input_prompt: "Type a word:"
+hints:
+  - "Type banana in the answer box above the RUN button."
+  - "in looks for the exact letter anywhere inside your typed word."
+  - "You don't need to change the code — just type banana and press RUN!"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: input
+category_level: 34
+main_path: false

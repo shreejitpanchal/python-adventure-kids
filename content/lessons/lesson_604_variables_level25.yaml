@@ -1,0 +1,26 @@
+id: lesson_604
+title: "Variables: Level 25 📦"
+level: 604
+objective: "Use %= as a shortcut for storing the remainder of a variable."
+explanation: |
+  total %= 3 is a shortcut for total = total % 3 — it replaces total with what's left over after dividing.
+example_code: |
+  total = 20
+  total %= 3
+  print(total)
+starter_code: |
+  total = 20
+  total %= 3
+  print(total)
+challenge: |
+  🎯 Challenge: Start coins at 50, then use %= to find the remainder after dividing by 7. Print coins.
+expected_output: "1"
+hints:
+  - "Change coins to 50, then write coins %= 7."
+  - "It should look like: coins = 50, coins %= 7, print(coins)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 25
+main_path: false

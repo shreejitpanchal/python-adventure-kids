@@ -1,0 +1,31 @@
+id: lesson_655
+title: "Ask a Question: Level 36 🙋"
+level: 655
+objective: "Convert a typed Celsius temperature to Fahrenheit, rounded and shown in one f-string."
+explanation: |
+  This combines the Celsius-to-Fahrenheit formula you've used before with round() and an f-string that shows both temperatures.
+
+  fahrenheit = round(celsius * 9 / 5 + 32, 1) works out the formula and rounds it. The f-string then shows both celsius and fahrenheit together.
+example_code: |
+  celsius = float(input("What is the temperature in Celsius? "))
+  fahrenheit = round(celsius * 9 / 5 + 32, 1)
+  print(f"{celsius} C is {fahrenheit} F")
+starter_code: |
+  celsius = float(input("What is the temperature in Celsius? "))
+  fahrenheit = round(celsius * 9 / 5 + 32, 1)
+  print(f"{celsius} C is {fahrenheit} F")
+challenge: |
+  🎯 Challenge: Type the temperature 25 in the box below, then press RUN to convert it to Fahrenheit!
+expected_output: "What is the temperature in Celsius? 25.0 C is 77.0 F"
+input_prompt: "What is the temperature in Celsius?"
+hints:
+  - "Type 25 in the answer box above the RUN button."
+  - "fahrenheit is worked out first, then both numbers are dropped into the f-string."
+  - "You don't need to change the code — just type 25 and press RUN!"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: input
+category_level: 36
+main_path: false
+concept_tags: [input, f-strings, expressions]

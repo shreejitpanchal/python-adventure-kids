@@ -1,0 +1,31 @@
+id: lesson_735
+title: "Lists: Level 36 🎒"
+level: 735
+objective: "Write a function that returns a list built with a comprehension."
+explanation: |
+  A list comprehension can live right inside a function's return line, building and handing back a brand new list in a single step.
+
+  squares_up_to(n) returns a list of every square number from 1 up to n * n, all built in one compact line.
+example_code: |
+  def squares_up_to(n):
+      return [i * i for i in range(1, n + 1)]
+
+  print(squares_up_to(5))
+starter_code: |
+  def squares_up_to(n):
+      return [i * i for i in range(1, n + 1)]
+
+  print(squares_up_to(5))
+challenge: |
+  🎯 Challenge: Can you call squares_up_to with 7 instead of 5, so it prints seven squares?
+expected_output: "[1, 4, 9, 16, 25, 36, 49]"
+hints:
+  - "Change the number you pass into squares_up_to(...)."
+  - "squares_up_to(7) builds squares for every number from 1 to 7."
+  - "It should print [1, 4, 9, 16, 25, 36, 49]."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 36
+main_path: false

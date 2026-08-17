@@ -1,0 +1,29 @@
+id: lesson_607
+title: "Variables: Level 28 📦"
+level: 607
+objective: "Combine two boolean variables with and."
+explanation: |
+  and checks that both sides are True — if either one is False, the whole thing is False.
+
+  print(a and b) is only True when both a and b are True.
+example_code: |
+  a = 10 > 3
+  b = 4 > 1
+  print(a and b)
+starter_code: |
+  a = 10 > 3
+  b = 4 > 1
+  print(a and b)
+challenge: |
+  🎯 Challenge: Make a check whether 5 is greater than 8, and b check whether 6 is greater than 2. Print a and b together.
+expected_output: "False"
+hints:
+  - "Change the comparisons to a = 5 > 8 and b = 6 > 2."
+  - "and needs both sides to be True to give True."
+  - "It should look like: a = 5 > 8, b = 6 > 2, print(a and b)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 28
+main_path: false

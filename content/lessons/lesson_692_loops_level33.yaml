@@ -1,0 +1,33 @@
+id: lesson_692
+title: "Loops: Level 33 🔁"
+level: 692
+objective: "Combine a nested loop with an accumulator to sum every product in a grid."
+explanation: |
+  A nested loop can build up a running total across every single trip, inner loop included. total += i * j adds one more product into the running total every time the innermost line runs.
+
+  By the time both loops finish, total holds the sum of i * j for every pair the loops visited.
+example_code: |
+  total = 0
+  for i in range(1, 4):
+      for j in range(1, 4):
+          total += i * j
+  print(total)
+starter_code: |
+  total = 0
+  for i in range(1, 4):
+      for j in range(1, 4):
+          total += i * j
+  print(total)
+challenge: |
+  🎯 Challenge: Can you change both loops to count from 1 to 4 instead of 1 to 3, so it sums every product in a bigger grid?
+expected_output: "100"
+hints:
+  - "Change both range(1, 4) to range(1, 5)."
+  - "There are two range(1, 4) calls to change -- one for i, one for j."
+  - "A bigger grid means more pairs get added into total, making it a bigger number."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 33
+main_path: false

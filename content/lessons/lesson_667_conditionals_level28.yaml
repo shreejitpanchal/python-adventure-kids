@@ -1,0 +1,43 @@
+id: lesson_667
+title: "Decisions: Level 28 🚦"
+level: 667
+objective: "Use and inside every branch of an elif chain to check two conditions per branch."
+explanation: |
+  Each elif can have its own and condition — Python still checks them top to bottom, stopping at the first one that's fully true.
+
+  temperature >= 80 and is_windy == "no" only matches when BOTH parts of that specific branch are true.
+example_code: |
+  temperature = 55
+  is_windy = "yes"
+  if temperature >= 80 and is_windy == "no":
+      print("Perfect beach day!")
+  elif temperature >= 80 and is_windy == "yes":
+      print("Hot but windy - hold onto your hat!")
+  elif temperature < 80 and is_windy == "yes":
+      print("Chilly and windy - wear a jacket!")
+  else:
+      print("Mild weather today.")
+starter_code: |
+  temperature = 55
+  is_windy = "yes"
+  if temperature >= 80 and is_windy == "no":
+      print("Perfect beach day!")
+  elif temperature >= 80 and is_windy == "yes":
+      print("Hot but windy - hold onto your hat!")
+  elif temperature < 80 and is_windy == "yes":
+      print("Chilly and windy - wear a jacket!")
+  else:
+      print("Mild weather today.")
+challenge: |
+  🎯 Challenge: Change temperature and is_windy so Python prints "Perfect beach day!" instead.
+expected_output: "Perfect beach day!"
+hints:
+  - "The first branch needs temperature to be 80 or more AND is_windy to be \"no\"."
+  - "Both parts of that and have to be true at once for the first branch to run."
+  - "Try temperature = 85 and is_windy = \"no\"."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 28
+main_path: false

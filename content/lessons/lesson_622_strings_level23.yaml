@@ -1,0 +1,27 @@
+id: lesson_622
+title: "Strings: Level 23 🔤"
+level: 622
+objective: "Split a string on a custom character using .split(\",\")."
+explanation: |
+  .split() can take an argument telling it exactly where to break the string — not just at spaces.
+
+  colors.split(",") breaks the text apart everywhere a comma appears, giving you a list of the pieces in between.
+example_code: |
+  colors = "red,green,blue"
+  print(colors.split(","))
+starter_code: |
+  colors = "red,green,blue"
+  print(colors.split(","))
+challenge: |
+  🎯 Challenge: Change colors to "pink,purple,gold" and print the split list.
+expected_output: "['pink', 'purple', 'gold']"
+hints:
+  - "Change \"red,green,blue\" to \"pink,purple,gold\", keeping the quotes."
+  - ".split(\",\") breaks the text apart at every comma, not at spaces."
+  - "It should look like: colors = \"pink,purple,gold\", print(colors.split(\",\"))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 23
+main_path: false

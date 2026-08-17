@@ -1,0 +1,27 @@
+id: lesson_630
+title: "Strings: Level 31 🔤"
+level: 630
+objective: "Pad a number string with leading zeros using .zfill()."
+explanation: |
+  .zfill() pads a string with "0" characters on the left until it reaches a certain length — handy for things like ID numbers that always need the same number of digits.
+
+  num.zfill(3) pads num with zeros until it's 3 characters long.
+example_code: |
+  num = "7"
+  print(num.zfill(3))
+starter_code: |
+  num = "7"
+  print(num.zfill(3))
+challenge: |
+  🎯 Challenge: Change num to "42" and pad it to 5 digits.
+expected_output: "00042"
+hints:
+  - "Change \"7\" to \"42\", and change the 3 to a 5."
+  - ".zfill() only adds zeros to the front — it never removes digits."
+  - "It should look like: num = \"42\", print(num.zfill(5))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 31
+main_path: false

@@ -1,0 +1,25 @@
+id: lesson_541
+title: "Subtraction: Level 22 ➖"
+level: 541
+objective: "Subtract two numbers, then floor-divide the result."
+explanation: |
+  You can combine - and // -- Python subtracts first, then floor-divides that answer.
+
+  (30 - 6) // 4 subtracts first (getting 24), then floor-divides by 4: 6.
+example_code: |
+  print((30 - 6) // 4)
+starter_code: |
+  print((30 - 6) // 4)
+challenge: |
+  🎯 Challenge: Subtract 14 from 50, then floor-divide the result by 4.
+expected_output: "9"
+hints:
+  - "Change the numbers to 50, 14, and 4."
+  - "The parentheses make sure the subtraction happens first."
+  - "It should look like: print((50 - 14) // 4)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 22
+main_path: false

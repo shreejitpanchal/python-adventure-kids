@@ -1,0 +1,22 @@
+id: lesson_598
+title: "Division: Level 39 ➗"
+level: 598
+objective: "Use /, //, and % on a dividend that's built from addition first."
+explanation: |
+  Python adds the two numbers in parentheses first, then divides that total three different ways.
+example_code: |
+  print((20 + 10) / 6, (20 + 10) // 6, (20 + 10) % 6)
+starter_code: |
+  print((20 + 10) / 6, (20 + 10) // 6, (20 + 10) % 6)
+challenge: |
+  🎯 Challenge: Add 18 and 12 together, then print that total divided by 4 all three ways — /, //, and %.
+expected_output: "7.5 7 2"
+hints:
+  - "Change the addition to 18 + 12, and divide by 4 in all three places."
+  - "It should look like: print((18 + 12) / 4, (18 + 12) // 4, (18 + 12) % 4)"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: division
+category_level: 39
+main_path: false

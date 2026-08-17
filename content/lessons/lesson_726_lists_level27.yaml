@@ -1,0 +1,27 @@
+id: lesson_726
+title: "Lists: Level 27 🎒"
+level: 726
+objective: "Reverse a list using a slice with a step of -1."
+explanation: |
+  A slice's step can be negative too -- list[::-1] means "go through the whole list, but backwards", which reverses it completely without needing a loop at all.
+
+  This is the list version of the exact same trick that reverses a string.
+example_code: |
+  letters = ["a", "b", "c", "d", "e"]
+  print(letters[::-1])
+starter_code: |
+  letters = ["a", "b", "c", "d", "e"]
+  print(letters[::-1])
+challenge: |
+  🎯 Challenge: Can you reverse this different list instead: ["p", "y", "t", "h", "o", "n"]?
+expected_output: "['n', 'o', 'h', 't', 'y', 'p']"
+hints:
+  - "Change letters = [...] to the new list of letters."
+  - "letters[::-1] doesn't need to change -- it reverses any list."
+  - "It should look like: letters = [\"p\", \"y\", \"t\", \"h\", \"o\", \"n\"], then print(letters[::-1])"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 27
+main_path: false

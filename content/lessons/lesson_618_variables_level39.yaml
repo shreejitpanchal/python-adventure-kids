@@ -1,0 +1,26 @@
+id: lesson_618
+title: "Variables: Level 39 📦"
+level: 618
+objective: "Store a comparison in a boolean variable, then report it in an f-string."
+explanation: |
+  You can combine a comparison, a variable, and an f-string all in one short program — a preview of the final challenge.
+example_code: |
+  score = 85
+  passed = score >= 60
+  print(f"Passed: {passed}")
+starter_code: |
+  score = 85
+  passed = score >= 60
+  print(f"Passed: {passed}")
+challenge: |
+  🎯 Challenge: Store 45 in score. Store whether score >= 60 in passed, then print f"Passed: {passed}".
+expected_output: "Passed: False"
+hints:
+  - "Change score to 45, keep the rest the same."
+  - "It should look like: score = 45, passed = score >= 60, print(f\"Passed: {passed}\")"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 39
+main_path: false

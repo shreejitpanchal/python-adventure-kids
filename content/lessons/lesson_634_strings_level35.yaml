@@ -1,0 +1,28 @@
+id: lesson_634
+title: "Strings: Level 35 🔤"
+level: 634
+objective: "Check whether one string appears inside another using in."
+explanation: |
+  in checks whether one piece of text appears anywhere inside another, and gives back True or False.
+
+  "kiwi" in fruit is True only if the letters k-i-w-i show up somewhere inside fruit.
+example_code: |
+  fruit = "pineapple"
+  print("kiwi" in fruit)
+starter_code: |
+  fruit = "pineapple"
+  print("kiwi" in fruit)
+challenge: |
+  🎯 Challenge: Change the search text to "apple" so it's found inside "pineapple".
+expected_output: "True"
+hints:
+  - "Change \"kiwi\" to \"apple\" — pineapple really does contain those letters."
+  - "in looks for the exact letters anywhere inside the string, not just at the start."
+  - "It should look like: fruit = \"pineapple\", print(\"apple\" in fruit)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 35
+main_path: false
+concept_tags: [strings, booleans]

@@ -1,0 +1,25 @@
+id: lesson_536
+title: "Addition: Level 37 ➕"
+level: 536
+objective: "Combine max() of two sums with a separate comparison, printed together."
+explanation: |
+  You can print the result of max() and the result of a comparison side by side.
+
+  print(max(3 + 3, 2 + 9), 10 + 5 > 12) works out max(6, 11) (which is 11), and checks if 15 > 12 (True), then shows both.
+example_code: |
+  print(max(3 + 3, 2 + 9), 10 + 5 > 12)
+starter_code: |
+  print(max(3 + 3, 2 + 9), 10 + 5 > 12)
+challenge: |
+  🎯 Challenge: Can you print the bigger of 7 + 7 and 5 + 9, and whether 20 + 3 is greater than 25 -- both together?
+expected_output: "14 False"
+hints:
+  - "Change the max() numbers to 7 + 7 and 5 + 9, and the comparison to 20 + 3 > 25."
+  - "There are two pieces separated by a comma -- change both."
+  - "It should look like: print(max(7 + 7, 5 + 9), 20 + 3 > 25)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 37
+main_path: false

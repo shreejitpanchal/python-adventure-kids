@@ -1,0 +1,25 @@
+id: lesson_515
+title: "Numbers: Level 36 🔢"
+level: 515
+objective: "Use a chained comparison with negative numbers."
+explanation: |
+  Chained comparisons work with negative numbers too -- Python just checks the order on the number line.
+
+  -10 < -3 < 0 is True, because -3 really does sit between -10 and 0.
+example_code: |
+  print(-10 < -3 < 0)
+starter_code: |
+  print(-10 < -3 < 0)
+challenge: |
+  🎯 Challenge: Can you make Python check if -15 is between -10 and 0?
+expected_output: "False"
+hints:
+  - "Change -3 to -15."
+  - "-15 is actually smaller than -10, so it isn't between them."
+  - "It should look like: print(-10 < -15 < 0)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 36
+main_path: false

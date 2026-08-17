@@ -1,0 +1,25 @@
+id: lesson_525
+title: "Addition: Level 26 ➕"
+level: 525
+objective: "Compare two sums, each made of three addends, using max()."
+explanation: |
+  max() can compare longer sums, not just two numbers -- Python works out each full sum first, then compares them.
+
+  max(2 + 3 + 4, 1 + 1 + 1) works out both sums (9 and 3), then hands back the bigger one.
+example_code: |
+  print(max(2 + 3 + 4, 1 + 1 + 1))
+starter_code: |
+  print(max(2 + 3 + 4, 1 + 1 + 1))
+challenge: |
+  🎯 Challenge: Which is bigger: 5 + 5 + 5 or 3 + 4 + 9? Make Python find out.
+expected_output: "16"
+hints:
+  - "Change the two sums to 5 + 5 + 5 and 3 + 4 + 9."
+  - "max() works out both full sums first, then compares them."
+  - "It should look like: print(max(5 + 5 + 5, 3 + 4 + 9))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 26
+main_path: false

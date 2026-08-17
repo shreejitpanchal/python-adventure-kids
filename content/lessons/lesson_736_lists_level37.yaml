@@ -1,0 +1,35 @@
+id: lesson_736
+title: "Lists: Level 37 🎒"
+level: 736
+objective: "Combine a nested list with a nested loop and an accumulator to total every value inside it."
+explanation: |
+  You can add up every single number inside a nested list by nesting a loop inside a loop and keeping a running total, just like adding up a flat list -- except now there are two levels to walk through.
+
+  total += value happens once for every number in every row, so by the end it holds the sum of the entire grid.
+example_code: |
+  grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+  total = 0
+  for row in grid:
+      for value in row:
+          total += value
+  print(total)
+starter_code: |
+  grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+  total = 0
+  for row in grid:
+      for value in row:
+          total += value
+  print(total)
+challenge: |
+  🎯 Challenge: Can you change grid to [[10, 20], [30, 40], [50, 60]] and print the new total?
+expected_output: "210"
+hints:
+  - "Change grid = [...] to the new nested list."
+  - "The nested loop and accumulator stay exactly the same -- they already work for any grid."
+  - "10 + 20 + 30 + 40 + 50 + 60 = 210."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 37
+main_path: false

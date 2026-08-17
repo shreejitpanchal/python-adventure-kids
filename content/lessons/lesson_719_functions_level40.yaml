@@ -1,0 +1,47 @@
+id: lesson_719
+title: "Functions: Level 40 ⚙️"
+level: 719
+objective: "Capstone: combine multiple parameters, a default value, a conditional mutation, a tuple return, and several call sites."
+explanation: |
+  This final functions challenge combines everything from the whole extended track: multiple parameters with a default value, arithmetic, a conditional that mutates a variable, a tuple return, and several separate calls in one program.
+
+  order_summary(price, quantity, discount=0) works out a subtotal, only applies the discount if the subtotal is over 100, then returns both the final total and the price per item as a tuple.
+example_code: |
+  def order_summary(price, quantity, discount=0):
+      subtotal = price * quantity
+      if subtotal > 100:
+          subtotal -= discount
+      return subtotal, subtotal / quantity
+
+  total1, unit1 = order_summary(10, 3)
+  print(total1, unit1)
+  total2, unit2 = order_summary(20, 6, 15)
+  print(total2, unit2)
+starter_code: |
+  def order_summary(price, quantity, discount=0):
+      subtotal = price * quantity
+      if subtotal > 100:
+          subtotal -= discount
+      return subtotal, subtotal / quantity
+
+  total1, unit1 = order_summary(10, 3)
+  print(total1, unit1)
+  total2, unit2 = order_summary(20, 6, 15)
+  print(total2, unit2)
+challenge: |
+  🎯 Challenge: Can you add a third call, order_summary(8, 20, 25), and print it too? That order's subtotal (160) is over 100, so the discount applies, and it should print 135 6.75.
+expected_output: |
+  30 10.0
+  105 17.5
+  135 6.75
+hints:
+  - "Add a third pair of lines underneath the other two: total3, unit3 = order_summary(8, 20, 25), then print(total3, unit3)."
+  - "8 * 20 = 160, which is over 100, so the discount of 25 gets subtracted: 160 - 25 = 135."
+  - "135 divided by the quantity (20) gives the price per item: 6.75."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 40
+main_path: false
+concept_tags: [functions, parameters, return-values, conditionals]

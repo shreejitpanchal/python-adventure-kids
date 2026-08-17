@@ -1,0 +1,30 @@
+id: lesson_668
+title: "Decisions: Level 29 🚦"
+level: 668
+objective: "Use a conditional expression (ternary) to assign a value in a single line."
+explanation: |
+  A conditional expression squeezes an if/else into one line. "Pass" if score >= 50 else "Fail" gives back "Pass" when the condition is true, and "Fail" otherwise.
+
+  message = "Pass" if score >= 50 else "Fail" is a shortcut for a whole if/else block that assigns message either way.
+example_code: |
+  score = 40
+  message = "Pass" if score >= 50 else "Fail"
+  print(message)
+starter_code: |
+  score = 40
+  message = "Pass" if score >= 50 else "Fail"
+  print(message)
+challenge: |
+  🎯 Challenge: Change score so Python prints "Pass" instead.
+expected_output: "Pass"
+hints:
+  - "score needs to be 50 or more for the \"Pass\" side to be chosen."
+  - "The part before if is used when the condition is true, and the part after else is used when it's false."
+  - "Try score = 60."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 29
+main_path: false
+concept_tags: [conditionals, comparison]

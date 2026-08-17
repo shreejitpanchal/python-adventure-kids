@@ -1,0 +1,25 @@
+id: lesson_508
+title: "Numbers: Level 29 🔢"
+level: 508
+objective: "Use round() with decimal places on a negative number."
+explanation: |
+  round() with a digit count works the same way on negative numbers.
+
+  round(-3.14159, 2) keeps 2 digits after the point: -3.14.
+example_code: |
+  print(round(-3.14159, 2))
+starter_code: |
+  print(round(-3.14159, 2))
+challenge: |
+  🎯 Challenge: Can you round -8.6789 to 2 decimal places?
+expected_output: "-8.68"
+hints:
+  - "Change -3.14159 to -8.6789, and keep the 2."
+  - "Negative numbers round the same way, just below zero."
+  - "It should look like: print(round(-8.6789, 2))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 29
+main_path: false

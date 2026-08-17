@@ -1,0 +1,36 @@
+id: lesson_676
+title: "Decisions: Level 37 🚦"
+level: 676
+objective: "Combine two direct boolean variables with and to gate a decision."
+explanation: |
+  Just like a single boolean can be checked directly, two booleans can be combined with and, with no == True needed anywhere.
+
+  if has_key and has_map: is only true when BOTH variables are True.
+example_code: |
+  has_key = True
+  has_map = False
+  if has_key and has_map:
+      print("You can enter the treasure room!")
+  else:
+      print("You're missing something to get in.")
+starter_code: |
+  has_key = True
+  has_map = False
+  if has_key and has_map:
+      print("You can enter the treasure room!")
+  else:
+      print("You're missing something to get in.")
+challenge: |
+  🎯 Challenge: Change has_map so Python prints "You can enter the treasure room!" instead.
+expected_output: "You can enter the treasure room!"
+hints:
+  - "has_key is already True, so focus on has_map."
+  - "Both variables need to be True for the and to be true."
+  - "Try has_map = True."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 37
+main_path: false
+concept_tags: [conditionals, booleans]

@@ -1,0 +1,25 @@
+id: lesson_567
+title: "Multiplication: Level 28 ✖️"
+level: 567
+objective: "Learn that Python multiplies before it adds, without needing parentheses."
+explanation: |
+  Python follows the same order of operations you learned in math class: multiplication happens before addition.
+
+  print(2 * 3 + 4) works out 2 * 3 first (6), then adds 4 — giving 10, not 14.
+example_code: |
+  print(2 * 3 + 4)
+starter_code: |
+  print(2 * 3 + 4)
+challenge: |
+  🎯 Challenge: Multiply 4 by 5, then add 10 to the result — all in one print, no parentheses needed.
+expected_output: "30"
+hints:
+  - "Change the numbers to 4, 5, and 10."
+  - "Python does the multiplying first automatically, even without parentheses."
+  - "It should look like: print(4 * 5 + 10)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 28
+main_path: false

@@ -1,0 +1,43 @@
+id: lesson_697
+title: "Loops: Level 38 🔁"
+level: 697
+objective: "Combine a multiplying while loop with break to stop once a product passes a threshold."
+explanation: |
+  Just like an adding loop can stop itself with break once a total passes a threshold, a multiplying loop can do the exact same thing -- watch the running product, and break the moment it crosses the line.
+
+  product keeps growing by multiplying in the next n each trip, and n keeps counting up, so both the product and how many numbers were multiplied get printed at the end.
+example_code: |
+  product = 1
+  n = 1
+  while True:
+      product = product * n
+      if product > 100:
+          break
+      n += 1
+  print(product)
+  print(n)
+starter_code: |
+  product = 1
+  n = 1
+  while True:
+      product = product * n
+      if product > 100:
+          break
+      n += 1
+  print(product)
+  print(n)
+challenge: |
+  🎯 Challenge: Can you change the threshold to 500 instead of 100?
+expected_output: |
+  720
+  6
+hints:
+  - "Change if product > 100: to if product > 500:."
+  - "The loop keeps multiplying in the next number (product = product * n) until it finally crosses your new threshold."
+  - "1 x 2 x 3 x 4 x 5 x 6 = 720, the first running product bigger than 500."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 38
+main_path: false

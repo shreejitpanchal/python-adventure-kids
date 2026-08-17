@@ -1,0 +1,25 @@
+id: lesson_533
+title: "Addition: Level 34 ➕"
+level: 533
+objective: "Show two calculated addition results inside one f-string sentence."
+explanation: |
+  An f-string can hold more than one calculation -- just use a separate pair of curly braces for each one.
+
+  f"{2 + 3} and {10 + 20}" shows both sums side by side in one sentence.
+example_code: |
+  print(f"{2 + 3} and {10 + 20}")
+starter_code: |
+  print(f"{2 + 3} and {10 + 20}")
+challenge: |
+  🎯 Challenge: Can you show 6 + 9 and 14 + 8, both together in one sentence?
+expected_output: "15 and 22"
+hints:
+  - "Change the two sums to 6 + 9 and 14 + 8."
+  - "Each pair of curly braces holds its own calculation."
+  - "It should look like: print(f\"{6 + 9} and {14 + 8}\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 34
+main_path: false

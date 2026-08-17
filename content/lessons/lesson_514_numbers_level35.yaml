@@ -1,0 +1,25 @@
+id: lesson_514
+title: "Numbers: Level 35 🔢"
+level: 514
+objective: "Work out a longer expression using // and % together, left to right."
+explanation: |
+  When // and % appear in the same expression, Python works left to right, same as + and -.
+
+  50 // 6 % 4 first does 50 // 6 (which is 8), then 8 % 4 (which is 0).
+example_code: |
+  print(50 // 6 % 4)
+starter_code: |
+  print(50 // 6 % 4)
+challenge: |
+  🎯 Challenge: Can you make Python work out 55 // 7 % 3?
+expected_output: "1"
+hints:
+  - "Change the numbers to 55, 7, and 3."
+  - "Python works left to right: // first, then %."
+  - "It should look like: print(55 // 7 % 3)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 35
+main_path: false

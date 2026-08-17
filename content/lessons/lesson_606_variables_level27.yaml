@@ -1,0 +1,28 @@
+id: lesson_606
+title: "Variables: Level 27 📦"
+level: 606
+objective: "Update the same variable three times in a row, using different operators."
+explanation: |
+  You can mix and match update shortcuts on the same variable, one line at a time — each line builds on the one before.
+example_code: |
+  x = 5
+  x += 3
+  x *= 2
+  print(x)
+starter_code: |
+  x = 5
+  x += 3
+  x *= 2
+  print(x)
+challenge: |
+  🎯 Challenge: Start total at 4, add 6 to it, multiply the result by 3, then subtract 5. Print total.
+expected_output: "25"
+hints:
+  - "Write three separate lines: total += 6, then total *= 3, then total -= 5."
+  - "It should look like: total = 4, total += 6, total *= 3, total -= 5, print(total)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 27
+main_path: false

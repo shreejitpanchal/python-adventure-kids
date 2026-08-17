@@ -1,0 +1,25 @@
+id: lesson_507
+title: "Numbers: Level 28 🔢"
+level: 507
+objective: "Use max() to compare the results of two floor-divisions."
+explanation: |
+  max() can compare the answers to two // problems, not just two plain numbers.
+
+  max(20 // 3, 10 // 4) works out both (6 and 2), then hands back the bigger one.
+example_code: |
+  print(max(20 // 3, 10 // 4))
+starter_code: |
+  print(max(20 // 3, 10 // 4))
+challenge: |
+  🎯 Challenge: Can you find the larger of 29 // 4 and 22 // 3?
+expected_output: "7"
+hints:
+  - "Change the two problems to 29 // 4 and 22 // 3."
+  - "max() works out both // problems first, then compares them."
+  - "It should look like: print(max(29 // 4, 22 // 3))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 28
+main_path: false

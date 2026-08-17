@@ -1,0 +1,25 @@
+id: lesson_518
+title: "Numbers: Level 39 🔢"
+level: 518
+objective: "Convert text into a number, then floor-divide it."
+explanation: |
+  int() turns text into a real number, so you can use // or % on it just like any other number.
+
+  int("23") // 5 converts "23" to the number 23, then floor-divides by 5: 4.
+example_code: |
+  print(int("23") // 5)
+starter_code: |
+  print(int("23") // 5)
+challenge: |
+  🎯 Challenge: Can you convert the text "40" into a number, then find the remainder when it's divided by 7?
+expected_output: "5"
+hints:
+  - "Change \"23\" to \"40\", change // to %, and change 5 to 7."
+  - "int() runs first, then % finds the remainder."
+  - "It should look like: print(int(\"40\") % 7)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 39
+main_path: false

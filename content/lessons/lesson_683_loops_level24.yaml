@@ -1,0 +1,37 @@
+id: lesson_683
+title: "Loops: Level 24 🔁"
+level: 683
+objective: "Build a rectangle grid with a nested loop where rows and columns are independent."
+explanation: |
+  A nested loop doesn't have to make a triangle -- if the inner loop always repeats the same fixed number of times, you get a perfect rectangle of rows and columns instead.
+
+  Here the outer loop controls how many rows print, and the inner loop always adds the same number of stars to every row, no matter what row it is.
+example_code: |
+  for row in range(3):
+      line = ""
+      for col in range(5):
+          line = line + "*"
+      print(line)
+starter_code: |
+  for row in range(3):
+      line = ""
+      for col in range(5):
+          line = line + "*"
+      print(line)
+challenge: |
+  🎯 Challenge: Can you make it a 4-row by 3-column grid instead of 3 rows by 5 columns?
+expected_output: |
+  ***
+  ***
+  ***
+  ***
+hints:
+  - "Change range(3) to range(4) for the rows."
+  - "Change range(5) to range(3) for the columns."
+  - "Both range(...) numbers need to change -- one controls rows, the other controls columns."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 24
+main_path: false

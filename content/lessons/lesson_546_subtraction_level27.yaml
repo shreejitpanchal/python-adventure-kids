@@ -1,0 +1,25 @@
+id: lesson_546
+title: "Subtraction: Level 27 ➖"
+level: 546
+objective: "Combine an f-string with round() to show a tidy subtraction result."
+explanation: |
+  You can put round() inside an f-string's curly braces, right along with the subtraction.
+
+  f"Diff: {round(9.8 - 2.4)}" subtracts first (getting 7.4), then rounds it to 7, inside the sentence.
+example_code: |
+  print(f"Diff: {round(9.8 - 2.4)}")
+starter_code: |
+  print(f"Diff: {round(9.8 - 2.4)}")
+challenge: |
+  🎯 Challenge: Can you show "Diff: " followed by the rounded result of 12.7 - 4.3?
+expected_output: "Diff: 8"
+hints:
+  - "Change 9.8 - 2.4 to 12.7 - 4.3, inside round(...)."
+  - "round() runs first, then the f-string shows the result."
+  - "It should look like: print(f\"Diff: {round(12.7 - 4.3)}\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 27
+main_path: false

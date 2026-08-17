@@ -1,0 +1,27 @@
+id: lesson_637
+title: "Strings: Level 38 🔤"
+level: 637
+objective: "Chain three string methods together in a single line."
+explanation: |
+  You've chained two methods before — now try three! Python runs them left to right: .strip() first, then .lower(), then .title() on whatever's left each time.
+
+  raw.strip().lower().title() cleans up extra spaces, lowercases everything, then capitalizes each word.
+example_code: |
+  raw = "  hello world  "
+  print(raw.strip().lower().title())
+starter_code: |
+  raw = "  hello world  "
+  print(raw.strip().lower().title())
+challenge: |
+  🎯 Challenge: Change raw to "  GOOD MORNING SUNSHINE  " and print it cleaned up and title-cased.
+expected_output: "Good Morning Sunshine"
+hints:
+  - "Change the text inside the quotes to \"  GOOD MORNING SUNSHINE  \", keeping the extra spaces."
+  - "You don't need to change .strip().lower().title() — it already does all three steps."
+  - "It should look like: raw = \"  GOOD MORNING SUNSHINE  \", print(raw.strip().lower().title())"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 38
+main_path: false

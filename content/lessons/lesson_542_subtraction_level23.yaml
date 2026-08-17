@@ -1,0 +1,25 @@
+id: lesson_542
+title: "Subtraction: Level 23 ➖"
+level: 542
+objective: "Subtract two numbers, then find the remainder when divided by another number."
+explanation: |
+  You can combine - and % the same way -- Python subtracts first, then finds the remainder.
+
+  (20 - 3) % 5 subtracts first (getting 17), then finds the remainder when divided by 5: 2.
+example_code: |
+  print((20 - 3) % 5)
+starter_code: |
+  print((20 - 3) % 5)
+challenge: |
+  🎯 Challenge: Subtract 8 from 35, then find the remainder when the result is divided by 6.
+expected_output: "3"
+hints:
+  - "Change the numbers to 35, 8, and 6."
+  - "The parentheses make sure the subtraction happens first."
+  - "It should look like: print((35 - 8) % 6)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 23
+main_path: false

@@ -1,0 +1,25 @@
+id: lesson_522
+title: "Addition: Level 23 ➕"
+level: 522
+objective: "Add two numbers, then find the remainder when divided by another number."
+explanation: |
+  You can combine + and % the same way -- Python adds first, then finds the remainder.
+
+  (14 + 9) % 5 adds first (getting 23), then finds the remainder when divided by 5: 3.
+example_code: |
+  print((14 + 9) % 5)
+starter_code: |
+  print((14 + 9) % 5)
+challenge: |
+  🎯 Challenge: Add 27 and 18, then find the remainder when the result is divided by 8.
+expected_output: "5"
+hints:
+  - "Change the numbers to 27, 18, and 8."
+  - "The parentheses make sure the addition happens first."
+  - "It should look like: print((27 + 18) % 8)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 23
+main_path: false

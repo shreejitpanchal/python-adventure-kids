@@ -1,0 +1,30 @@
+id: lesson_613
+title: "Variables: Level 34 📦"
+level: 613
+objective: "Store the smallest of three variables using min()."
+explanation: |
+  min() and max() aren't limited to two values — they can compare three variables at once too.
+example_code: |
+  a = 4
+  b = 9
+  c = 2
+  biggest = max(a, b, c)
+  print(biggest)
+starter_code: |
+  a = 4
+  b = 9
+  c = 2
+  biggest = max(a, b, c)
+  print(biggest)
+challenge: |
+  🎯 Challenge: Make a = 15, b = 6, c = 20. Store the smallest of the three in a variable called smallest, and print it.
+expected_output: "6"
+hints:
+  - "Change the three numbers, then use min(a, b, c) instead of max(...)."
+  - "It should look like: a = 15, b = 6, c = 20, smallest = min(a, b, c), print(smallest)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 34
+main_path: false

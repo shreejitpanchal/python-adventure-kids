@@ -1,0 +1,28 @@
+id: lesson_610
+title: "Variables: Level 31 📦"
+level: 610
+objective: "Weave a text variable and an updated number variable into the same f-string."
+explanation: |
+  f-strings can mix a text variable and a number variable together, even after the number has been updated.
+example_code: |
+  name = "Sam"
+  score = 10
+  score += 5
+  print(f"{name} scored {score}")
+starter_code: |
+  name = "Sam"
+  score = 10
+  score += 5
+  print(f"{name} scored {score}")
+challenge: |
+  🎯 Challenge: Make name hold "Ana", start score at 20, add 15 to it, then print f"{name} scored {score}".
+expected_output: "Ana scored 35"
+hints:
+  - "Change name to \"Ana\", score to 20, then score += 15."
+  - "It should look like: name = \"Ana\", score = 20, score += 15, print(f\"{name} scored {score}\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 31
+main_path: false

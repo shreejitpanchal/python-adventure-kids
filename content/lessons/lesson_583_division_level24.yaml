@@ -1,0 +1,23 @@
+id: lesson_583
+title: "Division: Level 24 ➗"
+level: 583
+objective: "Chain division mixing a negative number and a decimal number together."
+explanation: |
+  You've chained division before, and used negatives and decimals separately — now mix them in the same chain.
+example_code: |
+  print(-7.5 / 3 / -1)
+starter_code: |
+  print(-7.5 / 3 / -1)
+challenge: |
+  🎯 Challenge: Can you make Python divide -15 by 5, then by -1?
+expected_output: "3.0"
+hints:
+  - "Change the numbers to -15, 5, and -1."
+  - "Two negatives in the chain will cancel out."
+  - "It should look like: print(-15 / 5 / -1)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 24
+main_path: false

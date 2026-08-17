@@ -1,0 +1,25 @@
+id: lesson_549
+title: "Subtraction: Level 30 ➖"
+level: 549
+objective: "Combine an f-string, subtraction, and a comparison in one print."
+explanation: |
+  You can put a whole comparison -- subtraction and all -- inside an f-string's curly braces.
+
+  f"Result: {10 - 3 > 5}" subtracts first (getting 7), checks if it's greater than 5 (True), then shows it in the sentence.
+example_code: |
+  print(f"Result: {10 - 3 > 5}")
+starter_code: |
+  print(f"Result: {10 - 3 > 5}")
+challenge: |
+  🎯 Challenge: Can you show "Result: " followed by whether 9 - 8 is greater than 5?
+expected_output: "Result: False"
+hints:
+  - "Change the numbers to 9, 8, and 5."
+  - "Python subtracts first, then compares, then shows it in the sentence."
+  - "It should look like: print(f\"Result: {9 - 8 > 5}\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 30
+main_path: false

@@ -1,0 +1,35 @@
+id: lesson_672
+title: "Decisions: Level 33 🚦"
+level: 672
+objective: "Combine several or checks with and, using parentheses to group them."
+explanation: |
+  Parentheses let you group multiple or checks together, then combine the whole group with and.
+
+  (grade == 6 or grade == 7 or grade == 8) and has_permission_slip == "yes" only lets someone through if their grade is 6, 7, or 8 AND they have a permission slip.
+example_code: |
+  grade = 9
+  has_permission_slip = "yes"
+  if (grade == 6 or grade == 7 or grade == 8) and has_permission_slip == "yes":
+      print("You can join the field trip!")
+  else:
+      print("Sorry, you can't join this trip.")
+starter_code: |
+  grade = 9
+  has_permission_slip = "yes"
+  if (grade == 6 or grade == 7 or grade == 8) and has_permission_slip == "yes":
+      print("You can join the field trip!")
+  else:
+      print("Sorry, you can't join this trip.")
+challenge: |
+  🎯 Challenge: Change grade so Python prints "You can join the field trip!" instead.
+expected_output: "You can join the field trip!"
+hints:
+  - "has_permission_slip is already \"yes\", so focus on grade."
+  - "grade needs to be 6, 7, or 8 for the grouped or to be true."
+  - "Try grade = 7."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 33
+main_path: false

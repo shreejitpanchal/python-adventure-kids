@@ -1,0 +1,25 @@
+id: lesson_530
+title: "Addition: Level 31 ➕"
+level: 530
+objective: "Compare two sums, each made of three addends, using min()."
+explanation: |
+  min() works on longer sums too -- Python works out each full sum first, then hands back the smaller one.
+
+  min(2 + 2 + 2, 1 + 5 + 1) works out both sums (6 and 7), then picks the smaller.
+example_code: |
+  print(min(2 + 2 + 2, 1 + 5 + 1))
+starter_code: |
+  print(min(2 + 2 + 2, 1 + 5 + 1))
+challenge: |
+  🎯 Challenge: Which is smaller: 4 + 9 + 2 or 6 + 6 + 6? Make Python find out.
+expected_output: "15"
+hints:
+  - "Change the two sums to 4 + 9 + 2 and 6 + 6 + 6."
+  - "min() works out both full sums first, then compares them."
+  - "It should look like: print(min(4 + 9 + 2, 6 + 6 + 6))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 31
+main_path: false

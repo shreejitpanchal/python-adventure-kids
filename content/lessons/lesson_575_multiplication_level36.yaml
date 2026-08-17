@@ -1,0 +1,23 @@
+id: lesson_575
+title: "Multiplication: Level 36 ✖️"
+level: 575
+objective: "Round the result of a negative, decimal multiplication chain."
+explanation: |
+  You can combine everything you know: chain a negative and a decimal together, then round the final answer.
+example_code: |
+  print(round(-2 * 3.5 * 2))
+starter_code: |
+  print(round(-2 * 3.5 * 2))
+challenge: |
+  🎯 Challenge: Multiply -1.5, 4, and -3 together, then round the result.
+expected_output: "18"
+hints:
+  - "Change the numbers to -1.5, 4, and -3."
+  - "Two negatives in the chain cancel out before rounding."
+  - "It should look like: print(round(-1.5 * 4 * -3))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 36
+main_path: false

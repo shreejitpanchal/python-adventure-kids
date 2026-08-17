@@ -1,0 +1,46 @@
+id: lesson_699
+title: "Loops: Level 40 🔁"
+level: 699
+objective: "Capstone: combine continue, a filter with 'or', an accumulator, and break in one program."
+explanation: |
+  This final loops challenge combines everything from this whole extended track: continue to skip a whole group of numbers, an if with or to filter which ones count, a running total, and break to stop early once the total crosses a threshold.
+
+  Every number from 1 to 99 gets checked. Multiples of 7 are skipped entirely with continue. Of what's left, only multiples of 3 or 5 get added into total -- and the moment total passes the threshold, break stops everything.
+example_code: |
+  total = 0
+  for i in range(1, 100):
+      if i % 7 == 0:
+          continue
+      if i % 3 == 0 or i % 5 == 0:
+          total += i
+      if total > 100:
+          break
+  print(total)
+  print(i)
+starter_code: |
+  total = 0
+  for i in range(1, 100):
+      if i % 7 == 0:
+          continue
+      if i % 3 == 0 or i % 5 == 0:
+          total += i
+      if total > 100:
+          break
+  print(total)
+  print(i)
+challenge: |
+  🎯 Challenge: Can you change the threshold to 200 instead of 100, so more numbers get added before it stops?
+expected_output: |
+  204
+  30
+hints:
+  - "Change if total > 100: to if total > 200:."
+  - "Multiples of 7 (7, 14, 21, ...) are always skipped by continue, no matter what the threshold is."
+  - "Everything else about the loop stays exactly the same -- only the stopping threshold changes."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 40
+main_path: false
+concept_tags: [loops, for-loops, while-loops, conditionals, iteration]

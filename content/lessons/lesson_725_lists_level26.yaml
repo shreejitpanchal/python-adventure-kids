@@ -1,0 +1,27 @@
+id: lesson_725
+title: "Lists: Level 26 🎒"
+level: 725
+objective: "Slice a list with a step to grab every other item."
+explanation: |
+  A slice can take a third number too, just like range() can: list[start:stop:step]. numbers[::2] means "start at the beginning, go to the end, but only take every 2nd item".
+
+  Leaving start and stop both empty just means "the whole list" -- only the step number changes which items get picked.
+example_code: |
+  numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  print(numbers[::2])
+starter_code: |
+  numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  print(numbers[::2])
+challenge: |
+  🎯 Challenge: Can you print every ODD-indexed number instead, using numbers[1::2]?
+expected_output: "[1, 3, 5, 7, 9]"
+hints:
+  - "Change numbers[::2] to numbers[1::2]."
+  - "Starting at position 1 instead of 0 shifts which items the every-other pattern lands on."
+  - "It should look like: print(numbers[1::2])"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 26
+main_path: false

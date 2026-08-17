@@ -1,0 +1,38 @@
+id: lesson_687
+title: "Loops: Level 28 🔁"
+level: 687
+objective: "Use a while loop where the step multiplies instead of adds."
+explanation: |
+  A while loop's update line doesn't have to add or subtract a fixed amount -- it can multiply instead, making the numbers grow much faster each trip around.
+
+  n = n * 2 doubles n every time, so the loop prints powers of 2 until n finally reaches the stopping point.
+example_code: |
+  n = 1
+  while n < 50:
+      print(n)
+      n = n * 2
+starter_code: |
+  n = 1
+  while n < 50:
+      print(n)
+      n = n * 2
+challenge: |
+  🎯 Challenge: Can you change the stopping point to 100 instead of 50, so one more power of 2 gets printed?
+expected_output: |
+  1
+  2
+  4
+  8
+  16
+  32
+  64
+hints:
+  - "Change n < 50 to n < 100."
+  - "The doubling itself (n = n * 2) doesn't need to change."
+  - "After 32, doubling gives 64 -- and 64 is still less than 100."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 28
+main_path: false

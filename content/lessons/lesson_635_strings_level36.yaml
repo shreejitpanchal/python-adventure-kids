@@ -1,0 +1,28 @@
+id: lesson_635
+title: "Strings: Level 36 🔤"
+level: 635
+objective: "Combine an f-string with .split() and len() to describe a sentence."
+explanation: |
+  You can put a whole expression — even one using .split() and len() together — right inside an f-string's curly braces.
+
+  f"That sentence has {len(sentence.split())} words" splits the sentence, counts the words, and drops the count straight into the message.
+example_code: |
+  sentence = "Python is fun"
+  print(f"That sentence has {len(sentence.split())} words")
+starter_code: |
+  sentence = "Python is fun"
+  print(f"That sentence has {len(sentence.split())} words")
+challenge: |
+  🎯 Challenge: Change sentence to "Python is super duper fun" and print the same kind of message.
+expected_output: "That sentence has 5 words"
+hints:
+  - "Change the sentence to \"Python is super duper fun\", keeping the quotes."
+  - "The f-string doesn't need to change — {len(sentence.split())} recalculates automatically."
+  - "It should look like: sentence = \"Python is super duper fun\", print(f\"That sentence has {len(sentence.split())} words\")"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 36
+main_path: false
+concept_tags: [strings, f-strings]

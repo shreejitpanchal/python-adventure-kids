@@ -1,0 +1,35 @@
+id: lesson_658
+title: "Ask a Question: Level 39 🙋"
+level: 658
+objective: "Split a typed full name apart and shout both pieces with .upper()."
+explanation: |
+  You can chain a method like .upper() onto a piece you grabbed from a split — same as you would with any other string.
+
+  first = parts[0] and last = parts[1] store the two name pieces. print(f"{first.upper()} {last.upper()}") shouts both of them.
+example_code: |
+  line = input("Type your first and last name separated by a space: ")
+  parts = line.split()
+  first = parts[0]
+  last = parts[1]
+  print(f"{first.upper()} {last.upper()}")
+starter_code: |
+  line = input("Type your first and last name separated by a space: ")
+  parts = line.split()
+  first = parts[0]
+  last = parts[1]
+  print(f"{first.upper()} {last.upper()}")
+challenge: |
+  🎯 Challenge: Type maya rivera (with a space between them) in the box below, then press RUN to see both names shouted!
+expected_output: "Type your first and last name separated by a space: MAYA RIVERA"
+input_prompt: "Type your first and last name separated by a space:"
+hints:
+  - "Type maya rivera in the answer box above the RUN button, with a space between the two names."
+  - "first.upper() and last.upper() both shout their piece of the name."
+  - "You don't need to change the code — just type maya rivera and press RUN!"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: input
+category_level: 39
+main_path: false
+concept_tags: [input, strings, f-strings]

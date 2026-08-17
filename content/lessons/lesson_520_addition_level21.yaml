@@ -1,0 +1,25 @@
+id: lesson_520
+title: "Addition: Level 21 ➕"
+level: 520
+objective: "Add a chain of numbers that mixes positive and negative amounts."
+explanation: |
+  A chain of + can mix positive and negative numbers -- some add to the total, some take away.
+
+  10 + -3 + 5 adds 10, then takes away 3, then adds 5 back.
+example_code: |
+  print(10 + -3 + 5)
+starter_code: |
+  print(10 + -3 + 5)
+challenge: |
+  🎯 Challenge: Can you make Python work out 20 + -8 + 6?
+expected_output: "18"
+hints:
+  - "Change the numbers to 20, -8, and 6."
+  - "Python adds left to right, so the negative number lowers the running total."
+  - "It should look like: print(20 + -8 + 6)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 21
+main_path: false

@@ -1,0 +1,25 @@
+id: lesson_509
+title: "Numbers: Level 30 🔢"
+level: 509
+objective: "Combine floor division, modulo, and a comparison all in one print."
+explanation: |
+  You've learned //, %, and comparisons separately -- now let's use all three together in one line.
+
+  print(23 // 5, 23 % 5, 23 // 5 == 4) shows the whole groups, the leftover, and whether the groups equal 4.
+example_code: |
+  print(23 // 5, 23 % 5, 23 // 5 == 4)
+starter_code: |
+  print(23 // 5, 23 % 5, 23 // 5 == 4)
+challenge: |
+  🎯 Challenge: For 34 shared into groups of 6, can you print the groups, the leftover, and whether the groups equal 5?
+expected_output: "5 4 True"
+hints:
+  - "Change every 23 to 34, every 5 to 6, and the compared number to 5."
+  - "There are three pieces separated by commas -- change all three."
+  - "It should look like: print(34 // 6, 34 % 6, 34 // 6 == 5)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 30
+main_path: false

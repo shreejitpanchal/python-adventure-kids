@@ -1,0 +1,39 @@
+id: lesson_702
+title: "Functions: Level 23 ⚙️"
+level: 702
+objective: "Return more than one value from a function as a tuple and unpack it."
+explanation: |
+  A function can return more than one value at once, separated by a comma -- Python bundles them into a tuple automatically. return parts[0], parts[1] hands back two values in one go.
+
+  first, last = split_name(...) unpacks both values straight into two separate variables in a single line.
+example_code: |
+  def split_name(full_name):
+      parts = full_name.split(" ")
+      return parts[0], parts[1]
+
+  first, last = split_name("Ada Lovelace")
+  print(first)
+  print(last)
+starter_code: |
+  def split_name(full_name):
+      parts = full_name.split(" ")
+      return parts[0], parts[1]
+
+  first, last = split_name("Ada Lovelace")
+  print(first)
+  print(last)
+challenge: |
+  🎯 Challenge: Can you call split_name with "Grace Hopper" instead, so it prints Grace then Hopper?
+expected_output: |
+  Grace
+  Hopper
+hints:
+  - "Change the text you pass into split_name(...)."
+  - ".split(\" \") breaks the full name into two pieces wherever there's a space."
+  - "It should look like: split_name(\"Grace Hopper\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 23
+main_path: false

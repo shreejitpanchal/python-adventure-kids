@@ -1,0 +1,22 @@
+id: lesson_593
+title: "Division: Level 34 ➗"
+level: 593
+objective: "Use max() to find the biggest of three division results."
+explanation: |
+  max() isn't limited to two numbers — it can compare three quotients at once and hand back the biggest.
+example_code: |
+  print(max(20 / 4, 18 / 3, 10 / 5))
+starter_code: |
+  print(max(20 / 4, 18 / 3, 10 / 5))
+challenge: |
+  🎯 Challenge: Which is biggest: 30 / 5, 42 / 6, or 16 / 4? Make Python find out.
+expected_output: "7.0"
+hints:
+  - "Change the three problems to 30 / 5, 42 / 6, and 16 / 4."
+  - "It should look like: print(max(30 / 5, 42 / 6, 16 / 4))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: division
+category_level: 34
+main_path: false

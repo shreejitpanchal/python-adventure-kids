@@ -1,0 +1,47 @@
+id: lesson_695
+title: "Loops: Level 36 🔁"
+level: 695
+objective: "Use an if/elif/else chain inside a loop to print different things for different numbers."
+explanation: |
+  A loop's if can grow into a whole elif chain, checking several different conditions in order and doing something different for each one -- instead of only two choices.
+
+  Every number checks i % 3 == 0 first; if that's not true, it checks i % 5 == 0 next; and if neither is true, it just prints the number itself.
+example_code: |
+  for i in range(1, 11):
+      if i % 3 == 0:
+          print("Fizz")
+      elif i % 5 == 0:
+          print("Buzz")
+      else:
+          print(i)
+starter_code: |
+  for i in range(1, 11):
+      if i % 3 == 0:
+          print("Fizz")
+      elif i % 5 == 0:
+          print("Buzz")
+      else:
+          print(i)
+challenge: |
+  🎯 Challenge: Can you make it print "Fizz" for multiples of 4 instead of multiples of 3?
+expected_output: |
+  1
+  2
+  3
+  Fizz
+  Buzz
+  6
+  7
+  Fizz
+  9
+  Buzz
+hints:
+  - "Change i % 3 == 0 to i % 4 == 0."
+  - "The elif and else branches don't need to change at all."
+  - "4 and 8 are the only multiples of 4 between 1 and 10, so those should print \"Fizz\"."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 36
+main_path: false

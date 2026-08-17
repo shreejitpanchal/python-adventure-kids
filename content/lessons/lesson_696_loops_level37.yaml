@@ -1,0 +1,56 @@
+id: lesson_696
+title: "Loops: Level 37 🔁"
+level: 696
+objective: "Add a third branch to an elif chain for numbers that match two conditions at once."
+explanation: |
+  Sometimes a number matches TWO conditions at the same time -- like being divisible by both 3 and 5. Checking that combined case FIRST, before the simpler ones, makes sure it gets caught before either elif below it fires.
+
+  This is the classic FizzBuzz pattern: check "both" first, then "just one", then "neither".
+example_code: |
+  for i in range(1, 16):
+      if i % 3 == 0 and i % 5 == 0:
+          print("FizzBuzz")
+      elif i % 3 == 0:
+          print("Fizz")
+      elif i % 5 == 0:
+          print("Buzz")
+      else:
+          print(i)
+starter_code: |
+  for i in range(1, 16):
+      if i % 3 == 0 and i % 5 == 0:
+          print("FizzBuzz")
+      elif i % 3 == 0:
+          print("Fizz")
+      elif i % 5 == 0:
+          print("Buzz")
+      else:
+          print(i)
+challenge: |
+  🎯 Challenge: Can you make it use 2 and 7 as the two special numbers instead of 3 and 5?
+expected_output: |
+  1
+  Fizz
+  3
+  Fizz
+  5
+  Fizz
+  Buzz
+  Fizz
+  9
+  Fizz
+  11
+  Fizz
+  13
+  FizzBuzz
+  15
+hints:
+  - "Change every 3 to 2 and every 5 to 7 (there are three spots that mention each number)."
+  - "A number divisible by both 2 and 7 is divisible by 14 -- only 14 fits that in this range."
+  - "The else branch prints the plain number, exactly like before."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 37
+main_path: false

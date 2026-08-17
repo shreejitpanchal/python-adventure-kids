@@ -1,0 +1,24 @@
+id: lesson_539
+title: "Addition: Level 40 ➕"
+level: 539
+objective: "Combine everything you've learned about addition into one final program."
+explanation: |
+  You've learned chained addition, f-strings, rounding, and comparisons. This final challenge mixes several of them together in one print.
+example_code: |
+  print(f"{round(2.5 + 3.5 + 1.0)}", 10 + 20 + 5 > 30)
+starter_code: |
+  print(f"{round(2.5 + 3.5 + 1.0)}", 10 + 20 + 5 > 30)
+challenge: |
+  🎯 Challenge: Can you show the rounded result of 4.25 + 1.75 + 2.0, and whether 12 + 9 + 6 is greater than 25 -- both together?
+expected_output: "8 True"
+hints:
+  - "Change the f-string's chain to 4.25 + 1.75 + 2.0, and the comparison to 12 + 9 + 6 > 25."
+  - "There are two pieces separated by a comma -- change both."
+  - "It should look like: print(f\"{round(4.25 + 1.75 + 2.0)}\", 12 + 9 + 6 > 25)"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 40
+main_path: false
+concept_tags: [numbers, expressions, f-strings, comparison]

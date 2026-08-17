@@ -1,0 +1,30 @@
+id: lesson_639
+title: "Strings: Level 40 🔤"
+level: 639
+objective: "Combine f-strings, .split(), len(), indexing, and .upper() into one message about a sentence."
+explanation: |
+  This capstone mixes everything you've learned about strings: breaking a sentence apart with .split(), counting the pieces with len(), grabbing one with indexing, shouting it with .upper(), and weaving it all into one f-string.
+
+  words = sentence.split() saves the list of words. Then the f-string uses len(words) for the count and words[0].upper() for the shouted first word — all in a single message.
+example_code: |
+  sentence = "a small quiet town"
+  words = sentence.split()
+  print(f"The sentence has {len(words)} words and the first word is {words[0].upper()}")
+starter_code: |
+  sentence = "a small quiet town"
+  words = sentence.split()
+  print(f"The sentence has {len(words)} words and the first word is {words[0].upper()}")
+challenge: |
+  🎯 Challenge: Change sentence to "the lost city of gold" and print the same kind of message for it.
+expected_output: "The sentence has 5 words and the first word is THE"
+hints:
+  - "Just change the sentence to \"the lost city of gold\" — the rest of the code already handles the rest."
+  - "words[0] grabs the first word from the split list, and .upper() shouts it."
+  - "It should look like: sentence = \"the lost city of gold\", words = sentence.split(), print(f\"The sentence has {len(words)} words and the first word is {words[0].upper()}\")"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 40
+main_path: false
+concept_tags: [strings, f-strings, indexing]

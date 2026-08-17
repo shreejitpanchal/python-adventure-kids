@@ -1,0 +1,41 @@
+id: lesson_678
+title: "Decisions: Level 39 🚦"
+level: 678
+objective: "Nest an in-list check inside an if, for a two-part access decision."
+explanation: |
+  Nesting works with any kind of condition inside — here, the inner check uses in with a list instead of a simple comparison.
+
+  Python only checks whether day is a weekend day once role == "admin" is confirmed.
+example_code: |
+  role = "admin"
+  day = "Monday"
+  if role == "admin":
+      if day in ["Saturday", "Sunday"]:
+          print("Admin weekend access.")
+      else:
+          print("Admin weekday access.")
+  else:
+      print("Access denied.")
+starter_code: |
+  role = "admin"
+  day = "Monday"
+  if role == "admin":
+      if day in ["Saturday", "Sunday"]:
+          print("Admin weekend access.")
+      else:
+          print("Admin weekday access.")
+  else:
+      print("Access denied.")
+challenge: |
+  🎯 Challenge: Change day so Python prints "Admin weekend access." instead.
+expected_output: "Admin weekend access."
+hints:
+  - "role is already \"admin\", so focus on the inner day check."
+  - "day needs to match one of the items in [\"Saturday\", \"Sunday\"]."
+  - "Try day = \"Saturday\"."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 39
+main_path: false

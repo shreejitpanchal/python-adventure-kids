@@ -1,0 +1,27 @@
+id: lesson_600
+title: "Variables: Level 21 📦"
+level: 600
+objective: "Use an f-string to weave a variable's value into a sentence."
+explanation: |
+  An f-string starts with f before the quote marks, and lets you drop a variable right into your text using curly braces.
+
+  f"Age: {age}" builds the text "Age: 9" by swapping {age} for whatever age is holding.
+example_code: |
+  age = 9
+  print(f"Age: {age}")
+starter_code: |
+  age = 9
+  print(f"Age: {age}")
+challenge: |
+  🎯 Challenge: Store 12 in a variable called weight, then print an f-string that says "Weight: 12".
+expected_output: "Weight: 12"
+hints:
+  - "Change age to weight = 12."
+  - "The f-string should say f\"Weight: {weight}\"."
+  - "It should look like: weight = 12, print(f\"Weight: {weight}\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: variables
+category_level: 21
+main_path: false

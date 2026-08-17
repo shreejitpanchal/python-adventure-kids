@@ -1,0 +1,25 @@
+id: lesson_516
+title: "Numbers: Level 37 🔢"
+level: 516
+objective: "Combine a power and a floor division in one expression."
+explanation: |
+  You can mix ** and // in the same line -- Python works out the power first, then floor-divides.
+
+  2 ** 6 // 10 first works out 2 ** 6 (which is 64), then floor-divides by 10: 6.
+example_code: |
+  print(2 ** 6 // 10)
+starter_code: |
+  print(2 ** 6 // 10)
+challenge: |
+  🎯 Challenge: Can you make Python work out 3 ** 4 // 7?
+expected_output: "11"
+hints:
+  - "Change 2 ** 6 to 3 ** 4, and 10 to 7."
+  - "Python works out the power first, then floor-divides."
+  - "It should look like: print(3 ** 4 // 7)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 37
+main_path: false

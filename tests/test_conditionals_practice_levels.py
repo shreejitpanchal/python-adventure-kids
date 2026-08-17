@@ -187,6 +187,181 @@ SOLUTIONS = {
         "else:\n"
         '    print("Small order. Total: " + str(total))'
     ),
+    # -- conditionals (category_level 21-40) --------------------------------
+    "lesson_660": (
+        'secret = "1234"\n'
+        'guess = "1234"\n'
+        "if guess != secret:\n"
+        '    print("Access denied.")\n'
+        "else:\n"
+        '    print("Access granted!")'
+    ),
+    "lesson_661": (
+        "age = 10\n"
+        'has_pass = "no"\n'
+        'is_vip = "yes"\n'
+        'if (age >= 13 and has_pass == "yes") or is_vip == "yes":\n'
+        '    print("Welcome to the concert!")\n'
+        "else:\n"
+        '    print("Sorry, you can\'t come in.")'
+    ),
+    "lesson_662": (
+        "age = 12\n"
+        "if 10 <= age <= 15:\n"
+        '    print("You are in middle school range!")\n'
+        "else:\n"
+        '    print("Outside that range.")'
+    ),
+    "lesson_663": (
+        "is_member = True\n"
+        "if is_member:\n"
+        '    print("Welcome back, member!")\n'
+        "else:\n"
+        '    print("Please sign up to continue.")'
+    ),
+    "lesson_664": (
+        'day = "Saturday"\n'
+        'if day in ["Saturday", "Sunday"]:\n'
+        "    print(\"It's the weekend!\")\n"
+        "else:\n"
+        "    print(\"It's a weekday.\")"
+    ),
+    "lesson_665": (
+        'has_ticket = "yes"\n'
+        "age = 8\n"
+        'if has_ticket == "yes":\n'
+        "    if age >= 13:\n"
+        '        print("Enjoy the PG-13 movie!")\n'
+        "    elif age >= 6:\n"
+        '        print("Enjoy the family movie!")\n'
+        "    else:\n"
+        '        print("This movie needs an adult with you.")\n'
+        "else:\n"
+        '    print("You need a ticket first!")'
+    ),
+    "lesson_666": (
+        'age_text = "12"\n'
+        "if age_text.isdigit():\n"
+        "    age = int(age_text)\n"
+        '    print("You are " + str(age) + " years old.")\n'
+        "else:\n"
+        '    print("That doesn\'t look like a number.")'
+    ),
+    "lesson_667": (
+        "temperature = 85\n"
+        'is_windy = "no"\n'
+        'if temperature >= 80 and is_windy == "no":\n'
+        '    print("Perfect beach day!")\n'
+        'elif temperature >= 80 and is_windy == "yes":\n'
+        '    print("Hot but windy - hold onto your hat!")\n'
+        'elif temperature < 80 and is_windy == "yes":\n'
+        '    print("Chilly and windy - wear a jacket!")\n'
+        "else:\n"
+        '    print("Mild weather today.")'
+    ),
+    "lesson_668": (
+        "score = 60\n"
+        'message = "Pass" if score >= 50 else "Fail"\n'
+        "print(message)"
+    ),
+    "lesson_669": (
+        "temperature = 70\n"
+        'print("Warm" if temperature >= 60 else "Cold")'
+    ),
+    "lesson_670": (
+        'word = "zebra"\n'
+        'if "z" not in word:\n'
+        '    print("No z here!")\n'
+        "else:\n"
+        '    print("Found a z!")'
+    ),
+    "lesson_671": (
+        'is_member = "yes"\n'
+        "points = 220\n"
+        'if is_member == "yes":\n'
+        "    if points >= 200:\n"
+        '        print("Gold tier!")\n'
+        "    elif points >= 100:\n"
+        '        print("Silver tier!")\n'
+        "    else:\n"
+        '        print("Bronze tier!")\n'
+        "else:\n"
+        '    print("Join to start earning points!")'
+    ),
+    "lesson_672": (
+        "grade = 7\n"
+        'has_permission_slip = "yes"\n'
+        'if (grade == 6 or grade == 7 or grade == 8) and has_permission_slip == "yes":\n'
+        '    print("You can join the field trip!")\n'
+        "else:\n"
+        '    print("Sorry, you can\'t join this trip.")'
+    ),
+    "lesson_673": (
+        'pet = "dog"\n'
+        'if pet == "dog":\n'
+        '    print("Woof!")\n'
+        'elif pet == "cat":\n'
+        '    print("Meow!")\n'
+        'elif pet == "hamster":\n'
+        '    print("Squeak!")\n'
+        "else:\n"
+        '    print("Interesting pet!")'
+    ),
+    "lesson_674": (
+        "age = 15\n"
+        "if 0 <= age <= 12:\n"
+        '    print("Kid")\n'
+        "elif 13 <= age <= 19:\n"
+        '    print("Teenager")\n'
+        "else:\n"
+        '    print("Adult")'
+    ),
+    "lesson_675": (
+        'fruit = "kiwi"\n'
+        'if fruit in ["apple", "banana", "cherry"]:\n'
+        '    print("Common fruit!")\n'
+        'elif fruit in ["kiwi", "mango", "dragonfruit"]:\n'
+        '    print("Exotic fruit!")\n'
+        "else:\n"
+        '    print("Never heard of that fruit!")'
+    ),
+    "lesson_676": (
+        "has_key = True\n"
+        "has_map = True\n"
+        "if has_key and has_map:\n"
+        '    print("You can enter the treasure room!")\n'
+        "else:\n"
+        "    print(\"You're missing something to get in.\")"
+    ),
+    "lesson_677": (
+        "age = 15\n"
+        "print(f\"You are a {'kid' if age < 13 else 'teen'}\")"
+    ),
+    "lesson_678": (
+        'role = "admin"\n'
+        'day = "Saturday"\n'
+        'if role == "admin":\n'
+        '    if day in ["Saturday", "Sunday"]:\n'
+        '        print("Admin weekend access.")\n'
+        "    else:\n"
+        '        print("Admin weekday access.")\n'
+        "else:\n"
+        '    print("Access denied.")'
+    ),
+    "lesson_679": (
+        'ticket_text = "15"\n'
+        'has_id = "yes"\n'
+        'if ticket_text.isdigit() and has_id == "yes":\n'
+        "    age = int(ticket_text)\n"
+        "    if age >= 18:\n"
+        '        print("Adult ticket: Full price.")\n'
+        "    elif age >= 13:\n"
+        '        print("Teen ticket: Half price.")\n'
+        "    else:\n"
+        '        print("Child ticket: Free!")\n'
+        "else:\n"
+        '    print("You need a valid ticket number and ID.")'
+    ),
 }
 
 
@@ -213,8 +388,8 @@ def test_bonus_level_is_marked_correctly(engine, lesson_id):
     assert lesson.badge is None
 
 
-def test_conditionals_category_has_a_full_1_to_20_level_progression(engine):
+def test_conditionals_category_has_a_full_1_to_40_level_progression(engine):
     lessons = engine.lessons_in_category("conditionals")
-    assert len(lessons) == 20
+    assert len(lessons) == 40
     levels = sorted(lesson.category_level for lesson in lessons)
-    assert levels == list(range(1, 21))
+    assert levels == list(range(1, 41))

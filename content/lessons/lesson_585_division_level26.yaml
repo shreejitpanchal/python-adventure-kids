@@ -1,0 +1,23 @@
+id: lesson_585
+title: "Division: Level 26 ➗"
+level: 585
+objective: "Use >= to check if a division result is at least a target number."
+explanation: |
+  >= means "greater than or equal to" — it's True if the quotient matches the target exactly, or beats it.
+example_code: |
+  print(20 / 4 >= 5)
+starter_code: |
+  print(20 / 4 >= 5)
+challenge: |
+  🎯 Challenge: Is 18 divided by 4 greater than or equal to 5? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 18 / 4 >= 5."
+  - ">= is True for a match or anything bigger."
+  - "It should look like: print(18 / 4 >= 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 26
+main_path: false

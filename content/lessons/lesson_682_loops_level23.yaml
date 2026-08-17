@@ -1,0 +1,42 @@
+id: lesson_682
+title: "Loops: Level 23 🔁"
+level: 682
+objective: "Use continue inside a while loop."
+explanation: |
+  continue works inside while loops too -- but you have to be careful where you put the counter update. Here n += 1 happens BEFORE the continue check, so the loop always keeps moving forward and can never get stuck.
+
+  When n == 5, continue skips the print but the loop still keeps going, counting all the way up to 8.
+example_code: |
+  n = 0
+  while n < 8:
+      n += 1
+      if n == 5:
+          continue
+      print(n)
+starter_code: |
+  n = 0
+  while n < 8:
+      n += 1
+      if n == 5:
+          continue
+      print(n)
+challenge: |
+  🎯 Challenge: Can you make it skip 3 instead of 5?
+expected_output: |
+  1
+  2
+  4
+  5
+  6
+  7
+  8
+hints:
+  - "Change if n == 5: to if n == 3:."
+  - "n += 1 must stay above the if, or the loop could get stuck repeating the same number forever."
+  - "It should look like: if n == 3: continue"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 23
+main_path: false

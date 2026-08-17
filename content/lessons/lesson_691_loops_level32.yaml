@@ -1,0 +1,34 @@
+id: lesson_691
+title: "Loops: Level 32 🔁"
+level: 691
+objective: "Filter pairs from a nested loop with an if condition."
+explanation: |
+  A nested loop can use an if to only print SOME of the pairs it visits, not all of them -- just like a single loop can filter numbers.
+
+  (i + j) % 2 == 0 only lets a pair through when i and j add up to an even number, skipping every pair whose sum is odd.
+example_code: |
+  for i in range(1, 4):
+      for j in range(1, 4):
+          if (i + j) % 2 == 0:
+              print(i, j)
+starter_code: |
+  for i in range(1, 4):
+      for j in range(1, 4):
+          if (i + j) % 2 == 0:
+              print(i, j)
+challenge: |
+  🎯 Challenge: Can you change the condition so it only prints pairs where i and j are EQUAL instead?
+expected_output: |
+  1 1
+  2 2
+  3 3
+hints:
+  - "Change (i + j) % 2 == 0 to i == j."
+  - "Equal pairs from 1 to 3 are (1, 1), (2, 2), and (3, 3)."
+  - "It should look like: if i == j: print(i, j)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 32
+main_path: false

@@ -1,0 +1,28 @@
+id: lesson_638
+title: "Strings: Level 39 🔤"
+level: 638
+objective: "Grab the first word of a sentence and shout it with .upper()."
+explanation: |
+  You can chain indexing and methods together too — grab a piece first, then transform it.
+
+  sentence.split()[0].upper() splits the sentence into words, grabs the first one with [0], then uppercases it.
+example_code: |
+  sentence = "hello there friend"
+  print(sentence.split()[0].upper())
+starter_code: |
+  sentence = "hello there friend"
+  print(sentence.split()[0].upper())
+challenge: |
+  🎯 Challenge: Change sentence to "welcome to the jungle" and print its first word, shouted.
+expected_output: "WELCOME"
+hints:
+  - "Change the sentence to \"welcome to the jungle\", keeping the quotes."
+  - "sentence.split()[0].upper() doesn't need to change — it always grabs and shouts the first word."
+  - "It should look like: sentence = \"welcome to the jungle\", print(sentence.split()[0].upper())"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: strings
+category_level: 39
+main_path: false
+concept_tags: [strings, indexing]

@@ -1,0 +1,23 @@
+id: lesson_548
+title: "Subtraction: Level 29 ➖"
+level: 548
+objective: "Subtract a longer chain of five decimals, including subtracting negatives."
+explanation: |
+  The longer the chain, the more the negative numbers can flip into adding back to the total.
+example_code: |
+  print(20.5 - 2.5 - -3.0 - 1.5 - -0.5)
+starter_code: |
+  print(20.5 - 2.5 - -3.0 - 1.5 - -0.5)
+challenge: |
+  🎯 Challenge: Can you make Python work out 25.25 - 4.25 - -2.5 - 3.0 - -1.0?
+expected_output: "21.5"
+hints:
+  - "Change all five numbers."
+  - "Python works left to right, one piece at a time."
+  - "It should look like: print(25.25 - 4.25 - -2.5 - 3.0 - -1.0)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 29
+main_path: false

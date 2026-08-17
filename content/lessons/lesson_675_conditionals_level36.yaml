@@ -1,0 +1,37 @@
+id: lesson_675
+title: "Decisions: Level 36 🚦"
+level: 675
+objective: "Combine in with a list and an elif chain to sort a value into categories."
+explanation: |
+  Checking membership in a list works great inside an elif chain too — each branch can check a different list.
+
+  fruit in ["apple", "banana", "cherry"] checks the common-fruit list first; if that fails, the next branch checks a list of exotic fruits instead.
+example_code: |
+  fruit = "watermelon"
+  if fruit in ["apple", "banana", "cherry"]:
+      print("Common fruit!")
+  elif fruit in ["kiwi", "mango", "dragonfruit"]:
+      print("Exotic fruit!")
+  else:
+      print("Never heard of that fruit!")
+starter_code: |
+  fruit = "watermelon"
+  if fruit in ["apple", "banana", "cherry"]:
+      print("Common fruit!")
+  elif fruit in ["kiwi", "mango", "dragonfruit"]:
+      print("Exotic fruit!")
+  else:
+      print("Never heard of that fruit!")
+challenge: |
+  🎯 Challenge: Change fruit so Python prints "Exotic fruit!" instead.
+expected_output: "Exotic fruit!"
+hints:
+  - "fruit needs to match one of the items in the second list: kiwi, mango, or dragonfruit."
+  - "Python checks the first list, and only checks the second list if the first one fails."
+  - "Try fruit = \"kiwi\"."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 36
+main_path: false

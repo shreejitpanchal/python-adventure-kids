@@ -1,0 +1,45 @@
+id: lesson_665
+title: "Decisions: Level 26 🚦"
+level: 665
+objective: "Nest an elif chain inside an outer if, for a three-tier decision."
+explanation: |
+  You've nested a simple if/else before. This time, the inner check is a whole elif chain with three outcomes of its own.
+
+  Python only looks at the inner if/elif/else at all once the outer has_ticket check passes.
+example_code: |
+  has_ticket = "yes"
+  age = 20
+  if has_ticket == "yes":
+      if age >= 13:
+          print("Enjoy the PG-13 movie!")
+      elif age >= 6:
+          print("Enjoy the family movie!")
+      else:
+          print("This movie needs an adult with you.")
+  else:
+      print("You need a ticket first!")
+starter_code: |
+  has_ticket = "yes"
+  age = 20
+  if has_ticket == "yes":
+      if age >= 13:
+          print("Enjoy the PG-13 movie!")
+      elif age >= 6:
+          print("Enjoy the family movie!")
+      else:
+          print("This movie needs an adult with you.")
+  else:
+      print("You need a ticket first!")
+challenge: |
+  🎯 Challenge: Change age so Python prints "Enjoy the family movie!" instead.
+expected_output: "Enjoy the family movie!"
+hints:
+  - "has_ticket is already \"yes\", so look at the inner elif chain."
+  - "The family movie branch needs age to be 6 or more, but less than 13."
+  - "Try age = 8."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 26
+main_path: false

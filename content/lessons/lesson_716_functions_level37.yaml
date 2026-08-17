@@ -1,0 +1,35 @@
+id: lesson_716
+title: "Functions: Level 37 ⚙️"
+level: 716
+objective: "Write a recursive function with two parameters, where one shrinks toward a base case."
+explanation: |
+  Recursion isn't limited to a single parameter -- power(base, exponent) keeps base the same on every call, while exponent shrinks by 1 each time, until it hits the base case at 0.
+
+  Each call multiplies base by the result of the smaller call, building up the full power step by step.
+example_code: |
+  def power(base, exponent):
+      if exponent == 0:
+          return 1
+      return base * power(base, exponent - 1)
+
+  print(power(2, 5))
+starter_code: |
+  def power(base, exponent):
+      if exponent == 0:
+          return 1
+      return base * power(base, exponent - 1)
+
+  print(power(2, 5))
+challenge: |
+  🎯 Challenge: Can you call power with base 3 and exponent 4 instead, so it prints 81?
+expected_output: "81"
+hints:
+  - "Change both numbers you pass into power(...)."
+  - "power(3, 4) means 3 x 3 x 3 x 3."
+  - "It should look like: print(power(3, 4))"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 37
+main_path: false

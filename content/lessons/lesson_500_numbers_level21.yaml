@@ -1,0 +1,25 @@
+id: lesson_500
+title: "Numbers: Level 21 🔢"
+level: 500
+objective: "Use // to floor-divide two numbers and get a whole number answer."
+explanation: |
+  // is called floor division -- it divides two numbers and drops anything after the decimal point, giving you a whole number.
+
+  17 // 5 is 3, because 5 goes into 17 three whole times (with some left over that // ignores).
+example_code: |
+  print(17 // 5)
+starter_code: |
+  print(17 // 5)
+challenge: |
+  🎯 Challenge: You have 23 candies to pack into bags of 5. Can you make Python print how many full bags you can make?
+expected_output: "4"
+hints:
+  - "Change 17 // 5 to 23 // 5."
+  - "// divides and drops the leftover part -- no decimals in the answer."
+  - "It should look like: print(23 // 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 21
+main_path: false

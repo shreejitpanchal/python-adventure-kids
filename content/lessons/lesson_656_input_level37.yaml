@@ -1,0 +1,36 @@
+id: lesson_656
+title: "Ask a Question: Level 37 🙋"
+level: 656
+objective: "Split three typed numbers apart on one line and add them all together."
+explanation: |
+  The split trick works for more than two pieces — as many as you type in, separated by spaces.
+
+  parts = line.split() breaks the line into three pieces this time. int(parts[0]), int(parts[1]), and int(parts[2]) convert each one before adding them all up.
+example_code: |
+  line = input("Type three numbers separated by spaces: ")
+  parts = line.split()
+  a = int(parts[0])
+  b = int(parts[1])
+  c = int(parts[2])
+  print(a + b + c)
+starter_code: |
+  line = input("Type three numbers separated by spaces: ")
+  parts = line.split()
+  a = int(parts[0])
+  b = int(parts[1])
+  c = int(parts[2])
+  print(a + b + c)
+challenge: |
+  🎯 Challenge: Type 2 5 9 (separated by spaces) in the box below, then press RUN to add all three!
+expected_output: "Type three numbers separated by spaces: 16"
+input_prompt: "Type three numbers separated by spaces:"
+hints:
+  - "Type 2 5 9 in the answer box above the RUN button, with spaces between each number."
+  - "line.split() breaks your typed text into three pieces this time, one for each number."
+  - "You don't need to change the code — just type 2 5 9 and press RUN!"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: input
+category_level: 37
+main_path: false

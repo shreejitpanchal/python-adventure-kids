@@ -1,0 +1,37 @@
+id: lesson_729
+title: "Lists: Level 30 🎒"
+level: 729
+objective: "Nest a loop inside a loop to visit every single value inside a nested list."
+explanation: |
+  To reach every individual number inside a nested list (not just whole rows), you nest a second loop inside the first: the outer loop picks a row, and the inner loop walks through every value in that row.
+
+  Each value gets its own print, so a 2x2 nested list produces 4 separate lines of output.
+example_code: |
+  grid = [[1, 2], [3, 4]]
+  for row in grid:
+      for value in row:
+          print(value)
+starter_code: |
+  grid = [[1, 2], [3, 4]]
+  for row in grid:
+      for value in row:
+          print(value)
+challenge: |
+  🎯 Challenge: Can you change grid to [[5, 6, 7], [8, 9, 10]] and print every value?
+expected_output: |
+  5
+  6
+  7
+  8
+  9
+  10
+hints:
+  - "Change grid = [...] to the new nested list."
+  - "The nested loop stays exactly the same -- it works for rows of any length."
+  - "It should print six lines: 5, 6, 7, 8, 9, then 10."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 30
+main_path: false

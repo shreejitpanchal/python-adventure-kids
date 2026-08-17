@@ -1,0 +1,25 @@
+id: lesson_502
+title: "Numbers: Level 23 🔢"
+level: 502
+objective: "Print a floor-division result and a modulo result together."
+explanation: |
+  You can print // and % side by side to see both the whole groups and the leftovers in one line.
+
+  print(20 // 3, 20 % 3) shows 6 whole groups with 2 left over.
+example_code: |
+  print(20 // 3, 20 % 3)
+starter_code: |
+  print(20 // 3, 20 % 3)
+challenge: |
+  🎯 Challenge: You have 29 stickers to share into groups of 4. Can you print how many full groups, and how many are left over?
+expected_output: "7 1"
+hints:
+  - "Change both numbers to 29 and 4."
+  - "// finds the groups, % finds the leftover."
+  - "It should look like: print(29 // 4, 29 % 4)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 23
+main_path: false

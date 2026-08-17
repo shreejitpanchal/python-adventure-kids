@@ -1,0 +1,33 @@
+id: lesson_688
+title: "Loops: Level 29 🔁"
+level: 688
+objective: "Loop backwards through a string's indexes to print it in reverse."
+explanation: |
+  range() can count backwards through a string's positions too. range(len(word) - 1, -1, -1) starts at the LAST valid index and counts down to 0, one at a time.
+
+  Using word[i] inside that loop grabs each letter starting from the end, printing the word back to front.
+example_code: |
+  word = "python"
+  for i in range(len(word) - 1, -1, -1):
+      print(word[i])
+starter_code: |
+  word = "python"
+  for i in range(len(word) - 1, -1, -1):
+      print(word[i])
+challenge: |
+  🎯 Challenge: Can you make it print the letters of "code" backwards instead?
+expected_output: |
+  e
+  d
+  o
+  c
+hints:
+  - "Change word = \"python\" to word = \"code\"."
+  - "The rest of the loop already works for any word -- it just walks the indexes backwards."
+  - "\"code\" backwards should print e, d, o, c -- one letter per line."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 29
+main_path: false

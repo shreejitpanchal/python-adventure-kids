@@ -1,0 +1,24 @@
+id: lesson_599
+title: "Division: Level 40 ➗"
+level: 599
+objective: "Combine rounding, order of operations, floor division, and a comparison in one program — the ultimate division challenge."
+explanation: |
+  This final challenge mixes almost everything you've learned about division: rounding to a set number of digits, floor division on a sum, and comparing two order-of-operations expressions — all in one print.
+example_code: |
+  print(round(22 / 7, 1), (20 + 10) // 4, 15 / 4 > 20 / 5)
+starter_code: |
+  print(round(22 / 7, 1), (20 + 10) // 4, 15 / 4 > 20 / 5)
+challenge: |
+  🎯 Challenge: Print three things together: 17 divided by 5 rounded to 1 decimal place, how many whole times 5 fits into 24 + 6, and whether 20 / 8 is greater than 15 / 5.
+expected_output: "3.4 6 False"
+hints:
+  - "There are three parts, separated by commas — change the numbers in each one."
+  - "The first part rounds, the second uses //, the third compares two expressions."
+  - "It should look like: print(round(17 / 5, 1), (24 + 6) // 5, 20 / 8 > 15 / 5)"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: division
+category_level: 40
+main_path: false
+concept_tags: [numbers, expressions, comparison]

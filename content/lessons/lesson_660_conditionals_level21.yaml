@@ -1,0 +1,36 @@
+id: lesson_660
+title: "Decisions: Level 21 🚦"
+level: 660
+objective: "Use != to check that two values are NOT equal."
+explanation: |
+  != means "not equal to" — it's the opposite of ==. The condition is true only when the two sides are different.
+
+  if guess != secret: runs its block when guess does NOT match secret.
+example_code: |
+  secret = "1234"
+  guess = "0000"
+  if guess != secret:
+      print("Access denied.")
+  else:
+      print("Access granted!")
+starter_code: |
+  secret = "1234"
+  guess = "0000"
+  if guess != secret:
+      print("Access denied.")
+  else:
+      print("Access granted!")
+challenge: |
+  🎯 Challenge: Change guess so Python prints "Access granted!" instead.
+expected_output: "Access granted!"
+hints:
+  - "!= is true when the two sides are different — so guess needs to MATCH secret this time."
+  - "The else only runs when guess != secret is false, meaning they're equal."
+  - "Try guess = \"1234\"."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 21
+main_path: false
+concept_tags: [conditionals, comparison]

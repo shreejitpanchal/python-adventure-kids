@@ -1,0 +1,48 @@
+id: lesson_679
+title: "Decisions: Level 40 🚦"
+level: 679
+objective: "Combine .isdigit() validation, int() conversion, and, and a nested elif chain into one program."
+explanation: |
+  This capstone puts everything from this track together: checking that typed text is really a number with .isdigit(), combining that with and, converting it with int(), and sorting the result with a nested elif chain.
+
+  if ticket_text.isdigit() and has_id == "yes": guards the whole program. Only once that passes does age = int(ticket_text) run, followed by an elif chain that decides the ticket price.
+example_code: |
+  ticket_text = "200"
+  has_id = "yes"
+  if ticket_text.isdigit() and has_id == "yes":
+      age = int(ticket_text)
+      if age >= 18:
+          print("Adult ticket: Full price.")
+      elif age >= 13:
+          print("Teen ticket: Half price.")
+      else:
+          print("Child ticket: Free!")
+  else:
+      print("You need a valid ticket number and ID.")
+starter_code: |
+  ticket_text = "200"
+  has_id = "yes"
+  if ticket_text.isdigit() and has_id == "yes":
+      age = int(ticket_text)
+      if age >= 18:
+          print("Adult ticket: Full price.")
+      elif age >= 13:
+          print("Teen ticket: Half price.")
+      else:
+          print("Child ticket: Free!")
+  else:
+      print("You need a valid ticket number and ID.")
+challenge: |
+  🎯 Challenge: Change ticket_text so Python prints "Teen ticket: Half price." instead.
+expected_output: "Teen ticket: Half price."
+hints:
+  - "has_id is already \"yes\" and ticket_text is already all digits — only the age range needs to change."
+  - "The teen branch needs age to be 13 or more, but less than 18."
+  - "Try ticket_text = \"15\"."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 40
+main_path: false
+concept_tags: [conditionals, comparison, type-conversion]

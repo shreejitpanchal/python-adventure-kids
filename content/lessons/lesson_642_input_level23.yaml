@@ -1,0 +1,28 @@
+id: lesson_642
+title: "Ask a Question: Level 23 🙋"
+level: 642
+objective: "Put a calculation directly inside an f-string using a typed age."
+explanation: |
+  The curly braces {} in an f-string can hold a whole calculation, not just a plain variable.
+
+  age = int(input("How old are you? ")) stores your age. print(f"Next year you will be {age + 1}!") adds 1 right inside the braces.
+example_code: |
+  age = int(input("How old are you? "))
+  print(f"Next year you will be {age + 1}!")
+starter_code: |
+  age = int(input("How old are you? "))
+  print(f"Next year you will be {age + 1}!")
+challenge: |
+  🎯 Challenge: Type your age (like 9) in the box below, then press RUN to see next year's age!
+expected_output: "How old are you? Next year you will be 10!"
+input_prompt: "How old are you?"
+hints:
+  - "Type 9 in the answer box above the RUN button."
+  - "{age + 1} works out the math first, then drops the answer into the text."
+  - "You don't need to change the code — just type 9 and press RUN!"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: input
+category_level: 23
+main_path: false

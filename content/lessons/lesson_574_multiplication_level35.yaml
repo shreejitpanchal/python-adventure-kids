@@ -1,0 +1,22 @@
+id: lesson_574
+title: "Multiplication: Level 35 ✖️"
+level: 574
+objective: "Use min() to find the smallest of three multiplication results."
+explanation: |
+  Just like max(), min() can compare three products at once and hand back the smallest.
+example_code: |
+  print(min(4 * 4, 2 * 9, 6 * 6))
+starter_code: |
+  print(min(4 * 4, 2 * 9, 6 * 6))
+challenge: |
+  🎯 Challenge: Which is smallest: 5 * 5, 3 * 8, or 2 * 11? Make Python find out.
+expected_output: "22"
+hints:
+  - "Change the three problems to 5 * 5, 3 * 8, and 2 * 11."
+  - "It should look like: print(min(5 * 5, 3 * 8, 2 * 11))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 35
+main_path: false

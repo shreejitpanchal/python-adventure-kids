@@ -1,0 +1,23 @@
+id: lesson_565
+title: "Multiplication: Level 26 ✖️"
+level: 565
+objective: "Use >= to check if a multiplication result is at least a target number."
+explanation: |
+  >= means "greater than or equal to" — it's True if the product matches the target exactly, or beats it.
+example_code: |
+  print(5 * 5 >= 25)
+starter_code: |
+  print(5 * 5 >= 25)
+challenge: |
+  🎯 Challenge: Is 6 * 6 greater than or equal to 40? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 6 * 6 >= 40."
+  - ">= is True for a match or anything bigger."
+  - "It should look like: print(6 * 6 >= 40)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 26
+main_path: false

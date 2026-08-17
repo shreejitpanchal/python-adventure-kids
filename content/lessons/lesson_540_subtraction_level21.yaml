@@ -1,0 +1,25 @@
+id: lesson_540
+title: "Subtraction: Level 21 ➖"
+level: 540
+objective: "Subtract a chain of numbers that mixes positive and negative amounts."
+explanation: |
+  A chain of - can include subtracting a negative number, which flips into adding.
+
+  20 - 5 - -3 takes away 5 (getting 15), then subtracting -3 adds 3 back: 18.
+example_code: |
+  print(20 - 5 - -3)
+starter_code: |
+  print(20 - 5 - -3)
+challenge: |
+  🎯 Challenge: Can you make Python work out 30 - 8 - -4?
+expected_output: "26"
+hints:
+  - "Change the numbers to 30, 8, and -4."
+  - "Subtracting a negative number adds it back to the total."
+  - "It should look like: print(30 - 8 - -4)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 21
+main_path: false

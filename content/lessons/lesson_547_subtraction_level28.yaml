@@ -1,0 +1,25 @@
+id: lesson_547
+title: "Subtraction: Level 28 ➖"
+level: 547
+objective: "Subtract two numbers, then check if the result is evenly divisible using %."
+explanation: |
+  Combining - with % lets you check if a difference splits evenly into groups -- if the remainder is 0, it divides evenly.
+
+  (20 - 8) % 4 == 0 subtracts first (getting 12), then checks if 12 divides evenly by 4: True.
+example_code: |
+  print((20 - 8) % 4 == 0)
+starter_code: |
+  print((20 - 8) % 4 == 0)
+challenge: |
+  🎯 Challenge: Subtract 9 from 27, then check if the result divides evenly by 4.
+expected_output: "False"
+hints:
+  - "Change the numbers to 27, 9, and 4."
+  - "27 - 9 is 18 -- does 4 divide evenly into 18?"
+  - "It should look like: print((27 - 9) % 4 == 0)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 28
+main_path: false

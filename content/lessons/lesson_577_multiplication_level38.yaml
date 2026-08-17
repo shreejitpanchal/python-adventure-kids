@@ -1,0 +1,22 @@
+id: lesson_577
+title: "Multiplication: Level 38 ✖️"
+level: 577
+objective: "Combine int() conversion, order of operations, and == in one check."
+explanation: |
+  Everything you've learned comes together here: convert text to a number, do the math, then check it with ==.
+example_code: |
+  print(int("4") * 5 + 3 == 23)
+starter_code: |
+  print(int("4") * 5 + 3 == 23)
+challenge: |
+  🎯 Challenge: Convert the text "7" into a number, multiply it by 3, add 2, then check if the result equals 25.
+expected_output: "False"
+hints:
+  - "Change \"4\" to \"7\", 5 to 3, 3 to 2, and 23 to 25."
+  - "It should look like: print(int(\"7\") * 3 + 2 == 25)"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 38
+main_path: false

@@ -1,0 +1,22 @@
+id: lesson_582
+title: "Division: Level 23 ➗"
+level: 582
+objective: "Print /, //, and % together for the same pair of numbers."
+explanation: |
+  You've used /, //, and % separately — now see all three answers for the same division, side by side.
+example_code: |
+  print(17 / 5, 17 // 5, 17 % 5)
+starter_code: |
+  print(17 / 5, 17 // 5, 17 % 5)
+challenge: |
+  🎯 Challenge: Divide 23 by 5 all three ways — /, //, and % — in one print.
+expected_output: "4.6 4 3"
+hints:
+  - "Change every 17 and 5 to 23 and 5."
+  - "It should look like: print(23 / 5, 23 // 5, 23 % 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 23
+main_path: false

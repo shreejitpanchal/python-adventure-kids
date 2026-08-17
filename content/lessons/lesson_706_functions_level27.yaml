@@ -1,0 +1,39 @@
+id: lesson_706
+title: "Functions: Level 27 ⚙️"
+level: 706
+objective: "Use *args with a loop and if to find the biggest value among any number of arguments."
+explanation: |
+  *args works with any kind of loop logic, not just adding up. Here the loop compares every argument against the biggest one seen so far, updating result whenever it finds something bigger -- the same pattern as finding the biggest item in a list.
+
+  Because it's *args, this works whether you pass in 2 numbers or 20.
+example_code: |
+  def biggest(*args):
+      result = args[0]
+      for n in args:
+          if n > result:
+              result = n
+      return result
+
+  print(biggest(4, 9, 2, 7))
+starter_code: |
+  def biggest(*args):
+      result = args[0]
+      for n in args:
+          if n > result:
+              result = n
+      return result
+
+  print(biggest(4, 9, 2, 7))
+challenge: |
+  🎯 Challenge: Can you call biggest with 15, 3, 22, 8, and 11 instead, so it prints 22?
+expected_output: "22"
+hints:
+  - "Change the numbers you pass into biggest(...)."
+  - "args[0] starts as the first guess, then the loop updates it whenever it finds something bigger."
+  - "It should look like: print(biggest(15, 3, 22, 8, 11))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 27
+main_path: false

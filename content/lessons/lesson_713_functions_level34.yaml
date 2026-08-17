@@ -1,0 +1,41 @@
+id: lesson_713
+title: "Functions: Level 34 ⚙️"
+level: 713
+objective: "Combine recursion with a conditional to only add some numbers into the result."
+explanation: |
+  Recursion can carry a conditional inside it too. sum_evens(n) checks whether n itself is even before deciding whether to add it in, then always keeps recursing down to a smaller n either way.
+
+  Odd numbers get skipped over (their contribution is 0), while even numbers get added onto the total returned by the smaller call.
+example_code: |
+  def sum_evens(n):
+      if n <= 0:
+          return 0
+      if n % 2 == 0:
+          return n + sum_evens(n - 1)
+      else:
+          return sum_evens(n - 1)
+
+  print(sum_evens(6))
+starter_code: |
+  def sum_evens(n):
+      if n <= 0:
+          return 0
+      if n % 2 == 0:
+          return n + sum_evens(n - 1)
+      else:
+          return sum_evens(n - 1)
+
+  print(sum_evens(6))
+challenge: |
+  🎯 Challenge: Can you call sum_evens with 10 instead of 6, so it prints 30?
+expected_output: "30"
+hints:
+  - "Change the number you pass into sum_evens(...)."
+  - "The even numbers from 1 to 10 are 2, 4, 6, 8, and 10, which add up to 30."
+  - "It should look like: print(sum_evens(10))"
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: functions
+category_level: 34
+main_path: false

@@ -1,0 +1,25 @@
+id: lesson_517
+title: "Numbers: Level 38 🔢"
+level: 517
+objective: "Check whether a rounded decimal equals a target number."
+explanation: |
+  You can compare a round() result with == just like any other value.
+
+  round(3.14159, 2) == 3.14 works out the rounded value first, then checks if it matches.
+example_code: |
+  print(round(3.14159, 2) == 3.14)
+starter_code: |
+  print(round(3.14159, 2) == 3.14)
+challenge: |
+  🎯 Challenge: Can you check if round(9.8765, 2) equals 9.9?
+expected_output: "False"
+hints:
+  - "Change the rounded number to 9.8765, and compare it to 9.9."
+  - "round(9.8765, 2) doesn't come out to exactly 9.9 -- check carefully."
+  - "It should look like: print(round(9.8765, 2) == 9.9)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 38
+main_path: false

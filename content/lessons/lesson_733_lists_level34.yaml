@@ -1,0 +1,27 @@
+id: lesson_733
+title: "Lists: Level 34 🎒"
+level: 733
+objective: "Add a filtering if to a list comprehension."
+explanation: |
+  A list comprehension can filter which items make it into the new list too, by adding an if at the end: [n for n in range(1, 21) if n % 2 == 0] only keeps the numbers where the condition is true.
+
+  This is the one-line version of the loop-plus-if-plus-append pattern you've used before -- same result, more compact.
+example_code: |
+  evens = [n for n in range(1, 21) if n % 2 == 0]
+  print(evens)
+starter_code: |
+  evens = [n for n in range(1, 21) if n % 2 == 0]
+  print(evens)
+challenge: |
+  🎯 Challenge: Can you change it to keep the ODD numbers instead, using n % 2 != 0?
+expected_output: "[1, 3, 5, 7, 9, 11, 13, 15, 17, 19]"
+hints:
+  - "Change n % 2 == 0 to n % 2 != 0."
+  - "The range and the rest of the comprehension stay exactly the same."
+  - "It should print [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]."
+reward_stars: 6
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 34
+main_path: false

@@ -1,0 +1,39 @@
+id: lesson_690
+title: "Loops: Level 31 🔁"
+level: 690
+objective: "Nest a third loop inside two others to visit every combination of three small ranges."
+explanation: |
+  Loops can nest three deep, not just two! The outermost loop picks i, the middle loop picks j for every i, and the innermost loop picks k for every i-and-j pair -- visiting every possible combination.
+
+  With small ranges like these, the total number of trips stays tiny (2 x 2 x 2 = 8), so it finishes instantly.
+example_code: |
+  for i in range(1, 3):
+      for j in range(1, 3):
+          for k in range(1, 3):
+              print(i, j, k)
+starter_code: |
+  for i in range(1, 3):
+      for j in range(1, 3):
+          for k in range(1, 3):
+              print(i, j, k)
+challenge: |
+  🎯 Challenge: Can you make all three loops count from 0 to 1 instead of 1 to 2?
+expected_output: |
+  0 0 0
+  0 0 1
+  0 1 0
+  0 1 1
+  1 0 0
+  1 0 1
+  1 1 0
+  1 1 1
+hints:
+  - "Change all three range(1, 3) to range(0, 2)."
+  - "There are three separate range(1, 3) calls to change -- one for each loop."
+  - "The number of combinations stays the same (8 lines) -- only the numbers themselves change."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 31
+main_path: false

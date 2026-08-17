@@ -1,0 +1,23 @@
+id: lesson_581
+title: "Division: Level 22 ➗"
+level: 581
+objective: "Divide two numbers, then also find the remainder, printed side by side."
+explanation: |
+  / gives you the exact answer, while % gives you just what's left over. Printing both together shows how they relate.
+example_code: |
+  print(17 / 5, 17 % 5)
+starter_code: |
+  print(17 / 5, 17 % 5)
+challenge: |
+  🎯 Challenge: Divide 23 by 5, then print the exact answer and the remainder together.
+expected_output: "4.6 3"
+hints:
+  - "Change the numbers to 23 and 5, in both places."
+  - "The first part uses /, the second part uses %."
+  - "It should look like: print(23 / 5, 23 % 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 22
+main_path: false

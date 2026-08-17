@@ -1,0 +1,27 @@
+id: lesson_724
+title: "Lists: Level 25 🎒"
+level: 724
+objective: "Slice a list using a shorthand that leaves out the start or end number."
+explanation: |
+  A slice doesn't need both numbers written out -- leaving out the first number means "start from the very beginning", and leaving out the second means "go all the way to the end".
+
+  fruits[:3] means the same thing as fruits[0:3] -- it just grabs the first 3 items without you having to type the 0.
+example_code: |
+  fruits = ["apple", "banana", "orange", "grape", "kiwi"]
+  print(fruits[:3])
+starter_code: |
+  fruits = ["apple", "banana", "orange", "grape", "kiwi"]
+  print(fruits[:3])
+challenge: |
+  🎯 Challenge: Can you print everything from position 2 onward instead, using fruits[2:]?
+expected_output: "['orange', 'grape', 'kiwi']"
+hints:
+  - "Change fruits[:3] to fruits[2:]."
+  - "Leaving out the number after the colon means \"go all the way to the end\"."
+  - "It should look like: print(fruits[2:])"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 25
+main_path: false

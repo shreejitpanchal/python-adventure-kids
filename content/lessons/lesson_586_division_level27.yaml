@@ -1,0 +1,23 @@
+id: lesson_586
+title: "Division: Level 27 ➗"
+level: 586
+objective: "Use <= to check if a division result is at most a target number."
+explanation: |
+  <= means "less than or equal to" — the opposite check from >=.
+example_code: |
+  print(15 / 4 <= 5)
+starter_code: |
+  print(15 / 4 <= 5)
+challenge: |
+  🎯 Challenge: Is 27 divided by 4 less than or equal to 6? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 27 / 4 <= 6."
+  - "<= is True for a match or anything smaller."
+  - "It should look like: print(27 / 4 <= 6)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 27
+main_path: false

@@ -1,0 +1,29 @@
+id: lesson_720
+title: "Lists: Level 21 🎒"
+level: 720
+objective: "Sort a list in place with .sort()."
+explanation: |
+  .sort() rearranges a list's items into order and changes the ORIGINAL list itself, instead of handing back a brand new one like sorted(...) does.
+
+  numbers.sort() rearranges numbers from smallest to largest, right there in the same backpack.
+example_code: |
+  numbers = [9, 3, 7, 1]
+  numbers.sort()
+  print(numbers)
+starter_code: |
+  numbers = [9, 3, 7, 1]
+  numbers.sort()
+  print(numbers)
+challenge: |
+  🎯 Challenge: Can you sort this different backpack of numbers instead: [5, 2, 8, 1, 9]?
+expected_output: "[1, 2, 5, 8, 9]"
+hints:
+  - "Change numbers = [9, 3, 7, 1] to numbers = [5, 2, 8, 1, 9]."
+  - ".sort() doesn't need to change at all -- it works on any list."
+  - "It should look like: numbers = [5, 2, 8, 1, 9], then numbers.sort(), then print(numbers)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: lists
+category_level: 21
+main_path: false
