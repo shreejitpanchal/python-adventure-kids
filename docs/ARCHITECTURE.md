@@ -278,9 +278,9 @@ flowchart TB
     safety -->|SafetyViolation| blocked["Blocked message shown,\nnothing executes"]
     safety -->|passes| branch{"Which UI /\nlesson type?"}
 
-    branch -->|CTk, or Flet\nnot-yet-migrated| subprocess["app/sandbox/runner.py\n+ worker.py\n\nSeparate `python -I` process,\nrestricted builtins,\n5s hard timeout,\nno filesystem/network"]
-    branch -->|Flet (Android-safe,\nno subprocess spawn allowed)| inproc["app/sandbox/inprocess_runner.py\n+ watchdog.py\n\nRuns in-process; a cooperative\nAST-injected loop-body check\nstands in for the OS timeout"]
-    branch -->|graphical: true\n(Snake project)| graphical["app/games/graphical_runner.py\n\nRuns in the MAIN process against\na live game window; while-loops\nbanned outright (no timeout\nfallback exists here)"]
+    branch -->|CTk, or Flet\nnot-yet-migrated| subprocess["app/sandbox/runner.py\n+ worker.py\n\nSeparate python -I process,\nrestricted builtins,\n5s hard timeout,\nno filesystem/network"]
+    branch -->|Flet, Android-safe --\nno subprocess spawn allowed| inproc["app/sandbox/inprocess_runner.py\n+ watchdog.py\n\nRuns in-process; a cooperative\nAST-injected loop-body check\nstands in for the OS timeout"]
+    branch -->|graphical: true --\nSnake project| graphical["app/games/graphical_runner.py\n\nRuns in the MAIN process against\na live game window; while-loops\nbanned outright, no timeout\nfallback exists here"]
 
     subprocess --> result["ExecutionResult\n(stdout, stderr, success, blocked)"]
     inproc --> result
@@ -373,7 +373,7 @@ sequenceDiagram
 sequenceDiagram
     participant User
     participant Screen as SettingsScreen
-    participant State as AppState (Flet) / theme.py globals (CTk)
+    participant State as AppState / theme.py globals
     participant Cfg as app/config/settings.py
 
     User->>Screen: tap a theme / font-size / font-style option
@@ -395,7 +395,7 @@ sequenceDiagram
 
     Parent->>Area: open Parent Area
     Area->>Cfg: has_parent_pin()?
-    alt no PIN set yet (first-ever visit)
+    alt no PIN set yet -- first-ever visit
         Area-->>Parent: "Set a Parent PIN" (enter, then confirm)
         Parent->>Area: enter PIN twice (matching)
         Area->>Cfg: set_parent_pin(pin) (salted SHA-256)
