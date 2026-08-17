@@ -18,6 +18,7 @@ import flet as ft
 
 from app.engine.badges import BADGE_META, get_badge_meta
 from app.ui.app_state_flet import AppState
+from app.ui.theme_flet import scaled
 
 
 def _format_earned_date(iso_timestamp: str) -> str:
@@ -30,6 +31,7 @@ def _format_earned_date(iso_timestamp: str) -> str:
 
 def build_trophy_room_view(page: ft.Page, state: AppState) -> ft.View:
     theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
 
     header = ft.Row(
         [
@@ -37,7 +39,7 @@ def build_trophy_room_view(page: ft.Page, state: AppState) -> ft.View:
                 "🏠 Menu", on_click=lambda _e: page.go("/dashboard"), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
-            ft.Text("🏆 Trophy Room", size=26, weight=ft.FontWeight.BOLD, color=theme.primary),
+            ft.Text("🏆 Trophy Room", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary),
         ],
         spacing=16,
     )
@@ -51,12 +53,12 @@ def build_trophy_room_view(page: ft.Page, state: AppState) -> ft.View:
             all_badge_ids.append(badge_id)
 
     cards = [
-        _build_badge_card(page, theme, badge_id, earned_by_id.get(badge_id))
+        _build_badge_card(page, theme, badge_id, earned_by_id.get(badge_id), state.font_scale)
         for badge_id in all_badge_ids
     ]
 
     progress_text = ft.Text(
-        f"{len(earned_by_id)}/{len(all_badge_ids)} badges collected", size=14, color=theme.text_muted,
+        f"{len(earned_by_id)}/{len(all_badge_ids)} badges collected", size=fs(14), color=theme.text_muted,
     )
 
     return ft.View(
@@ -72,16 +74,17 @@ def build_trophy_room_view(page: ft.Page, state: AppState) -> ft.View:
     )
 
 
-def _build_badge_card(page: ft.Page, theme, badge_id: str, earned_at: str | None) -> ft.Control:
+def _build_badge_card(page: ft.Page, theme, badge_id: str, earned_at: str | None, scale: float) -> ft.Control:
+    fs = lambda base: scaled(base, scale)  # noqa: E731
     meta = get_badge_meta(badge_id)
     is_earned = earned_at is not None
 
-    icon_text = ft.Text(meta.icon if is_earned else "🔒", size=40)
+    icon_text = ft.Text(meta.icon if is_earned else "🔒", size=fs(40))
     title_text = ft.Text(
-        meta.title if is_earned else "???", size=14, weight=ft.FontWeight.BOLD,
+        meta.title if is_earned else "???", size=fs(14), weight=ft.FontWeight.BOLD,
         color=theme.text if is_earned else theme.text_muted, text_align=ft.TextAlign.CENTER,
     )
-    detail_text = ft.Text("", size=11, color=theme.text_muted, text_align=ft.TextAlign.CENTER, visible=False)
+    detail_text = ft.Text("", size=fs(11), color=theme.text_muted, text_align=ft.TextAlign.CENTER, visible=False)
 
     card = ft.Container(
         content=ft.Column(

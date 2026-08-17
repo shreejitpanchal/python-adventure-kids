@@ -13,6 +13,7 @@ import flet as ft
 
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color
+from app.ui.theme_flet import scaled
 
 _OPTION_COUNT = 4
 _RESULTS_CARD_COLOR = "#FFF3D0"
@@ -28,6 +29,7 @@ class _QuizController:
         self.page = page
         self.state = state
         self.theme = state.theme
+        self.scale = state.font_scale
 
         # The question count is picked on the setup card before a session
         # starts -- see _on_pick_count().
@@ -41,6 +43,10 @@ class _QuizController:
         # needed for this (see _show_results()'s "practice these next").
         self.missed_tags: set[str] = set()
 
+    def _fs(self, base_size: int) -> int:
+        """Scaled font size -- see AppState.font_scale / app/ui/theme_flet.py."""
+        return scaled(base_size, self.scale)
+
     # -- layout -----------------------------------------------------------------
     def build_view(self) -> ft.View:
         theme = self.theme
@@ -51,19 +57,19 @@ class _QuizController:
                     "🏠 Menu", on_click=self._on_menu, height=48,
                     style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
                 ),
-                ft.Text("❓ Quiz", size=26, weight=ft.FontWeight.BOLD, color=theme.primary),
+                ft.Text("❓ Quiz", size=self._fs(26), weight=ft.FontWeight.BOLD, color=theme.primary),
             ],
             spacing=16,
         )
 
         self.setup_card = self._build_setup_card()
 
-        self.progress_text = ft.Text("", size=14, color=theme.text_muted)
-        self.question_text = ft.Text("", size=18, weight=ft.FontWeight.BOLD, color=theme.text)
+        self.progress_text = ft.Text("", size=self._fs(14), color=theme.text_muted)
+        self.question_text = ft.Text("", size=self._fs(18), weight=ft.FontWeight.BOLD, color=theme.text)
         self.option_labels: list[ft.Text] = []
         self.option_buttons = [self._make_option_button(i) for i in range(_OPTION_COUNT)]
-        self.feedback_text = ft.Text("", size=14)
-        self.next_label = ft.Text("Next ➜", size=16, color="#FFFFFF")
+        self.feedback_text = ft.Text("", size=self._fs(14))
+        self.next_label = ft.Text("Next ➜", size=self._fs(16), color="#FFFFFF")
         self.next_button = ft.Button(
             content=self.next_label, on_click=self._on_next, visible=False, height=48,
             style=ft.ButtonStyle(bgcolor=theme.primary),
@@ -83,11 +89,11 @@ class _QuizController:
         # must be too -- theme.text is tuned for dark themes' own dark
         # background and turns near-invisible on this light card (#2547).
         self.results_text = ft.Text(
-            "", size=22, weight=ft.FontWeight.BOLD, color=contrasting_text_color(_RESULTS_CARD_COLOR),
+            "", size=self._fs(22), weight=ft.FontWeight.BOLD, color=contrasting_text_color(_RESULTS_CARD_COLOR),
         )
         results_card_text_color = contrasting_text_color(_RESULTS_CARD_COLOR)
         self.practice_heading = ft.Text(
-            "💡 Practice these next:", size=15, weight=ft.FontWeight.BOLD, color=results_card_text_color, visible=False,
+            "💡 Practice these next:", size=self._fs(15), weight=ft.FontWeight.BOLD, color=results_card_text_color, visible=False,
         )
         self.practice_row = ft.Row([], spacing=8, wrap=True, alignment=ft.MainAxisAlignment.CENTER)
         self.results_card = ft.Container(
@@ -134,14 +140,14 @@ class _QuizController:
             if n <= available
         ]
         return self._card("❓ How many questions?", [
-            ft.Text(f"{available} questions available -- pick how many to answer:", size=13, color=self.theme.text_muted),
+            ft.Text(f"{available} questions available -- pick how many to answer:", size=self._fs(13), color=self.theme.text_muted),
             ft.Row(buttons, wrap=True, spacing=10, run_spacing=10),
         ])
 
     def _card(self, title: str, children: list[ft.Control]) -> ft.Control:
         return ft.Container(
             content=ft.Column(
-                [ft.Text(title, size=18, weight=ft.FontWeight.BOLD, color=self.theme.text), *children],
+                [ft.Text(title, size=self._fs(18), weight=ft.FontWeight.BOLD, color=self.theme.text), *children],
                 spacing=10,
             ),
             bgcolor=self.theme.card, border_radius=18, padding=20,
@@ -153,7 +159,7 @@ class _QuizController:
         # at construction). Keep our own reference to that Text so later
         # renders can mutate `.value`/`.color` on it directly, the same
         # live-property pattern used for every other label on this screen.
-        label = ft.Text("", size=15)
+        label = ft.Text("", size=self._fs(15))
         self.option_labels.append(label)
         return ft.Button(
             content=label, on_click=lambda _e, i=index: self._on_select(i), height=56, width=560,

@@ -6,6 +6,8 @@ import re
 
 import customtkinter as ctk
 
+from app.ui import theme
+
 TOKEN_PATTERNS = [
     ("keyword", re.compile(r"\b(" + "|".join(keyword.kwlist) + r")\b")),
     ("builtin", re.compile(r"\b(print|len|range|int|float|str|bool|input|list|dict)\b")),
@@ -44,7 +46,7 @@ def make_read_only_code_block(master, code: str, height: int = 80) -> ctk.CTkTex
     box = ctk.CTkTextbox(
         master,
         height=height,
-        font=ctk.CTkFont(family="Consolas", size=15),
+        font=theme.font_mono(15),
         fg_color="#1E1E2E",
         text_color="#F1F1F1",
         wrap="none",
@@ -64,7 +66,7 @@ class CodeEditor(ctk.CTkFrame):
         self.textbox = ctk.CTkTextbox(
             self,
             height=height,
-            font=ctk.CTkFont(family="Consolas", size=16),
+            font=theme.font_mono(16),
             fg_color="#1E1E2E",
             text_color="#F1F1F1",
             wrap="none",

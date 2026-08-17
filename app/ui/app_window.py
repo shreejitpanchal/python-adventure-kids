@@ -21,6 +21,7 @@ class App(ctk.CTk):
 
         self.settings: Settings = load_settings()
         theme.apply_theme(self.settings.theme)
+        theme.apply_font(self.settings.font_family, self.settings.font_size)
 
         self.title("Python Adventure")
         self.geometry(f"{theme.WINDOW_WIDTH}x{theme.WINDOW_HEIGHT}")
@@ -91,6 +92,12 @@ class App(ctk.CTk):
         theme.apply_theme(theme_key)
         self.configure(fg_color=theme.COLOR_BG)
         self.settings.theme = theme_key
+        self.save_settings()
+
+    def apply_and_persist_font(self, family_key: str, size_key: str) -> None:
+        theme.apply_font(family_key, size_key)
+        self.settings.font_family = theme.CURRENT_FONT_FAMILY_KEY
+        self.settings.font_size = theme.CURRENT_FONT_SIZE_KEY
         self.save_settings()
 
     def save_settings(self) -> None:

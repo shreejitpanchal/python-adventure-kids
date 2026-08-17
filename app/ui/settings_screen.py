@@ -18,6 +18,7 @@ class SettingsFrame(ctk.CTkFrame):
         self.body.pack(fill="both", expand=True, padx=30, pady=(0, 20))
 
         self._build_sound_card()
+        self._build_font_card()
         self._build_theme_card()
         self._build_version_label()
 
@@ -46,6 +47,65 @@ class SettingsFrame(ctk.CTkFrame):
     def _on_toggle_sound(self) -> None:
         self.app.settings.sound_enabled = bool(self._sound_switch.get())
         self.app.save_settings()
+
+    _FONT_SIZE_LABELS = {"small": "Small", "medium": "Medium", "large": "Large", "extra_large": "Extra Large"}
+    _FONT_FAMILY_LABELS = {"default": "Playful", "classic": "Classic", "clean": "Clean"}
+
+    def _build_font_card(self) -> None:
+        card = ctk.CTkFrame(self.body, fg_color=theme.COLOR_CARD, corner_radius=20)
+        card.pack(fill="x", pady=(0, 20))
+
+        ctk.CTkLabel(
+            card, text="🔤 Text Size & Font", font=theme.font_heading(20),
+            text_color=theme.COLOR_TEXT,
+        ).pack(anchor="w", padx=24, pady=(20, 4))
+
+        ctk.CTkLabel(
+            card, text="Make text bigger or change the style — great for reading on a tablet.",
+            font=theme.font_body(13), text_color=theme.COLOR_TEXT_MUTED,
+        ).pack(anchor="w", padx=24, pady=(0, 16))
+
+        ctk.CTkLabel(
+            card, text="Size", font=theme.font_body(13), text_color=theme.COLOR_TEXT_MUTED,
+        ).pack(anchor="w", padx=24)
+
+        size_row = ctk.CTkFrame(card, fg_color="transparent")
+        size_row.pack(fill="x", padx=24, pady=(4, 16))
+        current_size = self.app.settings.font_size
+        for size_key, label in self._FONT_SIZE_LABELS.items():
+            is_selected = current_size == size_key
+            ctk.CTkButton(
+                size_row, text=label, font=theme.font_body(13), height=36,
+                fg_color=theme.COLOR_PRIMARY if is_selected else theme.COLOR_TEXT_MUTED,
+                hover_color=theme.COLOR_PRIMARY_HOVER,
+                state="disabled" if is_selected else "normal",
+                command=lambda key=size_key: self._on_select_font(size_key=key),
+            ).pack(side="left", padx=(0, 8))
+
+        ctk.CTkLabel(
+            card, text="Style", font=theme.font_body(13), text_color=theme.COLOR_TEXT_MUTED,
+        ).pack(anchor="w", padx=24)
+
+        family_row = ctk.CTkFrame(card, fg_color="transparent")
+        family_row.pack(fill="x", padx=24, pady=(4, 20))
+        current_family = self.app.settings.font_family
+        for family_key, label in self._FONT_FAMILY_LABELS.items():
+            is_selected = current_family == family_key
+            ctk.CTkButton(
+                family_row, text=label,
+                font=ctk.CTkFont(family=theme.FONT_FAMILY_PRESETS[family_key], size=14), height=36,
+                fg_color=theme.COLOR_PRIMARY if is_selected else theme.COLOR_TEXT_MUTED,
+                hover_color=theme.COLOR_PRIMARY_HOVER,
+                state="disabled" if is_selected else "normal",
+                command=lambda key=family_key: self._on_select_font(family_key=key),
+            ).pack(side="left", padx=(0, 8))
+
+    def _on_select_font(self, family_key: str | None = None, size_key: str | None = None) -> None:
+        self.app.apply_and_persist_font(
+            family_key or self.app.settings.font_family,
+            size_key or self.app.settings.font_size,
+        )
+        self.app.show_settings()
 
     def _build_header(self) -> None:
         header = ctk.CTkFrame(self, fg_color="transparent")
@@ -135,10 +195,12 @@ class SettingsFrame(ctk.CTkFrame):
         self.app.show_settings()
 
     def _build_version_label(self) -> None:
+        card = ctk.CTkFrame(self.body, fg_color=theme.COLOR_CARD, corner_radius=12)
+        card.pack(fill="x", pady=(0, 12))
         ctk.CTkLabel(
-            self.body, text=get_version_label(), font=theme.font_body(12),
-            text_color=theme.COLOR_TEXT_MUTED,
-        ).pack(anchor="w", pady=(0, 8))
+            card, text=get_version_label(), font=theme.font_heading(14),
+            text_color=theme.COLOR_TEXT,
+        ).pack(pady=10)
 
     def _on_menu(self) -> None:
         self.app.show_dashboard()

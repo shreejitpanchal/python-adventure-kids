@@ -28,8 +28,6 @@ def main(page: ft.Page) -> None:
     page.window.icon = "main-icon.png"
     page.padding = 0
     page.fonts = {"Baloo 2": "fonts/Baloo2-Regular.ttf"}
-    page.theme = ft.Theme(font_family="Baloo 2")
-    page.dark_theme = ft.Theme(font_family="Baloo 2")
 
     state = AppState()
     # state.sound_player stays None (its default -- see AppState.__init__)
@@ -76,6 +74,8 @@ def main(page: ft.Page) -> None:
 
         page.bgcolor = state.theme.bg
         page.theme_mode = ft.ThemeMode.DARK if state.theme.is_dark else ft.ThemeMode.LIGHT
+        page.theme = ft.Theme(font_family=state.font_family)
+        page.dark_theme = ft.Theme(font_family=state.font_family)
         page.update()
 
     def view_pop(_e: ft.ViewPopEvent) -> None:

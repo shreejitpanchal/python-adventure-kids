@@ -11,6 +11,14 @@ def _restore_default_theme():
     theme.apply_theme(theme.DEFAULT_THEME_KEY)
 
 
+@pytest.fixture(autouse=True)
+def _restore_default_font():
+    """apply_font() mutates module-level globals the same way apply_theme()
+    does -- same leak risk, same fix."""
+    yield
+    theme.apply_font(theme.DEFAULT_FONT_FAMILY_KEY, theme.DEFAULT_FONT_SIZE_KEY)
+
+
 def test_default_theme_is_midnight_dark():
     assert theme.CURRENT_THEME_KEY == theme.DEFAULT_THEME_KEY == "midnight_dark"
     assert theme.get_current_preset().key == "midnight_dark"
@@ -101,3 +109,68 @@ def test_locked_skins_unlock_in_increasing_order():
 
 def test_every_preset_key_set_matches_original_plus_locked():
     assert set(theme.THEME_PRESETS.keys()) == _ORIGINAL_SKIN_KEYS | _LOCKED_SKIN_KEYS
+
+
+# -- font family + size -------------------------------------------------------
+def test_default_font_is_medium_comic_sans():
+    assert theme.CURRENT_FONT_FAMILY_KEY == theme.DEFAULT_FONT_FAMILY_KEY == "default"
+    assert theme.CURRENT_FONT_SIZE_KEY == theme.DEFAULT_FONT_SIZE_KEY == "medium"
+    assert theme.FONT_FAMILY == "Comic Sans MS"
+    assert theme.FONT_SIZE_SCALE == 1.0
+
+
+def test_apply_font_updates_family_and_scale():
+    theme.apply_font("classic", "large")
+    assert theme.FONT_FAMILY == "Segoe UI"
+    assert theme.FONT_SIZE_SCALE == 1.2
+    assert theme.CURRENT_FONT_FAMILY_KEY == "classic"
+    assert theme.CURRENT_FONT_SIZE_KEY == "large"
+
+
+def test_apply_font_falls_back_to_defaults_for_unknown_keys():
+    theme.apply_font("not_a_real_family", "not_a_real_size")
+    assert theme.CURRENT_FONT_FAMILY_KEY == theme.DEFAULT_FONT_FAMILY_KEY
+    assert theme.CURRENT_FONT_SIZE_KEY == theme.DEFAULT_FONT_SIZE_KEY
+    assert theme.FONT_FAMILY == "Comic Sans MS"
+    assert theme.FONT_SIZE_SCALE == 1.0
+
+
+@pytest.fixture
+def tk_root():
+    """CTkFont requires a live default Tk root to exist -- the rest of this
+    test file never constructs one (only reads plain module globals), but
+    these font_*() tests build real CTkFont objects, matching the pattern
+    used elsewhere in this suite for widgets that need a real Tk root
+    (e.g. test_snake_lessons.py's game_canvas fixture)."""
+    import customtkinter as ctk
+
+    root = ctk.CTk()
+    root.withdraw()
+    yield root
+    root.destroy()
+
+
+def test_font_helpers_scale_their_size_argument(tk_root):
+    theme.apply_font("default", "large")  # 1.2x
+    assert theme.font_body(16).cget("size") == round(16 * 1.2)
+    assert theme.font_heading(20).cget("size") == round(20 * 1.2)
+    assert theme.font_title(34).cget("size") == round(34 * 1.2)
+    assert theme.font_button(20).cget("size") == round(20 * 1.2)
+
+
+def test_font_helpers_use_the_current_family_except_mono(tk_root):
+    theme.apply_font("classic", "medium")
+    assert theme.font_body(16).cget("family") == "Segoe UI"
+    assert theme.font_heading(16).cget("family") == "Segoe UI"
+
+
+def test_font_mono_always_stays_consolas_but_still_scales(tk_root):
+    theme.apply_font("classic", "extra_large")  # 1.4x, family should be ignored
+    mono = theme.font_mono(15)
+    assert mono.cget("family") == "Consolas"
+    assert mono.cget("size") == round(15 * 1.4)
+
+
+def test_font_size_scale_never_rounds_down_to_zero():
+    theme.apply_font("default", "small")
+    assert theme._scaled(1) >= 1

@@ -118,3 +118,42 @@ DEFAULT_THEME_KEY = "midnight_dark"
 
 def get_preset(theme_key: str) -> ThemePreset:
     return THEME_PRESETS.get(theme_key, THEME_PRESETS[DEFAULT_THEME_KEY])
+
+
+# Semantic keys (not real font names) so the same settings.json value means
+# something sensible on both UIs -- see app/config/settings.py's
+# Settings.font_family docstring, and app/ui/theme.py's FONT_FAMILY_PRESETS
+# for the CTk-side equivalent. "Roboto" needs no bundled .ttf: it's the
+# Material/Android default typeface, so Flutter resolves it out of the box
+# on every platform this app targets, unlike a Windows-only font name.
+FONT_FAMILY_PRESETS: dict[str, str] = {
+    "default": "Baloo 2",
+    "classic": "Roboto",
+}
+DEFAULT_FONT_FAMILY_KEY = "default"
+
+# A multiplier applied to every hardcoded text `size=` in the Flet screens
+# (there's no central font-size helper the way CTk's theme.py has font_*()
+# functions -- every ft.Text/ft.Button call passes its own literal size, so
+# each screen computes this once via AppState.font_scale and multiplies).
+FONT_SIZE_SCALES: dict[str, float] = {
+    "small": 0.85,
+    "medium": 1.0,
+    "large": 1.2,
+    "extra_large": 1.4,
+}
+DEFAULT_FONT_SIZE_KEY = "medium"
+
+
+def resolve_font_family(key: str) -> str:
+    return FONT_FAMILY_PRESETS.get(key, FONT_FAMILY_PRESETS[DEFAULT_FONT_FAMILY_KEY])
+
+
+def resolve_font_scale(key: str) -> float:
+    return FONT_SIZE_SCALES.get(key, FONT_SIZE_SCALES[DEFAULT_FONT_SIZE_KEY])
+
+
+def scaled(base_size: int, scale: float) -> int:
+    """Multiplies a literal text size by the current font-size scale --
+    `size=scaled(15, state.font_scale)` in place of a plain `size=15`."""
+    return max(1, round(base_size * scale))

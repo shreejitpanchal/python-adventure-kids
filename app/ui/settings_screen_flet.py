@@ -9,12 +9,13 @@ from __future__ import annotations
 import flet as ft
 
 from app.ui.app_state_flet import AppState
-from app.ui.theme_flet import THEME_PRESETS, ThemePreset
+from app.ui.theme_flet import FONT_FAMILY_PRESETS, THEME_PRESETS, ThemePreset, scaled
 from app.version import get_version_label
 
 
 def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
     theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
 
     header = ft.Row(
         [
@@ -22,7 +23,7 @@ def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
                 "🏠 Menu", on_click=lambda _e: page.go("/dashboard"), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
-            ft.Text("⚙️ Settings", size=26, weight=ft.FontWeight.BOLD, color=theme.primary),
+            ft.Text("⚙️ Settings", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary),
         ],
         spacing=16,
     )
@@ -32,16 +33,29 @@ def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
         bgcolor=theme.bg,
         scroll=ft.ScrollMode.AUTO,
         padding=24,
-        controls=[header, _build_sound_card(page, state), _build_theme_card(page, state), _build_version_row(state)],
+        controls=[
+            header, _build_sound_card(page, state), _build_font_card(page, state),
+            _build_theme_card(page, state), _build_version_row(state), ft.Container(height=16),
+        ],
     )
 
 
 def _build_version_row(state: AppState) -> ft.Control:
-    return ft.Text(get_version_label(), size=12, color=state.theme.text_muted)
+    theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
+    return ft.Container(
+        content=ft.Text(
+            get_version_label(), size=fs(14), weight=ft.FontWeight.BOLD,
+            color=theme.text, text_align=ft.TextAlign.CENTER,
+        ),
+        bgcolor=theme.card, border_radius=12, padding=12, margin=ft.margin.Margin.symmetric(vertical=8),
+        alignment=ft.alignment.Alignment.CENTER,
+    )
 
 
 def _build_sound_card(page: ft.Page, state: AppState) -> ft.Control:
     theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
 
     def on_toggle(e: ft.ControlEvent) -> None:
         state.settings.sound_enabled = e.control.value
@@ -55,7 +69,7 @@ def _build_sound_card(page: ft.Page, state: AppState) -> ft.Control:
     return ft.Container(
         content=ft.Row(
             [
-                ft.Text("🔊 Sound Effects", size=20, weight=ft.FontWeight.BOLD, color=theme.text),
+                ft.Text("🔊 Sound Effects", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
                 ft.Switch(value=state.settings.sound_enabled, on_change=on_toggle, active_color=theme.primary),
             ],
             spacing=16,
@@ -64,8 +78,76 @@ def _build_sound_card(page: ft.Page, state: AppState) -> ft.Control:
     )
 
 
+_FONT_SIZE_LABELS = {"small": "Small", "medium": "Medium", "large": "Large", "extra_large": "Extra Large"}
+_FONT_FAMILY_LABELS = {"default": "Playful", "classic": "Classic"}
+
+
+def _build_font_card(page: ft.Page, state: AppState) -> ft.Control:
+    theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
+
+    def select(family_key: str | None = None, size_key: str | None = None):
+        def handler(_e=None) -> None:
+            state.apply_font(
+                family_key or state.settings.font_family,
+                size_key or state.settings.font_size,
+            )
+            # Same rebuild-in-place pattern as the theme card's select() --
+            # see its comment for why page.go("/settings") wouldn't repaint.
+            page.views.clear()
+            page.views.append(build_settings_view(page, state))
+            page.theme = ft.Theme(font_family=state.font_family)
+            page.dark_theme = ft.Theme(font_family=state.font_family)
+            page.update()
+        return handler
+
+    current_size = state.settings.font_size
+    size_buttons = [
+        ft.Button(
+            label, on_click=select(size_key=key), height=40,
+            disabled=current_size == key,
+            style=ft.ButtonStyle(
+                bgcolor=theme.primary if current_size == key else theme.text_muted, color="#FFFFFF",
+            ),
+        )
+        for key, label in _FONT_SIZE_LABELS.items()
+    ]
+
+    current_family = state.settings.font_family
+    family_buttons = [
+        ft.Button(
+            label, on_click=select(family_key=key), height=40,
+            disabled=current_family == key,
+            style=ft.ButtonStyle(
+                bgcolor=theme.primary if current_family == key else theme.text_muted, color="#FFFFFF",
+                text_style=ft.TextStyle(font_family=FONT_FAMILY_PRESETS[key]),
+            ),
+        )
+        for key, label in _FONT_FAMILY_LABELS.items()
+    ]
+
+    return ft.Container(
+        content=ft.Column(
+            [
+                ft.Text("🔤 Text Size & Font", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
+                ft.Text(
+                    "Make text bigger or change the style — great for reading on a tablet.",
+                    size=fs(13), color=theme.text_muted,
+                ),
+                ft.Text("Size", size=fs(13), color=theme.text_muted),
+                ft.Row(size_buttons, wrap=True, spacing=8),
+                ft.Text("Style", size=fs(13), color=theme.text_muted),
+                ft.Row(family_buttons, wrap=True, spacing=8),
+            ],
+            spacing=8,
+        ),
+        bgcolor=theme.card, border_radius=20, padding=24,
+    )
+
+
 def _build_theme_card(page: ft.Page, state: AppState) -> ft.Control:
     theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     current_key = state.settings.theme
     player_level = state.progress.get_player_level().level
 
@@ -77,10 +159,10 @@ def _build_theme_card(page: ft.Page, state: AppState) -> ft.Control:
     return ft.Container(
         content=ft.Column(
             [
-                ft.Text("🎨 Choose a Theme", size=20, weight=ft.FontWeight.BOLD, color=theme.text),
+                ft.Text("🎨 Choose a Theme", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
                 ft.Text(
                     "Pick the colors you like best — you can change this anytime.",
-                    size=13, color=theme.text_muted,
+                    size=fs(13), color=theme.text_muted,
                 ),
                 ft.Row(options, wrap=True, spacing=16, run_spacing=16),
             ],
@@ -128,7 +210,8 @@ def _build_theme_option(
             [
                 ft.Text(
                     f"{preset.icon}  {preset.title}" if unlocked else f"🔒  {preset.title}",
-                    size=16, weight=ft.FontWeight.BOLD, color=preset.text if unlocked else preset.text_muted,
+                    size=scaled(16, state.font_scale), weight=ft.FontWeight.BOLD,
+                    color=preset.text if unlocked else preset.text_muted,
                 ),
                 swatches,
                 ft.Button(

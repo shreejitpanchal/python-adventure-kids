@@ -128,7 +128,32 @@ COLOR_TEXT_MUTED: str
 COLOR_CARD: str
 COLOR_STAR: str
 
-FONT_FAMILY = "Comic Sans MS"
+# Semantic keys (not real font names) so the same settings.json value means
+# something sensible on both UIs -- see app/config/settings.py's
+# Settings.font_family docstring. All three are real, commonly-preinstalled
+# Windows fonts (no bundled .ttf needed, unlike Flet's single bundled font).
+FONT_FAMILY_PRESETS: dict[str, str] = {
+    "default": "Comic Sans MS",
+    "classic": "Segoe UI",
+    "clean": "Arial",
+}
+DEFAULT_FONT_FAMILY_KEY = "default"
+
+# A multiplier applied to every font_*() call's size argument -- lets a
+# child (or a parent setting up a tablet) make ALL text bigger without every
+# screen needing its own font-size logic.
+FONT_SIZE_SCALES: dict[str, float] = {
+    "small": 0.85,
+    "medium": 1.0,
+    "large": 1.2,
+    "extra_large": 1.4,
+}
+DEFAULT_FONT_SIZE_KEY = "medium"
+
+FONT_FAMILY = FONT_FAMILY_PRESETS[DEFAULT_FONT_FAMILY_KEY]
+FONT_SIZE_SCALE = FONT_SIZE_SCALES[DEFAULT_FONT_SIZE_KEY]
+CURRENT_FONT_FAMILY_KEY = DEFAULT_FONT_FAMILY_KEY
+CURRENT_FONT_SIZE_KEY = DEFAULT_FONT_SIZE_KEY
 
 WINDOW_WIDTH = 1000
 WINDOW_HEIGHT = 700
@@ -136,6 +161,24 @@ WINDOW_HEIGHT = 700
 
 def apply_base_theme() -> None:
     ctk.set_default_color_theme("blue")
+
+
+def apply_font(family_key: str, size_key: str) -> None:
+    """Switches the active font family + size scale (falls back to defaults
+    for unrecognized keys, same resilience as apply_theme()). Like
+    apply_theme(), this doesn't repaint anything already on screen -- the
+    caller re-shows the current screen for that (see
+    App.apply_and_persist_font)."""
+    global FONT_FAMILY, FONT_SIZE_SCALE, CURRENT_FONT_FAMILY_KEY, CURRENT_FONT_SIZE_KEY
+
+    CURRENT_FONT_FAMILY_KEY = family_key if family_key in FONT_FAMILY_PRESETS else DEFAULT_FONT_FAMILY_KEY
+    CURRENT_FONT_SIZE_KEY = size_key if size_key in FONT_SIZE_SCALES else DEFAULT_FONT_SIZE_KEY
+    FONT_FAMILY = FONT_FAMILY_PRESETS[CURRENT_FONT_FAMILY_KEY]
+    FONT_SIZE_SCALE = FONT_SIZE_SCALES[CURRENT_FONT_SIZE_KEY]
+
+
+def _scaled(size: int) -> int:
+    return max(1, round(size * FONT_SIZE_SCALE))
 
 
 def get_current_preset() -> ThemePreset:
@@ -178,16 +221,24 @@ apply_theme(DEFAULT_THEME_KEY)
 
 
 def font_title(size: int = 34) -> ctk.CTkFont:
-    return ctk.CTkFont(family=FONT_FAMILY, size=size, weight="bold")
+    return ctk.CTkFont(family=FONT_FAMILY, size=_scaled(size), weight="bold")
 
 
 def font_heading(size: int = 22) -> ctk.CTkFont:
-    return ctk.CTkFont(family=FONT_FAMILY, size=size, weight="bold")
+    return ctk.CTkFont(family=FONT_FAMILY, size=_scaled(size), weight="bold")
 
 
 def font_body(size: int = 16) -> ctk.CTkFont:
-    return ctk.CTkFont(family=FONT_FAMILY, size=size)
+    return ctk.CTkFont(family=FONT_FAMILY, size=_scaled(size))
 
 
 def font_button(size: int = 20) -> ctk.CTkFont:
-    return ctk.CTkFont(family=FONT_FAMILY, size=size, weight="bold")
+    return ctk.CTkFont(family=FONT_FAMILY, size=_scaled(size), weight="bold")
+
+
+def font_mono(size: int = 15) -> ctk.CTkFont:
+    """Fixed-width font for code -- always Consolas regardless of the chosen
+    UI font family (code needs a monospace face to stay readable/aligned),
+    but still respects the size scale so the code editor and its output can
+    be made bigger on a tablet like everything else."""
+    return ctk.CTkFont(family="Consolas", size=_scaled(size))

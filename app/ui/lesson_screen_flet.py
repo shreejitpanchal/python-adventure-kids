@@ -32,9 +32,12 @@ from app.sandbox.errors import extract_error_line_number, translate_error
 from app.sandbox.inprocess_runner import ExecutionResult, RunHandle, run_code
 from app.ui.app_state_flet import AppState
 from app.ui.code_editor_flet import make_code_editor, make_read_only_code_block
+from app.ui.color_utils import contrasting_text_color
 from app.ui.components.codey_avatar_flet import CodeyState, build_codey_avatar
 from app.ui.components.macro_toolbar_flet import build_macro_toolbar
-from app.ui.components.victory_overlay_flet import build_victory_overlay
+from app.ui.theme_flet import scaled
+
+_REWARD_CARD_COLOR = "#FFF3D0"
 
 _KEY_NAME_MAP = {
     "Arrow Up": "Up", "Arrow Down": "Down", "Arrow Left": "Left", "Arrow Right": "Right",
@@ -63,14 +66,20 @@ class _LessonController:
         self.state = state
         self.lesson = lesson
         self.theme = state.theme
+        self.scale = state.font_scale
 
         self._running = False
         self._run_handle: RunHandle | None = None
         self._hint_index = 0
         self._lesson_passed = False
+        self._next_in_category_id: str | None = None
         self._current_input_value: str | None = None
         self.input_field: ft.TextField | None = None
         self.game_canvas: GameCanvas | None = None
+
+    def _fs(self, base_size: int) -> int:
+        """Scaled font size -- see AppState.font_scale / app/ui/theme_flet.py."""
+        return scaled(base_size, self.scale)
 
     # -- layout -----------------------------------------------------------------
     def build_view(self) -> ft.View:
@@ -83,27 +92,27 @@ class _LessonController:
                     "🏠 Menu", on_click=self._on_menu, height=48,
                     style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
                 ),
-                ft.Text(lesson.title, size=22, weight=ft.FontWeight.BOLD, color=theme.primary),
+                ft.Text(lesson.title, size=self._fs(22), weight=ft.FontWeight.BOLD, color=theme.primary),
             ],
             spacing=16,
         )
 
         explanation_card = self._card("📖 Let's Learn", [
-            ft.Text(lesson.explanation.strip(), size=15, color=theme.text),
+            ft.Text(lesson.explanation.strip(), size=self._fs(15), color=theme.text),
         ])
 
         example_card = self._card("👀 Example", [
-            make_read_only_code_block(lesson.example_code.strip()),
+            make_read_only_code_block(lesson.example_code.strip(), scale=self.scale),
         ])
 
         challenge_card = self._card("🎯 Try It", [
-            ft.Text(lesson.challenge.strip(), size=14, color=theme.text_muted),
+            ft.Text(lesson.challenge.strip(), size=self._fs(14), color=theme.text_muted),
         ])
 
         code_card = self._build_code_card()
         game_panel = self._build_game_panel() if lesson.graphical else None
         output_card = self._build_output_card()
-        self._build_victory_overlay()
+        self._build_reward_card()
 
         controls = [header, explanation_card, example_card, challenge_card, code_card]
         if game_panel is not None:
@@ -114,9 +123,8 @@ class _LessonController:
                 )
             )
         controls.append(output_card)
+        controls.append(self.reward_card)
 
-        # The victory overlay is a full-screen Stack layer, not another item
-        # in the scrolling column -- see app/ui/components/victory_overlay_flet.py.
         content = ft.Container(
             content=ft.Column(controls, scroll=ft.ScrollMode.AUTO, spacing=10, expand=True),
             padding=24, expand=True,
@@ -126,13 +134,13 @@ class _LessonController:
             route=f"/lesson/{lesson.id}",
             bgcolor=theme.bg,
             padding=0,
-            controls=[ft.Stack([content, self.reward_card], expand=True)],
+            controls=[content],
         )
 
     def _card(self, title: str, children: list[ft.Control]) -> ft.Control:
         return ft.Container(
             content=ft.Column(
-                [ft.Text(title, size=18, weight=ft.FontWeight.BOLD, color=self.theme.text), *children],
+                [ft.Text(title, size=self._fs(18), weight=ft.FontWeight.BOLD, color=self.theme.text), *children],
                 spacing=10,
             ),
             bgcolor=self.theme.card, border_radius=18, padding=20,
@@ -144,7 +152,7 @@ class _LessonController:
 
         self._codey = build_codey_avatar(theme)
 
-        self.editor = make_code_editor(lesson.starter_code.strip())
+        self.editor = make_code_editor(lesson.starter_code.strip(), scale=self.scale)
         self.macro_toolbar = build_macro_toolbar(self.editor, self.page, theme)
         children: list[ft.Control] = [self._codey.control, self.editor, self.macro_toolbar]
 
@@ -152,7 +160,7 @@ class _LessonController:
             self.input_field = ft.TextField(hint_text="Type your answer...", width=240)
             children.append(
                 ft.Row(
-                    [ft.Text(f"🧑 {lesson.input_prompt}", size=15, color=theme.text), self.input_field],
+                    [ft.Text(f"🧑 {lesson.input_prompt}", size=self._fs(15), color=theme.text), self.input_field],
                     spacing=10,
                 )
             )
@@ -177,19 +185,21 @@ class _LessonController:
             ft.Row([self.run_button, self.stop_button, reset_button, self.hint_button], spacing=10, wrap=True)
         )
 
-        self.hint_text = ft.Text("", size=14, color=theme.warning)
+        self.hint_text = ft.Text("", size=self._fs(14), color=theme.warning)
         children.append(self.hint_text)
 
         return self._card("📝 Your Code", children)
 
     def _build_output_card(self) -> ft.Control:
         theme = self.theme
-        self.output_text = ft.Text("Press RUN to see what happens!", size=15, color=theme.text_muted)
+        self.output_text = ft.Text("Press RUN to see what happens!", size=self._fs(15), color=theme.text_muted)
         self.details_button = ft.TextButton(
             "🔍 I'm curious (show technical details)", on_click=self._toggle_details,
             visible=False, style=ft.ButtonStyle(color=theme.text_muted),
         )
-        self.details_text = ft.Text("", size=12, font_family="Consolas", color="#F1F1F1", selectable=True)
+        self.details_text = ft.Text(
+            "", size=self._fs(12), font_family="Consolas", color="#F1F1F1", selectable=True,
+        )
         self.details_container = ft.Container(
             content=self.details_text, bgcolor="#1E1E2E", border_radius=8, padding=12, visible=False,
         )
@@ -197,7 +207,10 @@ class _LessonController:
         self.practice_quest_container = ft.Container(
             content=ft.Column(
                 [
-                    ft.Text("💡 Practice Quest: stuck? These might help!", size=14, weight=ft.FontWeight.BOLD, color=theme.text),
+                    ft.Text(
+                        "💡 Practice Quest: stuck? These might help!",
+                        size=self._fs(14), weight=ft.FontWeight.BOLD, color=theme.text,
+                    ),
                     self.practice_quest_row,
                     ft.TextButton("✕ Dismiss", on_click=self._dismiss_practice_quest, style=ft.ButtonStyle(color=theme.text_muted)),
                 ],
@@ -212,7 +225,7 @@ class _LessonController:
         )
 
     def _build_game_panel(self) -> ft.Control:
-        self._game_title_text = ft.Text(self.lesson.title, size=16, weight=ft.FontWeight.BOLD, color="#FFFFFF")
+        self._game_title_text = ft.Text(self.lesson.title, size=self._fs(16), weight=ft.FontWeight.BOLD, color="#FFFFFF")
         self._game_canvas_control = cv.Canvas(shapes=[])
         self._game_container = ft.Container(
             content=self._game_canvas_control, bgcolor="#2A2A2A", width=360, height=280, border_radius=8,
@@ -263,16 +276,41 @@ class _LessonController:
         if key is not None and self.game_canvas is not None:
             self.game_canvas.key_up(key)
 
-    def _build_victory_overlay(self) -> None:
-        # self.reward_card is kept as the name for the overlay's root Stack
-        # control (it's still just an ft.Control with a .visible flag) so
-        # the rest of this class -- and every existing test -- didn't need
-        # to change to know about the new presentation.
-        handle = build_victory_overlay(self.page, self.theme, self._on_continue)
-        self._victory_handle = handle
-        self.reward_card = handle.overlay
-        self.reward_text = handle.reward_text
-        self.badge_text = handle.badge_text
+    def _build_reward_card(self) -> None:
+        # Inline card at the bottom of the scrolling lesson content, not a
+        # full-screen popup -- the reward card's cream background is fixed
+        # regardless of the active theme (a deliberate always-celebratory
+        # look), so its text must be too, matching CTk's lesson_screen.py.
+        theme = self.theme
+        reward_text_color = contrasting_text_color(_REWARD_CARD_COLOR)
+        self.reward_text = ft.Text(
+            "", size=self._fs(20), weight=ft.FontWeight.BOLD, color=reward_text_color, text_align=ft.TextAlign.CENTER,
+        )
+        self.badge_text = ft.Text("", size=self._fs(15), color=reward_text_color, text_align=ft.TextAlign.CENTER)
+        self.next_lesson_button = ft.Button(
+            "NEXT LESSON ➜", on_click=self._on_next_lesson, height=52, visible=False,
+            style=ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF"),
+        )
+        onward_button = ft.Button(
+            "ONWARD ➜", on_click=self._on_continue, height=52,
+            style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+        )
+        self.reward_card = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Text("🏆", size=self._fs(40), text_align=ft.TextAlign.CENTER),
+                    self.reward_text,
+                    self.badge_text,
+                    ft.Row(
+                        [onward_button, self.next_lesson_button],
+                        alignment=ft.MainAxisAlignment.CENTER, spacing=12, wrap=True,
+                    ),
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=8,
+            ),
+            bgcolor=_REWARD_CARD_COLOR, border_radius=18, padding=24,
+            visible=False,
+        )
 
     # -- run flow -----------------------------------------------------------
     async def _on_run(self, e) -> None:
@@ -457,7 +495,7 @@ class _LessonController:
         self.output_text.value = "Press RUN to see what happens!"
         self.output_text.color = self.theme.text_muted
         self._codey.set_state(CodeyState.IDLE)
-        self._victory_handle.hide()
+        self.reward_card.visible = False
         self.page.update()
 
     def _on_hint(self, e) -> None:
@@ -552,12 +590,25 @@ class _LessonController:
             f"🎖️ New badge unlocked: {self.lesson.badge.replace('_', ' ').title()}!"
             if badge_newly_awarded else ""
         )
-        self._victory_handle.show()
+
+        next_in_category = self.state.lesson_engine.next_unlocked_in_category(
+            self.lesson.category, progress.get_completed_lesson_ids(),
+        )
+        self._next_in_category_id = next_in_category.id if next_in_category else None
+        self.next_lesson_button.visible = next_in_category is not None
+
+        self.reward_card.visible = True
 
     def _on_continue(self, e) -> None:
         if self.game_canvas is not None:
             self.game_canvas.cancel_pending()
         self.page.go("/dashboard")
+
+    def _on_next_lesson(self, e) -> None:
+        if self.game_canvas is not None:
+            self.game_canvas.cancel_pending()
+        if self._next_in_category_id:
+            self.page.go(f"/lesson/{self._next_in_category_id}")
 
     def _on_menu(self, e) -> None:
         if self._run_handle is not None:

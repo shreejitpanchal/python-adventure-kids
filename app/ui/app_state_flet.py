@@ -8,7 +8,9 @@ from app.config.settings import Settings, get_db_path, load_settings, save_setti
 from app.engine.lesson_engine import LessonEngine
 from app.engine.quiz_engine import QuizEngine
 from app.progress.store import ProgressStore
-from app.ui.theme_flet import ThemePreset, get_preset
+from app.ui.theme_flet import (
+    ThemePreset, get_preset, resolve_font_family, resolve_font_scale,
+)
 
 
 class AppState:
@@ -27,8 +29,21 @@ class AppState:
     def theme(self) -> ThemePreset:
         return get_preset(self.settings.theme)
 
+    @property
+    def font_family(self) -> str:
+        return resolve_font_family(self.settings.font_family)
+
+    @property
+    def font_scale(self) -> float:
+        return resolve_font_scale(self.settings.font_size)
+
     def apply_theme(self, theme_key: str) -> None:
         self.settings.theme = theme_key
+        self.save_settings()
+
+    def apply_font(self, family_key: str, size_key: str) -> None:
+        self.settings.font_family = family_key
+        self.settings.font_size = size_key
         self.save_settings()
 
     def save_settings(self) -> None:

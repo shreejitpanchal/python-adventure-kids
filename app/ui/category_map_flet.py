@@ -12,12 +12,14 @@ from app.engine.categories import get_category_meta
 from app.ui.adventure_map_layout import NODE_SIZE, PATH_WIDTH, total_path_height, zigzag_positions
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color
+from app.ui.theme_flet import scaled
 
 _CAPTION_WIDTH = 160.0
 
 
 def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
     theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     engine = state.lesson_engine
     completed_ids = set(state.progress.get_completed_lesson_ids())
     categories = engine.categories()
@@ -40,7 +42,7 @@ def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
     ]
 
     for category, position in zip(categories, positions):
-        stack_children.extend(_build_node(page, theme, category, position, engine, completed_ids))
+        stack_children.extend(_build_node(page, theme, category, position, engine, completed_ids, state.font_scale))
 
     header = ft.Row(
         [
@@ -48,7 +50,7 @@ def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
                 "🏠 Menu", on_click=lambda _e: page.go("/dashboard"), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
-            ft.Text("🗺️ Practice by Category", size=26, weight=ft.FontWeight.BOLD, color=theme.primary),
+            ft.Text("🗺️ Practice by Category", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary),
         ],
         spacing=16,
     )
@@ -66,7 +68,8 @@ def build_category_map_view(page: ft.Page, state: AppState) -> ft.View:
     )
 
 
-def _build_node(page, theme, category, position, engine, completed_ids) -> list[ft.Control]:
+def _build_node(page, theme, category, position, engine, completed_ids, scale: float) -> list[ft.Control]:
+    fs = lambda base: scaled(base, scale)  # noqa: E731
     meta = get_category_meta(category)
     lessons = engine.lessons_in_category(category)
     completed_count = sum(1 for lesson in lessons if lesson.id in completed_ids)
@@ -78,7 +81,7 @@ def _build_node(page, theme, category, position, engine, completed_ids) -> list[
         page.go(f"/categories/{c}")
 
     circle = ft.Container(
-        content=ft.Text(meta.icon, size=26, text_align=ft.TextAlign.CENTER),
+        content=ft.Text(meta.icon, size=fs(26), text_align=ft.TextAlign.CENTER),
         width=NODE_SIZE, height=NODE_SIZE, border_radius=NODE_SIZE / 2,
         bgcolor=meta.color, alignment=ft.alignment.Alignment.CENTER,
         left=position.x, top=position.y,
@@ -89,8 +92,8 @@ def _build_node(page, theme, category, position, engine, completed_ids) -> list[
     caption = ft.Container(
         content=ft.Column(
             [
-                ft.Text(meta.title, size=12, weight=ft.FontWeight.BOLD, color=theme.text, text_align=ft.TextAlign.CENTER),
-                ft.Text(status, size=11, color=theme.text_muted, text_align=ft.TextAlign.CENTER),
+                ft.Text(meta.title, size=fs(12), weight=ft.FontWeight.BOLD, color=theme.text, text_align=ft.TextAlign.CENTER),
+                ft.Text(status, size=fs(11), color=theme.text_muted, text_align=ft.TextAlign.CENTER),
             ],
             spacing=2, horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         ),
@@ -108,6 +111,7 @@ def _build_quiz_tile(page: ft.Page, state: AppState) -> ft.Control:
     and stays a full-width card above the winding map rather than a node
     on the path, since it isn't part of any lock/unlock sequence and is
     always available."""
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     meta = get_category_meta("quiz")
     best = state.progress.get_best_quiz_score()
     status = f"🏆 Best: {best[0]}/{best[1]}" if best else f"{len(state.quiz_engine)} questions · Not played yet"
@@ -116,11 +120,11 @@ def _build_quiz_tile(page: ft.Page, state: AppState) -> ft.Control:
     return ft.Container(
         content=ft.Row(
             [
-                ft.Text(meta.icon, size=28),
+                ft.Text(meta.icon, size=fs(28)),
                 ft.Column(
                     [
-                        ft.Text(meta.title, size=18, weight=ft.FontWeight.BOLD, color=text_color),
-                        ft.Text(status, size=13, color=text_color),
+                        ft.Text(meta.title, size=fs(18), weight=ft.FontWeight.BOLD, color=text_color),
+                        ft.Text(status, size=fs(13), color=text_color),
                     ],
                     spacing=4,
                 ),

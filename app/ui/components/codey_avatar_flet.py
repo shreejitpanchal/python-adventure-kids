@@ -11,6 +11,8 @@ from typing import Callable
 
 import flet as ft
 
+from app.ui.theme_flet import scaled
+
 
 class CodeyState:
     IDLE = "idle"
@@ -42,10 +44,11 @@ class CodeyHandle:
     set_state: Callable[[str], None]
 
 
-def build_codey_avatar(theme) -> CodeyHandle:
+def build_codey_avatar(theme, scale: float = 1.0) -> CodeyHandle:
+    fs = lambda base: scaled(base, scale)  # noqa: E731
     idle_face, idle_caption = _EXPRESSIONS[CodeyState.IDLE]
-    face_text = ft.Text(idle_face, size=28)
-    caption_text = ft.Text(idle_caption, size=12, color=theme.text_muted, italic=True)
+    face_text = ft.Text(idle_face, size=fs(28))
+    caption_text = ft.Text(idle_caption, size=fs(12), color=theme.text_muted, italic=True)
 
     face_container = ft.Container(
         content=face_text, bgcolor=theme.bg, border_radius=50, width=48, height=48,
@@ -57,7 +60,7 @@ def build_codey_avatar(theme) -> CodeyHandle:
             face_container,
             ft.Column(
                 [
-                    ft.Text("Codey", size=11, weight=ft.FontWeight.BOLD, color=theme.text_muted),
+                    ft.Text("Codey", size=fs(11), weight=ft.FontWeight.BOLD, color=theme.text_muted),
                     caption_text,
                 ],
                 spacing=0,

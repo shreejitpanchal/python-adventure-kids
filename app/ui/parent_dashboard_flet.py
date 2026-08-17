@@ -15,6 +15,7 @@ import flet as ft
 
 from app.engine.categories import get_category_meta
 from app.ui.app_state_flet import AppState
+from app.ui.theme_flet import scaled
 
 EVENT_ICONS = {
     "lesson_completed": "✅",
@@ -46,8 +47,13 @@ class _ParentController:
         self.page = page
         self.state = state
         self.theme = state.theme
+        self.scale = state.font_scale
         self.body = ft.Column(spacing=16)
         self.value_texts: dict[str, ft.Text] = {}
+
+    def _fs(self, base_size: int) -> int:
+        """Scaled font size -- see AppState.font_scale / app/ui/theme_flet.py."""
+        return scaled(base_size, self.scale)
 
     def build_view(self) -> ft.View:
         if self.state.settings.has_parent_pin():
@@ -82,7 +88,7 @@ class _ParentController:
             hint_text="••••", width=200, text_align=ft.TextAlign.CENTER,
             password=True, max_length=4, autofocus=True,
         )
-        self.pin_error_text = ft.Text("", size=13, color=theme.danger)
+        self.pin_error_text = ft.Text("", size=self._fs(13), color=theme.danger)
         self.pin_field.on_submit = self._submit_pin
 
         self._set([
@@ -91,8 +97,8 @@ class _ParentController:
                 ft.Container(
                     content=ft.Column(
                         [
-                            ft.Text("🔒 Parent Area", size=22, weight=ft.FontWeight.BOLD, color=theme.text),
-                            ft.Text("Enter the 4-digit PIN", size=14, color=theme.text_muted),
+                            ft.Text("🔒 Parent Area", size=self._fs(22), weight=ft.FontWeight.BOLD, color=theme.text),
+                            ft.Text("Enter the 4-digit PIN", size=self._fs(14), color=theme.text_muted),
                             self.pin_field,
                             self.pin_error_text,
                             ft.Button(
@@ -122,7 +128,7 @@ class _ParentController:
             hint_text="••••", width=200, text_align=ft.TextAlign.CENTER,
             password=True, max_length=4, autofocus=True,
         )
-        self.create_pin_error_text = ft.Text("", size=13, color=theme.danger)
+        self.create_pin_error_text = ft.Text("", size=self._fs(13), color=theme.danger)
         self._create_pin_first_entry: str | None = None
         self.create_pin_field.on_submit = self._submit_create_pin
 
@@ -132,10 +138,10 @@ class _ParentController:
                 ft.Container(
                     content=ft.Column(
                         [
-                            ft.Text("🔒 Set a Parent PIN", size=22, weight=ft.FontWeight.BOLD, color=theme.text),
+                            ft.Text("🔒 Set a Parent PIN", size=self._fs(22), weight=ft.FontWeight.BOLD, color=theme.text),
                             ft.Text(
                                 "This is your first time here — choose a 4-digit PIN to protect the Parent Area.",
-                                size=13, color=theme.text_muted, text_align=ft.TextAlign.CENTER,
+                                size=self._fs(13), color=theme.text_muted, text_align=ft.TextAlign.CENTER,
                             ),
                             self.create_pin_field,
                             self.create_pin_error_text,
@@ -199,10 +205,10 @@ class _ParentController:
         self.value_texts = {}
         summary_rows: list[ft.Control] = []
         for key, label, value in rows:
-            value_text = ft.Text(value, size=15, color=theme.text)
+            value_text = ft.Text(value, size=self._fs(15), color=theme.text)
             self.value_texts[key] = value_text
             summary_rows.append(
-                ft.Row([ft.Text(label, size=15, color=theme.text_muted, width=180), value_text])
+                ft.Row([ft.Text(label, size=self._fs(15), color=theme.text_muted, width=180), value_text])
             )
 
         summary_card = ft.Container(
@@ -220,16 +226,16 @@ class _ParentController:
             content=self.activity_column, bgcolor=theme.card, border_radius=16, padding=16, height=200,
         )
 
-        self.status_text = ft.Text("", size=13, color=theme.success)
+        self.status_text = ft.Text("", size=self._fs(13), color=theme.success)
 
         controls: list[ft.Control] = [
             self._menu_row(),
-            ft.Text("👋 Parent Area", size=22, weight=ft.FontWeight.BOLD, color=theme.text),
+            ft.Text("👋 Parent Area", size=self._fs(22), weight=ft.FontWeight.BOLD, color=theme.text),
             ft.Row([summary_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([rename_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([weekly_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([mastery_card], alignment=ft.MainAxisAlignment.CENTER),
-            ft.Text("Recent Activity", size=16, weight=ft.FontWeight.BOLD, color=theme.text),
+            ft.Text("Recent Activity", size=self._fs(16), weight=ft.FontWeight.BOLD, color=theme.text),
             activity_card,
         ]
 
@@ -248,12 +254,12 @@ class _ParentController:
         self.rename_field = ft.TextField(
             value=self.state.settings.child_name, width=220, text_align=ft.TextAlign.CENTER,
         )
-        self.rename_status_text = ft.Text("", size=12, color=theme.success)
+        self.rename_status_text = ft.Text("", size=self._fs(12), color=theme.success)
 
         return ft.Container(
             content=ft.Column(
                 [
-                    ft.Text("✏️ Child's Name", size=18, weight=ft.FontWeight.BOLD, color=theme.text),
+                    ft.Text("✏️ Child's Name", size=self._fs(18), weight=ft.FontWeight.BOLD, color=theme.text),
                     self.rename_field,
                     ft.Button(
                         "Save", on_click=self._save_child_name, height=44,
@@ -295,15 +301,15 @@ class _ParentController:
         self.weekly_value_texts = {}
         weekly_rows: list[ft.Control] = []
         for key, label, value in rows:
-            value_text = ft.Text(value, size=15, color=theme.text)
+            value_text = ft.Text(value, size=self._fs(15), color=theme.text)
             self.weekly_value_texts[key] = value_text
             weekly_rows.append(
-                ft.Row([ft.Text(label, size=15, color=theme.text_muted, width=180), value_text])
+                ft.Row([ft.Text(label, size=self._fs(15), color=theme.text_muted, width=180), value_text])
             )
 
         return ft.Container(
             content=ft.Column(
-                [ft.Text("📅 This Week", size=18, weight=ft.FontWeight.BOLD, color=theme.text), *weekly_rows],
+                [ft.Text("📅 This Week", size=self._fs(18), weight=ft.FontWeight.BOLD, color=theme.text), *weekly_rows],
                 spacing=10,
             ),
             bgcolor=theme.card, border_radius=16, padding=20, width=380,
@@ -320,14 +326,14 @@ class _ParentController:
         for category, (done, total) in completion.items():
             meta = get_category_meta(category)
             ratio = done / total if total else 0.0
-            count_text = ft.Text(f"{done}/{total}", size=13, color=theme.text_muted)
+            count_text = ft.Text(f"{done}/{total}", size=self._fs(13), color=theme.text_muted)
             bar = ft.ProgressBar(value=ratio, color=meta.color, bgcolor=theme.bg, height=8, border_radius=4)
             self.mastery_texts[category] = count_text
             self.mastery_bars[category] = bar
             category_rows.append(
                 ft.Column(
                     [
-                        ft.Row([ft.Text(f"{meta.icon} {meta.title}", size=13, color=theme.text, width=200), count_text]),
+                        ft.Row([ft.Text(f"{meta.icon} {meta.title}", size=self._fs(13), color=theme.text, width=200), count_text]),
                         bar,
                     ],
                     spacing=4,
@@ -337,7 +343,7 @@ class _ParentController:
         return ft.Container(
             content=ft.Column(
                 [
-                    ft.Text("📊 Category Mastery", size=18, weight=ft.FontWeight.BOLD, color=theme.text),
+                    ft.Text("📊 Category Mastery", size=self._fs(18), weight=ft.FontWeight.BOLD, color=theme.text),
                     ft.Column(category_rows, spacing=12, scroll=ft.ScrollMode.AUTO),
                 ],
                 spacing=10,
@@ -366,7 +372,7 @@ class _ParentController:
             self.activity_column.controls = [
                 ft.Text(
                     "Nothing yet — activity shows up here once lessons begin.",
-                    size=13, color=theme.text_muted,
+                    size=self._fs(13), color=theme.text_muted,
                 )
             ]
         else:
@@ -375,7 +381,7 @@ class _ParentController:
                 icon = EVENT_ICONS.get(row["event_type"], "•")
                 label = EVENT_LABELS.get(row["event_type"], row["event_type"])
                 lesson_part = f" ({row['lesson_id']})" if row["lesson_id"] else ""
-                items.append(ft.Text(f"{icon} {label}{lesson_part}", size=13, color=theme.text))
+                items.append(ft.Text(f"{icon} {label}{lesson_part}", size=self._fs(13), color=theme.text))
             self.activity_column.controls = items
 
     def _refresh_summary_values(self) -> None:

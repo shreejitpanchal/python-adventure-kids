@@ -5,7 +5,7 @@ from __future__ import annotations
 import flet as ft
 
 from app.ui.app_state_flet import AppState
-from app.ui.theme_flet import ThemePreset
+from app.ui.theme_flet import ThemePreset, scaled
 
 
 def build_setup_wizard_view(page: ft.Page, state: AppState) -> ft.View:
@@ -29,6 +29,11 @@ class _SetupWizard:
         self.state = state
         self.theme = theme
         self.body = body
+        self.scale = state.font_scale
+
+    def _fs(self, base_size: int) -> int:
+        """Scaled font size -- see AppState.font_scale / app/ui/theme_flet.py."""
+        return scaled(base_size, self.scale)
 
     def _set(self, controls: list[ft.Control]) -> None:
         self.body.controls = controls
@@ -39,7 +44,7 @@ class _SetupWizard:
         name_field = ft.TextField(
             hint_text="Type your name here", width=320, text_align=ft.TextAlign.CENTER, autofocus=True,
         )
-        error_text = ft.Text("", color=self.theme.danger, size=14)
+        error_text = ft.Text("", color=self.theme.danger, size=self._fs(14))
 
         def go_next(_e=None) -> None:
             name = (name_field.value or "").strip()
@@ -53,9 +58,9 @@ class _SetupWizard:
         name_field.on_submit = go_next
 
         self._set([
-            ft.Text("Welcome to Python Adventure!", size=32, weight=ft.FontWeight.BOLD, color=self.theme.primary),
+            ft.Text("Welcome to Python Adventure!", size=self._fs(32), weight=ft.FontWeight.BOLD, color=self.theme.primary),
             ft.Container(height=20),
-            ft.Text("What's your name, explorer?", size=22, weight=ft.FontWeight.BOLD, color=self.theme.text),
+            ft.Text("What's your name, explorer?", size=self._fs(22), weight=ft.FontWeight.BOLD, color=self.theme.text),
             ft.Container(height=10),
             name_field,
             error_text,
@@ -76,9 +81,9 @@ class _SetupWizard:
             self.page.go("/dashboard")
 
         self._set([
-            ft.Text("🎉", size=60),
-            ft.Text(f"All set, {name}!", size=32, weight=ft.FontWeight.BOLD, color=self.theme.primary),
-            ft.Text("Your Python Adventure is ready to begin.", size=18, color=self.theme.text),
+            ft.Text("🎉", size=self._fs(60)),
+            ft.Text(f"All set, {name}!", size=self._fs(32), weight=ft.FontWeight.BOLD, color=self.theme.primary),
+            ft.Text("Your Python Adventure is ready to begin.", size=self._fs(18), color=self.theme.text),
             ft.Container(height=20),
             ft.Button(
                 "▶ START ADVENTURE", width=320, height=64, on_click=finish,

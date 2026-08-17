@@ -15,10 +15,12 @@ import flet as ft
 from app.engine.categories import get_category_meta
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color
+from app.ui.theme_flet import scaled
 
 
 def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
     theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
 
     return ft.View(
         route="/dashboard",
@@ -36,13 +38,14 @@ def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
             ft.Container(height=16),
             _build_quiz_card(page, state),
             ft.Container(height=16),
-            ft.Text("More lessons are on their way! 🚀", size=13, color=theme.text_muted),
+            ft.Text("More lessons are on their way! 🚀", size=fs(13), color=theme.text_muted),
         ],
     )
 
 
 def _build_header(page: ft.Page, state: AppState) -> ft.Control:
     theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     name = state.settings.child_name or "Explorer"
 
     return ft.Column(
@@ -50,7 +53,7 @@ def _build_header(page: ft.Page, state: AppState) -> ft.Control:
             ft.Row(
                 [
                     ft.Image(src="main-icon.png", width=40, height=40),
-                    ft.Text("Python Adventure", size=22, weight=ft.FontWeight.BOLD, color=theme.primary),
+                    ft.Text("Python Adventure", size=fs(22), weight=ft.FontWeight.BOLD, color=theme.primary),
                 ],
                 spacing=8,
             ),
@@ -75,7 +78,7 @@ def _build_header(page: ft.Page, state: AppState) -> ft.Control:
                 ],
                 spacing=8, wrap=True,
             ),
-            ft.Text(f"Welcome back, {name}!", size=20, weight=ft.FontWeight.BOLD, color=theme.text),
+            ft.Text(f"Welcome back, {name}!", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
         ],
         spacing=10,
     )
@@ -88,6 +91,7 @@ def _build_xp_hud(state: AppState) -> ft.Control:
     of "level" in this app, kept visually distinct here rather than
     conflated)."""
     theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     player = state.progress.get_player_level()
     progress_ratio = player.xp_into_level / player.xp_needed_for_level if player.xp_needed_for_level else 0.0
 
@@ -95,18 +99,18 @@ def _build_xp_hud(state: AppState) -> ft.Control:
         content=ft.Row(
             [
                 ft.Container(
-                    content=ft.Text(f"LVL {player.level}", size=16, weight=ft.FontWeight.BOLD, color="#FFFFFF"),
+                    content=ft.Text(f"LVL {player.level}", size=fs(16), weight=ft.FontWeight.BOLD, color="#FFFFFF"),
                     bgcolor=theme.warning, border_radius=10,
                     padding=ft.padding.Padding.symmetric(horizontal=14, vertical=10),
                 ),
                 ft.Column(
                     [
-                        ft.Text("Player Level", size=13, color=theme.text_muted),
+                        ft.Text("Player Level", size=fs(13), color=theme.text_muted),
                         ft.ProgressBar(
                             value=progress_ratio, color=theme.success, bgcolor=theme.bg,
                             height=14, border_radius=7, width=240,
                         ),
-                        ft.Text(f"{player.xp_into_level}/{player.xp_needed_for_level} XP", size=11, color=theme.text_muted),
+                        ft.Text(f"{player.xp_into_level}/{player.xp_needed_for_level} XP", size=fs(11), color=theme.text_muted),
                     ],
                     spacing=4,
                 ),
@@ -119,20 +123,21 @@ def _build_xp_hud(state: AppState) -> ft.Control:
 
 def _build_missions_sidebar(page: ft.Page, state: AppState) -> ft.Control:
     theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     engine = state.lesson_engine
     completed_ids = set(state.progress.get_completed_lesson_ids())
     stars_by_lesson = state.progress.get_stars_by_lesson()
     completed_lessons = [lesson for lesson in engine.all_in_order() if lesson.id in completed_ids]
 
     items: list[ft.Control] = [
-        ft.Text("✅ Completed Missions", size=16, weight=ft.FontWeight.BOLD, color=theme.text),
+        ft.Text("✅ Completed Missions", size=fs(16), weight=ft.FontWeight.BOLD, color=theme.text),
     ]
 
     if not completed_lessons:
         items.append(
             ft.Text(
                 "Finish your first mission to see it here — then you can replay it anytime!",
-                size=12, color=theme.text_muted,
+                size=fs(12), color=theme.text_muted,
             )
         )
     else:
@@ -145,8 +150,8 @@ def _build_missions_sidebar(page: ft.Page, state: AppState) -> ft.Control:
                 ft.Button(
                     content=ft.Column(
                         [
-                            ft.Text(lesson.title, size=13, color=text_color),
-                            ft.Text("⭐" * stars if stars else " ", size=13, color=text_color),
+                            ft.Text(lesson.title, size=fs(13), color=text_color),
+                            ft.Text("⭐" * stars if stars else " ", size=fs(13), color=text_color),
                         ],
                         spacing=2,
                     ),
@@ -166,6 +171,7 @@ def _build_quiz_card(page: ft.Page, state: AppState) -> ft.Control:
     """Same tile pattern as the Quiz entry in the category browser
     (category_map_flet.py's _build_quiz_tile) -- a quick-access shortcut
     to the same standalone quiz, not a lesson category."""
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     meta = get_category_meta("quiz")
     best = state.progress.get_best_quiz_score()
     status = f"🏆 Best: {best[0]}/{best[1]}" if best else f"{len(state.quiz_engine)} questions · Tap to play!"
@@ -174,8 +180,8 @@ def _build_quiz_card(page: ft.Page, state: AppState) -> ft.Control:
     return ft.Container(
         content=ft.Column(
             [
-                ft.Text(f"{meta.icon}  Quick Quiz", size=16, weight=ft.FontWeight.BOLD, color=text_color),
-                ft.Text(status, size=12, color=text_color),
+                ft.Text(f"{meta.icon}  Quick Quiz", size=fs(16), weight=ft.FontWeight.BOLD, color=text_color),
+                ft.Text(status, size=fs(12), color=text_color),
             ],
             spacing=4,
         ),
@@ -187,6 +193,7 @@ def _build_quiz_card(page: ft.Page, state: AppState) -> ft.Control:
 
 def _build_mission_card(page: ft.Page, state: AppState) -> ft.Control:
     theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     summary = state.progress.get_summary()
     engine = state.lesson_engine
 
@@ -196,10 +203,10 @@ def _build_mission_card(page: ft.Page, state: AppState) -> ft.Control:
 
     stats_row = ft.Row(
         [
-            _stat_pill(theme, "⭐", f"{summary.total_stars} stars"),
-            _stat_pill(theme, "🏆", f"Level {summary.level}"),
-            _stat_pill(theme, "🔥", f"{summary.streak_days} day streak"),
-            _stat_pill(theme, "🎖️", f"{summary.badges_earned} badges"),
+            _stat_pill(theme, "⭐", f"{summary.total_stars} stars", state.font_scale),
+            _stat_pill(theme, "🏆", f"Level {summary.level}", state.font_scale),
+            _stat_pill(theme, "🔥", f"{summary.streak_days} day streak", state.font_scale),
+            _stat_pill(theme, "🎖️", f"{summary.badges_earned} badges", state.font_scale),
         ],
         wrap=True,
     )
@@ -216,11 +223,11 @@ def _build_mission_card(page: ft.Page, state: AppState) -> ft.Control:
         content=ft.Column(
             [
                 stats_row,
-                ft.Text("Today's Mission", size=14, color=theme.text_muted),
-                ft.Text(current_lesson.title, size=26, weight=ft.FontWeight.BOLD, color=theme.text),
+                ft.Text("Today's Mission", size=fs(14), color=theme.text_muted),
+                ft.Text(current_lesson.title, size=fs(26), weight=ft.FontWeight.BOLD, color=theme.text),
                 ft.Text(
                     "✅ Completed — replay anytime!" if already_completed else current_lesson.objective,
-                    size=14,
+                    size=fs(14),
                     color=theme.success if already_completed else theme.text_muted,
                 ),
                 progress_bar,
@@ -236,8 +243,8 @@ def _build_mission_card(page: ft.Page, state: AppState) -> ft.Control:
     )
 
 
-def _stat_pill(theme, icon: str, text: str) -> ft.Control:
+def _stat_pill(theme, icon: str, text: str, scale: float = 1.0) -> ft.Control:
     return ft.Container(
-        content=ft.Text(f"{icon}  {text}", size=15, color=theme.text),
+        content=ft.Text(f"{icon}  {text}", size=scaled(15, scale), color=theme.text),
         bgcolor=theme.bg, border_radius=14, padding=ft.padding.Padding.symmetric(horizontal=14, vertical=8),
     )

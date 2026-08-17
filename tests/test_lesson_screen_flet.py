@@ -73,6 +73,51 @@ def test_correct_code_completes_the_lesson(controller, state):
     assert state.progress.get_summary().current_lesson_id == "lesson_02"
 
 
+# -- inline reward card: Onward / Next Lesson (no popup) --------------------
+def test_success_shows_inline_not_a_popup_with_no_next_lesson_in_a_1_level_category(controller):
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+
+    # lesson_01 is the only lesson in "basics" -- nothing to advance to.
+    assert controller.reward_card.visible is True
+    assert controller.next_lesson_button.visible is False
+
+
+def test_next_lesson_button_appears_when_the_category_has_a_further_level(state):
+    lesson = state.lesson_engine.get("lesson_03")  # addition level 1
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    controller.editor.value = "print(7 + 5)"
+    asyncio.run(controller._on_run(None))
+
+    assert controller.reward_card.visible is True
+    assert controller.next_lesson_button.visible is True
+    assert controller._next_in_category_id is not None
+    next_lesson = state.lesson_engine.get(controller._next_in_category_id)
+    assert next_lesson.category == "addition"
+    assert next_lesson.category_level == 2
+
+
+def test_clicking_next_lesson_navigates_to_the_next_level_in_the_same_category(state):
+    lesson = state.lesson_engine.get("lesson_03")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    controller.editor.value = "print(7 + 5)"
+    asyncio.run(controller._on_run(None))
+
+    next_id = controller._next_in_category_id
+    controller._on_next_lesson(None)
+    assert controller.page.routes_visited == [f"/lesson/{next_id}"]
+
+
+def test_clicking_onward_goes_to_the_dashboard(controller):
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+
+    controller._on_continue(None)
+    assert controller.page.routes_visited == ["/dashboard"]
+
+
 # -- sound effects on lesson success ---------------------------------------
 def test_plain_success_plays_only_the_success_chime(state):
     fake_player = FakeSoundPlayer()

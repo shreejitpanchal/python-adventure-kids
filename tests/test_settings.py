@@ -11,6 +11,41 @@ def test_first_time_user_defaults_to_midnight_dark_theme():
     assert Settings().theme == "midnight_dark"
 
 
+def test_default_font_family_and_size():
+    settings = Settings()
+    assert settings.font_family == "default"
+    assert settings.font_size == "medium"
+
+
+def test_save_and_load_settings_round_trips_font_choices(tmp_path, monkeypatch):
+    import app.config.settings as settings_module
+
+    monkeypatch.setattr(settings_module, "get_data_dir", lambda: tmp_path)
+
+    settings = settings_module.Settings(font_family="classic", font_size="extra_large")
+    settings_module.save_settings(settings)
+
+    loaded = settings_module.load_settings()
+    assert loaded.font_family == "classic"
+    assert loaded.font_size == "extra_large"
+
+
+def test_load_settings_ignores_unknown_fields_from_a_newer_or_older_version(tmp_path, monkeypatch):
+    import json
+
+    import app.config.settings as settings_module
+
+    monkeypatch.setattr(settings_module, "get_data_dir", lambda: tmp_path)
+    (tmp_path / "settings.json").write_text(
+        json.dumps({"child_name": "Sam", "some_future_field_this_version_does_not_know": "x"}),
+        encoding="utf-8",
+    )
+
+    loaded = settings_module.load_settings()
+    assert loaded.child_name == "Sam"
+    assert loaded.font_family == "default"  # missing from the file -- falls back to the dataclass default
+
+
 def test_parent_pin_round_trip():
     settings = Settings()
     settings.set_parent_pin("1234")
