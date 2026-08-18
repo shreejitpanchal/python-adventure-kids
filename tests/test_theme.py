@@ -19,9 +19,9 @@ def _restore_default_font():
     theme.apply_font(theme.DEFAULT_FONT_FAMILY_KEY, theme.DEFAULT_FONT_SIZE_KEY)
 
 
-def test_default_theme_is_midnight_dark():
-    assert theme.CURRENT_THEME_KEY == theme.DEFAULT_THEME_KEY == "midnight_dark"
-    assert theme.get_current_preset().key == "midnight_dark"
+def test_default_theme_is_forest_adventure():
+    assert theme.CURRENT_THEME_KEY == theme.DEFAULT_THEME_KEY == "forest_adventure"
+    assert theme.get_current_preset().key == "forest_adventure"
 
 
 def test_every_preset_key_matches_its_dict_key():
@@ -84,47 +84,36 @@ def test_every_preset_color_is_valid_hex():
             int(value[1:], 16)  # raises if not valid hex
 
 
-# -- unlockable skins ---------------------------------------------------------
-_LOCKED_SKIN_KEYS = {"space_odyssey", "cyberpunk", "enchanted_forest"}
-_ORIGINAL_SKIN_KEYS = {
+# -- every skin is unlocked from the start -------------------------------------
+_ALL_SKIN_KEYS = {
     "sunny_light", "ocean_breeze", "sunset_glow", "forest_adventure", "midnight_dark", "galaxy",
+    "space_odyssey", "cyberpunk", "enchanted_forest",
 }
 
 
-def test_original_six_presets_are_always_unlocked():
-    for key in _ORIGINAL_SKIN_KEYS:
+def test_every_preset_is_unlocked_from_the_start():
+    for key in _ALL_SKIN_KEYS:
         assert theme.THEME_PRESETS[key].min_level == 1
 
 
-def test_new_adventure_skins_are_locked_behind_a_player_level():
-    for key in _LOCKED_SKIN_KEYS:
-        assert theme.THEME_PRESETS[key].min_level > 1
-
-
-def test_locked_skins_unlock_in_increasing_order():
-    levels = [theme.THEME_PRESETS[key].min_level for key in ("space_odyssey", "cyberpunk", "enchanted_forest")]
-    assert levels == sorted(levels)
-    assert len(set(levels)) == len(levels), "locked skins should unlock at distinct levels"
-
-
-def test_every_preset_key_set_matches_original_plus_locked():
-    assert set(theme.THEME_PRESETS.keys()) == _ORIGINAL_SKIN_KEYS | _LOCKED_SKIN_KEYS
+def test_every_preset_key_set_matches_the_full_skin_list():
+    assert set(theme.THEME_PRESETS.keys()) == _ALL_SKIN_KEYS
 
 
 # -- font family + size -------------------------------------------------------
-def test_default_font_is_medium_comic_sans():
+def test_default_font_is_large_comic_sans():
     assert theme.CURRENT_FONT_FAMILY_KEY == theme.DEFAULT_FONT_FAMILY_KEY == "default"
-    assert theme.CURRENT_FONT_SIZE_KEY == theme.DEFAULT_FONT_SIZE_KEY == "medium"
+    assert theme.CURRENT_FONT_SIZE_KEY == theme.DEFAULT_FONT_SIZE_KEY == "large"
     assert theme.FONT_FAMILY == "Comic Sans MS"
-    assert theme.FONT_SIZE_SCALE == 1.0
+    assert theme.FONT_SIZE_SCALE == 1.2
 
 
 def test_apply_font_updates_family_and_scale():
-    theme.apply_font("classic", "large")
+    theme.apply_font("classic", "small")
     assert theme.FONT_FAMILY == "Segoe UI"
-    assert theme.FONT_SIZE_SCALE == 1.2
+    assert theme.FONT_SIZE_SCALE == 0.85
     assert theme.CURRENT_FONT_FAMILY_KEY == "classic"
-    assert theme.CURRENT_FONT_SIZE_KEY == "large"
+    assert theme.CURRENT_FONT_SIZE_KEY == "small"
 
 
 def test_apply_font_falls_back_to_defaults_for_unknown_keys():
@@ -132,7 +121,7 @@ def test_apply_font_falls_back_to_defaults_for_unknown_keys():
     assert theme.CURRENT_FONT_FAMILY_KEY == theme.DEFAULT_FONT_FAMILY_KEY
     assert theme.CURRENT_FONT_SIZE_KEY == theme.DEFAULT_FONT_SIZE_KEY
     assert theme.FONT_FAMILY == "Comic Sans MS"
-    assert theme.FONT_SIZE_SCALE == 1.0
+    assert theme.FONT_SIZE_SCALE == 1.2
 
 
 @pytest.fixture

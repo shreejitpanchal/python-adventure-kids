@@ -85,15 +85,12 @@ THEME_PRESETS: dict[str, ThemePreset] = {
         success="#4ADE9E", success_hover="#3BC589",
         warning="#FFC857", danger="#FF7B7B", star="#FFD866",
     ),
-    # Unlockable "Adventure Skins" -- gated behind player level (see
-    # app.progress.store.PlayerLevel), not selectable from the start.
     "space_odyssey": ThemePreset(
         key="space_odyssey", title="Space Odyssey", icon="🚀", is_dark=True,
         bg="#0B1026", card="#151B3D", text="#E8ECFF", text_muted="#8A93C7",
         primary="#5DE8FF", primary_hover="#3BC5DD",
         success="#4ADE9E", success_hover="#3BC589",
         warning="#FFC857", danger="#FF6B6B", star="#FFD866",
-        min_level=3,
     ),
     "cyberpunk": ThemePreset(
         key="cyberpunk", title="Cyberpunk", icon="🌆", is_dark=True,
@@ -101,7 +98,6 @@ THEME_PRESETS: dict[str, ThemePreset] = {
         primary="#FF2E9A", primary_hover="#E01E82",
         success="#39FF88", success_hover="#2ADB6F",
         warning="#FFE93B", danger="#FF3860", star="#00F0FF",
-        min_level=5,
     ),
     "enchanted_forest": ThemePreset(
         key="enchanted_forest", title="Enchanted Forest", icon="🧚", is_dark=True,
@@ -109,11 +105,10 @@ THEME_PRESETS: dict[str, ThemePreset] = {
         primary="#7CFFB2", primary_hover="#5FE896",
         success="#4ADE9E", success_hover="#3BC589",
         warning="#FFC857", danger="#FF7B7B", star="#FFD866",
-        min_level=8,
     ),
 }
 
-DEFAULT_THEME_KEY = "midnight_dark"
+DEFAULT_THEME_KEY = "forest_adventure"
 
 
 def get_preset(theme_key: str) -> ThemePreset:
@@ -142,7 +137,7 @@ FONT_SIZE_SCALES: dict[str, float] = {
     "large": 1.2,
     "extra_large": 1.4,
 }
-DEFAULT_FONT_SIZE_KEY = "medium"
+DEFAULT_FONT_SIZE_KEY = "large"
 
 
 def resolve_font_family(key: str) -> str:

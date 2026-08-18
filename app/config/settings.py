@@ -66,14 +66,14 @@ class Settings:
     sound_enabled: bool = True
     animations_enabled: bool = True
     reduced_motion: bool = False
-    theme: str = "midnight_dark"
+    theme: str = "forest_adventure"
     font_family: str = "default"
     """A semantic key (not a real font name) -- each UI maps this to its own
     concrete, platform-appropriate font via a FONT_FAMILY_PRESETS-style dict
     (see app/ui/theme.py for CTk, app/ui/theme_flet.py for Flet), the same
     pattern `theme` above uses for colors. An unrecognized key (e.g. a CTk-
     only key read back by the Flet app) falls back to that UI's default."""
-    font_size: str = "medium"
+    font_size: str = "large"
     """One of small/medium/large/extra_large -- each UI maps this to its own
     size-scaling multiplier, same fallback-safe pattern as font_family."""
     parent_pin_salt: str = ""

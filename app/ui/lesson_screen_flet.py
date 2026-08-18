@@ -128,10 +128,6 @@ class _LessonController:
                 )
             )
         controls.append(output_card)
-        # A scroll_key, not a magic "scroll to the end" offset -- always
-        # lands exactly on the reward card regardless of how long the
-        # lesson content above it is, see _on_lesson_success()'s auto-scroll.
-        self.reward_card.key = "reward_card"
         controls.append(self.reward_card)
 
         self._content_column = ft.Column(controls, scroll=ft.ScrollMode.AUTO, spacing=10, expand=True)
@@ -563,6 +559,11 @@ class _LessonController:
         self.output_text.color = self.theme.text_muted
         self._codey.set_state(CodeyState.IDLE)
         self.reward_card.visible = False
+        # Without this, _on_lesson_success()'s "only run once" guard
+        # (self._lesson_passed) stayed True forever after the first
+        # correct answer, so Reset -> a fresh correct run would silently
+        # never show the reward card again.
+        self._lesson_passed = False
         self.page.update()
 
     def _on_hint(self, e) -> None:
@@ -688,14 +689,22 @@ class _LessonController:
                 self.next_lesson_caption.value = ""
 
         self.reward_card.visible = True
+        # Flush the reward card's new visibility to the client BEFORE
+        # asking it to scroll there -- scroll_to() targets the client's
+        # current layout, so scrolling first and updating after (or relying
+        # on some later update() elsewhere to happen to land first) could
+        # scroll against stale geometry that doesn't include the card yet.
+        self.page.update()
         # scroll_to() is `async def` in this Flet version, so it can't be
         # called bare from this sync method (the coroutine would go
         # unawaited and silently do nothing) -- page.run_task() is Flet's
         # documented way to fire an async control method from sync code,
-        # same pattern as sound_player_flet.py's play() calls. Lets a
-        # correct answer bring the reward card (and its Next Mission/Next
-        # Level buttons) into view without the child hunting for it.
-        self.page.run_task(self._content_column.scroll_to, scroll_key="reward_card", duration=400)
+        # same pattern as sound_player_flet.py's play() calls. offset=-1
+        # is Flet's own "scroll to the very end" convention -- simpler and
+        # more reliable here than scroll_key, which targets a control that
+        # was invisible up until the line above. The reward card is always
+        # the column's last control, so "the very end" always means it.
+        self.page.run_task(self._content_column.scroll_to, offset=-1, duration=400)
 
     def _on_continue(self, e) -> None:
         if self.game_canvas is not None:

@@ -88,7 +88,7 @@ def test_correct_answer_auto_scrolls_to_the_reward_card(controller, state):
     assert len(controller.page.run_task_calls) == 1
     handler, _args, kwargs = controller.page.run_task_calls[0]
     assert handler == controller._content_column.scroll_to
-    assert kwargs.get("scroll_key") == "reward_card"
+    assert kwargs.get("offset") == -1
 
 
 def test_wrong_answer_does_not_auto_scroll(state):
@@ -398,6 +398,22 @@ def test_reset_restores_starter_code_and_clears_output(controller):
     assert controller.editor.value == 'print("Hello!")'
     assert controller.output_text.value == "Press RUN to see what happens!"
     assert controller.reward_card.visible is False
+
+
+def test_reward_card_shows_again_after_reset_then_a_second_correct_run(controller, state):
+    """Regression guard: _on_lesson_success()'s "only run once" guard
+    (self._lesson_passed) previously stayed True forever after the first
+    correct answer, so Reset -> a fresh correct run never showed the
+    reward card again."""
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    assert controller.reward_card.visible is True
+
+    controller._on_reset(None)
+    assert controller.reward_card.visible is False
+
+    asyncio.run(controller._on_run(None))
+    assert controller.reward_card.visible is True
 
 
 # -- code snippet helpers toggle --------------------------------------------

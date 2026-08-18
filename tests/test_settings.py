@@ -7,14 +7,14 @@ def test_default_settings_are_not_setup_complete():
     assert settings.has_parent_pin() is False
 
 
-def test_first_time_user_defaults_to_midnight_dark_theme():
-    assert Settings().theme == "midnight_dark"
+def test_first_time_user_defaults_to_forest_adventure_theme():
+    assert Settings().theme == "forest_adventure"
 
 
 def test_default_font_family_and_size():
     settings = Settings()
     assert settings.font_family == "default"
-    assert settings.font_size == "medium"
+    assert settings.font_size == "large"
 
 
 def test_default_hub_fields_are_unset():

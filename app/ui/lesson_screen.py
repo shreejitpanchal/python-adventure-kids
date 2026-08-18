@@ -399,6 +399,11 @@ class LessonScreen(ctk.CTkFrame):
             text="Press RUN to see what happens!", text_color=theme.COLOR_TEXT_MUTED,
         )
         self.reward_card.pack_forget()
+        # Without this, _on_lesson_success()'s "only run once" guard
+        # (self._lesson_passed) stayed True forever after the first
+        # correct answer, so Reset -> a fresh correct run would silently
+        # never show the reward card again.
+        self._lesson_passed = False
 
     def _on_hint(self) -> None:
         if not self.lesson.hints:
