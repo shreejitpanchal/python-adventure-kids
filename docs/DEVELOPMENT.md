@@ -10,8 +10,8 @@ A Windows-to-Android re-platform onto [Flet](https://flet.dev) (one Python
 codebase targeting both — `main_flet.py`, `app/ui/*_flet.py`) is being built
 out feature-by-feature alongside the CustomTkinter app (`main.py`, the
 shipping Windows build). The Flet build has its own setup wizard, dashboard,
-category browser, Python Learning course, quiz, settings screen, PIN-gated
-parent area, and full lesson flow (including the Snake project's graphical
+category browser, Python Learning course, quiz, settings screen, parent
+area, and full lesson flow (including the Snake project's graphical
 lessons), built against the same content and progress data. It isn't the shipping build
 yet — `run.bat`/`run.sh` launch the CustomTkinter app; run the Flet build
 with `flet run main_flet.py` (see "Running it" below).
@@ -55,7 +55,9 @@ app/
              # itself is UI-specific -- winsound for CTk, flet-audio for Flet)
   config/    # settings persistence + platform-appropriate data directory
   progress/  # SQLite-backed progress, stars, badges, streaks, activity log, quiz attempts
-  parent/    # PIN-gated parent area (summary + recent activity)
+  parent/    # parent area (summary + recent activity, no PIN gate --
+             # Settings.set_parent_pin()/verify_parent_pin() exist but
+             # aren't wired into any screen yet, see "How it works" below)
   engine/    # lesson model + YAML-based lesson engine + category logic +
              # output validator + quiz model/engine + badge display metadata +
              # course_status.py (Python Learning course progress + badge)
@@ -281,6 +283,18 @@ execution path with different tradeoffs, not a bug:
   philosophy used throughout the app.
 
 A lesson opts into this path with `graphical: true` in its YAML.
+
+### Parent Area
+
+Opened directly from the Learning Hub's "👋 Parent Area" button/route
+(`app/parent/dashboard.py` for CTk, `app/ui/parent_dashboard_flet.py` for
+Flet) — a summary of progress, a "this week" breakdown, per-category
+mastery, recent activity, renaming the child's profile, and a
+double-confirmation "Reset Progress" action. **Not currently PIN-gated**:
+`Settings.has_parent_pin()`/`set_parent_pin()`/`verify_parent_pin()`
+(`app/config/settings.py`) implement a salted-hash PIN model and are
+unit-tested (`tests/test_settings.py`), but no screen in either UI calls
+them yet — anyone with access to the app can open the Parent Area today.
 
 ## Data storage
 

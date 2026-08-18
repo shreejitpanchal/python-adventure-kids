@@ -402,38 +402,30 @@ sequenceDiagram
     Screen-->>User: new theme/font visible immediately
 ```
 
-### 5.4 Parent Area — first visit sets a PIN, later visits verify it
+### 5.4 Parent Area — opens directly, not currently PIN-gated
 
 ```mermaid
 sequenceDiagram
     participant Parent
     participant Area as Parent Area
+    participant Store as ProgressStore
     participant Cfg as Settings
 
     Parent->>Area: open Parent Area
-    Area->>Cfg: has_parent_pin()?
-    alt no PIN set yet -- first-ever visit
-        Area-->>Parent: "Set a Parent PIN" (enter, then confirm)
-        Parent->>Area: enter PIN twice (matching)
-        Area->>Cfg: set_parent_pin(pin) (salted SHA-256)
-        Area->>Cfg: save_settings()
-        Area-->>Parent: Parent Area summary unlocked
-    else PIN already set
-        Area-->>Parent: "Enter the 4-digit PIN"
-        Parent->>Area: enter PIN
-        Area->>Cfg: verify_parent_pin(pin)
-        alt correct
-            Area-->>Parent: Parent Area summary unlocked
-        else incorrect
-            Area-->>Parent: "Incorrect PIN", stays locked
-        end
-    end
+    Area->>Store: get_summary() / get_weekly_summary() / category_completion() / get_recent_activity()
+    Area-->>Parent: progress summary, this-week stats,<br/>category mastery, recent activity
     opt Parent renames child or resets progress
         Parent->>Area: edit name / confirm reset
         Area->>Cfg: settings.child_name = new_name, then save_settings()
-        Area->>Area: ProgressStore.reset_progress() (on confirmed reset)
+        Area->>Store: reset_progress() (on confirmed reset)
     end
 ```
+
+`Settings.has_parent_pin()`/`set_parent_pin()`/`verify_parent_pin()`
+implement a salted-SHA-256 PIN model (`app/config/settings.py`) and are
+unit-tested in isolation, but no screen in either UI currently calls
+them — the Parent Area opens with no PIN prompt at all. This diagram
+reflects actual current behavior, not the PIN model's schema.
 
 ## 6. "Today's Mission" — computed, not stored
 
@@ -513,7 +505,9 @@ erDiagram
 `settings.json` (separate file, not SQLite — small, human-editable key/value
 config) holds `child_name`, `sound_enabled`, `theme`, `font_family`,
 `font_size`, `parent_pin_salt`/`parent_pin_hash` (PIN is salted SHA-256,
-never stored in plaintext), and `setup_complete`. `load_settings()` filters
+never stored in plaintext — schema and model methods exist and are
+tested, but no screen currently sets or checks a PIN, see Section 5.4),
+and `setup_complete`. `load_settings()` filters
 incoming JSON keys against `Settings.__dataclass_fields__` before
 construction, so an old file missing new fields (or a newer file with
 fields this version doesn't know about) never crashes — a new field just

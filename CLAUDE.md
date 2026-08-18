@@ -70,7 +70,8 @@ app/
   games/     # Snake's live-window execution path (game_canvas, game_window, graphical_runner) + game_canvas_flet.py
   progress/  # SQLite-backed progress/stars/badges/streaks/activity log
   config/    # settings persistence + platform-appropriate data directory resolution
-  parent/    # PIN-gated parent area (CTk only currently; Flet equivalent is app/ui/parent_dashboard_flet.py)
+  parent/    # parent area (CTk only currently; Flet equivalent is app/ui/parent_dashboard_flet.py) --
+             # not currently PIN-gated: Settings.set_parent_pin()/verify_parent_pin() exist but no screen calls them
 content/
   lessons/   # one YAML file per lesson — the actual curriculum content
   images/    # app icon

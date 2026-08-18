@@ -21,6 +21,10 @@ sign up for.
 
 ## Look & feel
 
+*Screenshots below are from an earlier build and don't yet reflect the
+current Learning Hub landing screen, updated level counts, or the newer
+Settings font controls — due for a refresh.*
+
 **Dashboard**
 
 ![Dashboard](docs/app-screenshots/welcome-screen.jpg)
@@ -67,14 +71,13 @@ sign up for.
   row, the app gently suggests related practice to help instead of leaving
   you stuck.
 - **Rewards that actually mean something** — stars, badges, player levels,
-  day streaks, and a Trophy Room to look back on what you've earned.
+  and day streaks.
 - **A Settings screen that's actually comfortable to use** — multiple color
   themes (including dark mode), adjustable font size and font style so
   text is easy to read on anything from a phone to a desktop monitor, and
   a sound toggle.
-- **A Parent Area** — PIN-protected (set the first time you open it),
-  showing a summary of progress, recent activity, and a way to reset
-  progress if needed.
+- **A Parent Area** — a summary of progress, recent activity, a way to
+  rename your child's profile, and a way to reset progress if needed.
 - **100% offline and private** — everything runs and stays on your device.
   No accounts, no network access, no data collection.
 
@@ -85,8 +88,7 @@ run `./run.sh` (git-bash/macOS/Linux). The first run takes a minute to set
 itself up; every run after that launches straight into the app.
 
 First launch walks you through a short setup — just a name — and lands you
-on the dashboard, ready to go. The first time you open the Parent Area,
-you'll be asked to set a PIN to protect it.
+on the Learning Hub, ready to go.
 
 ## For developers
 
