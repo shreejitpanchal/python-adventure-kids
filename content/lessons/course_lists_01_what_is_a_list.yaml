@@ -27,6 +27,7 @@ hints:
   - "It should look like: print(fruits[2])"
 reward_stars: 2
 badge: null
-category: course_lists
+category: course_data_structures
 category_level: 1
+topic: Lists
 concept_tags: [lists, indexing]

@@ -7,6 +7,7 @@ import customtkinter as ctk
 
 from app.audio.player import play_sound_ctk, success_sound_for
 from app.engine.categories import COURSE_CATEGORIES
+from app.engine.course_status import next_topic_item
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_window import GameWindow
@@ -422,9 +423,13 @@ class LessonScreen(ctk.CTkFrame):
             if badge_newly_awarded else ""
         )
 
-        next_in_category = self.app.lesson_engine.next_unlocked_in_category(
-            self.lesson.category, progress.get_completed_lesson_ids(),
-        )
+        completed_ids = progress.get_completed_lesson_ids()
+        if self.lesson.category in COURSE_CATEGORIES:
+            next_in_category = next_topic_item(self.app.lesson_engine, self.lesson, completed_ids)
+        else:
+            next_in_category = self.app.lesson_engine.next_unlocked_in_category(
+                self.lesson.category, completed_ids,
+            )
         self._next_in_category_id = next_in_category.id if next_in_category else None
         if next_in_category is not None:
             self.next_lesson_button.pack(side="left", padx=6)

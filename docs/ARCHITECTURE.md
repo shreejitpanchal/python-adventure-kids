@@ -124,6 +124,7 @@ classDiagram
         +bool requires_goal_reached
         +list~str~ concept_tags
         +bool is_quiz
+        +str topic
     }
 
     class LessonEngine {
@@ -162,9 +163,15 @@ classDiagram
     }
     QuizEngine "1" o-- "many" QuizQuestion : loads from content/quiz/*.yaml
 
+    class TopicStatus {
+        +str topic
+        +list~Lesson~ items
+        +int completed_count
+        +int total_count
+    }
     class ChapterStatus {
         +str category
-        +list~Lesson~ items
+        +list~TopicStatus~ topics
         +int completed_count
         +int total_count
     }
@@ -175,7 +182,8 @@ classDiagram
         +int stars_earned
     }
     CourseStatus "1" o-- "many" ChapterStatus
-    note for CourseStatus "Built by course_status.py's compute_course_status() function, the same shape as hub_status.py's compute_hub_status()."
+    ChapterStatus "1" o-- "many" TopicStatus
+    note for CourseStatus "Built by course_status.py's compute_course_status() function, the same shape as hub_status.py's compute_hub_status(). A chapter with no sub-grouping (Lesson.topic=='' on every lesson) still has exactly one TopicStatus, so single- and multi-topic chapters render the same way."
 
     class Settings {
         +str child_name
@@ -539,13 +547,22 @@ takes its dataclass default.
   can't be the only implementation. The in-process engine exists purely
   to make Android possible and is intended to fully replace the subprocess
   one once the Flet UI is complete (see Section 4).
-- **A course chapter is just a category; a quiz item is just a Lesson.**
-  The Python Learning course (Section 6 note above) deliberately reuses
-  the existing category/`is_unlocked()`/`complete_lesson()` machinery
-  instead of a parallel "chapter" content model, and models its quiz
-  item as a `Lesson` with an `is_quiz` flag rather than a new content
-  type — so quiz completion gets unlock tracking, star rewards, and XP
-  for free, and the course needed zero new `ProgressStore` schema.
+- **A course chapter is just a category; a topic is just a grouping field;
+  a quiz item is just a Lesson.** The Python Learning course (Section 6
+  note above) deliberately reuses the existing category/`complete_lesson()`
+  machinery instead of a parallel "chapter" content model, models its
+  quiz item as a `Lesson` with an `is_quiz` flag rather than a new
+  content type, and — once a chapter needed several independent
+  sub-topics (Data Structures, Variables) — added only a single `topic`
+  string field to `Lesson` rather than a new nesting concept in the
+  content schema. The one piece that couldn't be reused as-is was
+  unlocking: `LessonEngine.is_unlocked()` gates across a lesson's whole
+  category, which is exactly wrong once that category holds more than
+  one topic, so `course_status.py` adds a small topic-scoped sibling
+  (`is_topic_item_unlocked()`/`next_topic_item()`) rather than changing
+  the widely-used original. Quiz completion still gets unlock tracking,
+  star rewards, and XP for free, and the course needed zero new
+  `ProgressStore` schema.
 - **Dual-UI parity by convention, not abstraction.** Rather than building
   a shared widget/view abstraction over both CTk and Flet (which would
   constrain both to their lowest common capability), each UI is a

@@ -1,0 +1,29 @@
+id: course_functions_parameters_2
+title: "Your Sample Program with Parameters 🧩"
+level: 955
+objective: "Define a function with two parameters, separated by a comma."
+explanation: |
+  A function can take more than one parameter -- just separate them with commas: def introduce(name, age):.
+example_code: |
+  def introduce(name, age):
+      print(name + " is " + str(age) + " years old")
+
+  introduce("Sam", 9)
+starter_code: |
+  def introduce(name, age):
+      print(name + " is " + str(age) + " years old")
+
+  introduce("Sam", 9)
+challenge: |
+  🎯 Challenge: Call introduce with "Robin" who is 11, then run it.
+expected_output: "Robin is 11 years old"
+hints:
+  - "Change both values inside introduce(...) at the bottom."
+  - "Don't change anything inside the function itself."
+  - "It should look like: introduce(\"Robin\", 11)"
+reward_stars: 3
+badge: null
+category: course_functions
+category_level: 5
+topic: Parameters
+concept_tags: [parameters]

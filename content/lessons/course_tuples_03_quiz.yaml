@@ -1,0 +1,19 @@
+id: course_tuples_3
+title: "Chapter Quiz: Tuples ❓"
+level: 917
+objective: "Test what you've learned about tuples."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about tuples.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: course_data_structures
+category_level: 6
+topic: Tuples
+concept_tags: [tuples]
+is_quiz: true

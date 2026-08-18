@@ -1,0 +1,37 @@
+id: course_tuples_1
+title: "What is a Tuple? 🔗"
+level: 915
+objective: "Create a tuple and read an item by index."
+explanation: |
+  A tuple is a lot like a list -- an ordered collection of items -- but it
+  uses round brackets () instead of square brackets [], and once you
+  create it, its values can't be changed. That makes tuples a good fit for
+  things that shouldn't change, like a fixed coordinate.
+
+  point = (3, 5) packs two numbers into a tuple named point.
+
+  point[0] and point[1] read the first and second items, exactly like a
+  list -- Python still counts from 0.
+example_code: |
+  point = (3, 5)
+  print(point[0])
+  print(point[1])
+starter_code: |
+  point = (3, 5)
+  print(point[0])
+  print(point[1])
+challenge: |
+  🎯 Challenge: Change point to (7, 2), then run it.
+expected_output: |
+  7
+  2
+hints:
+  - "Only change the numbers inside the round brackets."
+  - "Tuples use () -- lists use []. Keep the round brackets."
+  - "It should look like: point = (7, 2)"
+reward_stars: 2
+badge: null
+category: course_data_structures
+category_level: 4
+topic: Tuples
+concept_tags: [tuples, indexing]

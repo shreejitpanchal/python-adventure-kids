@@ -1,0 +1,33 @@
+id: course_tuples_2
+title: "Your Sample Program with Tuples 🔗"
+level: 916
+objective: "Unpack tuples into named variables while looping over a list of them."
+explanation: |
+  Tuples are great for storing a fixed-size record, like a name paired
+  with an age. You can "unpack" a tuple straight into named variables --
+  for name, age in students: pulls each tuple apart automatically, one
+  pair at a time.
+example_code: |
+  students = [("Sam", 9), ("Robin", 11)]
+  for name, age in students:
+      print(name + " is " + str(age) + " years old")
+starter_code: |
+  students = [("Sam", 9), ("Robin", 11)]
+  for name, age in students:
+      print(name + " is " + str(age) + " years old")
+challenge: |
+  🎯 Challenge: Add a third tuple, ("Jamie", 10), to the students list, then run it.
+expected_output: |
+  Sam is 9 years old
+  Robin is 11 years old
+  Jamie is 10 years old
+hints:
+  - "Add (\"Jamie\", 10) inside the square brackets, after (\"Robin\", 11)."
+  - "Don't forget the comma separating it from the tuple before it."
+  - "It should look like: students = [(\"Sam\", 9), (\"Robin\", 11), (\"Jamie\", 10)]"
+reward_stars: 3
+badge: null
+category: course_data_structures
+category_level: 5
+topic: Tuples
+concept_tags: [tuples, iteration, for-loops]

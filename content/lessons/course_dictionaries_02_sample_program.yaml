@@ -1,0 +1,38 @@
+id: course_dictionaries_2
+title: "Your Sample Program with Dictionaries 📖"
+level: 919
+objective: "Add a new key to a dictionary and loop over every key-value pair."
+explanation: |
+  person["favorite_color"] = "blue" adds a brand new key to an existing
+  dictionary (or updates it, if that key already exists).
+
+  for key, value in person.items(): loops through every key-value pair,
+  one at a time -- a dictionary always remembers the order keys were
+  added in, so this prints them in the same order every time.
+example_code: |
+  person = {"name": "Sam", "age": 9}
+  person["favorite_color"] = "blue"
+  for key, value in person.items():
+      print(key + ": " + str(value))
+starter_code: |
+  person = {"name": "Sam", "age": 9}
+  person["favorite_color"] = "blue"
+  for key, value in person.items():
+      print(key + ": " + str(value))
+challenge: |
+  🎯 Challenge: Add one more line -- person["city"] = "Austin" -- right before the loop, then run it.
+expected_output: |
+  name: Sam
+  age: 9
+  favorite_color: blue
+  city: Austin
+hints:
+  - "Add person[\"city\"] = \"Austin\" after the favorite_color line."
+  - "Put your new line before the for loop, not after it."
+  - "The loop will print your new key automatically -- you don't need to change it."
+reward_stars: 3
+badge: null
+category: course_data_structures
+category_level: 8
+topic: Dictionaries
+concept_tags: [dictionaries, iteration]

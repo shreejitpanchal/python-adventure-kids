@@ -1,0 +1,36 @@
+id: course_variables_numbers_1
+title: "What is a Number in Python? 🔢"
+level: 927
+objective: "Understand int vs. float, and that mixing them in math gives a float back."
+explanation: |
+  Python has two main number types: an int is a whole number (9, 12, -3), and a float has a decimal point (4.5, 100.0).
+
+  You can do math with either one -- but if you mix an int and a float in the same calculation, the answer comes back as a float.
+example_code: |
+  age = 9
+  height = 4.5
+  print(age)
+  print(height)
+  print(age + height)
+starter_code: |
+  age = 9
+  height = 4.5
+  print(age)
+  print(height)
+  print(age + height)
+challenge: |
+  🎯 Challenge: Change age to 12 and height to 5.5, then run it.
+expected_output: |
+  12
+  5.5
+  17.5
+hints:
+  - "Change the number after age = and the number after height ="
+  - "The last line will update on its own once age and height change."
+  - "It should look like: age = 12 then height = 5.5"
+reward_stars: 2
+badge: null
+category: course_variables
+category_level: 4
+topic: Numbers
+concept_tags: [numbers]

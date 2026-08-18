@@ -65,8 +65,8 @@ class Lesson:
     strings, numbers, comments, expressions, variables, naming, input,
     type-conversion, f-strings, comparison, booleans, conditionals, loops,
     for-loops, while-loops, functions, parameters, return-values, lists,
-    indexing, slicing, dictionaries, iteration, debugging, errors,
-    algorithms, random, classes) -- used by LessonEngine.recommend_practice()
+    indexing, slicing, dictionaries, tuples, sets, iteration, debugging,
+    errors, algorithms, random, classes) -- used by LessonEngine.recommend_practice()
     to suggest relevant practice after repeated failures or a quiz. Empty
     is the common case; only lessons wired into the adaptive-practice pool
     need this set."""
@@ -75,3 +75,10 @@ class Lesson:
     from the quiz question bank, filtered by concept_tags) instead of a code
     lesson -- see app/ui/course_quiz_screen.py / course_quiz_screen_flet.py.
     Only meaningful for lessons in a course_* category."""
+    topic: str = ""
+    """Sub-groups a course_* category's items into independent topics (e.g.
+    "Lists", "Tuples") shown as their own labeled group of 3 items
+    (concept/sample-program/quiz) within one chapter screen, rather than
+    one flat 3-item list -- see app/engine/course_status.py's TopicStatus/
+    is_topic_item_unlocked(). "" (the default) means the chapter has no
+    sub-grouping; every non-course lesson leaves this unset."""

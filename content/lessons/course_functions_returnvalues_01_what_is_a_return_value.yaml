@@ -1,0 +1,33 @@
+id: course_functions_returnvalues_1
+title: "What is a Return Value? ↩️"
+level: 957
+objective: "Understand that return sends a value back out of a function, to be used elsewhere."
+explanation: |
+  return sends a value back out of a function, without showing anything on the screen -- that's different from print(), which shows something but doesn't hand back a value to use.
+
+  result = add_five(10) stores whatever add_five returns into result, so it can be used later, like printing it.
+example_code: |
+  def add_five(number):
+      return number + 5
+
+  result = add_five(10)
+  print(result)
+starter_code: |
+  def add_five(number):
+      return number + 5
+
+  result = add_five(10)
+  print(result)
+challenge: |
+  🎯 Challenge: Change 10 to 20, then run it.
+expected_output: "25"
+hints:
+  - "Only change the number passed into add_five(...)."
+  - "Don't change anything inside the function itself."
+  - "It should look like: result = add_five(20)"
+reward_stars: 2
+badge: null
+category: course_functions
+category_level: 7
+topic: Return Values
+concept_tags: [return-values]

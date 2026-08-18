@@ -1,7 +1,7 @@
 id: course_functions_3
-title: "Chapter Quiz: Functions ❓"
+title: "Topic Quiz: Defining Functions ❓"
 level: 911
-objective: "Test what you've learned about functions, parameters, and return values."
+objective: "Test what you've learned about defining and calling functions."
 explanation: |
   Answer the multiple-choice questions below to show what you've learned about functions.
 example_code: ""
@@ -14,5 +14,6 @@ reward_stars: 3
 badge: null
 category: course_functions
 category_level: 3
-concept_tags: [functions, parameters, return-values]
+topic: Defining Functions
+concept_tags: [functions]
 is_quiz: true

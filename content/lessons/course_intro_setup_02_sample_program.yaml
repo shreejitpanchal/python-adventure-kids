@@ -30,4 +30,5 @@ reward_stars: 3
 badge: null
 category: course_intro_setup
 category_level: 2
-concept_tags: [print, comments]
+topic: Print
+concept_tags: [print]

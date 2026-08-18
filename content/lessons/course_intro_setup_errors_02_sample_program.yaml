@@ -1,0 +1,27 @@
+id: course_intro_setup_errors_2
+title: "Your Sample Program: Avoiding an Error 🐞"
+level: 943
+objective: "Understand why mixing text and a number with + causes a TypeError, and how str() avoids it."
+explanation: |
+  Writing "Score: " + 100 causes a TypeError, because Python doesn't know how to join text and a number together with +.
+
+  Converting the number to text first with str(100) fixes it -- now it's text joined with text, which + understands.
+example_code: |
+  score = 100
+  print("Score: " + str(score))
+starter_code: |
+  score = 100
+  print("Score: " + str(score))
+challenge: |
+  🎯 Challenge: Change score to 250, then run it.
+expected_output: "Score: 250"
+hints:
+  - "Only change the number after score ="
+  - "Keep str(score) exactly as it is -- it's what avoids the error."
+  - "It should look like: score = 250"
+reward_stars: 3
+badge: null
+category: course_intro_setup
+category_level: 8
+topic: Reading Errors
+concept_tags: [errors, type-conversion]

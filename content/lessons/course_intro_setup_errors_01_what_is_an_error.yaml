@@ -1,0 +1,25 @@
+id: course_intro_setup_errors_1
+title: "What is an Error? 🐞"
+level: 942
+objective: "Understand that Python shows an error message when it can't understand your code."
+explanation: |
+  Sometimes Python can't run your code and shows an error message instead -- for example, print(Hello!) without quotes causes a NameError, because Python thinks Hello is a variable that doesn't exist.
+
+  Reading the error message carefully -- especially the last line -- tells you exactly what went wrong, so you can fix it. Wrapping text in quotes, like "Hello!", tells Python it's just text, not a variable name.
+example_code: |
+  print("Hello!")
+starter_code: |
+  print("Hello!")
+challenge: |
+  🎯 Challenge: Change "Hello!" to "Goodbye!", then run it.
+expected_output: "Goodbye!"
+hints:
+  - "Keep the quotes -- only change the word inside them."
+  - "Without quotes, Python would think Goodbye is a variable name and show an error."
+  - "It should look like: print(\"Goodbye!\")"
+reward_stars: 2
+badge: null
+category: course_intro_setup
+category_level: 7
+topic: Reading Errors
+concept_tags: [errors]

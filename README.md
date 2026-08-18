@@ -48,10 +48,16 @@ Settings font controls — due for a refresh.*
   Division, Variables, Strings, Input, Decisions, Loops, Functions, and
   Lists a level at a time, looping back around for deeper levels as you go.
 - **Python Learning course** — a structured 6-chapter course (Intro &
-  Setup, Variables & Data Types, Control Flow, Functions, Lists & Data
-  Structures, and a Capstone To-Do App) that pairs every topic with a
-  "What is it?" explanation, a hands-on sample program, and a topic quiz
-  before moving on to the next chapter.
+  Setup, Variables & Data Types, Control Flow, Functions, Data
+  Structures, Capstone: To-Do App). Five of the six chapters go deeper by
+  splitting into their own topics instead of one flat lesson: Intro &
+  Setup covers Print, Comments, and Reading Errors; Variables & Data
+  Types covers Variables, Numbers, Strings, Booleans, and Type
+  Conversion; Control Flow covers Conditionals, For Loops, and While
+  Loops; Functions covers Defining Functions, Parameters, and Return
+  Values; and Data Structures covers Lists, Tuples, Dictionaries, and
+  Sets. Every topic still gets its own "What is it?" explanation, a
+  hands-on sample program, and a topic quiz — 57 lessons in all.
 - **Practice by Category** — jump into any topic directly and work through
   its full 20-level progression at your own pace, independent of Today's
   Mission.
@@ -65,7 +71,7 @@ Settings font controls — due for a refresh.*
 - **Mini-games and projects** — Guess the Number, Rock-Paper-Scissors, the
   Snake project (build a real game step by step), Creative Arts, RPG
   Quests, Arcade Lab, and Robot Adventure.
-- **Quiz** — a 300-question multiple-choice quiz covering the whole
+- **Quiz** — a 336-question multiple-choice quiz covering the whole
   curriculum, reshuffled every time you play, with your best score tracked.
 - **Practice Quest** — if you get stuck on the same lesson a few times in a
   row, the app gently suggests related practice to help instead of leaving

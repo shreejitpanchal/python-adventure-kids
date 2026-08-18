@@ -42,4 +42,5 @@ reward_stars: 3
 badge: null
 category: course_variables
 category_level: 2
+topic: Variables
 concept_tags: [variables, numbers, strings, booleans, type-conversion]

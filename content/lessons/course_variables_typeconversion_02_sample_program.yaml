@@ -1,0 +1,31 @@
+id: course_variables_typeconversion_2
+title: "Your Sample Program with Type Conversion 🔄"
+level: 937
+objective: "Convert text that looks like a number into a real number with int(), so it can be used in math."
+explanation: |
+  If a number arrives as text, like "3", you can't do math with it directly. int("3") converts it into the real number 3, which can then be multiplied, added, and so on.
+example_code: |
+  quantity_text = "3"
+  quantity = int(quantity_text)
+  price = 2
+  total = quantity * price
+  print(total)
+starter_code: |
+  quantity_text = "3"
+  quantity = int(quantity_text)
+  price = 2
+  total = quantity * price
+  print(total)
+challenge: |
+  🎯 Challenge: Change quantity_text to "5", then run it.
+expected_output: "10"
+hints:
+  - "Only change the text inside the quotes after quantity_text ="
+  - "The quantity and total lines will recalculate automatically."
+  - "It should look like: quantity_text = \"5\""
+reward_stars: 3
+badge: null
+category: course_variables
+category_level: 14
+topic: Type Conversion
+concept_tags: [type-conversion, numbers]

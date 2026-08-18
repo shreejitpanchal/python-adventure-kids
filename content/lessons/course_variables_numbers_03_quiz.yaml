@@ -1,0 +1,19 @@
+id: course_variables_numbers_3
+title: "Topic Quiz: Numbers ❓"
+level: 929
+objective: "Test what you've learned about numbers in Python."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about numbers.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: course_variables
+category_level: 6
+topic: Numbers
+concept_tags: [numbers]
+is_quiz: true

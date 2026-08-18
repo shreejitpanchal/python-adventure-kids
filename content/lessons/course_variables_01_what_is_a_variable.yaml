@@ -33,4 +33,5 @@ reward_stars: 2
 badge: null
 category: course_variables
 category_level: 1
+topic: Variables
 concept_tags: [variables, naming, numbers, strings]

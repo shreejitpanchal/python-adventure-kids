@@ -1,12 +1,16 @@
-"""One course chapter's 3 items: "1. What is X?", "2. Your Sample Program",
-"3. Quiz" -- gated in order via the same LessonEngine.is_unlocked() used by
-category_levels_flet.py, laid out as a plain vertical Column of item cards
-(dashboard-card style, not the zigzag adventure-map path)."""
+"""One course chapter's items: "1. What is X?", "2. Your Sample Program",
+"3. Quiz" -- gated in order within each topic group via
+is_topic_item_unlocked() (topic-scoped, so sibling topics like Tuples and
+Sets never block each other), laid out as a plain vertical Column of item
+cards (dashboard-card style, not the zigzag adventure-map path). A chapter
+with only one implicit topic (topic="" on every lesson) renders
+identically to a flat 3-item list -- no topic heading shown."""
 from __future__ import annotations
 
 import flet as ft
 
-from app.engine.categories import get_category_meta
+from app.engine.categories import get_category_meta, get_topic_icon
+from app.engine.course_status import compute_course_status, is_topic_item_unlocked
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color
 from app.ui.theme_flet import scaled
@@ -17,10 +21,10 @@ _ITEM_LABELS = ["1. What is it?", "2. Your Sample Program", "3. Quiz"]
 def build_course_chapter_view(page: ft.Page, state: AppState, category: str) -> ft.View:
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
-    engine = state.lesson_engine
     meta = get_category_meta(category)
+    status = compute_course_status(state.lesson_engine, state.progress)
+    chapter = next(c for c in status.chapters if c.category == category)
     completed_ids = set(state.progress.get_completed_lesson_ids())
-    lessons = engine.lessons_in_category(category)
 
     header = ft.Row(
         [
@@ -33,24 +37,34 @@ def build_course_chapter_view(page: ft.Page, state: AppState, category: str) -> 
         spacing=16,
     )
 
-    items = [
-        _build_item_card(page, theme, meta, lesson, index, engine, completed_ids, state.font_scale)
-        for index, lesson in enumerate(lessons)
-    ]
+    controls: list[ft.Control] = [header, ft.Container(height=16)]
+    for topic in chapter.topics:
+        if topic.topic:
+            icon = get_topic_icon(topic.topic)
+            heading = f"{icon} {topic.topic}".strip()
+            controls.append(ft.Row(
+                [
+                    ft.Text(heading, size=fs(18), weight=ft.FontWeight.BOLD, color=meta.color),
+                    ft.Text(f"{topic.completed_count}/{topic.total_count}", size=fs(13), color=theme.text_muted),
+                ],
+                spacing=10,
+            ))
+        for index, lesson in enumerate(topic.items):
+            controls.append(_build_item_card(page, theme, meta, lesson, index, topic.items, completed_ids, state.font_scale))
 
     return ft.View(
         route=f"/course/{category}",
         bgcolor=theme.bg,
         scroll=ft.ScrollMode.AUTO,
         padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
-        controls=[header, ft.Container(height=16), *items],
+        controls=controls,
     )
 
 
-def _build_item_card(page, theme, meta, lesson, index: int, engine, completed_ids, scale: float) -> ft.Control:
+def _build_item_card(page, theme, meta, lesson, index: int, topic_items: list, completed_ids, scale: float) -> ft.Control:
     fs = lambda base: scaled(base, scale)  # noqa: E731
     is_completed = lesson.id in completed_ids
-    is_unlocked = engine.is_unlocked(lesson, completed_ids)
+    is_unlocked = is_topic_item_unlocked(lesson, topic_items, completed_ids)
     label = _ITEM_LABELS[index] if index < len(_ITEM_LABELS) else lesson.title
 
     if is_completed:

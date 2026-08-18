@@ -1,0 +1,38 @@
+id: course_sets_1
+title: "What is a Set? 🧺"
+level: 921
+objective: "Create a set, understand that duplicates are removed, and print it in a predictable order."
+explanation: |
+  A set is a collection of items where every item is unique -- if you try
+  to put the same value in twice, Python just keeps one copy. It uses
+  curly braces {}, like a dictionary, but without the key: value pairs.
+
+  colors = {"red", "green", "blue", "red"} only keeps three items, since
+  the second "red" is a duplicate.
+
+  Sets don't remember any particular order, so printing one directly can
+  look different each time you run it -- sorted(colors) fixes that by
+  giving you the items back as an ordered list you can rely on.
+example_code: |
+  colors = {"red", "green", "blue", "red"}
+  print(len(colors))
+  print(sorted(colors))
+starter_code: |
+  colors = {"red", "green", "blue", "red"}
+  print(len(colors))
+  print(sorted(colors))
+challenge: |
+  🎯 Challenge: Add "yellow" to the colors set, then run it.
+expected_output: |
+  4
+  ['blue', 'green', 'red', 'yellow']
+hints:
+  - "Add \"yellow\" inside the curly braces, after \"red\"."
+  - "Don't forget the comma before it."
+  - "It should look like: colors = {\"red\", \"green\", \"blue\", \"red\", \"yellow\"}"
+reward_stars: 2
+badge: null
+category: course_data_structures
+category_level: 10
+topic: Sets
+concept_tags: [sets]

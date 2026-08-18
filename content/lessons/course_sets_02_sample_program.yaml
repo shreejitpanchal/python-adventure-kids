@@ -1,0 +1,40 @@
+id: course_sets_2
+title: "Your Sample Program with Sets 🧺"
+level: 922
+objective: "Add items to a set one at a time and check membership with in."
+explanation: |
+  fruits.add("orange") adds a new item to a set -- if that item is
+  already there, nothing changes, since a set never keeps duplicates.
+
+  "banana" in fruits checks whether a value is inside the set, giving
+  back True or False -- a fast way to check membership.
+example_code: |
+  fruits = {"apple", "banana"}
+  fruits.add("orange")
+  fruits.add("apple")
+  print(len(fruits))
+  print("banana" in fruits)
+  print(sorted(fruits))
+starter_code: |
+  fruits = {"apple", "banana"}
+  fruits.add("orange")
+  fruits.add("apple")
+  print(len(fruits))
+  print("banana" in fruits)
+  print(sorted(fruits))
+challenge: |
+  🎯 Challenge: Add one more line -- fruits.add("mango") -- right before the print lines, then run it.
+expected_output: |
+  4
+  True
+  ['apple', 'banana', 'mango', 'orange']
+hints:
+  - "Add fruits.add(\"mango\") after fruits.add(\"apple\")."
+  - "Put your new line before the print(len(fruits)) line."
+  - "The print lines will pick up your change automatically."
+reward_stars: 3
+badge: null
+category: course_data_structures
+category_level: 11
+topic: Sets
+concept_tags: [sets]

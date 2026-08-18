@@ -1,0 +1,36 @@
+id: course_control_flow_whileloops_1
+title: "What is a While Loop? 🔂"
+level: 948
+objective: "Repeat a line of code for as long as a condition stays True."
+explanation: |
+  A while loop keeps repeating for as long as its condition is True -- while count < 3: keeps going until count reaches 3.
+
+  Each pass through the loop needs to change something (here, count = count + 1), or the loop would run forever.
+example_code: |
+  count = 0
+  while count < 3:
+      print("Counting: " + str(count))
+      count = count + 1
+starter_code: |
+  count = 0
+  while count < 3:
+      print("Counting: " + str(count))
+      count = count + 1
+challenge: |
+  🎯 Challenge: Change count < 3 to count < 5 so it counts one further, then run it.
+expected_output: |
+  Counting: 0
+  Counting: 1
+  Counting: 2
+  Counting: 3
+  Counting: 4
+hints:
+  - "Only change the number in the while condition."
+  - "count < 5 keeps the loop going until count reaches 5."
+  - "It should look like: while count < 5:"
+reward_stars: 2
+badge: null
+category: course_control_flow
+category_level: 7
+topic: While Loops
+concept_tags: [while-loops]

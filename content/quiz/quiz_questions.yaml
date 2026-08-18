@@ -3107,3 +3107,640 @@ questions:
   correct: 0
   explanation: By scheduling itself again each time it runs, move_snake keeps the snake moving in an ongoing game loop.
   concept_tags: [functions, while-loops]
+- id: q301
+  question: Which symbol is used to create a tuple in Python?
+  options:
+  - Round brackets ()
+  - Square brackets []
+  - Curly braces {}
+  - Angle brackets <>
+  correct: 0
+  explanation: A tuple is created with round brackets, like point = (3, 5).
+  concept_tags:
+  - tuples
+- id: q302
+  question: What is the main difference between a tuple and a list?
+  options:
+  - A tuple can't be changed after it's created, a list can
+  - A tuple can only hold numbers, a list can hold anything
+  - A tuple can't be indexed, a list can
+  - There is no real difference
+  correct: 0
+  explanation: Tuples are immutable -- once created, their values can't be changed. Lists can be changed freely.
+  concept_tags:
+  - tuples
+- id: q303
+  question: 'point = (3, 5)
+
+    print(point[0])
+
+    What does this print?'
+  options:
+  - '3'
+  - '5'
+  - (3, 5)
+  - '0'
+  correct: 0
+  explanation: point[0] reads the first item in the tuple, which is 3.
+  concept_tags:
+  - tuples
+  - indexing
+- id: q304
+  question: Which of these correctly creates a tuple with just one item, the number 5?
+  options:
+  - (5,)
+  - (5)
+  - '[5]'
+  - '{5}'
+  correct: 0
+  explanation: A single-item tuple needs a trailing comma -- (5) without a comma is just the number 5 in parentheses.
+  concept_tags:
+  - tuples
+- id: q305
+  question: 'point = (3, 5)
+
+    point[0] = 10
+
+    What happens when this code runs?'
+  options:
+  - It raises an error, because tuples can't be changed
+  - point becomes (10, 5)
+  - Nothing happens, the line is ignored
+  - point becomes (10,)
+  correct: 0
+  explanation: Tuples are immutable, so trying to assign a new value to one of its items raises a TypeError.
+  concept_tags:
+  - tuples
+  - errors
+- id: q306
+  question: 'name, age = ("Sam", 9)
+
+    What does this line do?'
+  options:
+  - Unpacks the tuple into two separate variables, name and age
+  - Creates a new tuple named name_age
+  - Raises an error because tuples can't be split apart
+  - Only assigns "Sam" to name, ignoring the 9
+  correct: 0
+  explanation: Tuple unpacking assigns each item in the tuple to its own variable, in order.
+  concept_tags:
+  - tuples
+- id: q307
+  question: Does tuple indexing start counting from 0, just like a list?
+  options:
+  - 'Yes'
+  - No, it starts from 1
+  - Only for tuples with two items
+  - Tuples can't be indexed
+  correct: 0
+  explanation: Tuples use the same 0-based indexing as lists and strings.
+  concept_tags:
+  - tuples
+  - indexing
+- id: q308
+  question: Why might a programmer choose a tuple instead of a list?
+  options:
+  - When the data shouldn't change after it's created
+  - When the data needs to be sorted automatically
+  - When the data needs to allow duplicates
+  - Tuples run faster in every situation, so they're always better
+  correct: 0
+  explanation: Tuples signal (and enforce) that the data is fixed, which is useful for things like coordinates that shouldn't be accidentally modified.
+  concept_tags:
+  - tuples
+- id: q309
+  question: How many items are in the tuple ("a", "b", "c")?
+  options:
+  - '3'
+  - '2'
+  - '1'
+  - It depends on the values
+  correct: 0
+  explanation: len(("a", "b", "c")) is 3 -- one for each comma-separated item.
+  concept_tags:
+  - tuples
+- id: q310
+  question: 'students = [("Sam", 9), ("Robin", 11)]
+
+    for name, age in students:
+
+    What is each item in the students list?'
+  options:
+  - A tuple containing a name and an age
+  - A dictionary with name and age keys
+  - Two separate variables
+  - A single string
+  correct: 0
+  explanation: Each item in the list is a 2-item tuple, which the for loop unpacks into name and age.
+  concept_tags:
+  - tuples
+  - iteration
+- id: q311
+  question: Which of these correctly writes a tuple for the coordinates x=3, y=5?
+  options:
+  - (3, 5)
+  - '[3, 5]'
+  - '{3, 5}'
+  - 3, 5, 0
+  correct: 0
+  explanation: 'Coordinates are a classic use for a tuple, written with round brackets: (3, 5).'
+  concept_tags:
+  - tuples
+- id: q312
+  question: Can a tuple hold items of different types, like ("Sam", 9)?
+  options:
+  - Yes, a tuple can mix types just like a list can
+  - No, every item in a tuple must be the same type
+  - Only if the types are both numbers
+  - Only the first item can be a string
+  correct: 0
+  explanation: Tuples, like lists, can freely mix strings, numbers, and other types.
+  concept_tags:
+  - tuples
+- id: q313
+  question: Which symbol is used to create a dictionary in Python?
+  options:
+  - Curly braces {}
+  - Square brackets []
+  - Round brackets ()
+  - Angle brackets <>
+  correct: 0
+  explanation: 'Dictionaries use curly braces, like person = {"name": "Sam"}.'
+  concept_tags:
+  - dictionaries
+- id: q314
+  question: 'person = {"name": "Sam", "age": 9}
+
+    How do you get the value "Sam" out of person?'
+  options:
+  - person["name"]
+  - person[0]
+  - person.name
+  - person("name")
+  correct: 0
+  explanation: Dictionary values are looked up by their key, in square brackets, not by position.
+  concept_tags:
+  - dictionaries
+- id: q315
+  question: 'person = {"age": 9}
+
+    person["age"] = 10
+
+    What happens to person after this runs?'
+  options:
+  - The value stored under "age" becomes 10
+  - A new key called 10 is added
+  - It raises an error, because the key already exists
+  - Nothing changes
+  correct: 0
+  explanation: Assigning to an existing key updates that key's value.
+  concept_tags:
+  - dictionaries
+- id: q316
+  question: What does person.items() give you?
+  options:
+  - Every key paired with its value, one pair at a time
+  - Just the dictionary's keys
+  - Just the dictionary's values
+  - The number of keys in the dictionary
+  correct: 0
+  explanation: items() gives back each key-value pair, which is why "for key, value in person.items():" works.
+  concept_tags:
+  - dictionaries
+  - iteration
+- id: q317
+  question: What's the main difference between a dictionary and a list?
+  options:
+  - A dictionary looks up values by key, a list looks up values by position
+  - A dictionary can only store numbers
+  - A list can't have duplicate values, a dictionary can
+  - There is no real difference
+  correct: 0
+  explanation: Lists use a numeric position (index); dictionaries use a key you choose yourself.
+  concept_tags:
+  - dictionaries
+- id: q318
+  question: '{"a": 1, "b": 2}["b"]
+
+    What does this evaluate to?'
+  options:
+  - '2'
+  - '1'
+  - '"b"'
+  - An error
+  correct: 0
+  explanation: Looking up the key "b" returns its value, 2.
+  concept_tags:
+  - dictionaries
+- id: q319
+  question: 'person = {"name": "Sam"}
+
+    print(person["email"])
+
+    What happens when this runs?'
+  options:
+  - It raises a KeyError, because "email" isn't a key in person
+  - It prints an empty string
+  - It prints None
+  - It adds a new "email" key automatically
+  correct: 0
+  explanation: Accessing a key that doesn't exist with square brackets raises a KeyError.
+  concept_tags:
+  - dictionaries
+  - errors
+- id: q320
+  question: Does a dictionary remember the order its keys were added in?
+  options:
+  - Yes, dictionaries keep insertion order
+  - No, the order is always random
+  - Only if the keys are numbers
+  - Only the first key is remembered
+  correct: 0
+  explanation: Since Python 3.7, dictionaries preserve the order keys were first added in.
+  concept_tags:
+  - dictionaries
+- id: q321
+  question: Which of these correctly creates a dictionary with one key, "score", set to 100?
+  options:
+  - '{"score": 100}'
+  - '["score", 100]'
+  - '("score": 100)'
+  - '{"score" = 100}'
+  correct: 0
+  explanation: 'A dictionary entry is written as "key": value inside curly braces.'
+  concept_tags:
+  - dictionaries
+- id: q322
+  question: 'len({"a": 1, "b": 2, "c": 3})
+
+    What does this return?'
+  options:
+  - '3'
+  - '6'
+  - '2'
+  - '1'
+  correct: 0
+  explanation: len() on a dictionary counts how many keys it has, not the values inside them.
+  concept_tags:
+  - dictionaries
+- id: q323
+  question: 'for key, value in person.items():
+
+    What does key represent on each pass through the loop?'
+  options:
+  - One of the dictionary's keys
+  - One of the dictionary's values
+  - The dictionary's length
+  - The whole dictionary
+  correct: 0
+  explanation: Each loop iteration gives you the next key (and its matching value) from the dictionary.
+  concept_tags:
+  - dictionaries
+  - iteration
+- id: q324
+  question: Can a dictionary's values be different types, like a string and a number mixed together?
+  options:
+  - Yes, dictionary values can be any type, mixed freely
+  - No, every value must be the same type
+  - Only the keys can mix types, not the values
+  - Only if they're all numbers
+  correct: 0
+  explanation: 'A dictionary like {"name": "Sam", "age": 9} freely mixes a string value and a number value.'
+  concept_tags:
+  - dictionaries
+- id: q325
+  question: Which symbol is used to create a set in Python?
+  options:
+  - 'Curly braces {}, without key: value pairs'
+  - Square brackets []
+  - Round brackets ()
+  - Double curly braces {{}}
+  correct: 0
+  explanation: A set uses curly braces like a dictionary, but holds plain values instead of key-value pairs, e.g. {"red", "blue"}.
+  concept_tags:
+  - sets
+- id: q326
+  question: 'colors = {"red", "green", "red"}
+
+    How many items does colors end up with?'
+  options:
+  - '2'
+  - '3'
+  - '1'
+  - '0'
+  correct: 0
+  explanation: Sets automatically drop duplicates, so the repeated "red" only counts once.
+  concept_tags:
+  - sets
+- id: q327
+  question: 'colors = {"red", "green"}
+
+    colors.add("blue")
+
+    What does .add() do here?'
+  options:
+  - Adds "blue" to the set, if it isn't already there
+  - Replaces the whole set with just "blue"
+  - Removes "blue" from the set
+  - Raises an error, because sets can't be changed
+  correct: 0
+  explanation: add() inserts a new item into a set -- it does nothing if that item is already a member.
+  concept_tags:
+  - sets
+- id: q328
+  question: 'fruits = {"apple", "banana"}
+
+    print("banana" in fruits)
+
+    What does this check?'
+  options:
+  - Whether "banana" is a member of the fruits set
+  - How many times "banana" appears in fruits
+  - Whether fruits is empty
+  - The position of "banana" in fruits
+  correct: 0
+  explanation: The "in" operator checks set membership and gives back True or False.
+  concept_tags:
+  - sets
+- id: q329
+  question: Why might printing a set of strings directly look different each time you run the same program?
+  options:
+  - Sets don't keep any guaranteed order
+  - Python shuffles the values on purpose to be unpredictable
+  - It never changes -- sets are always printed alphabetically
+  - Only empty sets behave this way
+  correct: 0
+  explanation: Sets don't preserve insertion order the way lists and dictionaries do, so their printed order can vary between runs.
+  concept_tags:
+  - sets
+- id: q330
+  question: What does sorted(my_set) give you back?
+  options:
+  - A list of the set's items, in sorted order
+  - The same set, unchanged
+  - The largest item in the set
+  - A dictionary of the set's items
+  correct: 0
+  explanation: sorted() always returns a list, giving you a predictable, ordered view of a set's contents.
+  concept_tags:
+  - sets
+- id: q331
+  question: 'len({1, 2, 2, 3})
+
+    What does this return?'
+  options:
+  - '3'
+  - '4'
+  - '2'
+  - '1'
+  correct: 0
+  explanation: 'The duplicate 2 is dropped when the set is created, leaving three unique items: 1, 2, 3.'
+  concept_tags:
+  - sets
+- id: q332
+  question: What's the main thing that makes a set different from a list?
+  options:
+  - A set only ever holds unique items, with no guaranteed order
+  - A set can only hold numbers
+  - A set is always sorted automatically
+  - A set can't be looped over
+  correct: 0
+  explanation: Sets automatically enforce uniqueness and don't track any particular order -- the two biggest differences from a list.
+  concept_tags:
+  - sets
+- id: q333
+  question: Can a set end up with duplicate items after you've finished adding to it?
+  options:
+  - No, duplicates are always automatically removed
+  - Yes, if you add the same item twice
+  - Only if the items are numbers
+  - Only the last duplicate is kept, the rest stay too
+  correct: 0
+  explanation: A set can never contain two equal items -- adding a duplicate is simply a no-op.
+  concept_tags:
+  - sets
+- id: q334
+  question: Which of these correctly creates an empty set?
+  options:
+  - set()
+  - '{}'
+  - '[]'
+  - ()
+  correct: 0
+  explanation: '{} creates an empty dictionary, not an empty set -- set() is the only way to make an empty set.'
+  concept_tags:
+  - sets
+- id: q335
+  question: '{1, 2, 3} == {3, 2, 1}
+
+    What does this evaluate to?'
+  options:
+  - 'True'
+  - 'False'
+  - An error
+  - None
+  correct: 0
+  explanation: Sets compare by their contents, not by any order, so these two sets are equal.
+  concept_tags:
+  - sets
+- id: q336
+  question: Is a set ordered like a list is?
+  options:
+  - No, sets don't preserve any particular order
+  - Yes, sets always keep the order items were added in
+  - Yes, sets are always kept in reverse order
+  - Only sets of numbers are ordered
+  correct: 0
+  explanation: Unlike lists (and dictionaries), sets make no guarantee about the order of their items.
+  concept_tags:
+  - sets
+- id: q337
+  question: Which symbol starts a comment in Python?
+  options:
+  - '#'
+  - //
+  - --
+  - <!--
+  correct: 0
+  explanation: 'A # symbol starts a comment -- Python ignores everything after it on that line.'
+  concept_tags:
+  - comments
+- id: q338
+  question: '# print("Hidden")
+
+    print("Visible")
+
+    What does this program print?'
+  options:
+  - Visible
+  - Hidden
+  - Hidden\nVisible
+  - Nothing
+  correct: 0
+  explanation: The first line is commented out, so Python skips it entirely -- only "Visible" prints.
+  concept_tags:
+  - comments
+- id: q339
+  question: Does a comment change what a program actually does when it runs?
+  options:
+  - No, comments are ignored by Python entirely
+  - Yes, comments run just like any other line
+  - Only if the comment contains a number
+  - Only if the comment is at the very top of the file
+  correct: 0
+  explanation: Comments are notes for humans -- Python skips them completely when running the program.
+  concept_tags:
+  - comments
+- id: q340
+  question: 'print("Hello!")
+
+    # print("Goodbye!")
+
+    Why does "Goodbye!" not appear when this runs?'
+  options:
+  - 'The # in front of that line comments it out, so Python skips it'
+  - print() can only be used once per program
+  - '"Goodbye!" is spelled wrong'
+  - Python only runs the first line of every program
+  correct: 0
+  explanation: 'The # turns that whole line into a comment, so Python never runs it.'
+  concept_tags:
+  - comments
+- id: q341
+  question: What is one common reason programmers use comments?
+  options:
+  - To leave a note explaining what a piece of code does
+  - To make the program run faster
+  - To fix errors automatically
+  - To make text print in bold
+  correct: 0
+  explanation: Comments are notes for humans reading the code -- they help explain what a section does, without affecting how it runs.
+  concept_tags:
+  - comments
+- id: q342
+  question: "def greet(name):\n    print(\"Hello, \" + name)\nWhat is name in this function definition?"
+  options:
+  - A parameter -- an input the function expects
+  - A return value
+  - A comment
+  - A loop variable
+  correct: 0
+  explanation: name is a parameter -- a placeholder for whatever value gets passed in when the function is called.
+  concept_tags:
+  - parameters
+- id: q343
+  question: "def greet(name):\n    print(\"Hi, \" + name)\ngreet(\"Sam\")\nWhat value does name have while this call runs?"
+  options:
+  - '"Sam"'
+  - '"name"'
+  - An empty string
+  - It has no value yet
+  correct: 0
+  explanation: Calling greet("Sam") passes "Sam" in, so name is set to "Sam" for that call.
+  concept_tags:
+  - parameters
+- id: q344
+  question: 'def introduce(name, age):
+
+    How many parameters does this function have?'
+  options:
+  - '2'
+  - '1'
+  - '0'
+  - It depends on how it's called
+  correct: 0
+  explanation: introduce takes two parameters, name and age, separated by a comma.
+  concept_tags:
+  - parameters
+- id: q345
+  question: Why are parameters useful in a function?
+  options:
+  - They let the same function work with different values each time it's called
+  - They make the function run without being called
+  - They automatically print the function's result
+  - They prevent the function from ever having an error
+  correct: 0
+  explanation: Parameters let you reuse one function definition with many different inputs, instead of writing a new function for each value.
+  concept_tags:
+  - parameters
+- id: q346
+  question: "def add(a, b):\n    print(a + b)\nadd(3, 4)\nWhat gets printed?"
+  options:
+  - '7'
+  - '34'
+  - '3'
+  - '4'
+  correct: 0
+  explanation: a is 3 and b is 4 for this call, so a + b is 7.
+  concept_tags:
+  - parameters
+  - numbers
+- id: q347
+  question: "def double(n):\n    return n * 2\nWhat does return do here?"
+  options:
+  - Sends the value n * 2 back out of the function, to be used elsewhere
+  - Prints n * 2 to the screen
+  - Stops the whole program
+  - Deletes the value of n
+  correct: 0
+  explanation: return hands a value back to wherever the function was called from -- it doesn't print anything by itself.
+  concept_tags:
+  - return-values
+- id: q348
+  question: "def double(n):\n    return n * 2\nresult = double(5)\nprint(result)\nWhat does this print?"
+  options:
+  - '10'
+  - '5'
+  - n * 2
+  - Nothing -- return doesn't print
+  correct: 0
+  explanation: double(5) returns 10, which gets stored in result and then printed.
+  concept_tags:
+  - return-values
+- id: q349
+  question: What's the key difference between return and print inside a function?
+  options:
+  - return hands a value back to use later; print just shows text on the screen
+  - return shows text on the screen; print hands a value back
+  - They do exactly the same thing
+  - return can only be used with numbers
+  correct: 0
+  explanation: print() displays something but gives nothing back to the code; return sends a value back that can be stored or reused.
+  concept_tags:
+  - return-values
+- id: q350
+  question: "def square(n):\n    return n * n\nprint(square(3) + 1)\nWhat does this print?"
+  options:
+  - '10'
+  - '9'
+  - '4'
+  - '3'
+  correct: 0
+  explanation: square(3) returns 9, and 9 + 1 is 10.
+  concept_tags:
+  - return-values
+  - numbers
+- id: q351
+  question: "def greet():\n    print(\"Hi!\")\nresult = greet()\nprint(result)\nWhat does the second print(result) show?"
+  options:
+  - None
+  - '"Hi!"'
+  - An error
+  - Hi!\nHi!
+  correct: 0
+  explanation: greet() has no return statement, so it gives back Python's default "nothing" value, None, even though it did print "Hi!" along the way.
+  concept_tags:
+  - return-values
+  - functions
+- id: q352
+  question: "def get_greeting(name):\n    return \"Hello, \" + name\nmessage = get_greeting(\"Sam\")\nWhy is message useful here, instead of just calling get_greeting(\"Sam\") on its own?"
+  options:
+  - message stores the returned value so it can be used again later, like being printed
+  - message makes the function run faster
+  - Without message, the function wouldn't run at all
+  - message changes what the function returns
+  correct: 0
+  explanation: Storing a function's return value in a variable lets you use that result more than once, instead of it disappearing right away.
+  concept_tags:
+  - return-values
+  - variables

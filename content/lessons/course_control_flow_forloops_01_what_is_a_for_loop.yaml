@@ -1,0 +1,30 @@
+id: course_control_flow_forloops_1
+title: "What is a For Loop? 🔁"
+level: 945
+objective: "Repeat a line of code a fixed number of times with a for loop."
+explanation: |
+  A for loop repeats the same lines once for every item in a range -- for i in range(3): runs 3 times, with i being 0, 1, then 2.
+example_code: |
+  for i in range(3):
+      print("Hooray!")
+starter_code: |
+  for i in range(3):
+      print("Hooray!")
+challenge: |
+  🎯 Challenge: Change range(3) to range(5) so it prints one more time, then run it.
+expected_output: |
+  Hooray!
+  Hooray!
+  Hooray!
+  Hooray!
+  Hooray!
+hints:
+  - "Only change the number inside range(...)."
+  - "range(5) makes the loop run 5 times instead of 3."
+  - "It should look like: for i in range(5):"
+reward_stars: 2
+badge: null
+category: course_control_flow
+category_level: 4
+topic: For Loops
+concept_tags: [for-loops, iteration]

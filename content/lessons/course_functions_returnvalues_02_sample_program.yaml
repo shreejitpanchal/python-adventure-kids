@@ -1,0 +1,31 @@
+id: course_functions_returnvalues_2
+title: "Your Sample Program with Return Values ↩️"
+level: 958
+objective: "Use a returned value inside another expression, not just print it directly."
+explanation: |
+  A returned value can be used in another calculation, not just printed on its own -- here it's joined into a sentence with +.
+example_code: |
+  def square(number):
+      return number * number
+
+  result = square(4)
+  print("Squared: " + str(result))
+starter_code: |
+  def square(number):
+      return number * number
+
+  result = square(4)
+  print("Squared: " + str(result))
+challenge: |
+  🎯 Challenge: Change 4 to 6, then run it.
+expected_output: "Squared: 36"
+hints:
+  - "Only change the number passed into square(...)."
+  - "Don't change anything inside the function itself."
+  - "It should look like: result = square(6)"
+reward_stars: 3
+badge: null
+category: course_functions
+category_level: 8
+topic: Return Values
+concept_tags: [return-values]

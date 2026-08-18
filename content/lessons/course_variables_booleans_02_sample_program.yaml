@@ -1,0 +1,31 @@
+id: course_variables_booleans_2
+title: "Your Sample Program with Booleans 🔘"
+level: 934
+objective: "Combine two conditions with and to produce a single boolean."
+explanation: |
+  and combines two booleans into one -- the result is only True if BOTH sides are True.
+
+  age >= 8 and has_ticket is True only when the child is old enough AND has a ticket.
+example_code: |
+  age = 10
+  has_ticket = True
+  can_enter = age >= 8 and has_ticket
+  print(can_enter)
+starter_code: |
+  age = 10
+  has_ticket = True
+  can_enter = age >= 8 and has_ticket
+  print(can_enter)
+challenge: |
+  🎯 Challenge: Change age to 5, then run it.
+expected_output: "False"
+hints:
+  - "Only change the number after age ="
+  - "5 is less than 8, so age >= 8 becomes False, which makes the whole and False."
+  - "It should look like: age = 5"
+reward_stars: 3
+badge: null
+category: course_variables
+category_level: 11
+topic: Booleans
+concept_tags: [booleans, comparison, conditionals]

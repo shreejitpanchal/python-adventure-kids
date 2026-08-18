@@ -1,6 +1,6 @@
 id: course_capstone_2
 title: "Your Sample Program: A To-Do App 🏁"
-level: 916
+level: 925
 objective: "Build a small To-Do app using a list, a function, a loop, and a conditional together."
 explanation: |
   Let's build a real To-Do app: a list to hold tasks, a function to add a task, a loop to number and print them, and an if/else in case the list is empty.

@@ -47,11 +47,34 @@ def test_one_card_per_chapter_in_curriculum_order(state):
     assert titles == [get_category_meta(c).title for c in COURSE_CATEGORIES]
 
 
-def test_chapter_card_status_starts_at_zero_of_three(state):
+def test_chapter_card_status_starts_at_zero_of_its_total(state):
     page = FakePage()
     view = build_course_map_view(page, state)
+    first_chapter = COURSE_CATEGORIES[0]
+    total = len(state.lesson_engine.lessons_in_category(first_chapter))
+
     card = _chapter_cards(view)[0]
-    assert card.content.controls[1].value == "0/3 items"
+    assert card.content.controls[1].value == f"0/{total} items"
+
+
+def test_data_structures_card_shows_0_of_12(state):
+    page = FakePage()
+    view = build_course_map_view(page, state)
+    card = next(
+        c for c in _chapter_cards(view)
+        if c.content.controls[0].controls[1].value == get_category_meta("course_data_structures").title
+    )
+    assert card.content.controls[1].value == "0/12 items"
+
+
+def test_variables_card_shows_0_of_15(state):
+    page = FakePage()
+    view = build_course_map_view(page, state)
+    card = next(
+        c for c in _chapter_cards(view)
+        if c.content.controls[0].controls[1].value == get_category_meta("course_variables").title
+    )
+    assert card.content.controls[1].value == "0/15 items"
 
 
 def test_chapter_card_click_navigates_to_its_chapter_route(state):
@@ -78,7 +101,7 @@ def test_hud_reflects_real_progress(state):
     assert lessons_text.value == f"{status.items_done}/{status.items_total} lessons complete"
 
 
-def test_chapter_card_shows_complete_once_all_three_items_done(state):
+def test_chapter_card_shows_complete_once_every_item_done(state):
     first_chapter = COURSE_CATEGORIES[0]
     lessons = state.lesson_engine.lessons_in_category(first_chapter)
     for lesson in lessons:

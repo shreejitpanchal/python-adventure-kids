@@ -1,0 +1,32 @@
+id: course_intro_setup_comments_1
+title: "What is a Comment? 💬"
+level: 939
+objective: "Understand that # starts a comment, and use one to turn off a line of code."
+explanation: |
+  A comment starts with a # symbol. Python ignores anything after a # -- it's just a note for humans reading the code, not an instruction.
+
+  Comments are also handy for temporarily turning off a line without deleting it -- just put a # in front of it.
+example_code: |
+  print("Hello!")
+  # print("This won't show")
+  print("Goodbye!")
+starter_code: |
+  print("Hello!")
+  # print("This won't show")
+  print("Goodbye!")
+challenge: |
+  🎯 Challenge: Remove the # in front of the middle line so it prints too, then run it.
+expected_output: |
+  Hello!
+  This won't show
+  Goodbye!
+hints:
+  - "Delete just the # symbol (and the space after it) on the middle line."
+  - "Leave the quotes and the rest of that line exactly as they are."
+  - "It should look like: print(\"This won't show\")"
+reward_stars: 2
+badge: null
+category: course_intro_setup
+category_level: 4
+topic: Comments
+concept_tags: [comments]

@@ -1,0 +1,19 @@
+id: course_variables_booleans_3
+title: "Topic Quiz: Booleans ❓"
+level: 935
+objective: "Test what you've learned about booleans."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about booleans.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: course_variables
+category_level: 12
+topic: Booleans
+concept_tags: [booleans]
+is_quiz: true

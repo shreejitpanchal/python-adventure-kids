@@ -1,0 +1,31 @@
+id: course_functions_parameters_1
+title: "What is a Parameter? 🧩"
+level: 954
+objective: "Define a function that takes one parameter, and call it with different values."
+explanation: |
+  A parameter is an input a function can take -- def greet(name): builds a machine named greet that takes one input, called name.
+
+  Each time you call greet(...) with a different value, name changes to match.
+example_code: |
+  def greet(name):
+      print("Hello, " + name + "!")
+
+  greet("Sam")
+starter_code: |
+  def greet(name):
+      print("Hello, " + name + "!")
+
+  greet("Sam")
+challenge: |
+  🎯 Challenge: Call greet with "Robin" instead of "Sam", then run it.
+expected_output: "Hello, Robin!"
+hints:
+  - "Only change the text inside greet(...) at the bottom."
+  - "Don't change anything inside the function itself."
+  - "It should look like: greet(\"Robin\")"
+reward_stars: 2
+badge: null
+category: course_functions
+category_level: 4
+topic: Parameters
+concept_tags: [parameters]

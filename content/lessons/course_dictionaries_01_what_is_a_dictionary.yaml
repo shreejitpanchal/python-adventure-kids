@@ -1,0 +1,36 @@
+id: course_dictionaries_1
+title: "What is a Dictionary? 📖"
+level: 918
+objective: "Create a dictionary and read a value by its key."
+explanation: |
+  A dictionary stores information in key-value pairs, like a real
+  dictionary pairs a word with its meaning. It uses curly braces {}.
+
+  person = {"name": "Sam", "age": 9} creates a dictionary named person
+  with two keys, "name" and "age".
+
+  person["name"] looks up the value stored under the "name" key -- not by
+  position like a list, but by the key itself.
+example_code: |
+  person = {"name": "Sam", "age": 9}
+  print(person["name"])
+  print(person["age"])
+starter_code: |
+  person = {"name": "Sam", "age": 9}
+  print(person["name"])
+  print(person["age"])
+challenge: |
+  🎯 Challenge: Change the values so name is "Robin" and age is 11, then run it.
+expected_output: |
+  Robin
+  11
+hints:
+  - "Change the text after \"name\": and the number after \"age\":."
+  - "Keep the keys (\"name\" and \"age\") exactly the same -- only change the values."
+  - "It should look like: person = {\"name\": \"Robin\", \"age\": 11}"
+reward_stars: 2
+badge: null
+category: course_data_structures
+category_level: 7
+topic: Dictionaries
+concept_tags: [dictionaries]

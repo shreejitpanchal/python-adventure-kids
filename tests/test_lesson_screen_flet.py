@@ -162,6 +162,22 @@ def test_course_lesson_next_lesson_routes_to_the_quiz_when_the_next_item_is_a_qu
     assert controller.page.routes_visited == [f"/course-quiz/{next_id}"]
 
 
+def test_course_lesson_next_lesson_is_topic_scoped_not_blocked_by_sibling_topics(state):
+    """Regression guard for the exact bug next_topic_item() was written to
+    fix: completing Sets' first item (skipping Lists/Tuples/Dictionaries
+    entirely) must surface Sets' second item as "next", not None -- the
+    old whole-category next_unlocked_in_category() would have required
+    every earlier category_level (i.e. all of Lists/Tuples/Dictionaries)
+    done first, even though topics are supposed to be independent."""
+    lesson = state.lesson_engine.get("course_sets_1")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    controller.editor.value = 'colors = {"red", "green", "blue", "red", "yellow"}\nprint(len(colors))\nprint(sorted(colors))'
+    asyncio.run(controller._on_run(None))
+
+    assert controller._next_in_category_id == "course_sets_2"
+
+
 # -- sound effects on lesson success ---------------------------------------
 def test_plain_success_plays_only_the_success_chime(state):
     fake_player = FakeSoundPlayer()

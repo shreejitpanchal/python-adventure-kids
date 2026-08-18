@@ -1,7 +1,7 @@
 id: course_intro_setup_1
 title: "What is Python? 🧭"
 level: 900
-objective: "Understand what a program is, and use print() and comments for the first time."
+objective: "Understand what a program is, and use print() for the first time."
 explanation: |
   A computer program is just a list of instructions the computer follows, one by one, from top to bottom.
 
@@ -27,4 +27,5 @@ reward_stars: 2
 badge: null
 category: course_intro_setup
 category_level: 1
-concept_tags: [print, comments]
+topic: Print
+concept_tags: [print]

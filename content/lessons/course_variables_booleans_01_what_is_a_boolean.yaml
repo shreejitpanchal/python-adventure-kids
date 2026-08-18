@@ -1,0 +1,36 @@
+id: course_variables_booleans_1
+title: "What is a Boolean? 🔘"
+level: 933
+objective: "Store True/False values and see that comparisons produce booleans too."
+explanation: |
+  A boolean is a value that's either True or False -- useful for yes/no questions like "is it sunny?"
+
+  Comparisons like 5 > 3 also give you a boolean back -- True or False, not a number.
+example_code: |
+  is_sunny = True
+  is_raining = False
+  print(is_sunny)
+  print(is_raining)
+  print(5 > 3)
+starter_code: |
+  is_sunny = True
+  is_raining = False
+  print(is_sunny)
+  print(is_raining)
+  print(5 > 3)
+challenge: |
+  🎯 Challenge: Change is_sunny to False and is_raining to True, then run it.
+expected_output: |
+  False
+  True
+  True
+hints:
+  - "Change True to False after is_sunny ="
+  - "Change False to True after is_raining ="
+  - "The last line doesn't need to change -- 5 is still greater than 3."
+reward_stars: 2
+badge: null
+category: course_variables
+category_level: 10
+topic: Booleans
+concept_tags: [booleans]

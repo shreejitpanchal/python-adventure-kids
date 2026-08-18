@@ -1,0 +1,31 @@
+id: course_variables_strings_1
+title: "What is a String? 🔤"
+level: 930
+objective: "Combine strings with + and check their length with len()."
+explanation: |
+  A string is text, written inside quotes. You can join strings together with +, and len() tells you how many characters are in one.
+example_code: |
+  greeting = "Hello"
+  name = "Sam"
+  print(greeting + ", " + name + "!")
+  print(len(name))
+starter_code: |
+  greeting = "Hello"
+  name = "Sam"
+  print(greeting + ", " + name + "!")
+  print(len(name))
+challenge: |
+  🎯 Challenge: Change name to "Robin", then run it.
+expected_output: |
+  Hello, Robin!
+  5
+hints:
+  - "Only change the text inside the quotes after name ="
+  - "The second line will update automatically once name changes."
+  - "It should look like: name = \"Robin\""
+reward_stars: 2
+badge: null
+category: course_variables
+category_level: 7
+topic: Strings
+concept_tags: [strings]

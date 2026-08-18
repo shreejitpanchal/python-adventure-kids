@@ -1,0 +1,32 @@
+id: course_variables_strings_2
+title: "Your Sample Program with Strings 🔤"
+level: 931
+objective: "Use .upper() and slicing to pull characters out of a string."
+explanation: |
+  word.upper() gives back the whole string in capital letters. word[0] reads just the first character, and word[0:3] reads a slice -- everything from position 0 up to (but not including) position 3.
+example_code: |
+  word = "python"
+  print(word.upper())
+  print(word[0])
+  print(word[0:3])
+starter_code: |
+  word = "python"
+  print(word.upper())
+  print(word[0])
+  print(word[0:3])
+challenge: |
+  🎯 Challenge: Change word to "coding", then run it.
+expected_output: |
+  CODING
+  c
+  cod
+hints:
+  - "Only change the text inside the quotes after word ="
+  - "The other lines will update automatically once word changes."
+  - "It should look like: word = \"coding\""
+reward_stars: 3
+badge: null
+category: course_variables
+category_level: 8
+topic: Strings
+concept_tags: [strings, slicing]

@@ -30,6 +30,7 @@ hints:
   - "The loop will automatically pick up the new item -- you don't need to change it."
 reward_stars: 3
 badge: null
-category: course_lists
+category: course_data_structures
 category_level: 2
+topic: Lists
 concept_tags: [lists, indexing, iteration]

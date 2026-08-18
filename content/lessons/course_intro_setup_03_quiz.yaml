@@ -1,9 +1,9 @@
 id: course_intro_setup_3
-title: "Chapter Quiz: Intro & Setup ❓"
+title: "Topic Quiz: Print ❓"
 level: 902
-objective: "Test what you've learned about programs, print(), and comments."
+objective: "Test what you've learned about print()."
 explanation: |
-  Answer the multiple-choice questions below to show what you've learned about print() and comments.
+  Answer the multiple-choice questions below to show what you've learned about print().
 example_code: ""
 starter_code: ""
 challenge: |
@@ -14,5 +14,6 @@ reward_stars: 3
 badge: null
 category: course_intro_setup
 category_level: 3
-concept_tags: [print, comments]
+topic: Print
+concept_tags: [print]
 is_quiz: true

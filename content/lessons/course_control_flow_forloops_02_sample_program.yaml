@@ -1,0 +1,35 @@
+id: course_control_flow_forloops_2
+title: "Your Sample Program with For Loops 🔁"
+level: 946
+objective: "Use the loop variable itself inside a calculation."
+explanation: |
+  The loop variable (number, here) changes on every pass through the loop -- you can use it in a calculation, not just print it directly.
+example_code: |
+  for number in range(1, 6):
+      print(number * 2)
+starter_code: |
+  for number in range(1, 6):
+      print(number * 2)
+challenge: |
+  🎯 Challenge: Change range(1, 6) to range(1, 11) so it doubles every number from 1 to 10, then run it.
+expected_output: |
+  2
+  4
+  6
+  8
+  10
+  12
+  14
+  16
+  18
+  20
+hints:
+  - "Only change the numbers inside range(...)."
+  - "range(1, 11) goes from 1 up to (but not including) 11 -- that's 1 through 10."
+  - "It should look like: for number in range(1, 11):"
+reward_stars: 3
+badge: null
+category: course_control_flow
+category_level: 5
+topic: For Loops
+concept_tags: [for-loops, iteration]

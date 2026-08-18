@@ -1,38 +1,33 @@
 id: course_control_flow_1
-title: "What is Control Flow? 🔀"
+title: "What is a Conditional? 🚦"
 level: 906
-objective: "Use if/elif/else and a for loop to control what a program does."
+objective: "Use if/else and a comparison to make Python choose between two outcomes."
 explanation: |
-  Control flow means choosing what a program does next, instead of always running every line the same way.
+  Python can make decisions, just like you do!
 
-  if condition: runs the lines under it only when condition is True. elif checks another condition if the first was False. else runs when none of the above were True.
-
-  A for loop repeats the same lines once for every item in a range or list -- for i in range(3): runs 3 times, with i being 0, 1, then 2.
+  if age >= 8: checks whether age is 8 or more. If that's true, Python runs the line underneath it. else: tells Python what to do instead, if the answer was no.
 example_code: |
-  for i in range(3):
-      if i == 1:
-          print("one!")
-      else:
-          print("not one")
+  age = 9
+  if age >= 8:
+      print("You can play!")
+  else:
+      print("You are too young!")
 starter_code: |
-  for i in range(3):
-      if i == 1:
-          print("one!")
-      else:
-          print("not one")
+  age = 9
+  if age >= 8:
+      print("You can play!")
+  else:
+      print("You are too young!")
 challenge: |
-  🎯 Challenge: Change range(3) to range(4) so the loop runs one more time, then run it.
-expected_output: |
-  not one
-  one!
-  not one
-  not one
+  🎯 Challenge: Change age so Python decides you are too young to play.
+expected_output: "You are too young!"
 hints:
-  - "Only change the number inside range(...)."
-  - "The loop always prints \"one!\" when i equals 1, and \"not one\" otherwise."
-  - "It should look like: for i in range(4):"
+  - "Try changing age = 9 to a smaller number, like age = 5."
+  - "The else: part only runs when the if condition is false."
+  - "Any age less than 8 should work."
 reward_stars: 2
 badge: null
 category: course_control_flow
 category_level: 1
-concept_tags: [conditionals, comparison, loops, for-loops]
+topic: Conditionals
+concept_tags: [conditionals, comparison]

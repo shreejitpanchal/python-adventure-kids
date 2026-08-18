@@ -1,0 +1,19 @@
+id: course_intro_setup_comments_3
+title: "Topic Quiz: Comments ❓"
+level: 941
+objective: "Test what you've learned about comments."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about comments.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: course_intro_setup
+category_level: 6
+topic: Comments
+concept_tags: [comments]
+is_quiz: true

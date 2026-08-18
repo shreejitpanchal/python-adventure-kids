@@ -1,5 +1,5 @@
 id: course_lists_3
-title: "Chapter Quiz: Lists & Data Structures ❓"
+title: "Chapter Quiz: Lists ❓"
 level: 914
 objective: "Test what you've learned about lists and indexing."
 explanation: |
@@ -12,7 +12,8 @@ expected_output: ""
 hints: []
 reward_stars: 3
 badge: null
-category: course_lists
+category: course_data_structures
 category_level: 3
+topic: Lists
 concept_tags: [lists, indexing]
 is_quiz: true

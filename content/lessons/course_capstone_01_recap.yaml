@@ -1,6 +1,6 @@
 id: course_capstone_1
 title: "Recap: Building Bigger Programs 🏁"
-level: 915
+level: 924
 objective: "Combine variables, lists, functions, and if/else into one program before building the To-Do app."
 explanation: |
   You've now learned variables, control flow, functions, and lists -- everything you need to build a real program.

@@ -1,0 +1,37 @@
+id: course_variables_numbers_2
+title: "Your Sample Program with Numbers 🔢"
+level: 928
+objective: "Use numbers in a small calculation involving multiplication and addition."
+explanation: |
+  Let's use numbers for something practical: working out the area and perimeter of a rectangle.
+
+  area = width * length. perimeter = 2 * (width + length) -- the parentheses make sure the addition happens first.
+example_code: |
+  width = 4
+  length = 6
+  area = width * length
+  perimeter = 2 * (width + length)
+  print("Area: " + str(area))
+  print("Perimeter: " + str(perimeter))
+starter_code: |
+  width = 4
+  length = 6
+  area = width * length
+  perimeter = 2 * (width + length)
+  print("Area: " + str(area))
+  print("Perimeter: " + str(perimeter))
+challenge: |
+  🎯 Challenge: Change width to 5 and length to 8, then run it.
+expected_output: |
+  Area: 40
+  Perimeter: 26
+hints:
+  - "Change the number after width = and the number after length ="
+  - "The area and perimeter lines will recalculate automatically."
+  - "It should look like: width = 5 then length = 8"
+reward_stars: 3
+badge: null
+category: course_variables
+category_level: 5
+topic: Numbers
+concept_tags: [numbers, expressions]

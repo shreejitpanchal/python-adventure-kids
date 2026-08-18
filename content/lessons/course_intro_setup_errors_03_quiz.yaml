@@ -1,0 +1,19 @@
+id: course_intro_setup_errors_3
+title: "Topic Quiz: Reading Errors ❓"
+level: 944
+objective: "Test what you've learned about reading and avoiding errors."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about errors.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: course_intro_setup
+category_level: 9
+topic: Reading Errors
+concept_tags: [errors]
+is_quiz: true

@@ -1,0 +1,32 @@
+id: course_intro_setup_comments_2
+title: "Your Sample Program with Comments 💬"
+level: 940
+objective: "Use comments to label the steps of a small program."
+explanation: |
+  Comments are great for labeling what each part of your program does, especially once a program has more than a couple of lines.
+example_code: |
+  # Step 1: greet the user
+  print("Hello!")
+  # Step 2: ask how they are
+  print("How are you?")
+starter_code: |
+  # Step 1: greet the user
+  print("Hello!")
+  # Step 2: ask how they are
+  print("How are you?")
+challenge: |
+  🎯 Challenge: Add a third labeled step -- a comment "# Step 3: say goodbye" followed by print("Goodbye!") -- then run it.
+expected_output: |
+  Hello!
+  How are you?
+  Goodbye!
+hints:
+  - "Add two new lines at the end: a comment, then a print()."
+  - "Match the style of the steps above it."
+  - "It should look like: # Step 3: say goodbye then print(\"Goodbye!\") on the next line."
+reward_stars: 3
+badge: null
+category: course_intro_setup
+category_level: 5
+topic: Comments
+concept_tags: [comments]

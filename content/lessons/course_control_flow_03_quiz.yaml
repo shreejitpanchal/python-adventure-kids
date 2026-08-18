@@ -1,9 +1,9 @@
 id: course_control_flow_3
-title: "Chapter Quiz: Control Flow ❓"
+title: "Topic Quiz: Conditionals ❓"
 level: 908
-objective: "Test what you've learned about conditionals and loops."
+objective: "Test what you've learned about if/elif/else and comparisons."
 explanation: |
-  Answer the multiple-choice questions below to show what you've learned about if/else, comparisons, and loops.
+  Answer the multiple-choice questions below to show what you've learned about conditionals.
 example_code: ""
 starter_code: ""
 challenge: |
@@ -14,5 +14,6 @@ reward_stars: 3
 badge: null
 category: course_control_flow
 category_level: 3
-concept_tags: [conditionals, comparison, loops, for-loops, while-loops, iteration]
+topic: Conditionals
+concept_tags: [conditionals, comparison]
 is_quiz: true

@@ -1,0 +1,19 @@
+id: course_variables_typeconversion_3
+title: "Topic Quiz: Type Conversion ❓"
+level: 938
+objective: "Test what you've learned about converting between types."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about type conversion.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: course_variables
+category_level: 15
+topic: Type Conversion
+concept_tags: [type-conversion]
+is_quiz: true

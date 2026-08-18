@@ -124,35 +124,65 @@ other automatically.
 ### Python Learning course
 
 A third, separate guided path — a fixed 6-chapter course (Intro &
-Setup, Variables & Data Types, Control Flow, Functions, Lists & Data
+Setup, Variables & Data Types, Control Flow, Functions, Data
 Structures, Capstone: To-Do App), reached from the Learning Hub's "🎓
 Python Learning" card. It's built almost entirely by reusing the
 category-browser machinery above rather than inventing a parallel
 content model: each chapter is just a lesson `category`
-(`course_intro_setup`, `course_variables`, ...) with exactly 3
-`category_level`s — a concept lesson ("What is X?"), a coding exercise
-("Your Sample Program"), and a quiz. Chapters themselves are never
-locked; only the 3 items *within* one gate in order via the existing
-`LessonEngine.is_unlocked()`, unchanged.
+(`course_intro_setup`, `course_variables`, `course_data_structures`,
+...). Chapters themselves are never locked.
+
+**Topics within a chapter.** A chapter isn't always one flat 3-item
+list — `Lesson.topic` (e.g. `"Lists"`, `"Numbers"`) optionally sub-groups
+a chapter's items into several independent named topics, each still
+exactly 3 items (a concept lesson "What is X?", a coding exercise "Your
+Sample Program", and a quiz). Five of the six chapters use this: `course_
+data_structures` holds 4 topics (Lists/Tuples/Dictionaries/Sets, 12 items
+— each data structure gets its own quiz since each has its own gotchas
+worth testing separately, e.g. sets have no guaranteed print order,
+tuples are immutable), `course_variables` holds 5 (Variables/Numbers/
+Strings/Booleans/Type Conversion, 15 items), `course_intro_setup` holds 3
+(Print/Comments/Reading Errors, 9 items), `course_control_flow` holds 3
+(Conditionals/For Loops/While Loops, 9 items), and `course_functions`
+holds 3 (Defining Functions/Parameters/Return Values, 9 items) — 57
+lessons across the whole course. Only `course_capstone` has no
+sub-grouping: every lesson there shares `topic=""`, which collapses back
+to the original flat 3-item list — the UI renders no topic heading in
+that case.
+
+Topics within a chapter are never locked relative to each other either
+(the child can jump straight to Sets without finishing Lists) — only the
+3 items *within one topic* gate in order. This needed a genuinely new,
+topic-scoped unlock check: `app/engine/course_status.py`'s
+`is_topic_item_unlocked(lesson, topic_items, completed_ids)` is the
+topic-scoped equivalent of `LessonEngine.is_unlocked()`, which gates
+across a lesson's *entire* category and so can't be reused once a
+category holds more than one topic (it would incorrectly require every
+earlier topic done too). The same file's `next_topic_item()` is the
+matching topic-scoped equivalent of `next_unlocked_in_category()`, used
+by the lesson screen's "Next Lesson" button so finishing, say, Sets'
+first item doesn't get stuck behind unfinished Lists/Tuples/Dictionaries
+items.
 
 The quiz item is modeled as a `Lesson` too, with a new `is_quiz: bool`
 field, rather than a separate content type. When `is_quiz` is set, the
 lesson-consuming screen (`course_quiz_screen.py` /
 `course_quiz_screen_flet.py`) shows a multiple-choice run instead of a
-code editor, drawing questions from the existing 300-question bank
-filtered to that lesson's `concept_tags`
+code editor, drawing questions from the quiz bank
+(`content/quiz/quiz_questions.yaml`) filtered to that lesson's `concept_tags`
 (`QuizEngine.start_session_for_tags()`, falling back to the full bank
 if the tag filter matches nothing). Passing at ≥70% calls the exact
 same `ProgressStore.complete_lesson()` every other lesson uses — so
 quiz completion participates in unlock/completion tracking for free,
 with zero new `ProgressStore` schema.
 
-`app/engine/course_status.py` computes per-chapter and whole-course
-progress (`compute_course_status()`) and awards a `course_graduate`
-badge once every one of the 18 items is complete
-(`maybe_award_course_badge()`) — called after each course quiz pass,
-since within-chapter ordering guarantees the last item ever completed
-across the whole course is always some chapter's quiz.
+`app/engine/course_status.py` computes per-chapter, per-topic, and
+whole-course progress (`compute_course_status()`, returning nested
+`ChapterStatus`/`TopicStatus`) and awards a `course_graduate` badge once
+every item across every chapter is complete (`maybe_award_course_badge()`)
+— called after each course quiz pass, since within-topic ordering
+guarantees the last item ever completed in any given topic is always
+that topic's own quiz.
 
 ### Adaptive practice
 
@@ -170,7 +200,7 @@ across the whole course is always some chapter's quiz.
 
 ### Quiz
 
-A standalone 300-question multiple-choice quiz covering the whole
+A standalone 336-question multiple-choice quiz covering the whole
 curriculum (`content/quiz/quiz_questions.yaml`), reachable from both the
 dashboard's "❓ Quick Quiz" card and a "❓ Quiz" tile in the category
 browser. It's not a lesson category — multiple-choice doesn't fit the

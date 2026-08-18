@@ -1,0 +1,35 @@
+id: course_control_flow_whileloops_2
+title: "Your Sample Program with While Loops 🔂"
+level: 949
+objective: "Use a while loop that counts down instead of up."
+explanation: |
+  A while loop can count down just as easily as up -- countdown = countdown - 1 shrinks the value each time, until the condition becomes False.
+example_code: |
+  countdown = 5
+  while countdown > 0:
+      print(countdown)
+      countdown = countdown - 1
+  print("Liftoff!")
+starter_code: |
+  countdown = 5
+  while countdown > 0:
+      print(countdown)
+      countdown = countdown - 1
+  print("Liftoff!")
+challenge: |
+  🎯 Challenge: Change countdown = 5 to countdown = 3, then run it.
+expected_output: |
+  3
+  2
+  1
+  Liftoff!
+hints:
+  - "Only change the number after countdown ="
+  - "The loop and the Liftoff! line don't need to change."
+  - "It should look like: countdown = 3"
+reward_stars: 3
+badge: null
+category: course_control_flow
+category_level: 8
+topic: While Loops
+concept_tags: [while-loops]

@@ -1,6 +1,6 @@
 id: course_capstone_3
 title: "Chapter Quiz: Capstone Review ❓"
-level: 917
+level: 926
 objective: "A review quiz mixing everything from the Python Learning course."
 explanation: |
   Answer the multiple-choice questions below -- a mix of everything from the whole course.
@@ -14,5 +14,5 @@ reward_stars: 3
 badge: null
 category: course_capstone
 category_level: 3
-concept_tags: [lists, loops, conditionals, functions, variables, strings]
+concept_tags: [lists, tuples, dictionaries, sets, loops, conditionals, functions, variables, strings]
 is_quiz: true

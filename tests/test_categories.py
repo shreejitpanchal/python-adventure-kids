@@ -127,11 +127,34 @@ def test_course_categories_in_curriculum_order(engine):
     assert course_positions == sorted(course_positions)
 
 
-def test_each_course_chapter_has_exactly_three_items(engine):
+def _topics_in(lessons: list) -> dict[str, list]:
+    """Groups already category_level-sorted lessons by Lesson.topic, in
+    order of first appearance -- same grouping app.engine.course_status's
+    _group_by_topic() does, reimplemented here so tests don't reach into
+    that module's private helper."""
+    topics: dict[str, list] = {}
+    for lesson in lessons:
+        topics.setdefault(lesson.topic, []).append(lesson)
+    return topics
+
+
+def test_each_course_topic_has_exactly_three_items(engine):
     for category in COURSE_CATEGORIES:
         lessons = engine.lessons_in_category(category)
-        assert len(lessons) == 3, f"'{category}' has {len(lessons)} items, expected 3"
-        assert [lesson.category_level for lesson in lessons] == [1, 2, 3]
+        for topic, items in _topics_in(lessons).items():
+            assert len(items) == 3, f"'{category}' topic '{topic}' has {len(items)} items, expected 3"
+
+
+def test_course_data_structures_chapter_has_four_topics_totaling_12_items(engine):
+    lessons = engine.lessons_in_category("course_data_structures")
+    assert len(lessons) == 12
+    assert set(_topics_in(lessons)) == {"Lists", "Tuples", "Dictionaries", "Sets"}
+
+
+def test_course_variables_chapter_has_five_topics_totaling_15_items(engine):
+    lessons = engine.lessons_in_category("course_variables")
+    assert len(lessons) == 15
+    assert set(_topics_in(lessons)) == {"Variables", "Numbers", "Strings", "Booleans", "Type Conversion"}
 
 
 def test_course_chapters_excluded_from_todays_mission(engine):
@@ -142,9 +165,10 @@ def test_course_chapters_excluded_from_todays_mission(engine):
     assert not (course_ids & main_path_ids)
 
 
-def test_course_chapter_third_item_is_a_quiz(engine):
+def test_course_topic_third_item_is_a_quiz(engine):
     for category in COURSE_CATEGORIES:
         lessons = engine.lessons_in_category(category)
-        assert lessons[2].is_quiz is True
-        assert lessons[0].is_quiz is False
-        assert lessons[1].is_quiz is False
+        for topic, items in _topics_in(lessons).items():
+            assert items[2].is_quiz is True, f"'{category}' topic '{topic}''s 3rd item isn't a quiz"
+            assert items[0].is_quiz is False
+            assert items[1].is_quiz is False

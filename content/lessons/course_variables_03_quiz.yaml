@@ -1,9 +1,9 @@
 id: course_variables_3
-title: "Chapter Quiz: Variables & Data Types ❓"
+title: "Chapter Quiz: Variables ❓"
 level: 905
-objective: "Test what you've learned about variables and data types."
+objective: "Test what you've learned about variables and naming."
 explanation: |
-  Answer the multiple-choice questions below to show what you've learned about variables and data types.
+  Answer the multiple-choice questions below to show what you've learned about variables.
 example_code: ""
 starter_code: ""
 challenge: |
@@ -14,5 +14,6 @@ reward_stars: 3
 badge: null
 category: course_variables
 category_level: 3
-concept_tags: [variables, naming, numbers, strings, booleans, type-conversion]
+topic: Variables
+concept_tags: [variables, naming]
 is_quiz: true

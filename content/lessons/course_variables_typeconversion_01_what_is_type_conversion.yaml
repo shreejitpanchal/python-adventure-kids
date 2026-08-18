@@ -1,0 +1,27 @@
+id: course_variables_typeconversion_1
+title: "What is Type Conversion? 🔄"
+level: 936
+objective: "Convert a number to text with str() so it can be joined into a sentence."
+explanation: |
+  Python can only join text with +, so to combine a number with text, you first need to convert it to a string using str(...) -- that's called type conversion.
+example_code: |
+  age = 9
+  age_text = str(age)
+  print("I am " + age_text + " years old")
+starter_code: |
+  age = 9
+  age_text = str(age)
+  print("I am " + age_text + " years old")
+challenge: |
+  🎯 Challenge: Change age to 12, then run it.
+expected_output: "I am 12 years old"
+hints:
+  - "Only change the number after age ="
+  - "The age_text and print lines will update automatically once age changes."
+  - "It should look like: age = 12"
+reward_stars: 2
+badge: null
+category: course_variables
+category_level: 13
+topic: Type Conversion
+concept_tags: [type-conversion]
