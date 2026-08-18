@@ -491,6 +491,13 @@ class LessonScreen(ctk.CTkFrame):
                 self.next_lesson_caption.configure(text="")
 
         self.reward_card.pack(fill="x", pady=10)
+        # update_idletasks() first so the canvas's scrollregion already
+        # reflects the just-packed reward card -- yview_moveto() otherwise
+        # scrolls against stale (pre-pack) geometry. _parent_canvas is the
+        # same CTkScrollableFrame internal scroll_utils.py already reaches
+        # into for this app's fast-wheel-scroll handling, not a new pattern.
+        self.update_idletasks()
+        self.body._parent_canvas.yview_moveto(1.0)
 
     def _on_continue(self) -> None:
         if self.lesson.category in COURSE_CATEGORIES:

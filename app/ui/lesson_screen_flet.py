@@ -128,10 +128,15 @@ class _LessonController:
                 )
             )
         controls.append(output_card)
+        # A scroll_key, not a magic "scroll to the end" offset -- always
+        # lands exactly on the reward card regardless of how long the
+        # lesson content above it is, see _on_lesson_success()'s auto-scroll.
+        self.reward_card.key = "reward_card"
         controls.append(self.reward_card)
 
+        self._content_column = ft.Column(controls, scroll=ft.ScrollMode.AUTO, spacing=10, expand=True)
         content = ft.Container(
-            content=ft.Column(controls, scroll=ft.ScrollMode.AUTO, spacing=10, expand=True),
+            content=self._content_column,
             # Extra bottom clearance so the reward card isn't hidden behind
             # Android's gesture/navigation bar -- see learning_hub_flet.py's
             # build_learning_hub_view() for the full rationale.
@@ -162,6 +167,7 @@ class _LessonController:
 
         self.editor = make_code_editor(lesson.starter_code.strip(), scale=self.scale)
         self.macro_toolbar = build_macro_toolbar(self.editor, self.page, theme)
+        self.macro_toolbar.visible = False  # collapsed by default, see helpers_button below
         children: list[ft.Control] = [self._codey.control, self.editor, self.macro_toolbar]
 
         if lesson.input_prompt:
@@ -193,8 +199,21 @@ class _LessonController:
             "💡 Hint", on_click=self._on_hint, disabled=not lesson.hints, height=48,
             style=ft.ButtonStyle(bgcolor=theme.warning, color="#FFFFFF"),
         )
+        # Button has no real `text` property to mutate later (a string
+        # passed in becomes `content`, wrapped into a Text control just
+        # once at construction) -- keep our own reference to that Text so
+        # _on_toggle_helpers() can flip the label directly, same pattern
+        # as quiz_screen_flet.py's next_label/next_button.
+        self.helpers_button_label = ft.Text("🧰 Helpers")
+        self.helpers_button = ft.Button(
+            content=self.helpers_button_label, on_click=self._on_toggle_helpers, height=48,
+            style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
+        )
         children.append(
-            ft.Row([self.run_button, self.stop_button, reset_button, self.hint_button], spacing=10, wrap=True)
+            ft.Row(
+                [self.run_button, self.stop_button, reset_button, self.hint_button, self.helpers_button],
+                spacing=10, wrap=True,
+            )
         )
 
         self.hint_text = ft.Text("", size=self._fs(14), color=theme.warning)
@@ -555,6 +574,11 @@ class _LessonController:
         self._hint_index += 1
         self.page.update()
 
+    def _on_toggle_helpers(self, e) -> None:
+        self.macro_toolbar.visible = not self.macro_toolbar.visible
+        self.helpers_button_label.value = "🧰 Hide Helpers" if self.macro_toolbar.visible else "🧰 Helpers"
+        self.page.update()
+
     # -- output helpers -----------------------------------------------------
     def _show_output(self, text: str, color: str, raw: str | None = None) -> None:
         self.output_text.value = text
@@ -664,6 +688,14 @@ class _LessonController:
                 self.next_lesson_caption.value = ""
 
         self.reward_card.visible = True
+        # scroll_to() is `async def` in this Flet version, so it can't be
+        # called bare from this sync method (the coroutine would go
+        # unawaited and silently do nothing) -- page.run_task() is Flet's
+        # documented way to fire an async control method from sync code,
+        # same pattern as sound_player_flet.py's play() calls. Lets a
+        # correct answer bring the reward card (and its Next Mission/Next
+        # Level buttons) into view without the child hunting for it.
+        self.page.run_task(self._content_column.scroll_to, scroll_key="reward_card", duration=400)
 
     def _on_continue(self, e) -> None:
         if self.game_canvas is not None:

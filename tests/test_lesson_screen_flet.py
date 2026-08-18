@@ -19,12 +19,19 @@ class FakePage:
     def __init__(self) -> None:
         self.update_count = 0
         self.routes_visited: list[str] = []
+        self.run_task_calls: list = []
 
     def update(self) -> None:
         self.update_count += 1
 
     def go(self, route: str) -> None:
         self.routes_visited.append(route)
+
+    def run_task(self, handler, *args, **kwargs) -> None:
+        # Real Flet schedules `handler` onto the page's event loop; there's
+        # no live one in tests (same stub shape as test_sound_player_flet.py's
+        # FakePage), so just record the call for assertions.
+        self.run_task_calls.append((handler, args, kwargs))
 
 
 @pytest.fixture
@@ -72,6 +79,28 @@ def test_correct_code_completes_the_lesson(controller, state):
     assert "lesson_01" in state.progress.get_completed_lesson_ids()
     assert "first_program" in state.progress.get_badge_ids()
     assert state.progress.get_summary().current_lesson_id == "lesson_02"
+
+
+def test_correct_answer_auto_scrolls_to_the_reward_card(controller, state):
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+
+    assert len(controller.page.run_task_calls) == 1
+    handler, _args, kwargs = controller.page.run_task_calls[0]
+    assert handler == controller._content_column.scroll_to
+    assert kwargs.get("scroll_key") == "reward_card"
+
+
+def test_wrong_answer_does_not_auto_scroll(state):
+    # lesson_02, not the shared lesson_01 controller fixture -- lesson_01's
+    # "Meet Python" challenge now accepts any print() message (see its
+    # expected_output_pattern), so it has no "wrong answer" case to test.
+    lesson = state.lesson_engine.get("lesson_02")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    asyncio.run(controller._on_run(None))  # unedited starter prints 5, not the challenge's 7
+
+    assert controller.page.run_task_calls == []
 
 
 # -- inline reward card: Onward / Next Lesson (no popup) --------------------
@@ -369,6 +398,24 @@ def test_reset_restores_starter_code_and_clears_output(controller):
     assert controller.editor.value == 'print("Hello!")'
     assert controller.output_text.value == "Press RUN to see what happens!"
     assert controller.reward_card.visible is False
+
+
+# -- code snippet helpers toggle --------------------------------------------
+def test_macro_toolbar_hidden_by_default(controller):
+    controller.build_view()
+    assert controller.macro_toolbar.visible is False
+
+
+def test_toggle_helpers_shows_and_hides_the_macro_toolbar(controller):
+    controller.build_view()
+
+    controller._on_toggle_helpers(None)
+    assert controller.macro_toolbar.visible is True
+    assert controller.helpers_button_label.value == "🧰 Hide Helpers"
+
+    controller._on_toggle_helpers(None)
+    assert controller.macro_toolbar.visible is False
+    assert controller.helpers_button_label.value == "🧰 Helpers"
 
 
 def test_hint_cycles_through_lesson_hints(controller, state):
