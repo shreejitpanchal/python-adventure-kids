@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import random
 from pathlib import Path
+from typing import Collection
 
 import yaml
 
@@ -32,10 +33,25 @@ class QuizEngine:
         here, so no two playthroughs look the same and the correct answer
         isn't always in the same position.
         """
-        if count is not None and 0 < count < len(self._questions):
-            pool = random.sample(self._questions, count)
+        return self._build_session(self._questions, count)
+
+    def start_session_for_tags(self, tags: Collection[str], count: int | None = None) -> list[QuizQuestion]:
+        """Like start_session(), but drawn only from questions whose
+        concept_tags intersect `tags` -- used by a course chapter's quiz
+        item to test just that chapter's topic. Falls back to the full
+        question bank if the tag filter matches nothing (an empty or
+        uncovered tag set should never produce a broken, empty quiz)."""
+        tags = set(tags)
+        pool = [q for q in self._questions if set(q.concept_tags) & tags] if tags else []
+        if not pool:
+            pool = self._questions
+        return self._build_session(pool, count)
+
+    def _build_session(self, candidates: list[QuizQuestion], count: int | None) -> list[QuizQuestion]:
+        if count is not None and 0 < count < len(candidates):
+            pool = random.sample(candidates, count)
         else:
-            pool = list(self._questions)
+            pool = list(candidates)
             random.shuffle(pool)
 
         session: list[QuizQuestion] = []

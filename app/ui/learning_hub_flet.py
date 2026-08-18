@@ -1,7 +1,8 @@
 """Learning Hub: the new top-of-hierarchy screen for the Flet app -- a
-choice of four ways into the content (guided path, two Code Cracker
-tracks, and projects) instead of dropping straight into "Today's Mission"
-the way the old dashboard did. All status text is computed once in
+choice of five ways into the content (guided path, two Code Cracker
+tracks, projects, and the Python Learning course) instead of dropping
+straight into "Today's Mission" the way the old dashboard did. All
+status text is computed once in
 app/engine/hub_status.py and just rendered here; this screen never
 recomputes progress numbers itself.
 
@@ -29,6 +30,7 @@ _ROUTES: dict[str, str] = {
     "code_crackers": "/categories/code_crackers",
     "advanced_code_crackers": "/categories/advanced_code_crackers",
     "projects": "/projects",
+    "course": "/course",
 }
 
 
@@ -136,6 +138,11 @@ _CARD_DEFS: list[tuple[str, str, str, str, str]] = [
         "projects", "🛠️ Build a Project",
         "Games, art, adventures, and coding challenges.",
         "project_status", "/projects",
+    ),
+    (
+        "course", "🎓 Python Learning",
+        "A structured 6-chapter course with lessons, sample programs, and quizzes.",
+        "course_status", "/course",
     ),
 ]
 

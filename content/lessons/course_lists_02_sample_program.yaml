@@ -1,0 +1,35 @@
+id: course_lists_2
+title: "Your Sample Program with Lists 📃"
+level: 913
+objective: "Append to a list and loop through it printing each item with its index."
+explanation: |
+  append(...) adds a new item to the end of a list.
+
+  Combining a for loop with range(len(list)) lets you visit every position in a list, one at a time, and use the position number yourself.
+example_code: |
+  foods = ["pizza", "tacos", "pasta"]
+  foods.append("sushi")
+  for i in range(len(foods)):
+      print(str(i) + ": " + foods[i])
+starter_code: |
+  foods = ["pizza", "tacos", "pasta"]
+  foods.append("sushi")
+  for i in range(len(foods)):
+      print(str(i) + ": " + foods[i])
+challenge: |
+  🎯 Challenge: Add one more line that appends "ramen" to foods (before the loop runs), then run it.
+expected_output: |
+  0: pizza
+  1: tacos
+  2: pasta
+  3: sushi
+  4: ramen
+hints:
+  - "Add a new line: foods.append(\"ramen\")"
+  - "Put the new line after foods.append(\"sushi\") but before the for loop."
+  - "The loop will automatically pick up the new item -- you don't need to change it."
+reward_stars: 3
+badge: null
+category: course_lists
+category_level: 2
+concept_tags: [lists, indexing, iteration]

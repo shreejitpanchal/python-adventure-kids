@@ -25,6 +25,7 @@ import flet as ft
 import flet.canvas as cv
 
 from app.audio.player import success_sound_for
+from app.engine.categories import COURSE_CATEGORIES
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_canvas_flet import GameCanvas
@@ -607,13 +608,20 @@ class _LessonController:
     def _on_continue(self, e) -> None:
         if self.game_canvas is not None:
             self.game_canvas.cancel_pending()
-        self.page.go("/dashboard")
+        if self.lesson.category in COURSE_CATEGORIES:
+            self.page.go(f"/course/{self.lesson.category}")
+        else:
+            self.page.go("/dashboard")
 
     def _on_next_lesson(self, e) -> None:
         if self.game_canvas is not None:
             self.game_canvas.cancel_pending()
         if self._next_in_category_id:
-            self.page.go(f"/lesson/{self._next_in_category_id}")
+            next_lesson = self.state.lesson_engine.get(self._next_in_category_id)
+            if next_lesson.is_quiz:
+                self.page.go(f"/course-quiz/{self._next_in_category_id}")
+            else:
+                self.page.go(f"/lesson/{self._next_in_category_id}")
 
     def _on_menu(self, e) -> None:
         if self._run_handle is not None:

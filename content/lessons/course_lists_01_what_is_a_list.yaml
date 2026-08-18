@@ -1,0 +1,32 @@
+id: course_lists_1
+title: "What is a List? 📃"
+level: 912
+objective: "Create a list, read an item by index, and check its length."
+explanation: |
+  A list is like a backpack that can hold many things at once.
+
+  fruits = ["apple", "banana", "orange"] packs three items into one backpack named fruits.
+
+  fruits[0] reaches into the backpack and grabs the FIRST item -- Python starts counting from 0! len(fruits) tells you how many items are inside.
+example_code: |
+  fruits = ["apple", "banana", "orange"]
+  print(fruits[0])
+  print(len(fruits))
+starter_code: |
+  fruits = ["apple", "banana", "orange"]
+  print(fruits[0])
+  print(len(fruits))
+challenge: |
+  🎯 Challenge: Change fruits[0] to fruits[2] so it prints the THIRD fruit instead, then run it.
+expected_output: |
+  orange
+  3
+hints:
+  - "Python counts from 0, so the third item is at position 2."
+  - "Only change the number inside the square brackets."
+  - "It should look like: print(fruits[2])"
+reward_stars: 2
+badge: null
+category: course_lists
+category_level: 1
+concept_tags: [lists, indexing]

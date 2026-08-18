@@ -70,3 +70,8 @@ class Lesson:
     to suggest relevant practice after repeated failures or a quiz. Empty
     is the common case; only lessons wired into the adaptive-practice pool
     need this set."""
+    is_quiz: bool = False
+    """If true, this lesson's item renders as a multiple-choice quiz (drawn
+    from the quiz question bank, filtered by concept_tags) instead of a code
+    lesson -- see app/ui/course_quiz_screen.py / course_quiz_screen_flet.py.
+    Only meaningful for lessons in a course_* category."""

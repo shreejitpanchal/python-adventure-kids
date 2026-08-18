@@ -1,0 +1,42 @@
+id: course_control_flow_2
+title: "Your Sample Program with Control Flow 🔀"
+level: 907
+objective: "Combine a for loop with if/else to label numbers as even or odd."
+explanation: |
+  The % (modulo) operator gives the remainder of a division. number % 2 == 0 is True whenever number is even.
+
+  Let's loop through some numbers and use if/else to print whether each one is even or odd.
+example_code: |
+  for number in range(1, 6):
+      if number % 2 == 0:
+          print(str(number) + " is even")
+      else:
+          print(str(number) + " is odd")
+starter_code: |
+  for number in range(1, 6):
+      if number % 2 == 0:
+          print(str(number) + " is even")
+      else:
+          print(str(number) + " is odd")
+challenge: |
+  🎯 Challenge: Change range(1, 6) to range(1, 11) so it labels every number from 1 to 10, then run it.
+expected_output: |
+  1 is odd
+  2 is even
+  3 is odd
+  4 is even
+  5 is odd
+  6 is even
+  7 is odd
+  8 is even
+  9 is odd
+  10 is even
+hints:
+  - "Only change the numbers inside range(...)."
+  - "range(1, 11) goes from 1 up to (but not including) 11 -- that's 1 through 10."
+  - "It should look like: for number in range(1, 11):"
+reward_stars: 3
+badge: null
+category: course_control_flow
+category_level: 2
+concept_tags: [conditionals, comparison, loops, for-loops, iteration]

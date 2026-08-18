@@ -1,0 +1,44 @@
+id: course_capstone_1
+title: "Recap: Building Bigger Programs 🏁"
+level: 915
+objective: "Combine variables, lists, functions, and if/else into one program before building the To-Do app."
+explanation: |
+  You've now learned variables, control flow, functions, and lists -- everything you need to build a real program.
+
+  Real programs combine these building blocks: a function can use an if/else, and that if/else can check a list.
+
+  In this chapter's sample program, you'll build a small To-Do app. First, let's see how a function and a conditional work together to describe a list.
+example_code: |
+  tasks = ["Buy milk", "Walk the dog"]
+
+  def show_tasks(tasks):
+      if len(tasks) == 0:
+          print("No tasks yet!")
+      else:
+          for task in tasks:
+              print("- " + task)
+
+  show_tasks(tasks)
+starter_code: |
+  tasks = ["Buy milk", "Walk the dog"]
+
+  def show_tasks(tasks):
+      if len(tasks) == 0:
+          print("No tasks yet!")
+      else:
+          for task in tasks:
+              print("- " + task)
+
+  show_tasks(tasks)
+challenge: |
+  🎯 Challenge: Change tasks to an empty list [] so the program takes the other path, then run it.
+expected_output: "No tasks yet!"
+hints:
+  - "Change tasks = [\"Buy milk\", \"Walk the dog\"] to tasks = []"
+  - "Don't change anything inside show_tasks -- the if/else already handles an empty list."
+  - "It should look like: tasks = []"
+reward_stars: 2
+badge: null
+category: course_capstone
+category_level: 1
+concept_tags: [variables, lists, functions, conditionals, loops]

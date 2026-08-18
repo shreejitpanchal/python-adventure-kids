@@ -7,7 +7,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
-from app.engine.categories import PROJECT_CATEGORIES, get_category_meta
+from app.engine.categories import COURSE_CATEGORIES, PROJECT_CATEGORIES, get_category_meta
 from app.engine.lesson_engine import LessonEngine
 from app.progress.store import ProgressStore
 
@@ -19,6 +19,7 @@ _ROUTE_LABELS: dict[str, str] = {
     "code_crackers": "Code Cracker Puzzles",
     "advanced_code_crackers": "Advanced Code Crackers",
     "projects": "Build a Project",
+    "course": "Python Learning",
 }
 
 
@@ -28,6 +29,7 @@ class HubStatus:
     cracker_status: str
     advanced_cracker_status: str
     project_status: str
+    course_status: str
     resume_label: Optional[str]
 
 
@@ -54,6 +56,9 @@ def compute_hub_status(engine: LessonEngine, progress: ProgressStore, settings) 
 
     project_status = f"{len(PROJECT_CATEGORIES)} categories available"
 
+    course_done, course_total = _category_progress(engine, completed_ids, COURSE_CATEGORIES)
+    course_status = f"{course_done}/{course_total} lessons complete"
+
     route_key = getattr(settings, "last_learning_route", "")
     resume_label = f"Continue where you left off: {_ROUTE_LABELS[route_key]}" if route_key in _ROUTE_LABELS else None
 
@@ -62,5 +67,6 @@ def compute_hub_status(engine: LessonEngine, progress: ProgressStore, settings) 
         cracker_status=cracker_status,
         advanced_cracker_status=advanced_cracker_status,
         project_status=project_status,
+        course_status=course_status,
         resume_label=resume_label,
     )

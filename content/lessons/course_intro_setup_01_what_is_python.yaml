@@ -1,0 +1,30 @@
+id: course_intro_setup_1
+title: "What is Python? 🧭"
+level: 900
+objective: "Understand what a program is, and use print() and comments for the first time."
+explanation: |
+  A computer program is just a list of instructions the computer follows, one by one, from top to bottom.
+
+  Python is a language we use to write those instructions in a way the computer understands.
+
+  The print() command tells the computer: "Show this on the screen!"
+
+  A comment starts with a # symbol. Python ignores anything after a #, so comments are just notes for humans reading the code — they don't change what the program does.
+example_code: |
+  # This line is just a note -- Python skips it
+  print("Hello, Python!")
+starter_code: |
+  # This line is just a note -- Python skips it
+  print("Hello, Python!")
+challenge: |
+  🎯 Challenge: Change the message so Python prints "Hello, world!" instead.
+expected_output: "Hello, world!"
+hints:
+  - "Only change the words inside the quotes after print(...)."
+  - "Leave the # comment line alone -- Python ignores it either way."
+  - "It should look like: print(\"Hello, world!\")"
+reward_stars: 2
+badge: null
+category: course_intro_setup
+category_level: 1
+concept_tags: [print, comments]

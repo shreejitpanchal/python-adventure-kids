@@ -1,0 +1,45 @@
+id: course_variables_2
+title: "Your Sample Program with Variables 🧮"
+level: 904
+objective: "Create variables of different data types and convert one to text with str()."
+explanation: |
+  Let's put every data type in one program: a str, an int, a float, and a bool.
+
+  Python can only join text with +, so to combine a number with text we first need to convert it using str(...) -- that's called type conversion.
+example_code: |
+  name = "Sam"
+  age = 9
+  height = 4.2
+  is_student = True
+  print(name)
+  print(age)
+  print(height)
+  print(is_student)
+  print("Age as text: " + str(age))
+starter_code: |
+  name = "Sam"
+  age = 9
+  height = 4.2
+  is_student = True
+  print(name)
+  print(age)
+  print(height)
+  print(is_student)
+  print("Age as text: " + str(age))
+challenge: |
+  🎯 Challenge: Change the values so name is "Jamie", age is 12, height is 5.0, and is_student is False, then run it.
+expected_output: |
+  Jamie
+  12
+  5.0
+  False
+  Age as text: 12
+hints:
+  - "Change the text after name = and the numbers after age = and height ="
+  - "Change is_student = True to is_student = False"
+  - "The last line will update on its own once age changes -- you don't need to touch it."
+reward_stars: 3
+badge: null
+category: course_variables
+category_level: 2
+concept_tags: [variables, numbers, strings, booleans, type-conversion]

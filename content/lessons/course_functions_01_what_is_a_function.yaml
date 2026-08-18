@@ -1,0 +1,34 @@
+id: course_functions_1
+title: "What is a Function? 🧰"
+level: 909
+objective: "Define a function with a parameter, and understand return vs. print."
+explanation: |
+  A function is a little machine you can build once and use again and again.
+
+  def greet(name): builds a machine named greet that takes one input, called a parameter, named name.
+
+  return sends a value back out of the function, without showing anything on the screen -- that's different from print(), which shows something but doesn't hand back a value to use.
+example_code: |
+  def greet(name):
+      return "Hello, " + name + "!"
+
+  message = greet("Sam")
+  print(message)
+starter_code: |
+  def greet(name):
+      return "Hello, " + name + "!"
+
+  message = greet("Sam")
+  print(message)
+challenge: |
+  🎯 Challenge: Call greet with "Robin" instead of "Sam", then run it.
+expected_output: "Hello, Robin!"
+hints:
+  - "Only change the text inside greet(...) on the message = line."
+  - "Don't change anything inside the function itself."
+  - "It should look like: message = greet(\"Robin\")"
+reward_stars: 2
+badge: null
+category: course_functions
+category_level: 1
+concept_tags: [functions, parameters, return-values]

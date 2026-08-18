@@ -118,6 +118,50 @@ def test_clicking_onward_goes_to_the_dashboard(controller):
     assert controller.page.routes_visited == ["/dashboard"]
 
 
+# -- course-chapter-aware navigation (course_* categories only) -------------
+def test_course_lesson_onward_goes_to_its_chapter_not_the_dashboard(state):
+    lesson = state.lesson_engine.get("course_intro_setup_1")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    controller.editor.value = 'print("Hello, world!")'
+    asyncio.run(controller._on_run(None))
+
+    controller._on_continue(None)
+    assert controller.page.routes_visited == ["/course/course_intro_setup"]
+
+
+def test_course_lesson_next_lesson_goes_to_the_next_code_item(state):
+    lesson = state.lesson_engine.get("course_intro_setup_1")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    controller.editor.value = 'print("Hello, world!")'
+    asyncio.run(controller._on_run(None))
+
+    next_id = controller._next_in_category_id
+    assert next_id == "course_intro_setup_2"
+    controller._on_next_lesson(None)
+    assert controller.page.routes_visited == [f"/lesson/{next_id}"]
+
+
+def test_course_lesson_next_lesson_routes_to_the_quiz_when_the_next_item_is_a_quiz(state):
+    state.progress.complete_lesson("course_intro_setup_1", 2)
+    lesson = state.lesson_engine.get("course_intro_setup_2")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    controller.editor.value = (
+        '# My About Me program\n'
+        'print("My name is Alex")\n'
+        'print("I am learning Python!")\n'
+        'print("Python is fun!")'
+    )
+    asyncio.run(controller._on_run(None))
+
+    next_id = controller._next_in_category_id
+    assert next_id == "course_intro_setup_3"
+    controller._on_next_lesson(None)
+    assert controller.page.routes_visited == [f"/course-quiz/{next_id}"]
+
+
 # -- sound effects on lesson success ---------------------------------------
 def test_plain_success_plays_only_the_success_chime(state):
     fake_player = FakeSoundPlayer()

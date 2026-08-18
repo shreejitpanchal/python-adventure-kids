@@ -1,0 +1,38 @@
+id: course_control_flow_1
+title: "What is Control Flow? 🔀"
+level: 906
+objective: "Use if/elif/else and a for loop to control what a program does."
+explanation: |
+  Control flow means choosing what a program does next, instead of always running every line the same way.
+
+  if condition: runs the lines under it only when condition is True. elif checks another condition if the first was False. else runs when none of the above were True.
+
+  A for loop repeats the same lines once for every item in a range or list -- for i in range(3): runs 3 times, with i being 0, 1, then 2.
+example_code: |
+  for i in range(3):
+      if i == 1:
+          print("one!")
+      else:
+          print("not one")
+starter_code: |
+  for i in range(3):
+      if i == 1:
+          print("one!")
+      else:
+          print("not one")
+challenge: |
+  🎯 Challenge: Change range(3) to range(4) so the loop runs one more time, then run it.
+expected_output: |
+  not one
+  one!
+  not one
+  not one
+hints:
+  - "Only change the number inside range(...)."
+  - "The loop always prints \"one!\" when i equals 1, and \"not one\" otherwise."
+  - "It should look like: for i in range(4):"
+reward_stars: 2
+badge: null
+category: course_control_flow
+category_level: 1
+concept_tags: [conditionals, comparison, loops, for-loops]

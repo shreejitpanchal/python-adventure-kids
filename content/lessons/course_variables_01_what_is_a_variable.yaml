@@ -1,0 +1,36 @@
+id: course_variables_1
+title: "What is a Variable? 🧮"
+level: 903
+objective: "Understand variables as labeled boxes, and the difference between numbers, text, and true/false values."
+explanation: |
+  A variable is like a box with a name where we can keep a value.
+
+  name = "Sam" puts the text "Sam" inside a box named "name". age = 9 puts the number 9 inside a box named "age".
+
+  Python has a few basic data types: a str (text, in quotes), an int (a whole number), a float (a number with a decimal point), and a bool (True or False).
+
+  Variable names should describe what they hold, and can't start with a number or contain spaces.
+example_code: |
+  name = "Sam"
+  age = 9
+  print(name)
+  print(age)
+starter_code: |
+  name = "Sam"
+  age = 9
+  print(name)
+  print(age)
+challenge: |
+  🎯 Challenge: Change the values so name is "Robin" and age is 11, then run it.
+expected_output: |
+  Robin
+  11
+hints:
+  - "Change the text inside the quotes after name ="
+  - "Change the number after age ="
+  - "It should look like: name = \"Robin\" then age = 11"
+reward_stars: 2
+badge: null
+category: course_variables
+category_level: 1
+concept_tags: [variables, naming, numbers, strings]

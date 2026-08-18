@@ -94,6 +94,28 @@ class App(ctk.CTk):
 
         self.show_frame(QuizScreen(self))
 
+    def show_course_map(self) -> None:
+        from app.ui.course_map import CourseMapFrame
+
+        self.show_frame(CourseMapFrame(self))
+
+    def show_course_chapter(self, category: str) -> None:
+        from app.ui.course_chapter import CourseChapterFrame
+
+        self.show_frame(CourseChapterFrame(self, category))
+
+    def show_course_quiz(self, lesson_id: str) -> None:
+        from app.ui.course_quiz_screen import CourseQuizScreen
+
+        self.show_frame(CourseQuizScreen(self, lesson_id))
+
+    def show_lesson_or_quiz(self, lesson_id: str) -> None:
+        lesson = self.lesson_engine.get(lesson_id)
+        if lesson.is_quiz:
+            self.show_course_quiz(lesson_id)
+        else:
+            self.show_lesson(lesson_id)
+
     def show_settings(self) -> None:
         from app.ui.settings_screen import SettingsFrame
 

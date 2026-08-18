@@ -1,7 +1,7 @@
 """Tests for category grouping, unlocking, and the main-path/bonus-level split."""
 import pytest
 
-from app.engine.categories import CATEGORY_META, get_category_meta
+from app.engine.categories import CATEGORY_META, COURSE_CATEGORIES, get_category_meta
 from app.engine.lesson_engine import LessonEngine
 
 
@@ -118,3 +118,33 @@ def test_resolve_current_stays_within_the_computed_mission_sequence(engine):
     all_main_ids = [l.id for l in engine.main_path_lessons()]
     lesson = engine.resolve_current(completed_ids=all_main_ids, stored_current_id=None)
     assert lesson.id == engine.main_path_lessons()[-1].id
+
+
+# -- the "🎓 Python Learning" course's chapters --------------------------
+def test_course_categories_in_curriculum_order(engine):
+    categories = engine.categories()
+    course_positions = [categories.index(category) for category in COURSE_CATEGORIES]
+    assert course_positions == sorted(course_positions)
+
+
+def test_each_course_chapter_has_exactly_three_items(engine):
+    for category in COURSE_CATEGORIES:
+        lessons = engine.lessons_in_category(category)
+        assert len(lessons) == 3, f"'{category}' has {len(lessons)} items, expected 3"
+        assert [lesson.category_level for lesson in lessons] == [1, 2, 3]
+
+
+def test_course_chapters_excluded_from_todays_mission(engine):
+    main_path_ids = {lesson.id for lesson in engine.main_path_lessons()}
+    course_ids = {
+        lesson.id for category in COURSE_CATEGORIES for lesson in engine.lessons_in_category(category)
+    }
+    assert not (course_ids & main_path_ids)
+
+
+def test_course_chapter_third_item_is_a_quiz(engine):
+    for category in COURSE_CATEGORIES:
+        lessons = engine.lessons_in_category(category)
+        assert lessons[2].is_quiz is True
+        assert lessons[0].is_quiz is False
+        assert lessons[1].is_quiz is False

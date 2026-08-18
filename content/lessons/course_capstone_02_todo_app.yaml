@@ -1,0 +1,51 @@
+id: course_capstone_2
+title: "Your Sample Program: A To-Do App 🏁"
+level: 916
+objective: "Build a small To-Do app using a list, a function, a loop, and a conditional together."
+explanation: |
+  Let's build a real To-Do app: a list to hold tasks, a function to add a task, a loop to number and print them, and an if/else in case the list is empty.
+
+  add_task(task) appends a new task to the shared tasks list -- this is exactly the pattern real to-do apps use.
+example_code: |
+  tasks = []
+
+  def add_task(task):
+      tasks.append(task)
+
+  add_task("Buy milk")
+  add_task("Walk the dog")
+
+  if len(tasks) == 0:
+      print("No tasks yet!")
+  else:
+      for i in range(len(tasks)):
+          print(str(i + 1) + ". " + tasks[i])
+starter_code: |
+  tasks = []
+
+  def add_task(task):
+      tasks.append(task)
+
+  add_task("Buy milk")
+  add_task("Walk the dog")
+
+  if len(tasks) == 0:
+      print("No tasks yet!")
+  else:
+      for i in range(len(tasks)):
+          print(str(i + 1) + ". " + tasks[i])
+challenge: |
+  🎯 Challenge: Add a third line calling add_task("Do homework") after the other two, then run it.
+expected_output: |
+  1. Buy milk
+  2. Walk the dog
+  3. Do homework
+hints:
+  - "Add a new line: add_task(\"Do homework\")"
+  - "Put it after add_task(\"Walk the dog\") but before the if/else."
+  - "The numbering and loop update automatically -- you don't need to change them."
+reward_stars: 3
+badge: null
+category: course_capstone
+category_level: 2
+concept_tags: [lists, functions, loops, conditionals, variables]

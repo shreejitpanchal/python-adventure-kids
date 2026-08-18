@@ -24,6 +24,9 @@ from app.engine.categories import PROJECT_CATEGORIES
 from app.ui.app_state_flet import AppState
 from app.ui.category_levels_flet import build_category_levels_view
 from app.ui.category_map_flet import build_category_map_view
+from app.ui.course_chapter_flet import build_course_chapter_view
+from app.ui.course_map_flet import build_course_map_view
+from app.ui.course_quiz_screen_flet import build_course_quiz_view
 from app.ui.dashboard_flet import build_dashboard_view
 from app.ui.learning_hub_flet import build_learning_hub_view
 from app.ui.lesson_screen_flet import build_lesson_view
@@ -94,6 +97,14 @@ def main(page: ft.Page) -> None:
             page.views.append(build_parent_view(page, state))
         elif route == "/quiz":
             page.views.append(build_quiz_view(page, state))
+        elif route == "/course":
+            page.views.append(build_course_map_view(page, state))
+        elif route.startswith("/course-quiz/"):
+            lesson_id = route.removeprefix("/course-quiz/")
+            page.views.append(build_course_quiz_view(page, state, lesson_id))
+        elif route.startswith("/course/"):
+            category = route.removeprefix("/course/")
+            page.views.append(build_course_chapter_view(page, state, category))
         elif route == "/trophy-room":
             page.views.append(build_trophy_room_view(page, state))
         elif route.startswith("/lesson/"):

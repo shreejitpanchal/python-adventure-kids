@@ -101,3 +101,42 @@ def test_start_session_carries_concept_tags_through_the_reshuffle():
     session = engine.start_session()
     for question in session:
         assert question.concept_tags == original_by_id[question.id]
+
+
+# -- tag-filtered sessions (course chapter quizzes) --------------------------
+def test_start_session_for_tags_only_returns_matching_questions():
+    engine = QuizEngine()
+    session = engine.start_session_for_tags(["functions", "parameters"])
+    assert len(session) > 0
+    for question in session:
+        assert set(question.concept_tags) & {"functions", "parameters"}
+
+
+def test_start_session_for_tags_respects_count():
+    engine = QuizEngine()
+    session = engine.start_session_for_tags(["strings"], count=8)
+    assert len(session) == 8
+
+
+def test_start_session_for_tags_falls_back_to_full_bank_when_unmatched():
+    engine = QuizEngine()
+    session = engine.start_session_for_tags(["not_a_real_tag"], count=5)
+    assert len(session) == 5
+
+
+def test_start_session_for_tags_falls_back_to_full_bank_when_empty():
+    engine = QuizEngine()
+    session = engine.start_session_for_tags([], count=None)
+    assert len(session) == len(engine)
+
+
+def test_start_session_for_tags_preserves_the_correct_answer_text():
+    engine = QuizEngine()
+    original_by_id = {q.id: q for q in engine.start_session()}
+    tagged = engine.start_session_for_tags(["lists", "indexing"])
+
+    for question in tagged:
+        original = original_by_id[question.id]
+        original_correct_text = original.options[original.correct]
+        assert question.options[question.correct] == original_correct_text
+        assert set(question.options) == set(original.options)

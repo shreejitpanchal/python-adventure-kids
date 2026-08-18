@@ -43,6 +43,12 @@ CATEGORY_META: dict[str, CategoryMeta] = {
     "arcade_lab": CategoryMeta("Arcade Lab", "🏓", "#00ACC1"),
     "robot_adventure": CategoryMeta("Robot Adventure", "🤖", "#546E7A"),
     "advanced_code_crackers": CategoryMeta("Advanced Code Crackers", "🕵️", "#37474F"),
+    "course_intro_setup": CategoryMeta("Intro to Python & Setup", "🧭", "#4F46E5"),
+    "course_variables": CategoryMeta("Variables & Data Types", "🧮", "#0EA5E9"),
+    "course_control_flow": CategoryMeta("Control Flow", "🔀", "#F97316"),
+    "course_functions": CategoryMeta("Functions", "🧰", "#7C3AED"),
+    "course_lists": CategoryMeta("Lists & Data Structures", "📃", "#10B981"),
+    "course_capstone": CategoryMeta("Capstone: To-Do App", "🏁", "#DC2626"),
 }
 
 DEFAULT_META = CategoryMeta("More Adventures", "⭐", "#78909C")
@@ -57,3 +63,13 @@ PROJECT_CATEGORIES = ["games", "snake", "creative_arts", "rpg_quests", "arcade_l
 that isn't a core skill-practice track (see LessonEngine.TODAYS_MISSION_
 CATEGORIES), "basics", or one of the two Code Crackers tracks (which get
 their own direct Hub cards instead of being lumped in here)."""
+
+COURSE_CATEGORIES = [
+    "course_intro_setup", "course_variables", "course_control_flow",
+    "course_functions", "course_lists", "course_capstone",
+]
+"""The "🎓 Python Learning" course's chapters, in curriculum order -- each
+one a lesson category with exactly 3 category_levels (concept lesson,
+sample-program lesson, quiz). Never added to LessonEngine.TODAYS_MISSION_
+CATEGORIES -- this course is reached only through its own Hub card, not
+folded into "Today's Mission"."""

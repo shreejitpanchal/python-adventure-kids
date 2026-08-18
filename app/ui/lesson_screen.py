@@ -6,6 +6,7 @@ import threading
 import customtkinter as ctk
 
 from app.audio.player import play_sound_ctk, success_sound_for
+from app.engine.categories import COURSE_CATEGORIES
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_window import GameWindow
@@ -433,11 +434,14 @@ class LessonScreen(ctk.CTkFrame):
         self.reward_card.pack(fill="x", pady=10)
 
     def _on_continue(self) -> None:
-        self.app.show_dashboard()
+        if self.lesson.category in COURSE_CATEGORIES:
+            self.app.show_course_chapter(self.lesson.category)
+        else:
+            self.app.show_dashboard()
 
     def _on_next_lesson(self) -> None:
         if self._next_in_category_id:
-            self.app.show_lesson(self._next_in_category_id)
+            self.app.show_lesson_or_quiz(self._next_in_category_id)
 
     def _on_menu(self) -> None:
         if self._run_handle is not None:

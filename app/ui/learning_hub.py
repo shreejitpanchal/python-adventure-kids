@@ -1,7 +1,8 @@
-"""Learning Hub: the very first screen a child sees after setup -- four ways
-to reach content (guided path, two Code Cracker tracks, projects), replacing
-the old "land straight on the Dashboard" behavior. The Dashboard (Today's
-Mission) is now one of the four destinations, not the top of the navigation
+"""Learning Hub: the very first screen a child sees after setup -- five ways
+to reach content (guided path, two Code Cracker tracks, projects, and the
+Python Learning course), replacing the old "land straight on the Dashboard"
+behavior. The Dashboard (Today's
+Mission) is now one of the five destinations, not the top of the navigation
 hierarchy -- see app_window.py's _route_initial_screen(). Settings and
 Parent Area live here too (in the header), not on the Dashboard -- this is
 the true top of the hierarchy, so they only need one home.
@@ -70,6 +71,14 @@ class HubFrame(ctk.CTkFrame):
                 "status_attr": "project_status",
                 "color": "#EF5350",
                 "navigate": lambda: app.show_project_categories(),
+            },
+            {
+                "key": "course",
+                "title": "🎓 Python Learning",
+                "subtitle": "A structured 6-chapter course with lessons, sample programs, and quizzes.",
+                "status_attr": "course_status",
+                "color": "#009688",
+                "navigate": lambda: app.show_course_map(),
             },
         ]
         self._cards_by_key = {card["key"]: card for card in self._card_defs}

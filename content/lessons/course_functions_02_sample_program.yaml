@@ -1,0 +1,34 @@
+id: course_functions_2
+title: "Your Sample Program with Functions 🧰"
+level: 910
+objective: "Write a function that takes two parameters and reuse it for different values."
+explanation: |
+  Functions can take more than one parameter -- just separate them with commas.
+
+  The real power of a function is reusing it: build it once, then call it as many times as you like with different values.
+example_code: |
+  def introduce(name, age):
+      return name + " is " + str(age) + " years old"
+
+  print(introduce("Sam", 9))
+  print(introduce("Robin", 11))
+starter_code: |
+  def introduce(name, age):
+      return name + " is " + str(age) + " years old"
+
+  print(introduce("Sam", 9))
+  print(introduce("Robin", 11))
+challenge: |
+  🎯 Challenge: Call introduce for two new people -- "Jamie" who is 10, and "Casey" who is 12 -- then run it.
+expected_output: |
+  Jamie is 10 years old
+  Casey is 12 years old
+hints:
+  - "Change the names and numbers inside both introduce(...) calls."
+  - "Don't change anything inside the function itself."
+  - "It should look like: print(introduce(\"Jamie\", 10)) then print(introduce(\"Casey\", 12))"
+reward_stars: 3
+badge: null
+category: course_functions
+category_level: 2
+concept_tags: [functions, parameters, return-values, type-conversion]
