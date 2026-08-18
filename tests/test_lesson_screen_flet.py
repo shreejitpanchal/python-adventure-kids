@@ -10,6 +10,7 @@ import asyncio
 import flet as ft
 import pytest
 
+from app.engine.categories import get_category_meta
 from app.ui.app_state_flet import AppState
 from app.ui.lesson_screen_flet import _LessonController
 
@@ -110,12 +111,78 @@ def test_clicking_next_lesson_navigates_to_the_next_level_in_the_same_category(s
     assert controller.page.routes_visited == [f"/lesson/{next_id}"]
 
 
-def test_clicking_onward_goes_to_the_dashboard(controller):
+def test_clicking_next_mission_navigates_directly_to_the_next_mission_lesson(state, controller):
+    """lesson_01 ("Meet Python") is the one-time "basics" intro -- its
+    next_after() mission is lesson_02, the first level of the Today's
+    Mission round-robin. Clicking Next Mission should go straight there,
+    not through the Dashboard."""
     controller.build_view()
     asyncio.run(controller._on_run(None))
 
+    next_mission = state.lesson_engine.next_after("lesson_01")
+    assert next_mission.id == "lesson_02"
+    controller._on_continue(None)
+    assert controller.page.routes_visited == ["/lesson/lesson_02"]
+
+
+def test_next_mission_caption_previews_the_upcoming_mission(controller, state):
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+
+    next_mission = state.lesson_engine.next_after("lesson_01")
+    meta = get_category_meta(next_mission.category)
+    assert controller.next_mission_caption.value == f"{meta.icon} {meta.title} — Level {next_mission.category_level}"
+
+
+def test_next_mission_falls_back_to_dashboard_when_todays_mission_is_finished(state):
+    """lesson_739 is the last lesson in main_path_lessons() -- next_after()
+    returns None for it, so Next Mission has nowhere direct to send the
+    child and should fall back to the Dashboard, same as the old Onward
+    button always did."""
+    lesson = state.lesson_engine.get("lesson_739")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    controller.editor.value = (
+        'def class_average(students):\n'
+        '    total = 0\n'
+        '    count = 0\n'
+        '    for name, scores in students:\n'
+        '        for s in scores:\n'
+        '            total += s\n'
+        '            count += 1\n'
+        '    return total / count\n\n'
+        'students = [("Ana", [80, 90]), ("Ben", [70, 60, 100]), ("Cara", [90, 90, 90, 90, 90])]\n'
+        'print(class_average(students))'
+    )
+    asyncio.run(controller._on_run(None))
+
+    assert state.lesson_engine.next_after("lesson_739") is None
+    assert controller.next_mission_caption.value == "You've completed Today's Mission! 🎉"
     controller._on_continue(None)
     assert controller.page.routes_visited == ["/dashboard"]
+
+
+def test_next_level_caption_previews_the_next_level(state):
+    lesson = state.lesson_engine.get("lesson_03")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    controller.editor.value = "print(7 + 5)"
+    asyncio.run(controller._on_run(None))
+
+    next_in_category = state.lesson_engine.get(controller._next_in_category_id)
+    meta = get_category_meta(next_in_category.category)
+    assert controller.next_lesson_caption.value == f"{meta.icon} {meta.title} — Level {next_in_category.category_level}"
+
+
+def test_course_lesson_has_no_next_mission_captions(state):
+    """Course lessons keep the original Onward/Next Lesson pair -- the
+    Next Mission/Next Level captions only exist for Today's Mission
+    lessons (see _build_reward_card())."""
+    lesson = state.lesson_engine.get("course_intro_setup_1")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    assert controller.next_mission_caption is None
+    assert controller.next_lesson_caption is None
 
 
 # -- course-chapter-aware navigation (course_* categories only) -------------
@@ -239,12 +306,43 @@ def test_syntax_error_shows_friendly_message_with_line_number(controller, state)
     assert "lesson_01" not in state.progress.get_completed_lesson_ids()
 
 
-def test_wrong_output_does_not_complete_the_lesson(controller, state):
+def test_wrong_output_does_not_complete_the_lesson(state):
+    # lesson_02 (not the shared lesson_01 controller fixture): lesson_01's
+    # very first "Meet Python" challenge deliberately accepts any print()
+    # output now (see its expected_output_pattern), so it's no longer a
+    # lesson where a "wrong" answer exists -- lesson_02 still does exact
+    # output matching and exercises the same warning/no-completion path.
+    lesson = state.lesson_engine.get("lesson_02")
+    controller = _LessonController(FakePage(), state, lesson)
     controller.build_view()
-    controller.editor.value = 'print("Goodbye!")'
+    asyncio.run(controller._on_run(None))  # unedited starter prints 5, not the challenge's 7
+
+    assert "5" in controller.output_text.value
+    assert controller.output_text.color == state.theme.warning
+    assert controller.reward_card.visible is False
+    assert "lesson_02" not in state.progress.get_completed_lesson_ids()
+
+
+def test_meet_python_accepts_any_message_inside_print(controller, state):
+    """lesson_01's whole point is teaching print() itself, not memorizing
+    "Hello!" -- any text a kid types inside the quotes should complete it,
+    as long as they still used print() (see ast_contains) and it runs
+    without an error."""
+    controller.build_view()
+    controller.editor.value = 'print("Dogs are the best!")'
     asyncio.run(controller._on_run(None))
 
-    assert "Goodbye!" in controller.output_text.value
+    assert "Dogs are the best!" in controller.output_text.value
+    assert controller.output_text.color == state.theme.success
+    assert controller.reward_card.visible is True
+    assert "lesson_01" in state.progress.get_completed_lesson_ids()
+
+
+def test_meet_python_still_requires_using_print(controller, state):
+    controller.build_view()
+    controller.editor.value = 'message = "Hello!"'
+    asyncio.run(controller._on_run(None))
+
     assert controller.output_text.color == state.theme.warning
     assert controller.reward_card.visible is False
     assert "lesson_01" not in state.progress.get_completed_lesson_ids()
@@ -579,10 +677,13 @@ def test_codey_shows_success_when_the_lesson_passes(controller):
     assert controller._codey.caption_text.value == "Awesome job!"
 
 
-def test_codey_shows_warning_on_wrong_output(controller):
+def test_codey_shows_warning_on_wrong_output(state):
+    # lesson_02, not the shared lesson_01 controller fixture -- see
+    # test_wrong_output_does_not_complete_the_lesson's comment above.
+    lesson = state.lesson_engine.get("lesson_02")
+    controller = _LessonController(FakePage(), state, lesson)
     controller.build_view()
-    controller.editor.value = 'print("Goodbye!")'
-    asyncio.run(controller._on_run(None))
+    asyncio.run(controller._on_run(None))  # unedited starter prints 5, not the challenge's 7
     assert controller._codey.caption_text.value == "So close -- try again!"
 
 

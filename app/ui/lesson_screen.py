@@ -6,7 +6,7 @@ import threading
 import customtkinter as ctk
 
 from app.audio.player import play_sound_ctk, success_sound_for
-from app.engine.categories import COURSE_CATEGORIES
+from app.engine.categories import COURSE_CATEGORIES, get_category_meta
 from app.engine.course_status import next_topic_item
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
@@ -32,6 +32,7 @@ class LessonScreen(ctk.CTkFrame):
         self._hint_index = 0
         self._lesson_passed = False
         self._next_in_category_id: str | None = None
+        self._next_mission_id: str | None = None
         self._current_input_value: str | None = None
         self.input_entry: ctk.CTkEntry | None = None
         self.game_window: GameWindow | None = None
@@ -102,15 +103,19 @@ class LessonScreen(ctk.CTkFrame):
         if self.lesson.input_prompt:
             input_row = ctk.CTkFrame(card, fg_color="transparent")
             input_row.pack(fill="x", padx=24, pady=(0, 12))
+            # Stacked (label above, box below), not side-by-side -- at
+            # larger font sizes the label alone can grow wider than the
+            # card, which pushed the fixed-width entry box off-screen when
+            # both shared one row.
             ctk.CTkLabel(
                 input_row, text=f"🧑 {self.lesson.input_prompt}", font=theme.font_body(15),
-                text_color=theme.COLOR_TEXT,
-            ).pack(side="left", padx=(0, 10))
+                text_color=theme.COLOR_TEXT, anchor="w", justify="left", wraplength=760,
+            ).pack(anchor="w", pady=(0, 6))
             self.input_entry = ctk.CTkEntry(
                 input_row, font=theme.font_body(16), width=240, height=40,
                 placeholder_text="Type your answer...",
             )
-            self.input_entry.pack(side="left")
+            self.input_entry.pack(anchor="w")
 
         button_row = ctk.CTkFrame(card, fg_color="transparent")
         button_row.pack(fill="x", padx=24, pady=(0, 12))
@@ -193,21 +198,56 @@ class LessonScreen(ctk.CTkFrame):
         )
         self.badge_label.pack(pady=(0, 10))
 
-        button_row = ctk.CTkFrame(self.reward_card, fg_color="transparent")
-        button_row.pack(pady=(0, 24))
+        # Course lessons keep the original Onward/Next Lesson pair (chapter
+        # navigation, not a "mission") -- only Today's Mission lessons
+        # (outside COURSE_CATEGORIES) get the Next Mission/Next Level
+        # framing below, since only those participate in next_after()'s
+        # round-robin at all.
+        if self.lesson.category in COURSE_CATEGORIES:
+            self.next_mission_caption = None
+            self.next_lesson_caption = None
 
-        ctk.CTkButton(
-            button_row, text="ONWARD ➜", font=theme.font_button(20), width=200, height=56,
-            fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
-            command=self._on_continue,
-        ).pack(side="left", padx=6)
+            button_row = ctk.CTkFrame(self.reward_card, fg_color="transparent")
+            button_row.pack(pady=(0, 24))
 
-        self.next_lesson_button = ctk.CTkButton(
-            button_row, text="NEXT LESSON ➜", font=theme.font_button(20), width=200, height=56,
-            fg_color=theme.COLOR_SUCCESS, hover_color=theme.COLOR_SUCCESS_HOVER,
-            command=self._on_next_lesson,
-        )
-        self.next_lesson_button.pack(side="left", padx=6)
+            ctk.CTkButton(
+                button_row, text="ONWARD ➜", font=theme.font_button(20), width=200, height=56,
+                fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
+                command=self._on_continue,
+            ).pack(side="left", padx=6)
+
+            self.next_lesson_button = ctk.CTkButton(
+                button_row, text="NEXT LESSON ➜", font=theme.font_button(20), width=200, height=56,
+                fg_color=theme.COLOR_SUCCESS, hover_color=theme.COLOR_SUCCESS_HOVER,
+                command=self._on_next_lesson,
+            )
+            self._next_lesson_button_pack_kwargs = {"side": "left", "padx": 6}
+            self.next_lesson_button.pack(**self._next_lesson_button_pack_kwargs)
+        else:
+            button_column = ctk.CTkFrame(self.reward_card, fg_color="transparent")
+            button_column.pack(pady=(0, 24))
+
+            ctk.CTkButton(
+                button_column, text="Next Mission ➜", font=theme.font_button(20), width=280, height=56,
+                fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
+                command=self._on_continue,
+            ).pack()
+            self.next_mission_caption = ctk.CTkLabel(
+                button_column, text="", font=theme.font_italic(13), text_color=reward_text_color,
+            )
+            self.next_mission_caption.pack(pady=(2, 12))
+
+            self.next_lesson_button = ctk.CTkButton(
+                button_column, text="Next Level ➜", font=theme.font_button(20), width=280, height=56,
+                fg_color=theme.COLOR_SUCCESS, hover_color=theme.COLOR_SUCCESS_HOVER,
+                command=self._on_next_lesson,
+            )
+            self._next_lesson_button_pack_kwargs = {"pady": (2, 0)}
+            self.next_lesson_button.pack()
+            self.next_lesson_caption = ctk.CTkLabel(
+                button_column, text="", font=theme.font_italic(13), text_color=reward_text_color,
+            )
+            self.next_lesson_caption.pack(pady=(2, 0))
 
     # -- run flow -------------------------------------------------------------
     def _on_run(self) -> None:
@@ -413,6 +453,7 @@ class LessonScreen(ctk.CTkFrame):
         if next_lesson:
             progress.set_current_lesson(next_lesson.id)
             progress.set_level(next_lesson.level)
+        self._next_mission_id = next_lesson.id if next_lesson else None
 
         self.reward_label.configure(
             text=f"🎉 Great job! You earned {'⭐' * self.lesson.reward_stars} "
@@ -432,15 +473,30 @@ class LessonScreen(ctk.CTkFrame):
             )
         self._next_in_category_id = next_in_category.id if next_in_category else None
         if next_in_category is not None:
-            self.next_lesson_button.pack(side="left", padx=6)
+            self.next_lesson_button.pack(**self._next_lesson_button_pack_kwargs)
         else:
             self.next_lesson_button.pack_forget()
+
+        if self.next_mission_caption is not None:
+            if next_lesson:
+                meta = get_category_meta(next_lesson.category)
+                self.next_mission_caption.configure(text=f"{meta.icon} {meta.title} — Level {next_lesson.category_level}")
+            else:
+                self.next_mission_caption.configure(text="You've completed Today's Mission! 🎉")
+        if self.next_lesson_caption is not None:
+            if next_in_category:
+                meta = get_category_meta(next_in_category.category)
+                self.next_lesson_caption.configure(text=f"{meta.icon} {meta.title} — Level {next_in_category.category_level}")
+            else:
+                self.next_lesson_caption.configure(text="")
 
         self.reward_card.pack(fill="x", pady=10)
 
     def _on_continue(self) -> None:
         if self.lesson.category in COURSE_CATEGORIES:
             self.app.show_course_chapter(self.lesson.category)
+        elif self._next_mission_id:
+            self.app.show_lesson_or_quiz(self._next_mission_id)
         else:
             self.app.show_dashboard()
 

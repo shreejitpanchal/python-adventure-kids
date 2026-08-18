@@ -25,7 +25,7 @@ import flet as ft
 import flet.canvas as cv
 
 from app.audio.player import success_sound_for
-from app.engine.categories import COURSE_CATEGORIES
+from app.engine.categories import COURSE_CATEGORIES, get_category_meta
 from app.engine.course_status import next_topic_item
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
@@ -75,6 +75,7 @@ class _LessonController:
         self._hint_index = 0
         self._lesson_passed = False
         self._next_in_category_id: str | None = None
+        self._next_mission_id: str | None = None
         self._current_input_value: str | None = None
         self.input_field: ft.TextField | None = None
         self.game_canvas: GameCanvas | None = None
@@ -165,10 +166,14 @@ class _LessonController:
 
         if lesson.input_prompt:
             self.input_field = ft.TextField(hint_text="Type your answer...", width=240)
+            # Stacked (label above, box below), not a Row -- at larger font
+            # scales the label alone can grow wider than a narrow phone
+            # screen, which pushed the fixed-width TextField off the
+            # visible area when both shared one row.
             children.append(
-                ft.Row(
+                ft.Column(
                     [ft.Text(f"🧑 {lesson.input_prompt}", size=self._fs(15), color=theme.text), self.input_field],
-                    spacing=10,
+                    spacing=8,
                 )
             )
 
@@ -294,24 +299,60 @@ class _LessonController:
             "", size=self._fs(20), weight=ft.FontWeight.BOLD, color=reward_text_color, text_align=ft.TextAlign.CENTER,
         )
         self.badge_text = ft.Text("", size=self._fs(15), color=reward_text_color, text_align=ft.TextAlign.CENTER)
-        self.next_lesson_button = ft.Button(
-            "NEXT LESSON ➜", on_click=self._on_next_lesson, height=52, visible=False,
-            style=ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF"),
-        )
-        onward_button = ft.Button(
-            "ONWARD ➜", on_click=self._on_continue, height=52,
-            style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
-        )
+
+        # Course lessons keep the original Onward/Next Lesson pair (chapter
+        # navigation, not a "mission") -- only Today's Mission lessons
+        # (outside COURSE_CATEGORIES) get the Next Mission/Next Level
+        # framing below, since only those participate in next_after()'s
+        # round-robin at all.
+        if self.lesson.category in COURSE_CATEGORIES:
+            self.next_mission_caption = None
+            self.next_lesson_caption = None
+            self.next_lesson_button = ft.Button(
+                "NEXT LESSON ➜", on_click=self._on_next_lesson, height=52, visible=False,
+                style=ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF"),
+            )
+            onward_button = ft.Button(
+                "ONWARD ➜", on_click=self._on_continue, height=52,
+                style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+            )
+            buttons_section: ft.Control = ft.Row(
+                [onward_button, self.next_lesson_button],
+                alignment=ft.MainAxisAlignment.CENTER, spacing=12, wrap=True,
+            )
+        else:
+            self.next_mission_caption = ft.Text(
+                "", size=self._fs(13), italic=True, color=reward_text_color, text_align=ft.TextAlign.CENTER,
+            )
+            next_mission_button = ft.Button(
+                "Next Mission ➜", on_click=self._on_continue, height=52,
+                style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+            )
+            self.next_lesson_caption = ft.Text(
+                "", size=self._fs(13), italic=True, color=reward_text_color, text_align=ft.TextAlign.CENTER,
+            )
+            self.next_lesson_button = ft.Button(
+                "Next Level ➜", on_click=self._on_next_lesson, height=52, visible=False,
+                style=ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF"),
+            )
+            buttons_section = ft.Column(
+                [
+                    next_mission_button,
+                    self.next_mission_caption,
+                    ft.Container(height=8),
+                    self.next_lesson_button,
+                    self.next_lesson_caption,
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=4,
+            )
+
         self.reward_card = ft.Container(
             content=ft.Column(
                 [
                     ft.Text("🏆", size=self._fs(40), text_align=ft.TextAlign.CENTER),
                     self.reward_text,
                     self.badge_text,
-                    ft.Row(
-                        [onward_button, self.next_lesson_button],
-                        alignment=ft.MainAxisAlignment.CENTER, spacing=12, wrap=True,
-                    ),
+                    buttons_section,
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=8,
             ),
@@ -588,6 +629,7 @@ class _LessonController:
         if next_lesson:
             progress.set_current_lesson(next_lesson.id)
             progress.set_level(next_lesson.level)
+        self._next_mission_id = next_lesson.id if next_lesson else None
 
         self.reward_text.value = (
             f"🎉 Great job! You earned {'⭐' * self.lesson.reward_stars} "
@@ -608,6 +650,19 @@ class _LessonController:
         self._next_in_category_id = next_in_category.id if next_in_category else None
         self.next_lesson_button.visible = next_in_category is not None
 
+        if self.next_mission_caption is not None:
+            if next_lesson:
+                meta = get_category_meta(next_lesson.category)
+                self.next_mission_caption.value = f"{meta.icon} {meta.title} — Level {next_lesson.category_level}"
+            else:
+                self.next_mission_caption.value = "You've completed Today's Mission! 🎉"
+        if self.next_lesson_caption is not None:
+            if next_in_category:
+                meta = get_category_meta(next_in_category.category)
+                self.next_lesson_caption.value = f"{meta.icon} {meta.title} — Level {next_in_category.category_level}"
+            else:
+                self.next_lesson_caption.value = ""
+
         self.reward_card.visible = True
 
     def _on_continue(self, e) -> None:
@@ -615,6 +670,8 @@ class _LessonController:
             self.game_canvas.cancel_pending()
         if self.lesson.category in COURSE_CATEGORIES:
             self.page.go(f"/course/{self.lesson.category}")
+        elif self._next_mission_id:
+            self.page.go(f"/lesson/{self._next_mission_id}")
         else:
             self.page.go("/dashboard")
 

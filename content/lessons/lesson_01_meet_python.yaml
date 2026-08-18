@@ -13,12 +13,14 @@ example_code: |
 starter_code: |
   print("Hello!")
 challenge: |
-  🎯 Challenge: Press RUN and see what Python says back to you!
+  🎯 Challenge: Try changing the message inside the quotes to anything you like, then press RUN!
 expected_output: "Hello!"
+expected_output_pattern: "(?s).*"
+ast_contains: [print]
 hints:
   - "Make sure you use print(...) with round brackets."
-  - "Text goes inside quotes, like \"Hello!\""
-  - "Don't change the words inside the quotes — just press RUN!"
+  - "Text goes inside quotes, like \"Hello!\" -- but it can be anything you want!"
+  - "Keep the quotes around your message, and press RUN to see what Python says back."
 reward_stars: 3
 badge: first_program
 next_lesson_id: lesson_02

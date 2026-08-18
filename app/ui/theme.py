@@ -232,6 +232,12 @@ def font_body(size: int = 16) -> ctk.CTkFont:
     return ctk.CTkFont(family=FONT_FAMILY, size=_scaled(size))
 
 
+def font_italic(size: int = 13) -> ctk.CTkFont:
+    """For small caption text under a button, e.g. previewing which
+    lesson/level a "Next Mission"/"Next Level" button leads to."""
+    return ctk.CTkFont(family=FONT_FAMILY, size=_scaled(size), slant="italic")
+
+
 def font_button(size: int = 20) -> ctk.CTkFont:
     return ctk.CTkFont(family=FONT_FAMILY, size=_scaled(size), weight="bold")
 
