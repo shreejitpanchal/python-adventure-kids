@@ -10,9 +10,9 @@ A Windows-to-Android re-platform onto [Flet](https://flet.dev) (one Python
 codebase targeting both — `main_flet.py`, `app/ui/*_flet.py`) is being built
 out feature-by-feature alongside the CustomTkinter app (`main.py`, the
 shipping Windows build). The Flet build has its own setup wizard, dashboard,
-category browser, quiz, settings screen, PIN-gated parent area, and full
-lesson flow (including the Snake project's graphical lessons), built
-against the same content and progress data. It isn't the shipping build
+category browser, Python Learning course, quiz, settings screen, PIN-gated
+parent area, and full lesson flow (including the Snake project's graphical
+lessons), built against the same content and progress data. It isn't the shipping build
 yet — `run.bat`/`run.sh` launch the CustomTkinter app; run the Flet build
 with `flet run main_flet.py` (see "Running it" below).
 
@@ -57,7 +57,8 @@ app/
   progress/  # SQLite-backed progress, stars, badges, streaks, activity log, quiz attempts
   parent/    # PIN-gated parent area (summary + recent activity)
   engine/    # lesson model + YAML-based lesson engine + category logic +
-             # output validator + quiz model/engine + badge display metadata
+             # output validator + quiz model/engine + badge display metadata +
+             # course_status.py (Python Learning course progress + badge)
   sandbox/   # AST safety check + two execution engines (see "Code execution
              # sandbox" below for why there are currently two)
   games/     # GameCanvas/GameWindow + in-process graphical runner (Snake,
@@ -71,7 +72,7 @@ content/
   images/    # app icon (main-icon.png / .ico)
 docs/
   app-screenshots/    # images used in the README
-tests/       # pytest suite (1350+ tests)
+tests/       # pytest suite (2100+ tests)
 app-data/    # gitignored, legacy dev-only location — see "Data storage" below
 main.py      # CustomTkinter entry point
 main_flet.py # Flet entry point (see "Status")
@@ -117,6 +118,39 @@ This is a second, orthogonal way to reach lessons alongside the guided
 "Today's Mission" flow above — the same lessons (Numbers through Lists)
 are reachable either way, so progress made through one shows up in the
 other automatically.
+
+### Python Learning course
+
+A third, separate guided path — a fixed 6-chapter course (Intro &
+Setup, Variables & Data Types, Control Flow, Functions, Lists & Data
+Structures, Capstone: To-Do App), reached from the Learning Hub's "🎓
+Python Learning" card. It's built almost entirely by reusing the
+category-browser machinery above rather than inventing a parallel
+content model: each chapter is just a lesson `category`
+(`course_intro_setup`, `course_variables`, ...) with exactly 3
+`category_level`s — a concept lesson ("What is X?"), a coding exercise
+("Your Sample Program"), and a quiz. Chapters themselves are never
+locked; only the 3 items *within* one gate in order via the existing
+`LessonEngine.is_unlocked()`, unchanged.
+
+The quiz item is modeled as a `Lesson` too, with a new `is_quiz: bool`
+field, rather than a separate content type. When `is_quiz` is set, the
+lesson-consuming screen (`course_quiz_screen.py` /
+`course_quiz_screen_flet.py`) shows a multiple-choice run instead of a
+code editor, drawing questions from the existing 300-question bank
+filtered to that lesson's `concept_tags`
+(`QuizEngine.start_session_for_tags()`, falling back to the full bank
+if the tag filter matches nothing). Passing at ≥70% calls the exact
+same `ProgressStore.complete_lesson()` every other lesson uses — so
+quiz completion participates in unlock/completion tracking for free,
+with zero new `ProgressStore` schema.
+
+`app/engine/course_status.py` computes per-chapter and whole-course
+progress (`compute_course_status()`) and awards a `course_graduate`
+badge once every one of the 18 items is complete
+(`maybe_award_course_badge()`) — called after each course quiz pass,
+since within-chapter ordering guarantees the last item ever completed
+across the whole course is always some chapter's quiz.
 
 ### Adaptive practice
 

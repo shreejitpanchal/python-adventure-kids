@@ -72,7 +72,7 @@ flowchart LR
     end
 
     subgraph shared["Shared core (imported by both, UI-agnostic)"]
-        engine["app/engine\nLessonEngine, QuizEngine,\nvalidator, categories, badges"]
+        engine["app/engine\nLessonEngine, QuizEngine,\nvalidator, categories, badges,\ncourse_status"]
         progress["app/progress\nProgressStore (SQLite)"]
         config["app/config\nSettings, load/save,\nplatform data dir"]
         sandbox["app/sandbox\ntwo execution engines"]
@@ -123,6 +123,7 @@ classDiagram
         +list~str~ ast_contains
         +bool requires_goal_reached
         +list~str~ concept_tags
+        +bool is_quiz
     }
 
     class LessonEngine {
@@ -156,9 +157,25 @@ classDiagram
     class QuizEngine {
         -list~QuizQuestion~ _questions
         +start_session() list~QuizQuestion~
+        +start_session_for_tags(tags, count) list~QuizQuestion~
         +__len__() int
     }
     QuizEngine "1" o-- "many" QuizQuestion : loads from content/quiz/*.yaml
+
+    class ChapterStatus {
+        +str category
+        +list~Lesson~ items
+        +int completed_count
+        +int total_count
+    }
+    class CourseStatus {
+        +list~ChapterStatus~ chapters
+        +int items_done
+        +int items_total
+        +int stars_earned
+    }
+    CourseStatus "1" o-- "many" ChapterStatus
+    note for CourseStatus "Built by course_status.py's compute_course_status() function, the same shape as hub_status.py's compute_hub_status()."
 
     class Settings {
         +str child_name
@@ -441,11 +458,13 @@ flowchart LR
 `LessonEngine.main_path_lessons()` walks `category`/`category_level`
 fields on lesson content to build this sequence fresh on every call;
 `resolve_current()` just finds the first ID in that sequence not present
-in `completed_lesson_ids`. Games, Snake, Code Crackers, and every other
-bonus category are simply never included in this walk — they're reached
-exclusively through the category browser, which uses the same content
-but a different, independent traversal (`lessons_in_category()` sorted by
-`category_level`, unlock-gated by `is_unlocked()`).
+in `completed_lesson_ids`. Games, Snake, Code Crackers, the Python
+Learning course's `course_*` categories, and every other bonus category
+are simply never included in this walk — they're reached exclusively
+through the category browser (or, for the course, its own chapter
+screens), which uses the same content but a different, independent
+traversal (`lessons_in_category()` sorted by `category_level`,
+unlock-gated by `is_unlocked()`).
 
 ## 7. Persistence model
 
@@ -526,6 +545,13 @@ takes its dataclass default.
   can't be the only implementation. The in-process engine exists purely
   to make Android possible and is intended to fully replace the subprocess
   one once the Flet UI is complete (see Section 4).
+- **A course chapter is just a category; a quiz item is just a Lesson.**
+  The Python Learning course (Section 6 note above) deliberately reuses
+  the existing category/`is_unlocked()`/`complete_lesson()` machinery
+  instead of a parallel "chapter" content model, and models its quiz
+  item as a `Lesson` with an `is_quiz` flag rather than a new content
+  type — so quiz completion gets unlock tracking, star rewards, and XP
+  for free, and the course needed zero new `ProgressStore` schema.
 - **Dual-UI parity by convention, not abstraction.** Rather than building
   a shared widget/view abstraction over both CTk and Flet (which would
   constrain both to their lowest common capability), each UI is a

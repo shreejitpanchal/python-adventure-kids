@@ -43,6 +43,11 @@ sign up for.
   and works through Numbers, Addition, Subtraction, Multiplication,
   Division, Variables, Strings, Input, Decisions, Loops, Functions, and
   Lists a level at a time, looping back around for deeper levels as you go.
+- **Python Learning course** — a structured 6-chapter course (Intro &
+  Setup, Variables & Data Types, Control Flow, Functions, Lists & Data
+  Structures, and a Capstone To-Do App) that pairs every topic with a
+  "What is it?" explanation, a hands-on sample program, and a topic quiz
+  before moving on to the next chapter.
 - **Practice by Category** — jump into any topic directly and work through
   its full 20-level progression at your own pace, independent of Today's
   Mission.
