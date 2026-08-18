@@ -14,8 +14,8 @@ VOCABULARY = {
     "naming", "input", "type-conversion", "f-strings", "comparison",
     "booleans", "conditionals", "loops", "for-loops", "while-loops",
     "functions", "parameters", "return-values", "lists", "indexing",
-    "slicing", "dictionaries", "iteration", "debugging", "errors",
-    "algorithms", "random", "classes",
+    "slicing", "dictionaries", "tuples", "sets", "iteration", "debugging",
+    "errors", "algorithms", "random", "classes",
 }
 
 
