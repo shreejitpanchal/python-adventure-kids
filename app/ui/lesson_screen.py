@@ -127,13 +127,6 @@ class LessonScreen(ctk.CTkFrame):
         )
         self.run_button.pack(side="left", padx=(0, 10))
 
-        self.stop_button = ctk.CTkButton(
-            button_row, text="⏹ STOP", font=theme.font_button(16), width=110, height=48,
-            fg_color=theme.COLOR_DANGER, hover_color="#D94F4F",
-            command=self._on_stop, state="disabled",
-        )
-        self.stop_button.pack(side="left", padx=(0, 10))
-
         ctk.CTkButton(
             button_row, text="↺ Reset", font=theme.font_body(15), width=110, height=48,
             fg_color=theme.COLOR_TEXT_MUTED, hover_color=theme.COLOR_TEXT,
@@ -259,7 +252,6 @@ class LessonScreen(ctk.CTkFrame):
 
         self._running = True
         self.run_button.configure(state="disabled")
-        self.stop_button.configure(state="normal")
         self.editor.clear_error_highlight()
         self._hide_details()
         self.output_label.configure(text="⏳ Running your code...", text_color=theme.COLOR_TEXT_MUTED)
@@ -284,7 +276,6 @@ class LessonScreen(ctk.CTkFrame):
     def _on_run_complete(self, result: ExecutionResult, handle: RunHandle) -> None:
         self._running = False
         self.run_button.configure(state="normal")
-        self.stop_button.configure(state="disabled")
 
         if result.blocked:
             self._show_output(f"🚫 {result.blocked_message}", theme.COLOR_DANGER)
@@ -383,10 +374,6 @@ class LessonScreen(ctk.CTkFrame):
         if self.game_window is not None:
             self.game_window.close()
             self.game_window = None
-
-    def _on_stop(self) -> None:
-        if self._run_handle is not None:
-            self._run_handle.cancel()
 
     def _on_reset(self) -> None:
         self.editor.set_code(self.lesson.starter_code.strip())

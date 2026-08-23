@@ -183,10 +183,6 @@ class _LessonController:
             "▶ RUN", on_click=self._on_run, height=52,
             style=ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF"),
         )
-        self.stop_button = ft.Button(
-            "⏹ STOP", on_click=self._on_stop, disabled=True, height=52,
-            style=ft.ButtonStyle(bgcolor=theme.danger, color="#FFFFFF"),
-        )
         reset_button = ft.Button(
             "↺ Reset", on_click=self._on_reset, height=48,
             style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
@@ -207,7 +203,7 @@ class _LessonController:
         )
         children.append(
             ft.Row(
-                [self.run_button, self.stop_button, reset_button, self.hint_button, self.helpers_button],
+                [self.run_button, reset_button, self.hint_button, self.helpers_button],
                 spacing=10, wrap=True,
             )
         )
@@ -385,7 +381,6 @@ class _LessonController:
 
         self._running = True
         self.run_button.disabled = True
-        self.stop_button.disabled = False
         self._hide_details()
         self.output_text.value = "⏳ Running your code..."
         self.output_text.color = self.theme.text_muted
@@ -406,7 +401,6 @@ class _LessonController:
     def _on_run_complete(self, result: ExecutionResult, handle: RunHandle) -> None:
         self._running = False
         self.run_button.disabled = False
-        self.stop_button.disabled = True
 
         if result.blocked:
             self._show_output(f"🚫 {result.blocked_message}", self.theme.danger)
@@ -541,10 +535,6 @@ class _LessonController:
         self._codey.set_state(CodeyState.SUCCESS)
         self._on_lesson_success()
         self.page.update()
-
-    def _on_stop(self, e) -> None:
-        if self._run_handle is not None:
-            self._run_handle.cancel()
 
     def _on_reset(self, e) -> None:
         self.editor.value = self.lesson.starter_code.strip()
