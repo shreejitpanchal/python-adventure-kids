@@ -47,17 +47,25 @@ Settings font controls — due for a refresh.*
   and works through Numbers, Addition, Subtraction, Multiplication,
   Division, Variables, Strings, Input, Decisions, Loops, Functions, and
   Lists a level at a time, looping back around for deeper levels as you go.
-- **Python Learning course** — a structured 6-chapter course (Intro &
+- **Python Learning course** — a structured 9-chapter course (Intro &
   Setup, Variables & Data Types, Control Flow, Functions, Data
-  Structures, Capstone: To-Do App). Five of the six chapters go deeper by
-  splitting into their own topics instead of one flat lesson: Intro &
-  Setup covers Print, Comments, and Reading Errors; Variables & Data
-  Types covers Variables, Numbers, Strings, Booleans, and Type
+  Structures, Advanced Programming Concepts, Standard Library Deep Dive,
+  Concurrency & Observability, Capstone: To-Do App). Most chapters go
+  deeper by splitting into their own topics instead of one flat lesson:
+  Intro & Setup covers Print, Comments, and Reading Errors; Variables &
+  Data Types covers Variables, Numbers, Strings, Booleans, and Type
   Conversion; Control Flow covers Conditionals, For Loops, and While
   Loops; Functions covers Defining Functions, Parameters, and Return
-  Values; and Data Structures covers Lists, Tuples, Dictionaries, and
-  Sets. Every topic still gets its own "What is it?" explanation, a
-  hands-on sample program, and a topic quiz — 57 lessons in all.
+  Values; Data Structures covers Lists, Tuples, Dictionaries, and Sets;
+  Advanced Programming Concepts covers Algorithms, Recursion, and
+  Functional Programming; Standard Library Deep Dive covers Collections,
+  Itertools, Datetime, and JSON; and Concurrency & Observability covers
+  Concurrency & Async, Thread Scheduling, Sync vs Async, and
+  Observability — taught as simulated, concept-only exercises rather than
+  real threading/asyncio, since this app's sandbox hard-kills code after a
+  timeout and doesn't compose safely with real concurrency. Every topic
+  still gets its own "What is it?" explanation, a hands-on sample program,
+  and a topic quiz — 90 lessons in all.
 - **Practice by Category** — jump into any topic directly and work through
   its full 20-level progression at your own pace, independent of Today's
   Mission.

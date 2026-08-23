@@ -1,0 +1,34 @@
+id: course_advanced_concepts_algorithms_2
+title: "Your Sample Program with Algorithms 📐"
+level: 961
+objective: "Implement a simple sorting algorithm (bubble sort) that puts a list in order."
+explanation: |
+  Sorting algorithms put a list in order. Bubble sort repeatedly compares neighboring items and swaps them if they're in the wrong order -- doing this enough times sorts the whole list.
+example_code: |
+  numbers = [5, 2, 4, 1]
+  for i in range(len(numbers)):
+      for j in range(len(numbers) - 1):
+          if numbers[j] > numbers[j + 1]:
+              numbers[j], numbers[j + 1] = numbers[j + 1], numbers[j]
+  print(numbers)
+starter_code: |
+  numbers = [5, 2, 4, 1]
+  for i in range(len(numbers)):
+      for j in range(len(numbers) - 1):
+          if numbers[j] > numbers[j + 1]:
+              numbers[j], numbers[j + 1] = numbers[j + 1], numbers[j]
+  print(numbers)
+challenge: |
+  🎯 Challenge: Change numbers to [9, 3, 7, 1, 5], then run it.
+expected_output: |
+  [1, 3, 5, 7, 9]
+hints:
+  - "Change the list after numbers ="
+  - "The two loops below will sort whatever list you give them."
+  - "It should look like: numbers = [9, 3, 7, 1, 5]"
+reward_stars: 3
+badge: null
+category: course_advanced_concepts
+category_level: 2
+topic: Algorithms
+concept_tags: [algorithms, loops, lists]

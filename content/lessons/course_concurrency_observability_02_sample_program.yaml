@@ -1,0 +1,43 @@
+id: course_concurrency_observability_2
+title: "Your Sample Program with Observability 🔭"
+level: 991
+objective: "Write log-style messages with INFO/ERROR labels to make a program's behavior easy to follow."
+explanation: |
+  Real logging tools tag each message with a level, like INFO or ERROR, so you can filter and search them later. We can format our own log-style messages the same way, using plain print().
+example_code: |
+  def divide(a, b):
+      print("[INFO] Dividing " + str(a) + " by " + str(b))
+      if b == 0:
+          print("[ERROR] Cannot divide by zero!")
+          return None
+      result = a / b
+      print("[INFO] Result: " + str(result))
+      return result
+
+  divide(10, 2)
+starter_code: |
+  def divide(a, b):
+      print("[INFO] Dividing " + str(a) + " by " + str(b))
+      if b == 0:
+          print("[ERROR] Cannot divide by zero!")
+          return None
+      result = a / b
+      print("[INFO] Result: " + str(result))
+      return result
+
+  divide(10, 2)
+challenge: |
+  🎯 Challenge: Change divide(10, 2) to divide(10, 0), then run it.
+expected_output: |
+  [INFO] Dividing 10 by 0
+  [ERROR] Cannot divide by zero!
+hints:
+  - "Change the 2 inside divide(10, 2) to a 0"
+  - "Dividing by 0 triggers the [ERROR] message instead of a result."
+  - "It should look like: divide(10, 0)"
+reward_stars: 3
+badge: null
+category: course_concurrency
+category_level: 11
+topic: Observability
+concept_tags: [observability, conditionals]

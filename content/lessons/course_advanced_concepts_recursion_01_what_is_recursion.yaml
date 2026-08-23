@@ -1,0 +1,36 @@
+id: course_advanced_concepts_recursion_1
+title: "What is Recursion? 🪆"
+level: 963
+objective: "Understand that a recursive function calls itself to solve a smaller version of the same problem."
+explanation: |
+  A recursive function calls itself to solve a smaller version of the same problem, until it reaches a "base case" that stops the calls.
+
+  factorial(5) means 5 * 4 * 3 * 2 * 1. The base case is n <= 1, which returns 1 and stops the chain of calls.
+example_code: |
+  def factorial(n):
+      if n <= 1:
+          return 1
+      return n * factorial(n - 1)
+
+  print(factorial(5))
+starter_code: |
+  def factorial(n):
+      if n <= 1:
+          return 1
+      return n * factorial(n - 1)
+
+  print(factorial(5))
+challenge: |
+  🎯 Challenge: Change factorial(5) to factorial(6), then run it.
+expected_output: |
+  720
+hints:
+  - "Change the number inside factorial( )"
+  - "factorial(6) means 6 * 5 * 4 * 3 * 2 * 1."
+  - "It should look like: print(factorial(6))"
+reward_stars: 2
+badge: null
+category: course_advanced_concepts
+category_level: 4
+topic: Recursion
+concept_tags: [recursion, functions]

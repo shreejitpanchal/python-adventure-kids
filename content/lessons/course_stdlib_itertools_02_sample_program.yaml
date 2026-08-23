@@ -1,0 +1,38 @@
+id: course_stdlib_itertools_2
+title: "Your Sample Program with itertools 🔁"
+level: 973
+objective: "Use itertools.chain() to join several lists into one sequence."
+explanation: |
+  itertools.chain() joins several lists together into one sequence, one after another, without building a brand-new combined list first.
+example_code: |
+  import itertools
+  morning = ["wake up", "breakfast"]
+  afternoon = ["lunch", "study"]
+  evening = ["dinner"]
+  for task in itertools.chain(morning, afternoon):
+      print(task)
+starter_code: |
+  import itertools
+  morning = ["wake up", "breakfast"]
+  afternoon = ["lunch", "study"]
+  evening = ["dinner"]
+  for task in itertools.chain(morning, afternoon):
+      print(task)
+challenge: |
+  🎯 Challenge: Add evening to the chain() call, so it reads chain(morning, afternoon, evening), then run it.
+expected_output: |
+  wake up
+  breakfast
+  lunch
+  study
+  dinner
+hints:
+  - "Add , evening inside the chain( ) parentheses."
+  - "evening is already defined above -- it just needs to be added to the chain."
+  - "It should look like: itertools.chain(morning, afternoon, evening)"
+reward_stars: 3
+badge: null
+category: course_stdlib
+category_level: 5
+topic: Itertools
+concept_tags: [itertools, loops, lists]

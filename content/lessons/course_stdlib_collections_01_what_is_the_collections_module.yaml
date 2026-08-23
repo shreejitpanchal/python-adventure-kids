@@ -1,0 +1,30 @@
+id: course_stdlib_collections_1
+title: "What is the collections Module? 🗃️"
+level: 969
+objective: "Use collections.Counter to count how often items appear in a list."
+explanation: |
+  The collections module has useful tools beyond lists and dicts. Counter counts how many times each item appears in a list -- great for tallying votes, words, or scores.
+example_code: |
+  from collections import Counter
+  votes = ["red", "blue", "red", "green", "blue", "red"]
+  counts = Counter(votes)
+  print(counts["red"])
+starter_code: |
+  from collections import Counter
+  votes = ["red", "blue", "red", "green", "blue", "red"]
+  counts = Counter(votes)
+  print(counts["red"])
+challenge: |
+  🎯 Challenge: Change counts["red"] to counts["blue"], then run it.
+expected_output: |
+  2
+hints:
+  - "Change red to blue inside counts[ ]"
+  - "There are 2 \"blue\" votes in the list."
+  - "It should look like: print(counts[\"blue\"])"
+reward_stars: 2
+badge: null
+category: course_stdlib
+category_level: 1
+topic: Collections
+concept_tags: [collections]

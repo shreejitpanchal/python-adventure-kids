@@ -104,6 +104,32 @@ def test_functions_chapter_shows_0_of_9(engine, progress):
     assert [t.topic for t in chapter.topics] == ["Defining Functions", "Parameters", "Return Values"]
 
 
+def test_advanced_concepts_chapter_shows_0_of_9(engine, progress):
+    status = compute_course_status(engine, progress)
+    chapter = next(c for c in status.chapters if c.category == "course_advanced_concepts")
+    assert chapter.completed_count == 0
+    assert chapter.total_count == 9
+    assert [t.topic for t in chapter.topics] == ["Algorithms", "Recursion", "Functional Programming"]
+
+
+def test_stdlib_chapter_shows_0_of_12(engine, progress):
+    status = compute_course_status(engine, progress)
+    chapter = next(c for c in status.chapters if c.category == "course_stdlib")
+    assert chapter.completed_count == 0
+    assert chapter.total_count == 12
+    assert [t.topic for t in chapter.topics] == ["Collections", "Itertools", "Datetime", "JSON"]
+
+
+def test_concurrency_chapter_shows_0_of_12(engine, progress):
+    status = compute_course_status(engine, progress)
+    chapter = next(c for c in status.chapters if c.category == "course_concurrency")
+    assert chapter.completed_count == 0
+    assert chapter.total_count == 12
+    assert [t.topic for t in chapter.topics] == [
+        "Concurrency & Async", "Thread Scheduling", "Sync vs Async", "Observability",
+    ]
+
+
 def test_badge_not_awarded_until_every_item_complete(engine, progress, all_course_lesson_ids):
     for lesson_id in all_course_lesson_ids[:-1]:
         progress.complete_lesson(lesson_id, 3)
@@ -144,6 +170,7 @@ def test_sets_topic_never_blocked_by_lists_tuples_or_dictionaries(engine):
 
 @pytest.mark.parametrize("category", [
     "course_intro_setup", "course_control_flow", "course_functions", "course_variables",
+    "course_advanced_concepts", "course_stdlib", "course_concurrency",
 ])
 def test_last_topics_first_item_never_blocked_by_earlier_topics(engine, category):
     """Same "all topics open" guarantee as course_data_structures' Sets,

@@ -1,0 +1,34 @@
+id: course_advanced_concepts_recursion_2
+title: "Your Sample Program with Recursion 🪆"
+level: 964
+objective: "Write a recursive function that adds up all the numbers in a list."
+explanation: |
+  This function adds up a list recursively: the sum of a list is its first item, plus the sum of everything after it. The base case is an empty list, which sums to 0.
+example_code: |
+  def sum_list(numbers):
+      if len(numbers) == 0:
+          return 0
+      return numbers[0] + sum_list(numbers[1:])
+
+  print(sum_list([1, 2, 3, 4]))
+starter_code: |
+  def sum_list(numbers):
+      if len(numbers) == 0:
+          return 0
+      return numbers[0] + sum_list(numbers[1:])
+
+  print(sum_list([1, 2, 3, 4]))
+challenge: |
+  🎯 Challenge: Change the list to [1, 2, 3, 4, 5, 6], then run it.
+expected_output: |
+  21
+hints:
+  - "Change the list inside sum_list( )"
+  - "1 + 2 + 3 + 4 + 5 + 6 = 21"
+  - "It should look like: print(sum_list([1, 2, 3, 4, 5, 6]))"
+reward_stars: 3
+badge: null
+category: course_advanced_concepts
+category_level: 5
+topic: Recursion
+concept_tags: [recursion, lists, functions]

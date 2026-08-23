@@ -141,7 +141,7 @@ _CARD_DEFS: list[tuple[str, str, str, str, str]] = [
     ),
     (
         "course", "🎓 Python Learning",
-        "A structured 6-chapter course with lessons, sample programs, and quizzes.",
+        "A structured 9-chapter course with lessons, sample programs, and quizzes.",
         "course_status", "/course",
     ),
 ]

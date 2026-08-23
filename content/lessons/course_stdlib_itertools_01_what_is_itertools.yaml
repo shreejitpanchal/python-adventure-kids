@@ -1,0 +1,37 @@
+id: course_stdlib_itertools_1
+title: "What is itertools? 🔁"
+level: 972
+objective: "Use itertools.product() to generate every combination of items from two lists."
+explanation: |
+  itertools.product() generates every possible combination of items from two or more lists -- like pairing every color with every size.
+example_code: |
+  import itertools
+  colors = ["red", "blue"]
+  sizes = ["S", "M"]
+  for combo in itertools.product(colors, sizes):
+      print(combo)
+starter_code: |
+  import itertools
+  colors = ["red", "blue"]
+  sizes = ["S", "M"]
+  for combo in itertools.product(colors, sizes):
+      print(combo)
+challenge: |
+  🎯 Challenge: Add "L" to the sizes list, then run it.
+expected_output: |
+  ('red', 'S')
+  ('red', 'M')
+  ('red', 'L')
+  ('blue', 'S')
+  ('blue', 'M')
+  ('blue', 'L')
+hints:
+  - "Add \"L\" to the end of the sizes list."
+  - "product() will now pair each color with all 3 sizes."
+  - "It should look like: sizes = [\"S\", \"M\", \"L\"]"
+reward_stars: 2
+badge: null
+category: course_stdlib
+category_level: 4
+topic: Itertools
+concept_tags: [itertools, loops]

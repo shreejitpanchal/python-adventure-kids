@@ -1,0 +1,45 @@
+id: course_concurrency_syncvsasync_1
+title: "What is the Difference Between Sync and Async? 🔀"
+level: 987
+objective: "Understand that synchronous code runs one task fully before the next starts."
+explanation: |
+  Synchronous code runs one step completely before starting the next -- like waiting in a single line. Asynchronous code can start a new task while an earlier one is still waiting, instead of sitting idle.
+example_code: |
+  def make_tea():
+      print("Boiling water...")
+      print("Tea is ready!")
+
+  def make_toast():
+      print("Toasting bread...")
+      print("Toast is ready!")
+
+  make_tea()
+  make_toast()
+starter_code: |
+  def make_tea():
+      print("Boiling water...")
+      print("Tea is ready!")
+
+  def make_toast():
+      print("Toasting bread...")
+      print("Toast is ready!")
+
+  make_tea()
+  make_toast()
+challenge: |
+  🎯 Challenge: Swap the order so make_toast() is called before make_tea(), then run it.
+expected_output: |
+  Toasting bread...
+  Toast is ready!
+  Boiling water...
+  Tea is ready!
+hints:
+  - "Swap the last two lines: make_toast() first, then make_tea()"
+  - "In synchronous code, each function finishes completely before the next one starts."
+  - "It should look like: make_toast() then make_tea()"
+reward_stars: 2
+badge: null
+category: course_concurrency
+category_level: 7
+topic: Sync vs Async
+concept_tags: [async, functions]

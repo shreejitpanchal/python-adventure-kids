@@ -16,7 +16,7 @@ from app.sandbox.allowed_builtins import ALLOWED_BUILTIN_NAMES
 # Kept in sync with app/sandbox/safety.py's ALLOWED_MODULES -- that AST check
 # already rejects anything else before this process is even spawned; this is
 # the second, defense-in-depth layer.
-ALLOWED_MODULES = {"random"}
+ALLOWED_MODULES = {"random", "time", "collections", "itertools", "datetime", "json", "functools"}
 
 
 def _restricted_import(name, globals=None, locals=None, fromlist=(), level=0):

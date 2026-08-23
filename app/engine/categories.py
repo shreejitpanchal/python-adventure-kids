@@ -48,6 +48,9 @@ CATEGORY_META: dict[str, CategoryMeta] = {
     "course_control_flow": CategoryMeta("Control Flow", "🔀", "#F97316"),
     "course_functions": CategoryMeta("Functions", "🧰", "#7C3AED"),
     "course_data_structures": CategoryMeta("Data Structures", "🗂️", "#10B981"),
+    "course_advanced_concepts": CategoryMeta("Advanced Programming Concepts", "🧠", "#0891B2"),
+    "course_stdlib": CategoryMeta("Standard Library Deep Dive", "📚", "#9333EA"),
+    "course_concurrency": CategoryMeta("Concurrency & Observability", "🕸️", "#BE185D"),
     "course_capstone": CategoryMeta("Capstone: To-Do App", "🏁", "#DC2626"),
 }
 
@@ -65,6 +68,10 @@ TOPIC_ICONS: dict[str, str] = {
     "Print": "🖨️", "Comments": "💬", "Reading Errors": "🐞",
     "Conditionals": "🚦", "For Loops": "🔁", "While Loops": "🔂",
     "Defining Functions": "🧰", "Parameters": "🧩", "Return Values": "↩️",
+    "Algorithms": "📐", "Recursion": "🪆", "Functional Programming": "🧬",
+    "Collections": "🗃️", "Itertools": "🔁", "Datetime": "📅", "JSON": "🧾",
+    "Concurrency & Async": "⚡", "Thread Scheduling": "🧵", "Sync vs Async": "🔀",
+    "Observability": "🔭",
 }
 """Purely presentational icon per sub-topic name, shown next to a topic's
 group heading within a multi-topic course chapter screen (see
@@ -84,7 +91,8 @@ their own direct Hub cards instead of being lumped in here)."""
 
 COURSE_CATEGORIES = [
     "course_intro_setup", "course_variables", "course_control_flow",
-    "course_functions", "course_data_structures", "course_capstone",
+    "course_functions", "course_data_structures", "course_advanced_concepts",
+    "course_stdlib", "course_concurrency", "course_capstone",
 ]
 """The "🎓 Python Learning" course's chapters, in curriculum order -- each
 one a lesson category, grouped by Lesson.topic into 3-item sub-groups

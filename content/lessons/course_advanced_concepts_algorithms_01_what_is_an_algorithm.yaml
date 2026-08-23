@@ -1,0 +1,36 @@
+id: course_advanced_concepts_algorithms_1
+title: "What is an Algorithm? 📐"
+level: 960
+objective: "Understand that an algorithm is a step-by-step set of instructions, using linear search as an example."
+explanation: |
+  An algorithm is just a step-by-step set of instructions for solving a problem -- like a recipe for your computer.
+
+  Linear search is a simple algorithm: check each item in a list, one at a time, until you find the one you're looking for (or run out of items).
+example_code: |
+  numbers = [4, 2, 7, 1, 9]
+  target = 7
+  for i in range(len(numbers)):
+      if numbers[i] == target:
+          print("Found at index " + str(i))
+          break
+starter_code: |
+  numbers = [4, 2, 7, 1, 9]
+  target = 7
+  for i in range(len(numbers)):
+      if numbers[i] == target:
+          print("Found at index " + str(i))
+          break
+challenge: |
+  🎯 Challenge: Change target to 1, then run it.
+expected_output: |
+  Found at index 3
+hints:
+  - "Change the number after target ="
+  - "1 is the 4th item in the list, so its index is 3 (indexes start at 0)."
+  - "It should look like: target = 1"
+reward_stars: 2
+badge: null
+category: course_advanced_concepts
+category_level: 1
+topic: Algorithms
+concept_tags: [algorithms, loops]

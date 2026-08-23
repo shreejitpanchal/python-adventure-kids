@@ -165,6 +165,148 @@ LESSON_SOLUTIONS = {
         'total = quantity * price\n'
         'print(total)'
     ),
+    "course_advanced_concepts_algorithms_1": (
+        'numbers = [4, 2, 7, 1, 9]\n'
+        'target = 1\n'
+        'for i in range(len(numbers)):\n'
+        '    if numbers[i] == target:\n'
+        '        print("Found at index " + str(i))\n'
+        '        break'
+    ),
+    "course_advanced_concepts_algorithms_2": (
+        'numbers = [9, 3, 7, 1, 5]\n'
+        'for i in range(len(numbers)):\n'
+        '    for j in range(len(numbers) - 1):\n'
+        '        if numbers[j] > numbers[j + 1]:\n'
+        '            numbers[j], numbers[j + 1] = numbers[j + 1], numbers[j]\n'
+        'print(numbers)'
+    ),
+    "course_advanced_concepts_recursion_1": (
+        'def factorial(n):\n'
+        '    if n <= 1:\n'
+        '        return 1\n'
+        '    return n * factorial(n - 1)\n\n'
+        'print(factorial(6))'
+    ),
+    "course_advanced_concepts_recursion_2": (
+        'def sum_list(numbers):\n'
+        '    if len(numbers) == 0:\n'
+        '        return 0\n'
+        '    return numbers[0] + sum_list(numbers[1:])\n\n'
+        'print(sum_list([1, 2, 3, 4, 5, 6]))'
+    ),
+    "course_advanced_concepts_functionalprogramming_1": (
+        'numbers = [1, 2, 3, 4]\n'
+        'doubled = list(map(lambda x: x * 3, numbers))\n'
+        'print(doubled)'
+    ),
+    "course_advanced_concepts_functionalprogramming_2": (
+        'from functools import reduce\n'
+        'numbers = [1, 2, 3, 4, 5, 6, 7, 8]\n'
+        'evens = list(filter(lambda x: x % 2 == 0, numbers))\n'
+        'total = reduce(lambda a, b: a + b, evens)\n'
+        'print(evens)\n'
+        'print(total)'
+    ),
+    "course_stdlib_collections_1": (
+        'from collections import Counter\n'
+        'votes = ["red", "blue", "red", "green", "blue", "red"]\n'
+        'counts = Counter(votes)\n'
+        'print(counts["blue"])'
+    ),
+    "course_stdlib_collections_2": (
+        'from collections import Counter\n'
+        'votes = ["red", "blue", "red", "green", "blue", "red"]\n'
+        'counts = Counter(votes)\n'
+        'print(counts.most_common(2))'
+    ),
+    "course_stdlib_itertools_1": (
+        'import itertools\n'
+        'colors = ["red", "blue"]\n'
+        'sizes = ["S", "M", "L"]\n'
+        'for combo in itertools.product(colors, sizes):\n'
+        '    print(combo)'
+    ),
+    "course_stdlib_itertools_2": (
+        'import itertools\n'
+        'morning = ["wake up", "breakfast"]\n'
+        'afternoon = ["lunch", "study"]\n'
+        'evening = ["dinner"]\n'
+        'for task in itertools.chain(morning, afternoon, evening):\n'
+        '    print(task)'
+    ),
+    "course_stdlib_datetime_1": 'import datetime\nbirthday = datetime.date(2016, 9, 3)\nprint(birthday)',
+    "course_stdlib_datetime_2": (
+        'import datetime\n'
+        'start = datetime.date(2024, 1, 1)\n'
+        'end = datetime.date(2024, 1, 31)\n'
+        'difference = end - start\n'
+        'print(difference.days)'
+    ),
+    "course_stdlib_json_1": 'import json\nprofile = {"name": "Sam", "age": 11}\nprint(json.dumps(profile))',
+    "course_stdlib_json_2": (
+        'import json\n'
+        'data = \'{"name": "Sam", "score": 100}\'\n'
+        'profile = json.loads(data)\n'
+        'print(profile["score"])'
+    ),
+    "course_concurrency_concurrencyasync_1": (
+        'task_a = ["A1", "A2", "A3"]\n'
+        'task_b = ["C1", "C2", "C3"]\n'
+        'for a, b in zip(task_a, task_b):\n'
+        '    print(a)\n'
+        '    print(b)'
+    ),
+    "course_concurrency_concurrencyasync_2": (
+        'tasks = {"download": 3, "process": 3}\n'
+        'for round_num in range(1, 4):\n'
+        '    for name, steps in tasks.items():\n'
+        '        if round_num <= steps:\n'
+        '            print(name + " step " + str(round_num))'
+    ),
+    "course_concurrency_threadscheduling_1": (
+        'threads = {"thread-1": 3, "thread-2": 3, "thread-3": 3}\n'
+        'for turn in range(1, 4):\n'
+        '    for name in threads:\n'
+        '        print(name + " runs turn " + str(turn))'
+    ),
+    "course_concurrency_threadscheduling_2": 'counter = 0\nfor turn in range(7):\n    counter = counter + 1\nprint(counter)',
+    "course_concurrency_syncvsasync_1": (
+        'def make_tea():\n'
+        '    print("Boiling water...")\n'
+        '    print("Tea is ready!")\n\n'
+        'def make_toast():\n'
+        '    print("Toasting bread...")\n'
+        '    print("Toast is ready!")\n\n'
+        'make_toast()\n'
+        'make_tea()'
+    ),
+    "course_concurrency_syncvsasync_2": (
+        'tea_steps = ["Heating water...", "Tea is ready!"]\n'
+        'toast_steps = ["Toasting bread...", "Toast is ready!"]\n'
+        'for tea, toast in zip(tea_steps, toast_steps):\n'
+        '    print(tea)\n'
+        '    print(toast)'
+    ),
+    "course_concurrency_observability_1": (
+        'def process_order(order_id):\n'
+        '    print("Starting order " + str(order_id))\n'
+        '    total = order_id * 10\n'
+        '    print("Order " + str(order_id) + " total: " + str(total))\n'
+        '    return total\n\n'
+        'process_order(5)'
+    ),
+    "course_concurrency_observability_2": (
+        'def divide(a, b):\n'
+        '    print("[INFO] Dividing " + str(a) + " by " + str(b))\n'
+        '    if b == 0:\n'
+        '        print("[ERROR] Cannot divide by zero!")\n'
+        '        return None\n'
+        '    result = a / b\n'
+        '    print("[INFO] Result: " + str(result))\n'
+        '    return result\n\n'
+        'divide(10, 0)'
+    ),
 }
 
 

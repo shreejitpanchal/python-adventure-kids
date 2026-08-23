@@ -75,7 +75,7 @@ class HubFrame(ctk.CTkFrame):
             {
                 "key": "course",
                 "title": "🎓 Python Learning",
-                "subtitle": "A structured 6-chapter course with lessons, sample programs, and quizzes.",
+                "subtitle": "A structured 9-chapter course with lessons, sample programs, and quizzes.",
                 "status_attr": "course_status",
                 "color": "#009688",
                 "navigate": lambda: app.show_course_map(),

@@ -30,6 +30,23 @@ def test_still_blocks_other_modules_from_import():
         check_code_safety("import subprocess")
 
 
+# -- modules added for the Python Learning course's Standard Library
+# Deep Dive / Advanced Programming Concepts chapters -----------------------
+@pytest.mark.parametrize("module", ["time", "collections", "itertools", "datetime", "json", "functools"])
+def test_allows_the_stdlib_modules_added_for_the_course(module):
+    check_code_safety(f"import {module}")
+
+
+@pytest.mark.parametrize("module", ["threading", "asyncio", "logging"])
+def test_still_blocks_concurrency_and_logging_modules(module):
+    """Deliberately excluded even though they're common stdlib modules --
+    real threads/event loops don't compose safely with this sandbox's
+    hard-kill-after-5s timeout model. The course's concurrency lessons
+    teach the concepts without importing these for real."""
+    with pytest.raises(SafetyViolation):
+        check_code_safety(f"import {module}")
+
+
 def test_blocks_eval_and_exec():
     with pytest.raises(SafetyViolation):
         check_code_safety("eval('1+1')")

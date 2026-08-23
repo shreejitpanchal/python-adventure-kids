@@ -1,0 +1,19 @@
+id: course_concurrency_threadscheduling_3
+title: "Topic Quiz: Thread Scheduling ❓"
+level: 986
+objective: "Test what you've learned about thread scheduling."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about thread scheduling.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: course_concurrency
+category_level: 6
+topic: Thread Scheduling
+concept_tags: [threading]
+is_quiz: true

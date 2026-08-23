@@ -1,0 +1,19 @@
+id: course_advanced_concepts_functionalprogramming_3
+title: "Topic Quiz: Functional Programming ❓"
+level: 968
+objective: "Test what you've learned about functional programming."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about functional programming.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: course_advanced_concepts
+category_level: 9
+topic: Functional Programming
+concept_tags: [functional]
+is_quiz: true

@@ -1,0 +1,30 @@
+id: course_concurrency_threadscheduling_2
+title: "Your Sample Program with Thread Scheduling 🧵"
+level: 985
+objective: "Understand why shared data needs care across turns, using a simulated shared counter."
+explanation: |
+  When multiple real threads share the same data (like a counter), they can interfere with each other if they're not careful -- this is called a race condition. A "lock" makes sure only one thread changes shared data at a time. Here, we simulate threads safely taking turns to increment a shared counter.
+example_code: |
+  counter = 0
+  for turn in range(4):
+      counter = counter + 1
+  print(counter)
+starter_code: |
+  counter = 0
+  for turn in range(4):
+      counter = counter + 1
+  print(counter)
+challenge: |
+  🎯 Challenge: Change range(4) to range(7), then run it.
+expected_output: |
+  7
+hints:
+  - "Change the 4 inside range( ) to a 7"
+  - "Each turn adds 1 to counter, so 7 turns means counter ends at 7."
+  - "It should look like: for turn in range(7):"
+reward_stars: 3
+badge: null
+category: course_concurrency
+category_level: 5
+topic: Thread Scheduling
+concept_tags: [threading, loops]

@@ -1,0 +1,39 @@
+id: course_concurrency_concurrencyasync_1
+title: "What is Concurrency? ⚡"
+level: 981
+objective: "Understand that concurrency means multiple tasks make progress by taking turns, simulated with interleaved output."
+explanation: |
+  Concurrency means multiple tasks make progress over the same period of time, by taking turns, instead of one finishing completely before the next starts.
+
+  We can simulate "taking turns" with a loop that interleaves steps from two tasks, one step at a time.
+example_code: |
+  task_a = ["A1", "A2", "A3"]
+  task_b = ["B1", "B2", "B3"]
+  for a, b in zip(task_a, task_b):
+      print(a)
+      print(b)
+starter_code: |
+  task_a = ["A1", "A2", "A3"]
+  task_b = ["B1", "B2", "B3"]
+  for a, b in zip(task_a, task_b):
+      print(a)
+      print(b)
+challenge: |
+  🎯 Challenge: Change task_b to ["C1", "C2", "C3"], then run it.
+expected_output: |
+  A1
+  C1
+  A2
+  C2
+  A3
+  C3
+hints:
+  - "Change the list after task_b ="
+  - "zip() takes one item from each list per round, interleaving the output."
+  - "It should look like: task_b = [\"C1\", \"C2\", \"C3\"]"
+reward_stars: 2
+badge: null
+category: course_concurrency
+category_level: 1
+topic: Concurrency & Async
+concept_tags: [concurrency]

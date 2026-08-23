@@ -1,0 +1,30 @@
+id: course_stdlib_collections_2
+title: "Your Sample Program with Collections 🗃️"
+level: 970
+objective: "Use Counter.most_common() to find the most frequent items."
+explanation: |
+  most_common(n) gives back the n most frequent items, ordered from highest count to lowest -- handy for finding a winner or a top score.
+example_code: |
+  from collections import Counter
+  votes = ["red", "blue", "red", "green", "blue", "red"]
+  counts = Counter(votes)
+  print(counts.most_common(1))
+starter_code: |
+  from collections import Counter
+  votes = ["red", "blue", "red", "green", "blue", "red"]
+  counts = Counter(votes)
+  print(counts.most_common(1))
+challenge: |
+  🎯 Challenge: Change most_common(1) to most_common(2), then run it.
+expected_output: |
+  [('red', 3), ('blue', 2)]
+hints:
+  - "Change the 1 inside most_common( ) to a 2"
+  - "most_common(2) returns the top 2 items instead of just 1."
+  - "It should look like: counts.most_common(2)"
+reward_stars: 3
+badge: null
+category: course_stdlib
+category_level: 2
+topic: Collections
+concept_tags: [collections]

@@ -16,8 +16,18 @@ BLOCKED_NAMES = {
 }
 
 # A short, deliberate allowlist -- extended as lessons need more of the
-# standard library. Everything else stays blocked.
-ALLOWED_MODULES = {"random"}
+# standard library. Everything else stays blocked. time/collections/
+# itertools/datetime/json/functools were added for the Python Learning
+# course's "Standard Library Deep Dive" and "Advanced Programming
+# Concepts" chapters -- all pure-computation or clock-reading modules,
+# no filesystem/network/process access, so they don't weaken the
+# sandbox's isolation guarantees. threading/asyncio/logging were
+# deliberately left out: real concurrency doesn't compose safely with
+# this sandbox's "hard-kill the process after 5s" timeout model (a
+# thread or event loop can outlive that kill in ways a straight-line
+# script can't) -- the course's concurrency-related lessons teach the
+# concepts without importing those modules for real.
+ALLOWED_MODULES = {"random", "time", "collections", "itertools", "datetime", "json", "functools"}
 
 
 class SafetyViolation(Exception):

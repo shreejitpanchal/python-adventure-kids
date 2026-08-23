@@ -1,0 +1,35 @@
+id: course_concurrency_syncvsasync_2
+title: "Your Sample Program with Sync vs Async 🔀"
+level: 988
+objective: "Simulate interleaved (async-style) output compared to sequential (sync-style) output."
+explanation: |
+  If make_tea and make_toast could run asynchronously, their steps could interleave instead of finishing one at a time. Let's simulate that interleaved order using zip() on their step lists.
+example_code: |
+  tea_steps = ["Boiling water...", "Tea is ready!"]
+  toast_steps = ["Toasting bread...", "Toast is ready!"]
+  for tea, toast in zip(tea_steps, toast_steps):
+      print(tea)
+      print(toast)
+starter_code: |
+  tea_steps = ["Boiling water...", "Tea is ready!"]
+  toast_steps = ["Toasting bread...", "Toast is ready!"]
+  for tea, toast in zip(tea_steps, toast_steps):
+      print(tea)
+      print(toast)
+challenge: |
+  🎯 Challenge: Change tea_steps' first item to "Heating water...", then run it.
+expected_output: |
+  Heating water...
+  Toasting bread...
+  Tea is ready!
+  Toast is ready!
+hints:
+  - "Change \"Boiling water...\" to \"Heating water...\" inside tea_steps"
+  - "zip() prints one step from tea, then one from toast, each round."
+  - "It should look like: tea_steps = [\"Heating water...\", \"Tea is ready!\"]"
+reward_stars: 3
+badge: null
+category: course_concurrency
+category_level: 8
+topic: Sync vs Async
+concept_tags: [async, loops]

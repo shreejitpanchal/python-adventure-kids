@@ -1,0 +1,37 @@
+id: course_concurrency_observability_1
+title: "What is Observability? 🔭"
+level: 990
+objective: "Understand observability as being able to see what a program is doing while it runs."
+explanation: |
+  Observability means being able to understand what your program is doing while it runs -- often by printing helpful messages at key moments.
+example_code: |
+  def process_order(order_id):
+      print("Starting order " + str(order_id))
+      total = order_id * 10
+      print("Order " + str(order_id) + " total: " + str(total))
+      return total
+
+  process_order(3)
+starter_code: |
+  def process_order(order_id):
+      print("Starting order " + str(order_id))
+      total = order_id * 10
+      print("Order " + str(order_id) + " total: " + str(total))
+      return total
+
+  process_order(3)
+challenge: |
+  🎯 Challenge: Change process_order(3) to process_order(5), then run it.
+expected_output: |
+  Starting order 5
+  Order 5 total: 50
+hints:
+  - "Change the 3 inside process_order( ) to a 5"
+  - "The messages update automatically to match order_id."
+  - "It should look like: process_order(5)"
+reward_stars: 2
+badge: null
+category: course_concurrency
+category_level: 10
+topic: Observability
+concept_tags: [observability, functions]

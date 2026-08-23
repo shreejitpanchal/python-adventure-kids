@@ -1,0 +1,28 @@
+id: course_stdlib_json_1
+title: "What is JSON? 🧾"
+level: 978
+objective: "Use json.dumps() to convert a Python dictionary into a JSON-formatted string."
+explanation: |
+  JSON is a common text format for storing structured data, used all over the web. json.dumps() converts a Python dictionary into a JSON-formatted string.
+example_code: |
+  import json
+  profile = {"name": "Sam", "age": 9}
+  print(json.dumps(profile))
+starter_code: |
+  import json
+  profile = {"name": "Sam", "age": 9}
+  print(json.dumps(profile))
+challenge: |
+  🎯 Challenge: Change age to 11, then run it.
+expected_output: |
+  {"name": "Sam", "age": 11}
+hints:
+  - "Change the 9 after \"age\": to 11"
+  - "json.dumps() will turn the whole dictionary into text automatically."
+  - "It should look like: {\"name\": \"Sam\", \"age\": 11}"
+reward_stars: 2
+badge: null
+category: course_stdlib
+category_level: 10
+topic: JSON
+concept_tags: [json, dictionaries]

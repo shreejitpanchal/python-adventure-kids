@@ -1,0 +1,35 @@
+id: course_advanced_concepts_functionalprogramming_2
+title: "Your Sample Program with Functional Programming 🧬"
+level: 967
+objective: "Combine filter() and functools.reduce() to filter and combine a list."
+explanation: |
+  filter() keeps only the items where a function returns True. functools.reduce() then combines all the remaining items into one result, one step at a time.
+example_code: |
+  from functools import reduce
+  numbers = [1, 2, 3, 4, 5, 6]
+  evens = list(filter(lambda x: x % 2 == 0, numbers))
+  total = reduce(lambda a, b: a + b, evens)
+  print(evens)
+  print(total)
+starter_code: |
+  from functools import reduce
+  numbers = [1, 2, 3, 4, 5, 6]
+  evens = list(filter(lambda x: x % 2 == 0, numbers))
+  total = reduce(lambda a, b: a + b, evens)
+  print(evens)
+  print(total)
+challenge: |
+  🎯 Challenge: Change numbers to [1, 2, 3, 4, 5, 6, 7, 8], then run it.
+expected_output: |
+  [2, 4, 6, 8]
+  20
+hints:
+  - "Change the list after numbers ="
+  - "filter() keeps the even numbers, and reduce() adds them all up."
+  - "It should look like: numbers = [1, 2, 3, 4, 5, 6, 7, 8]"
+reward_stars: 3
+badge: null
+category: course_advanced_concepts
+category_level: 8
+topic: Functional Programming
+concept_tags: [functional, lists]

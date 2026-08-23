@@ -15,7 +15,9 @@ VOCABULARY = {
     "booleans", "conditionals", "loops", "for-loops", "while-loops",
     "functions", "parameters", "return-values", "lists", "indexing",
     "slicing", "dictionaries", "tuples", "sets", "iteration", "debugging",
-    "errors", "algorithms", "random", "classes",
+    "errors", "algorithms", "random", "classes", "recursion", "functional",
+    "collections", "itertools", "datetime", "json", "concurrency",
+    "threading", "async", "observability",
 }
 
 

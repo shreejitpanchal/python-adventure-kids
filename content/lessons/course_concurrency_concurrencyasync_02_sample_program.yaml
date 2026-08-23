@@ -1,0 +1,37 @@
+id: course_concurrency_concurrencyasync_2
+title: "Your Sample Program with Concurrency & Async ⚡"
+level: 982
+objective: "Simulate async-style round-robin task progress using a plain loop."
+explanation: |
+  In real async code (Python's asyncio, not used directly here), tasks pause at "await" points and let other tasks run. This loop simulates that by printing one step from each task per round, moving on once a task runs out of steps.
+example_code: |
+  tasks = {"download": 3, "process": 2}
+  for round_num in range(1, 4):
+      for name, steps in tasks.items():
+          if round_num <= steps:
+              print(name + " step " + str(round_num))
+starter_code: |
+  tasks = {"download": 3, "process": 2}
+  for round_num in range(1, 4):
+      for name, steps in tasks.items():
+          if round_num <= steps:
+              print(name + " step " + str(round_num))
+challenge: |
+  🎯 Challenge: Change "process": 2 to "process": 3, then run it.
+expected_output: |
+  download step 1
+  process step 1
+  download step 2
+  process step 2
+  download step 3
+  process step 3
+hints:
+  - "Change the 2 after \"process\": to a 3"
+  - "Now process has 3 steps too, so it prints on every round."
+  - "It should look like: \"process\": 3"
+reward_stars: 3
+badge: null
+category: course_concurrency
+category_level: 2
+topic: Concurrency & Async
+concept_tags: [concurrency, async]

@@ -1,0 +1,28 @@
+id: course_stdlib_datetime_1
+title: "What is the datetime Module? 📅"
+level: 975
+objective: "Create a date using datetime.date() and understand how Python displays it."
+explanation: |
+  The datetime module works with dates and times. datetime.date(year, month, day) creates a calendar date object that Python understands and can compare or do math with.
+example_code: |
+  import datetime
+  birthday = datetime.date(2015, 6, 12)
+  print(birthday)
+starter_code: |
+  import datetime
+  birthday = datetime.date(2015, 6, 12)
+  print(birthday)
+challenge: |
+  🎯 Challenge: Change the date to datetime.date(2016, 9, 3), then run it.
+expected_output: |
+  2016-09-03
+hints:
+  - "Change the numbers inside datetime.date( )"
+  - "Python always prints dates as YYYY-MM-DD."
+  - "It should look like: datetime.date(2016, 9, 3)"
+reward_stars: 2
+badge: null
+category: course_stdlib
+category_level: 7
+topic: Datetime
+concept_tags: [datetime]

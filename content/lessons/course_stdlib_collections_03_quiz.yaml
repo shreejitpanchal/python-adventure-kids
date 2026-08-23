@@ -1,0 +1,19 @@
+id: course_stdlib_collections_3
+title: "Topic Quiz: Collections ❓"
+level: 971
+objective: "Test what you've learned about the collections module."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about the collections module.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: course_stdlib
+category_level: 3
+topic: Collections
+concept_tags: [collections]
+is_quiz: true

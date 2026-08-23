@@ -1,0 +1,32 @@
+id: course_stdlib_datetime_2
+title: "Your Sample Program with datetime 📅"
+level: 976
+objective: "Subtract two dates to find the number of days between them."
+explanation: |
+  Subtracting one date from another gives you a timedelta -- an object that stores the difference. .days gives you that difference as a plain number.
+example_code: |
+  import datetime
+  start = datetime.date(2024, 1, 1)
+  end = datetime.date(2024, 1, 10)
+  difference = end - start
+  print(difference.days)
+starter_code: |
+  import datetime
+  start = datetime.date(2024, 1, 1)
+  end = datetime.date(2024, 1, 10)
+  difference = end - start
+  print(difference.days)
+challenge: |
+  🎯 Challenge: Change end to datetime.date(2024, 1, 31), then run it.
+expected_output: |
+  30
+hints:
+  - "Change the numbers inside end = datetime.date( )"
+  - "January 1 to January 31 is 30 days apart."
+  - "It should look like: end = datetime.date(2024, 1, 31)"
+reward_stars: 3
+badge: null
+category: course_stdlib
+category_level: 8
+topic: Datetime
+concept_tags: [datetime]

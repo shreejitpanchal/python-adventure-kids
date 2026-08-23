@@ -1,0 +1,28 @@
+id: course_advanced_concepts_functionalprogramming_1
+title: "What is Functional Programming? 🧬"
+level: 966
+objective: "Understand that functions can be treated as values, using map() and lambda."
+explanation: |
+  Functional programming treats functions as values you can pass around. map() applies a function to every item in a list, and lambda creates a small, unnamed function to use right on the spot.
+example_code: |
+  numbers = [1, 2, 3, 4]
+  doubled = list(map(lambda x: x * 2, numbers))
+  print(doubled)
+starter_code: |
+  numbers = [1, 2, 3, 4]
+  doubled = list(map(lambda x: x * 2, numbers))
+  print(doubled)
+challenge: |
+  🎯 Challenge: Change lambda x: x * 2 to lambda x: x * 3, then run it.
+expected_output: |
+  [3, 6, 9, 12]
+hints:
+  - "Change the 2 in x * 2 to a 3"
+  - "map() runs the lambda on every number in the list."
+  - "It should look like: lambda x: x * 3"
+reward_stars: 2
+badge: null
+category: course_advanced_concepts
+category_level: 7
+topic: Functional Programming
+concept_tags: [functional]

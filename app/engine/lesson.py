@@ -66,10 +66,11 @@ class Lesson:
     type-conversion, f-strings, comparison, booleans, conditionals, loops,
     for-loops, while-loops, functions, parameters, return-values, lists,
     indexing, slicing, dictionaries, tuples, sets, iteration, debugging,
-    errors, algorithms, random, classes) -- used by LessonEngine.recommend_practice()
-    to suggest relevant practice after repeated failures or a quiz. Empty
-    is the common case; only lessons wired into the adaptive-practice pool
-    need this set."""
+    errors, algorithms, random, classes, recursion, functional, collections,
+    itertools, datetime, json, concurrency, threading, async, observability)
+    -- used by LessonEngine.recommend_practice() to suggest relevant practice
+    after repeated failures or a quiz. Empty is the common case; only
+    lessons wired into the adaptive-practice pool need this set."""
     is_quiz: bool = False
     """If true, this lesson's item renders as a multiple-choice quiz (drawn
     from the quiz question bank, filtered by concept_tags) instead of a code

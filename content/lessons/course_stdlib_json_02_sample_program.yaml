@@ -1,0 +1,30 @@
+id: course_stdlib_json_2
+title: "Your Sample Program with JSON 🧾"
+level: 979
+objective: "Use json.loads() to parse a JSON string back into a Python dictionary."
+explanation: |
+  json.loads() does the opposite of dumps() -- it turns a JSON-formatted string back into a real Python dictionary you can read values from.
+example_code: |
+  import json
+  data = '{"name": "Sam", "score": 90}'
+  profile = json.loads(data)
+  print(profile["score"])
+starter_code: |
+  import json
+  data = '{"name": "Sam", "score": 90}'
+  profile = json.loads(data)
+  print(profile["score"])
+challenge: |
+  🎯 Challenge: Change the score value in the JSON string from 90 to 100, then run it.
+expected_output: |
+  100
+hints:
+  - "Change the 90 inside the quotes in the data string"
+  - "json.loads() turns the string into a dictionary you can index with [\"score\"]"
+  - "It should look like: '{\"name\": \"Sam\", \"score\": 100}'"
+reward_stars: 3
+badge: null
+category: course_stdlib
+category_level: 11
+topic: JSON
+concept_tags: [json, dictionaries]

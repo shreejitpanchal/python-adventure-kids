@@ -123,12 +123,13 @@ other automatically.
 
 ### Python Learning course
 
-A third, separate guided path — a fixed 6-chapter course (Intro &
+A third, separate guided path — a fixed 9-chapter course (Intro &
 Setup, Variables & Data Types, Control Flow, Functions, Data
-Structures, Capstone: To-Do App), reached from the Learning Hub's "🎓
-Python Learning" card. It's built almost entirely by reusing the
-category-browser machinery above rather than inventing a parallel
-content model: each chapter is just a lesson `category`
+Structures, Advanced Programming Concepts, Standard Library Deep Dive,
+Concurrency & Observability, Capstone: To-Do App), reached from the
+Learning Hub's "🎓 Python Learning" card. It's built almost entirely by
+reusing the category-browser machinery above rather than inventing a
+parallel content model: each chapter is just a lesson `category`
 (`course_intro_setup`, `course_variables`, `course_data_structures`,
 ...). Chapters themselves are never locked.
 
@@ -136,19 +137,29 @@ content model: each chapter is just a lesson `category`
 list — `Lesson.topic` (e.g. `"Lists"`, `"Numbers"`) optionally sub-groups
 a chapter's items into several independent named topics, each still
 exactly 3 items (a concept lesson "What is X?", a coding exercise "Your
-Sample Program", and a quiz). Five of the six chapters use this: `course_
+Sample Program", and a quiz). Eight of the nine chapters use this: `course_
 data_structures` holds 4 topics (Lists/Tuples/Dictionaries/Sets, 12 items
 — each data structure gets its own quiz since each has its own gotchas
 worth testing separately, e.g. sets have no guaranteed print order,
 tuples are immutable), `course_variables` holds 5 (Variables/Numbers/
 Strings/Booleans/Type Conversion, 15 items), `course_intro_setup` holds 3
 (Print/Comments/Reading Errors, 9 items), `course_control_flow` holds 3
-(Conditionals/For Loops/While Loops, 9 items), and `course_functions`
-holds 3 (Defining Functions/Parameters/Return Values, 9 items) — 57
+(Conditionals/For Loops/While Loops, 9 items), `course_functions` holds 3
+(Defining Functions/Parameters/Return Values, 9 items),
+`course_advanced_concepts` holds 3 (Algorithms/Recursion/Functional
+Programming, 9 items), `course_stdlib` holds 4 (Collections/Itertools/
+Datetime/JSON, 12 items), and `course_concurrency` holds 4 (Concurrency &
+Async/Thread Scheduling/Sync vs Async/Observability, 12 items) — 90
 lessons across the whole course. Only `course_capstone` has no
 sub-grouping: every lesson there shares `topic=""`, which collapses back
 to the original flat 3-item list — the UI renders no topic heading in
 that case.
+
+`course_concurrency`'s four topics are deliberately concept-only —
+their sample programs simulate concurrency/threading/async ideas with
+plain loops, dicts, and `zip()` rather than importing `threading` or
+`asyncio`, because those modules don't compose safely with the sandbox's
+hard-kill-after-a-timeout model (see "Code execution sandbox" above).
 
 Topics within a chapter are never locked relative to each other either
 (the child can jump straight to Sets without finishing Lists) — only the
