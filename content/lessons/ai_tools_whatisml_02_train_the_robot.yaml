@@ -1,0 +1,30 @@
+id: ai_tools_whatisml_2
+title: "Train the Robot 🤖"
+level: 2011
+objective: "Use a dictionary of training examples to make a simple robot 'predict' an answer for a new input."
+explanation: |
+  A very simple way to simulate "learning from examples": store training_data as animal -> sound pairs, then look up a new test_word to get the robot's prediction. If the robot was never trained on that word, it says so instead of guessing wrong.
+example_code: |
+  training_data = {"cat": "meow", "dog": "woof", "cow": "moo"}
+  test_word = "cat"
+  guess = training_data.get(test_word, "Not sure yet!")
+  print("The robot guesses: " + guess)
+starter_code: |
+  training_data = {"cat": "meow", "dog": "woof", "cow": "moo"}
+  test_word = "cat"
+  guess = training_data.get(test_word, "Not sure yet!")
+  print("The robot guesses: " + guess)
+challenge: |
+  🎯 Challenge: Add "duck": "quack" to training_data, and change test_word to "duck", then run it.
+expected_output: |
+  The robot guesses: quack
+hints:
+  - "Add , \"duck\": \"quack\" inside training_data, and change \"cat\" to \"duck\" after test_word ="
+  - ".get(test_word, ...) looks up test_word in the dictionary the robot was trained on."
+  - "It should look like: test_word = \"duck\""
+reward_stars: 3
+badge: null
+category: ai_tools
+category_level: 2
+topic: "What is Machine Learning?"
+concept_tags: [machine-learning, dictionaries]

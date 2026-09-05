@@ -67,7 +67,8 @@ class Lesson:
     for-loops, while-loops, functions, parameters, return-values, lists,
     indexing, slicing, dictionaries, tuples, sets, iteration, debugging,
     errors, algorithms, random, classes, recursion, functional, collections,
-    itertools, datetime, json, concurrency, threading, async, observability)
+    itertools, datetime, json, concurrency, threading, async, observability,
+    ai, rule-based, machine-learning, mcp)
     -- used by LessonEngine.recommend_practice() to suggest relevant practice
     after repeated failures or a quiz. Empty is the common case; only
     lessons wired into the adaptive-practice pool need this set."""

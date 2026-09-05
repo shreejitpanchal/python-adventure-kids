@@ -1,0 +1,36 @@
+id: ai_tools_whatisml_1
+title: "What is Machine Learning? 🧠"
+level: 2010
+objective: "Understand machine learning as learning patterns from labeled examples, instead of hand-written rules."
+explanation: |
+  Machine learning is different from a rule-based system: instead of a person writing every rule by hand, the program learns patterns from labeled examples, called "training data."
+
+  Here, training_examples pairs each animal with the sound it makes -- the kind of labeled example a real machine learning system would learn from many, many of.
+example_code: |
+  training_examples = {"cat": "meow", "dog": "woof", "cow": "moo"}
+  print("The robot learned these examples:")
+  for animal, sound in training_examples.items():
+      print(animal + " -> " + sound)
+starter_code: |
+  training_examples = {"cat": "meow", "dog": "woof", "cow": "moo"}
+  print("The robot learned these examples:")
+  for animal, sound in training_examples.items():
+      print(animal + " -> " + sound)
+challenge: |
+  🎯 Challenge: Add "duck": "quack" to training_examples, then run it.
+expected_output: |
+  The robot learned these examples:
+  cat -> meow
+  dog -> woof
+  cow -> moo
+  duck -> quack
+hints:
+  - "Add , \"duck\": \"quack\" inside the training_examples dictionary."
+  - "Dictionaries in Python remember the order items were added, so duck prints last."
+  - "It should look like: {\"cat\": \"meow\", \"dog\": \"woof\", \"cow\": \"moo\", \"duck\": \"quack\"}"
+reward_stars: 2
+badge: null
+category: ai_tools
+category_level: 1
+topic: "What is Machine Learning?"
+concept_tags: [machine-learning, dictionaries]

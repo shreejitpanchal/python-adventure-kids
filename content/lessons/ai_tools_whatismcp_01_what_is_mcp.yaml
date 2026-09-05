@@ -1,0 +1,39 @@
+id: ai_tools_whatismcp_1
+title: "What is MCP? 🔌"
+level: 2013
+objective: "Understand MCP as a shared request format letting an AI assistant ask other tool programs for help."
+explanation: |
+  MCP (Model Context Protocol) is a shared "menu format" that lets an AI assistant ask other tool programs for help -- like ordering at a restaurant: the AI is the customer, MCP is the standard menu format, and the tool is the kitchen that fulfills the order.
+
+  Here, request is the AI's order (which tool, with what details), and get_weather() is the "kitchen" that fulfills it.
+example_code: |
+  def get_weather(city):
+      return "Sunny in " + city
+
+  request = {"tool": "get_weather", "city": "Paris"}
+  print("The AI is asking for tool: " + request["tool"])
+  result = get_weather(request["city"])
+  print("The tool replied: " + result)
+starter_code: |
+  def get_weather(city):
+      return "Sunny in " + city
+
+  request = {"tool": "get_weather", "city": "Paris"}
+  print("The AI is asking for tool: " + request["tool"])
+  result = get_weather(request["city"])
+  print("The tool replied: " + result)
+challenge: |
+  🎯 Challenge: Change request's "city" to "Tokyo", then run it.
+expected_output: |
+  The AI is asking for tool: get_weather
+  The tool replied: Sunny in Tokyo
+hints:
+  - "Change \"Paris\" to \"Tokyo\" inside the request dictionary."
+  - "get_weather() is called with whatever city is inside request."
+  - "It should look like: request = {\"tool\": \"get_weather\", \"city\": \"Tokyo\"}"
+reward_stars: 2
+badge: null
+category: ai_tools
+category_level: 4
+topic: "What is MCP?"
+concept_tags: [mcp, dictionaries, functions]

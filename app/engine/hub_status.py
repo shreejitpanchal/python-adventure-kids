@@ -1,4 +1,4 @@
-"""Pure status computation for the Learning Hub's 4 cards -- shared by both
+"""Pure status computation for the Learning Hub's cards -- shared by both
 UIs (like LessonEngine.category_completion()) so the "what should each card
 say" logic exists exactly once, not duplicated per-UI.
 """
@@ -7,7 +7,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
-from app.engine.categories import COURSE_CATEGORIES, PROJECT_CATEGORIES, get_category_meta
+from app.engine.categories import PROJECT_CATEGORIES, get_category_meta
+from app.engine.courses import AI_ML_COURSE, PYTHON_COURSE
 from app.engine.lesson_engine import LessonEngine
 from app.progress.store import ProgressStore
 
@@ -20,6 +21,7 @@ _ROUTE_LABELS: dict[str, str] = {
     "advanced_code_crackers": "Advanced Code Crackers",
     "projects": "Build a Project",
     "course": "Python Learning",
+    "ai_course": "AI & Machine Learning",
 }
 
 
@@ -30,6 +32,7 @@ class HubStatus:
     advanced_cracker_status: str
     project_status: str
     course_status: str
+    ai_course_status: str
     resume_label: Optional[str]
 
 
@@ -56,8 +59,11 @@ def compute_hub_status(engine: LessonEngine, progress: ProgressStore, settings) 
 
     project_status = f"{len(PROJECT_CATEGORIES)} categories available"
 
-    course_done, course_total = _category_progress(engine, completed_ids, COURSE_CATEGORIES)
+    course_done, course_total = _category_progress(engine, completed_ids, PYTHON_COURSE.categories)
     course_status = f"{course_done}/{course_total} lessons complete"
+
+    ai_course_done, ai_course_total = _category_progress(engine, completed_ids, AI_ML_COURSE.categories)
+    ai_course_status = f"{ai_course_done}/{ai_course_total} lessons complete"
 
     route_key = getattr(settings, "last_learning_route", "")
     resume_label = f"Continue where you left off: {_ROUTE_LABELS[route_key]}" if route_key in _ROUTE_LABELS else None
@@ -68,5 +74,6 @@ def compute_hub_status(engine: LessonEngine, progress: ProgressStore, settings) 
         advanced_cracker_status=advanced_cracker_status,
         project_status=project_status,
         course_status=course_status,
+        ai_course_status=ai_course_status,
         resume_label=resume_label,
     )

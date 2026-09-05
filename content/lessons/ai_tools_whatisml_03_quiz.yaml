@@ -1,0 +1,19 @@
+id: ai_tools_whatisml_3
+title: "Topic Quiz: What is Machine Learning? ❓"
+level: 2012
+objective: "Test what you've learned about machine learning."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about machine learning.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: ai_tools
+category_level: 3
+topic: "What is Machine Learning?"
+concept_tags: [machine-learning]
+is_quiz: true

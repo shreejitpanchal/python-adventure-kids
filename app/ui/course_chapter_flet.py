@@ -11,6 +11,7 @@ import flet as ft
 
 from app.engine.categories import get_category_meta, get_topic_icon
 from app.engine.course_status import compute_course_status, is_topic_item_unlocked
+from app.engine.courses import PYTHON_COURSE, CourseSpec
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color
 from app.ui.theme_flet import scaled
@@ -18,18 +19,22 @@ from app.ui.theme_flet import scaled
 _ITEM_LABELS = ["1. What is it?", "2. Your Sample Program", "3. Quiz"]
 
 
-def build_course_chapter_view(page: ft.Page, state: AppState, category: str) -> ft.View:
+def build_course_chapter_view(
+    page: ft.Page, state: AppState, category: str, course: CourseSpec = PYTHON_COURSE,
+) -> ft.View:
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     meta = get_category_meta(category)
-    status = compute_course_status(state.lesson_engine, state.progress)
+    status = compute_course_status(state.lesson_engine, state.progress, course.categories)
     chapter = next(c for c in status.chapters if c.category == category)
     completed_ids = set(state.progress.get_completed_lesson_ids())
+    map_route = "/course" if course.id == "python" else "/ai-course"
+    quiz_route_prefix = "/course-quiz" if course.id == "python" else "/ai-course-quiz"
 
     header = ft.Row(
         [
             ft.Button(
-                "🎓 Python Learning", on_click=lambda _e: page.go("/course"), height=48,
+                course.title, on_click=lambda _e: page.go(map_route), height=48,
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
             ft.Text(f"{meta.icon} {meta.title}", size=fs(24), weight=ft.FontWeight.BOLD, color=meta.color, expand=True),
@@ -50,10 +55,13 @@ def build_course_chapter_view(page: ft.Page, state: AppState, category: str) -> 
                 spacing=10,
             ))
         for index, lesson in enumerate(topic.items):
-            controls.append(_build_item_card(page, theme, meta, lesson, index, topic.items, completed_ids, state.font_scale))
+            controls.append(_build_item_card(
+                page, theme, meta, lesson, index, topic.items, completed_ids, state.font_scale,
+                quiz_route_prefix,
+            ))
 
     return ft.View(
-        route=f"/course/{category}",
+        route=f"{map_route}/{category}",
         bgcolor=theme.bg,
         scroll=ft.ScrollMode.AUTO,
         padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
@@ -61,7 +69,10 @@ def build_course_chapter_view(page: ft.Page, state: AppState, category: str) -> 
     )
 
 
-def _build_item_card(page, theme, meta, lesson, index: int, topic_items: list, completed_ids, scale: float) -> ft.Control:
+def _build_item_card(
+    page, theme, meta, lesson, index: int, topic_items: list, completed_ids, scale: float,
+    quiz_route_prefix: str,
+) -> ft.Control:
     fs = lambda base: scaled(base, scale)  # noqa: E731
     is_completed = lesson.id in completed_ids
     is_unlocked = is_topic_item_unlocked(lesson, topic_items, completed_ids)
@@ -84,7 +95,7 @@ def _build_item_card(page, theme, meta, lesson, index: int, topic_items: list, c
     badge_text_color = contrasting_text_color(meta.color)
 
     def on_click(_e: ft.ControlEvent, lesson_id: str = lesson.id, is_quiz: bool = lesson.is_quiz) -> None:
-        page.go(f"/course-quiz/{lesson_id}" if is_quiz else f"/lesson/{lesson_id}")
+        page.go(f"{quiz_route_prefix}/{lesson_id}" if is_quiz else f"/lesson/{lesson_id}")
 
     return ft.Container(
         content=ft.Column(

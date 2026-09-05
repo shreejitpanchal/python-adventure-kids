@@ -21,6 +21,7 @@ from __future__ import annotations
 import flet as ft
 
 from app.engine.categories import PROJECT_CATEGORIES
+from app.engine.courses import AI_ML_COURSE
 from app.ui.app_state_flet import AppState
 from app.ui.category_levels_flet import build_category_levels_view
 from app.ui.category_map_flet import build_category_map_view
@@ -105,6 +106,14 @@ def main(page: ft.Page) -> None:
         elif route.startswith("/course/"):
             category = route.removeprefix("/course/")
             page.views.append(build_course_chapter_view(page, state, category))
+        elif route == "/ai-course":
+            page.views.append(build_course_map_view(page, state, course=AI_ML_COURSE))
+        elif route.startswith("/ai-course-quiz/"):
+            lesson_id = route.removeprefix("/ai-course-quiz/")
+            page.views.append(build_course_quiz_view(page, state, lesson_id, course=AI_ML_COURSE))
+        elif route.startswith("/ai-course/"):
+            category = route.removeprefix("/ai-course/")
+            page.views.append(build_course_chapter_view(page, state, category, course=AI_ML_COURSE))
         elif route == "/trophy-room":
             page.views.append(build_trophy_room_view(page, state))
         elif route.startswith("/lesson/"):

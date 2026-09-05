@@ -1,0 +1,40 @@
+id: ai_foundations_rulebased_1
+title: "Rule-Based Decisions 🚦"
+level: 2004
+objective: "Understand a rule-based system as a chain of if/elif rules matching a situation to a response."
+explanation: |
+  One common, simple form of AI is a "rule-based system" (sometimes called an expert system) -- a chain of if/elif rules that matches a situation to a response, written by a person instead of learned from examples.
+example_code: |
+  symptom = "cough"
+  if symptom == "cough":
+      print("Advice: Drink warm water and rest.")
+  elif symptom == "fever":
+      print("Advice: Rest and monitor your temperature.")
+  elif symptom == "headache":
+      print("Advice: Drink water and rest in a quiet room.")
+  else:
+      print("Advice: Talk to a grown-up about how you feel.")
+starter_code: |
+  symptom = "cough"
+  if symptom == "cough":
+      print("Advice: Drink warm water and rest.")
+  elif symptom == "fever":
+      print("Advice: Rest and monitor your temperature.")
+  elif symptom == "headache":
+      print("Advice: Drink water and rest in a quiet room.")
+  else:
+      print("Advice: Talk to a grown-up about how you feel.")
+challenge: |
+  🎯 Challenge: Change symptom to "fever", then run it.
+expected_output: |
+  Advice: Rest and monitor your temperature.
+hints:
+  - "Change \"cough\" to \"fever\" after symptom ="
+  - "The elif symptom == \"fever\": rule will now match."
+  - "It should look like: symptom = \"fever\""
+reward_stars: 2
+badge: null
+category: ai_foundations
+category_level: 4
+topic: "Rule-Based Decisions"
+concept_tags: [rule-based, conditionals]

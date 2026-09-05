@@ -5826,3 +5826,461 @@ questions:
   explanation: ''
   concept_tags:
   - observability
+- id: q485
+  question: What is AI (Artificial Intelligence)?
+  options:
+  - A program that makes decisions based on input, combined with rules or data
+  - A type of computer virus
+  - A programming language
+  - A kind of computer chip
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai
+- id: q486
+  question: Why isn't AI "magic"?
+  options:
+  - Because it's built from ordinary code -- rules or patterns learned from data
+  - Because it can read minds
+  - Because it never makes mistakes
+  - Because it doesn't use variables
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai
+- id: q487
+  question: "temperature = 90\nif temperature > 85:\n    print(\"It's hot!\")\nWhat triggers this AI-style\
+    \ decision?"
+  options:
+  - The value of the temperature variable
+  - A random guess
+  - The time of day
+  - The color of the screen
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai
+- id: q488
+  question: Which of these best describes what an AI program needs to make a decision?
+  options:
+  - Input, plus rules or data to interpret it
+  - Just a really fast computer
+  - An internet connection
+  - A microphone
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai
+- id: q489
+  question: If a program only follows ONE fixed rule no matter the input, is it acting "smart" like AI?
+  options:
+  - No -- it isn't really responding to the input at all
+  - Yes, that's exactly what AI does
+  - Yes, because it never changes
+  - No, because it uses a variable
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai
+- id: q490
+  question: Adding more rules to a decision-making program generally makes it...
+  options:
+  - Able to handle more specific situations
+  - Slower to write, but otherwise identical
+  - Impossible to run
+  - Less accurate
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai
+- id: q491
+  question: Which everyday example works like simple AI decision-making?
+  options:
+  - A thermostat deciding whether to turn on the heater based on the temperature
+  - A calculator adding two numbers
+  - A book with a fixed story
+  - A photograph
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai
+- id: q492
+  question: "if temperature > 85:\n    print(...)\nelif temperature > 60:\n    print(...)\nelse:\n   \
+    \ print(...)\nWhat changes the printed message?"
+  options:
+  - The value of temperature
+  - The number of print statements
+  - The order of the code
+  - The name of the variable
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai
+- id: q493
+  question: What is one honest way to describe what AI programs do under the hood?
+  options:
+  - They follow rules or patterns, encoded in ordinary code
+  - They think exactly like a human brain
+  - They understand everything perfectly
+  - They never need any input
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai
+- id: q494
+  question: Why is understanding if/elif/else useful for understanding AI?
+  options:
+  - Because many AI decisions boil down to checking conditions and picking a response
+  - Because AI never uses conditions
+  - Because if/elif/else is only used in games
+  - Because AI is unrelated to decision-making
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai
+- id: q495
+  question: What is a rule-based system?
+  options:
+  - A chain of if/elif rules that matches a situation to a response
+  - A system with no rules at all
+  - A random number generator
+  - A type of loop
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - rule-based
+- id: q496
+  question: Who writes the rules in a rule-based system?
+  options:
+  - A person, ahead of time
+  - The computer, by learning from examples
+  - Nobody -- they appear automatically
+  - The user, while the program runs
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - rule-based
+- id: q497
+  question: "symptom = \"fever\"\nif symptom == \"cough\":\n    ...\nelif symptom == \"fever\":\n    print(\"\
+    Rest and monitor...\")\nWhat gets printed?"
+  options:
+  - Rest and monitor your temperature.
+  - Drink warm water and rest.
+  - Nothing
+  - An error
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - rule-based
+- id: q498
+  question: What is another name sometimes used for a rule-based system?
+  options:
+  - An expert system
+  - A neural network
+  - A database
+  - A compiler
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - rule-based
+- id: q499
+  question: A simple chatbot that replies based on keywords in a message is an example of...
+  options:
+  - A rule-based system
+  - A random number generator
+  - A sorting algorithm
+  - A type of loop
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - rule-based
+- id: q500
+  question: "message = \"what's your name?\"\nif \"name\" in message:\n    print(\"I'm RoboBot!\")\nWhy\
+    \ does this print?"
+  options:
+  - Because the word "name" appears inside the message
+  - Because message is empty
+  - Because of a random choice
+  - Because the message is exactly "name"
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - rule-based
+- id: q501
+  question: What is a limitation of a rule-based system compared to a system that learns from data?
+  options:
+  - It can only handle situations someone thought to write a rule for
+  - It runs slower than any other kind of program
+  - It can never use if statements
+  - It cannot use variables
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - rule-based
+- id: q502
+  question: Why might .lower() be used before checking keywords in a chatbot message?
+  options:
+  - So "Hello" and "hello" both match the same rule
+  - To make the program run faster
+  - To delete the message
+  - To turn the message into a number
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - rule-based
+- id: q503
+  question: Which of these is closest to how a rule-based system decides what to do?
+  options:
+  - Check conditions in order, and act on the first one that matches
+  - Guess randomly
+  - Always do the same thing regardless of input
+  - Wait for a person to decide
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - rule-based
+- id: q504
+  question: In a rule-based chatbot, what happens if no keyword rule matches the message?
+  options:
+  - A fallback/else response is used instead
+  - The program crashes
+  - The message is repeated back
+  - Python deletes the variable
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - rule-based
+- id: q505
+  question: What is machine learning?
+  options:
+  - A program learning patterns from labeled examples, called training data
+  - A person writing every rule by hand
+  - A way to make a computer run faster
+  - A type of computer virus
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - machine-learning
+- id: q506
+  question: What is "training data"?
+  options:
+  - Labeled examples a machine learning system learns patterns from
+  - A list of computer parts
+  - The program's error messages
+  - A type of loop
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - machine-learning
+- id: q507
+  question: 'training_data = {"cat": "meow", "dog": "woof"}
+
+    guess = training_data.get("dog", "Not sure yet!")
+
+    What is guess?'
+  options:
+  - woof
+  - meow
+  - Not sure yet!
+  - dog
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - machine-learning
+- id: q508
+  question: 'training_data = {"cat": "meow"}
+
+    guess = training_data.get("fish", "Not sure yet!")
+
+    What is guess?'
+  options:
+  - Not sure yet!
+  - meow
+  - fish
+  - An error
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - machine-learning
+- id: q509
+  question: How is machine learning different from a rule-based system?
+  options:
+  - It learns patterns from examples instead of following hand-written rules
+  - It never makes mistakes
+  - It doesn't use any code at all
+  - It only works with numbers
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - machine-learning
+- id: q510
+  question: Why might a machine learning system say "Not sure yet!" for a new input?
+  options:
+  - It was never trained on an example like that one
+  - It ran out of memory
+  - It's broken
+  - It always says that
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - machine-learning
+- id: q511
+  question: What does .get(key, default) do on a Python dictionary?
+  options:
+  - Returns the value for key, or default if key isn't found
+  - Deletes key from the dictionary
+  - Adds key to the dictionary
+  - Always returns default
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - machine-learning
+- id: q512
+  question: Which of these is closest to how a simple "trained" lookup works?
+  options:
+  - Matching a new input against previously seen labeled examples
+  - Picking a response completely at random
+  - Running the exact same code every time regardless of input
+  - Asking a person for the answer
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - machine-learning
+- id: q513
+  question: Why do real machine learning systems usually need MANY training examples?
+  options:
+  - More examples generally help the system recognize patterns more reliably
+  - Because Python requires at least 100 dictionary entries
+  - Because a single example causes an error
+  - Because training data must always be sorted
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - machine-learning
+- id: q514
+  question: What is one honest limitation of a simple example-lookup "robot"?
+  options:
+  - It can only recognize inputs it was specifically trained on
+  - It is exactly as smart as a real AI research system
+  - It never needs any training data
+  - It always guesses correctly
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - machine-learning
+- id: q515
+  question: What does MCP stand for?
+  options:
+  - Model Context Protocol
+  - Machine Coding Program
+  - Multi-Computer Processing
+  - My Chatbot Program
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp
+- id: q516
+  question: What does MCP let an AI assistant do?
+  options:
+  - Ask other tool programs for help, using a shared request format
+  - Learn to speak human languages
+  - Delete files automatically
+  - Run without any code at all
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp
+- id: q517
+  question: In the restaurant analogy for MCP, what does the "tool" represent?
+  options:
+  - The kitchen that fulfills the order
+  - The customer
+  - The menu format itself
+  - The waiter
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp
+- id: q518
+  question: 'request = {"tool": "get_weather", "city": "Tokyo"}
+
+    What does request["tool"] tell the program?'
+  options:
+  - Which tool/function should handle this request
+  - The weather in Tokyo
+  - The name of the AI
+  - An error message
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp
+- id: q519
+  question: 'tools = {"get_weather": get_weather, "get_time": get_time}
+
+    tools[request["tool"]]
+
+    What does this do?'
+  options:
+  - Looks up which function to call, based on the request
+  - Deletes the get_weather function
+  - Always calls get_time
+  - Creates a new dictionary
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp
+- id: q520
+  question: Why is a shared request format (like MCP) useful?
+  options:
+  - It lets an AI assistant work with many different tools in a consistent way
+  - It makes the code run without any functions
+  - It removes the need for dictionaries
+  - It only works with one specific tool, forever
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp
+- id: q521
+  question: In the sample program, what determines which function actually runs?
+  options:
+  - The value of request["tool"], looked up in the tools dictionary
+  - The order the functions were defined in
+  - A random choice
+  - The length of the city name
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp
+- id: q522
+  question: What is a "dispatch dictionary" (like tools in the MCP example) used for?
+  options:
+  - Mapping a name (like "get_weather") to the actual function that handles it
+  - Storing a list of temperatures
+  - Sorting requests alphabetically
+  - Deleting unused functions
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp
+- id: q523
+  question: Does the MCP example lesson use any real network connection?
+  options:
+  - No -- it's simulated entirely with plain Python functions and dictionaries
+  - Yes, it connects to the real internet
+  - Yes, it downloads real weather data
+  - It requires a Wi-Fi connection to run
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp
+- id: q524
+  question: Why might an AI assistant need to call an outside "tool" instead of doing everything itself?
+  options:
+  - Some information or actions (like real weather data) come from other specialized programs
+  - Because AI assistants can't use variables
+  - Because tools are always faster than any other code
+  - Because it's required by every Python program
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp

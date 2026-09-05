@@ -1,0 +1,38 @@
+id: ai_foundations_whatisai_1
+title: "What is AI? 🤖"
+level: 2001
+objective: "Understand that AI is a program that makes decisions from input and rules or data -- not magic."
+explanation: |
+  AI (Artificial Intelligence) sounds mysterious, but at its core it's just a program that makes decisions based on input, combined with rules or data it was given.
+
+  Here, the "decision" is which activity to suggest, based on the temperature. More rules (in the next lesson) let the program make smarter, more specific decisions.
+example_code: |
+  temperature = 75
+  if temperature > 85:
+      print("It's hot! Let's go swimming.")
+  elif temperature > 60:
+      print("Nice weather! Let's play outside.")
+  else:
+      print("It's chilly. Let's stay in and read.")
+starter_code: |
+  temperature = 75
+  if temperature > 85:
+      print("It's hot! Let's go swimming.")
+  elif temperature > 60:
+      print("Nice weather! Let's play outside.")
+  else:
+      print("It's chilly. Let's stay in and read.")
+challenge: |
+  🎯 Challenge: Change temperature to 90, then run it.
+expected_output: |
+  It's hot! Let's go swimming.
+hints:
+  - "Change the number after temperature ="
+  - "90 is above 85, so the first condition should now match."
+  - "It should look like: temperature = 90"
+reward_stars: 2
+badge: null
+category: ai_foundations
+category_level: 1
+topic: "What is AI?"
+concept_tags: [ai, conditionals]

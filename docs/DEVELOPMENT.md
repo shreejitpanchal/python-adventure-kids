@@ -10,9 +10,10 @@ A Windows-to-Android re-platform onto [Flet](https://flet.dev) (one Python
 codebase targeting both — `main_flet.py`, `app/ui/*_flet.py`) is being built
 out feature-by-feature alongside the CustomTkinter app (`main.py`, the
 shipping Windows build). The Flet build has its own setup wizard, dashboard,
-category browser, Python Learning course, quiz, settings screen, parent
-area, and full lesson flow (including the Snake project's graphical
-lessons), built against the same content and progress data. It isn't the shipping build
+category browser, Python Learning and AI & Machine Learning courses, quiz,
+settings screen, parent area, and full lesson flow (including the Snake
+project's graphical lessons), built against the same content and progress
+data. It isn't the shipping build
 yet — `run.bat`/`run.sh` launch the CustomTkinter app; run the Flet build
 with `flet run main_flet.py` (see "Running it" below).
 
@@ -60,7 +61,8 @@ app/
              # aren't wired into any screen yet, see "How it works" below)
   engine/    # lesson model + YAML-based lesson engine + category logic +
              # output validator + quiz model/engine + badge display metadata +
-             # course_status.py (Python Learning course progress + badge)
+             # course_status.py (per-course progress/badge, shared by every
+             # course) + courses.py (the CourseSpec registry)
   sandbox/   # AST safety check + two execution engines (see "Code execution
              # sandbox" below for why there are currently two)
   games/     # GameCanvas/GameWindow + in-process graphical runner (Snake,
@@ -133,6 +135,20 @@ parallel content model: each chapter is just a lesson `category`
 (`course_intro_setup`, `course_variables`, `course_data_structures`,
 ...). Chapters themselves are never locked.
 
+This course and the "🤖 AI & Machine Learning" course below share one
+engine (`app/engine/course_status.py`'s `compute_course_status()`/
+`maybe_award_course_badge()`, both parameterized by a `categories` list and
+`badge_id` rather than hardcoding one course) and one set of UI screens per
+platform (`course_map.py`/`course_chapter.py`/`course_quiz_screen.py` and
+their `_flet.py` counterparts, each parameterized by a
+`course: app.engine.courses.CourseSpec`) instead of a duplicated copy per
+course — `app/engine/courses.py`'s `CourseSpec` (`id`/`title`/`categories`/
+`badge_id`) is the thin object threaded through both. `app/ui/app_window.py`'s
+`show_course_map(course_id)`/`show_course_chapter(course_id, category)`/
+`show_course_quiz(course_id, lesson_id)` (default `course_id="python"`) and
+the Flet route dispatch's `/course...` vs `/ai-course...` prefixes are the
+only genuinely course-specific bits.
+
 **Topics within a chapter.** A chapter isn't always one flat 3-item
 list — `Lesson.topic` (e.g. `"Lists"`, `"Numbers"`) optionally sub-groups
 a chapter's items into several independent named topics, each still
@@ -194,6 +210,31 @@ every item across every chapter is complete (`maybe_award_course_badge()`)
 — called after each course quiz pass, since within-topic ordering
 guarantees the last item ever completed in any given topic is always
 that topic's own quiz.
+
+### AI & Machine Learning course
+
+A second, standalone course reached from the Learning Hub's "🤖 AI &
+Machine Learning" card, built on the exact same shared engine/screens as
+the Python Learning course above (see `app/engine/courses.py`'s
+`CourseSpec`) — just a different `categories` list and `badge_id`
+(`ai_ml_graduate`). It has 2 chapters: `ai_foundations` (topics "What is
+AI?" and "Rule-Based Decisions") and `ai_tools` (topics "What is Machine
+Learning?" and "What is MCP?"), 6 items each, 12 lessons total.
+
+Since the sandbox has no real AI/ML libraries and never should (see "Code
+execution sandbox" below), every concept is taught by simulation in plain
+Python — the same convention `course_concurrency` established for
+threading/asyncio. "Rule-Based Decisions"' sample program is a simulated
+rule-based chatbot (an if/elif keyword-matching chain over a fixed
+`message` string — not real `input()`, since course lessons are validated
+by the same `LESSON_SOLUTIONS`/`run_code(starter_code)`-with-no-stdin test
+harness as every other course lesson, which doesn't support interactive
+input). "What is Machine Learning?"'s sample program, "Train the Robot",
+is a themed mini-game: a dict of labeled training examples the "robot"
+looks up an unseen input against via `.get(key, default)`. "What is MCP?"
+simulates Model Context Protocol as a dispatch dictionary routing a
+structured request (`{"tool": ..., "args": {...}}`) to the matching plain
+Python function — no real network or protocol library involved.
 
 ### Adaptive practice
 

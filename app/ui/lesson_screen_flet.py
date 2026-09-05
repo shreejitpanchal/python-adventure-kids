@@ -25,8 +25,9 @@ import flet as ft
 import flet.canvas as cv
 
 from app.audio.player import success_sound_for
-from app.engine.categories import COURSE_CATEGORIES, get_category_meta
+from app.engine.categories import get_category_meta
 from app.engine.course_status import next_topic_item
+from app.engine.courses import find_course_for_category
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_canvas_flet import GameCanvas
@@ -313,10 +314,10 @@ class _LessonController:
 
         # Course lessons keep the original Onward/Next Lesson pair (chapter
         # navigation, not a "mission") -- only Today's Mission lessons
-        # (outside COURSE_CATEGORIES) get the Next Mission/Next Level
-        # framing below, since only those participate in next_after()'s
-        # round-robin at all.
-        if self.lesson.category in COURSE_CATEGORIES:
+        # (outside any registered course's categories) get the Next Mission/
+        # Next Level framing below, since only those participate in
+        # next_after()'s round-robin at all.
+        if find_course_for_category(self.lesson.category) is not None:
             self.next_mission_caption = None
             self.next_lesson_caption = None
             self.next_lesson_button = ft.Button(
@@ -656,7 +657,7 @@ class _LessonController:
         )
 
         completed_ids = progress.get_completed_lesson_ids()
-        if self.lesson.category in COURSE_CATEGORIES:
+        if find_course_for_category(self.lesson.category) is not None:
             next_in_category = next_topic_item(self.state.lesson_engine, self.lesson, completed_ids)
         else:
             next_in_category = self.state.lesson_engine.next_unlocked_in_category(
@@ -699,8 +700,10 @@ class _LessonController:
     def _on_continue(self, e) -> None:
         if self.game_canvas is not None:
             self.game_canvas.cancel_pending()
-        if self.lesson.category in COURSE_CATEGORIES:
-            self.page.go(f"/course/{self.lesson.category}")
+        course = find_course_for_category(self.lesson.category)
+        if course is not None:
+            map_route = "/course" if course.id == "python" else "/ai-course"
+            self.page.go(f"{map_route}/{self.lesson.category}")
         elif self._next_mission_id:
             self.page.go(f"/lesson/{self._next_mission_id}")
         else:

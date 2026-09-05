@@ -18,6 +18,7 @@ VOCABULARY = {
     "errors", "algorithms", "random", "classes", "recursion", "functional",
     "collections", "itertools", "datetime", "json", "concurrency",
     "threading", "async", "observability",
+    "ai", "rule-based", "machine-learning", "mcp",
 }
 
 

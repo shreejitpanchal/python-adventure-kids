@@ -1,4 +1,5 @@
-"""The "🎓 Python Learning" course dashboard: an XP/progress-bar header
+"""A course dashboard (e.g. "🎓 Python Learning" or "🤖 AI & Machine
+Learning" -- see app.engine.courses.CourseSpec): an XP/progress-bar header
 (styled after dashboard.py's _build_xp_hud/_stat_pill) above a 2-column grid
 of chapter cards (styled after settings_screen.py's theme-picker grid).
 
@@ -10,15 +11,17 @@ import customtkinter as ctk
 
 from app.engine.categories import get_category_meta
 from app.engine.course_status import compute_course_status
+from app.engine.courses import CourseSpec
 from app.ui import theme
 from app.ui.color_utils import contrasting_text_color
 
 
 class CourseMapFrame(ctk.CTkFrame):
-    def __init__(self, app) -> None:
+    def __init__(self, app, course: CourseSpec) -> None:
         super().__init__(app, fg_color=theme.COLOR_BG)
         self.app = app
-        self.status = compute_course_status(app.lesson_engine, app.progress)
+        self.course = course
+        self.status = compute_course_status(app.lesson_engine, app.progress, course.categories)
 
         self.scroll = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self.scroll.pack(fill="both", expand=True)
@@ -38,7 +41,7 @@ class CourseMapFrame(ctk.CTkFrame):
         ).pack(side="left")
 
         ctk.CTkLabel(
-            header, text="🎓 Python Learning", font=theme.font_title(26),
+            header, text=self.course.title, font=theme.font_title(26),
             text_color=theme.COLOR_PRIMARY,
         ).pack(side="left", padx=20)
 
@@ -119,7 +122,7 @@ class CourseMapFrame(ctk.CTkFrame):
         ).pack(fill="x", padx=20, pady=(0, 16))
 
     def _on_open_chapter(self, category: str) -> None:
-        self.app.show_course_chapter(category)
+        self.app.show_course_chapter(self.course.id, category)
 
     def _on_menu(self) -> None:
         self.app.show_hub()

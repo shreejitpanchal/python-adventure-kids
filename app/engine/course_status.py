@@ -1,7 +1,7 @@
-"""Status computation for the "🎓 Python Learning" course -- shared by both
-UIs (like app.engine.hub_status.compute_hub_status()) so the course
-dashboard's chapter grid and XP tile are computed once, not duplicated
-per-UI.
+"""Status computation shared by every course (see app.engine.courses.CourseSpec)
+and both UIs (like app.engine.hub_status.compute_hub_status()) so a course
+dashboard's chapter grid and XP tile are computed once per course, not
+duplicated per-UI or per-course.
 
 Chapters are never locked (every chapter is always browsable). A chapter
 can hold one or several independent sub-topics (Lesson.topic, e.g. a
@@ -17,14 +17,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Collection, Optional
 
-from app.engine.categories import COURSE_CATEGORIES
 from app.engine.lesson import Lesson
 from app.engine.lesson_engine import LessonEngine
 from app.progress.store import ProgressStore
 
 COURSE_BADGE_ID = "course_graduate"
-"""Awarded once every lesson across every COURSE_CATEGORIES chapter is
-complete -- see maybe_award_course_badge()."""
+"""Awarded once every lesson across every "🎓 Python Learning" chapter
+(COURSE_CATEGORIES) is complete -- see maybe_award_course_badge() and
+app.engine.courses.PYTHON_COURSE."""
 
 
 @dataclass(frozen=True)
@@ -79,7 +79,9 @@ def _group_by_topic(items: list[Lesson], completed_ids: set[str]) -> list[TopicS
     ]
 
 
-def compute_course_status(engine: LessonEngine, progress: ProgressStore) -> CourseStatus:
+def compute_course_status(
+    engine: LessonEngine, progress: ProgressStore, categories: list[str],
+) -> CourseStatus:
     completed_ids = set(progress.get_completed_lesson_ids())
     stars_by_lesson = progress.get_stars_by_lesson()
 
@@ -87,7 +89,7 @@ def compute_course_status(engine: LessonEngine, progress: ProgressStore) -> Cour
     items_done = 0
     items_total = 0
     stars_earned = 0
-    for category in COURSE_CATEGORIES:
+    for category in categories:
         items = engine.lessons_in_category(category)
         topics = _group_by_topic(items, completed_ids)
         completed_count = sum(topic.completed_count for topic in topics)
@@ -137,13 +139,15 @@ def next_topic_item(engine: LessonEngine, lesson: Lesson, completed_ids: Collect
     return None
 
 
-def maybe_award_course_badge(engine: LessonEngine, progress: ProgressStore) -> None:
-    """Awards COURSE_BADGE_ID once every lesson in every course chapter is
-    complete. Safe to call after every course-lesson completion -- award_
-    badge() is itself idempotent (INSERT OR IGNORE)."""
+def maybe_award_course_badge(
+    engine: LessonEngine, progress: ProgressStore, categories: list[str], badge_id: str,
+) -> None:
+    """Awards `badge_id` once every lesson in every one of `categories`'
+    chapters is complete. Safe to call after every course-lesson completion
+    -- award_badge() is itself idempotent (INSERT OR IGNORE)."""
     completed_ids = set(progress.get_completed_lesson_ids())
     all_course_lesson_ids = [
-        lesson.id for category in COURSE_CATEGORIES for lesson in engine.lessons_in_category(category)
+        lesson.id for category in categories for lesson in engine.lessons_in_category(category)
     ]
     if all_course_lesson_ids and all(lesson_id in completed_ids for lesson_id in all_course_lesson_ids):
-        progress.award_badge(COURSE_BADGE_ID)
+        progress.award_badge(badge_id)

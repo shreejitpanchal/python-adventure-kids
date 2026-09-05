@@ -36,6 +36,9 @@ BADGE_META: dict[str, BadgeMeta] = {
     "course_graduate": BadgeMeta(
         "Python Learning Graduate", "🎓", "Completed every chapter of the Python Learning course!",
     ),
+    "ai_ml_graduate": BadgeMeta(
+        "AI & ML Explorer", "🤖", "Completed every chapter of the AI & Machine Learning course!",
+    ),
 }
 
 DEFAULT_BADGE_META = BadgeMeta("Mystery Badge", "🏅", "A special achievement!")

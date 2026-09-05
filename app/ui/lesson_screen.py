@@ -6,8 +6,9 @@ import threading
 import customtkinter as ctk
 
 from app.audio.player import play_sound_ctk, success_sound_for
-from app.engine.categories import COURSE_CATEGORIES, get_category_meta
+from app.engine.categories import get_category_meta
 from app.engine.course_status import next_topic_item
+from app.engine.courses import find_course_for_category
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_window import GameWindow
@@ -193,10 +194,10 @@ class LessonScreen(ctk.CTkFrame):
 
         # Course lessons keep the original Onward/Next Lesson pair (chapter
         # navigation, not a "mission") -- only Today's Mission lessons
-        # (outside COURSE_CATEGORIES) get the Next Mission/Next Level
-        # framing below, since only those participate in next_after()'s
-        # round-robin at all.
-        if self.lesson.category in COURSE_CATEGORIES:
+        # (outside any registered course's categories) get the Next Mission/
+        # Next Level framing below, since only those participate in
+        # next_after()'s round-robin at all.
+        if find_course_for_category(self.lesson.category) is not None:
             self.next_mission_caption = None
             self.next_lesson_caption = None
 
@@ -457,7 +458,7 @@ class LessonScreen(ctk.CTkFrame):
         )
 
         completed_ids = progress.get_completed_lesson_ids()
-        if self.lesson.category in COURSE_CATEGORIES:
+        if find_course_for_category(self.lesson.category) is not None:
             next_in_category = next_topic_item(self.app.lesson_engine, self.lesson, completed_ids)
         else:
             next_in_category = self.app.lesson_engine.next_unlocked_in_category(
@@ -492,8 +493,9 @@ class LessonScreen(ctk.CTkFrame):
         self.body._parent_canvas.yview_moveto(1.0)
 
     def _on_continue(self) -> None:
-        if self.lesson.category in COURSE_CATEGORIES:
-            self.app.show_course_chapter(self.lesson.category)
+        course = find_course_for_category(self.lesson.category)
+        if course is not None:
+            self.app.show_course_chapter(course.id, self.lesson.category)
         elif self._next_mission_id:
             self.app.show_lesson_or_quiz(self._next_mission_id)
         else:

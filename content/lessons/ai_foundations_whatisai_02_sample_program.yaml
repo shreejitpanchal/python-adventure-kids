@@ -1,0 +1,38 @@
+id: ai_foundations_whatisai_2
+title: "Your Sample Program with AI 🤖"
+level: 2002
+objective: "Combine two inputs with and/or to make a smarter rule-based decision."
+explanation: |
+  Real decisions usually depend on more than one thing at once. Combining conditions with and/or lets a program weigh several inputs together -- more rules means a smarter, more specific decision.
+example_code: |
+  temperature = 75
+  is_raining = False
+  if temperature > 85 and not is_raining:
+      print("It's hot and dry! Let's go swimming.")
+  elif is_raining:
+      print("It's raining. Let's stay in and read.")
+  else:
+      print("Nice weather! Let's play outside.")
+starter_code: |
+  temperature = 75
+  is_raining = False
+  if temperature > 85 and not is_raining:
+      print("It's hot and dry! Let's go swimming.")
+  elif is_raining:
+      print("It's raining. Let's stay in and read.")
+  else:
+      print("Nice weather! Let's play outside.")
+challenge: |
+  🎯 Challenge: Change is_raining to True, then run it.
+expected_output: |
+  It's raining. Let's stay in and read.
+hints:
+  - "Change False to True after is_raining ="
+  - "The elif is_raining: rule now matches, no matter the temperature."
+  - "It should look like: is_raining = True"
+reward_stars: 3
+badge: null
+category: ai_foundations
+category_level: 2
+topic: "What is AI?"
+concept_tags: [ai, conditionals]

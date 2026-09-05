@@ -66,6 +66,14 @@ Settings font controls — due for a refresh.*
   timeout and doesn't compose safely with real concurrency. Every topic
   still gets its own "What is it?" explanation, a hands-on sample program,
   and a topic quiz — 90 lessons in all.
+- **AI & Machine Learning course** — a second, standalone 2-chapter course
+  (AI Foundations, Machine Learning & Tools) with its own dashboard,
+  parallel to Python Learning. AI Foundations covers What is AI? and
+  Rule-Based Decisions (including a simulated rule-based chatbot exercise);
+  Machine Learning & Tools covers What is Machine Learning? (with a
+  "Train the Robot" pattern-matching mini-game) and What is MCP?. Every
+  concept is taught through plain-Python simulation — dictionaries,
+  if/elif chains — since the sandbox has no real AI/ML libraries.
 - **Practice by Category** — jump into any topic directly and work through
   its full 20-level progression at your own pace, independent of Today's
   Mission.

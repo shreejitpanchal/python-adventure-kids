@@ -82,6 +82,7 @@ def test_resume_label_is_none_for_an_unrecognized_route_key(engine, progress):
         ("advanced_code_crackers", "Advanced Code Crackers"),
         ("projects", "Build a Project"),
         ("course", "Python Learning"),
+        ("ai_course", "AI & Machine Learning"),
     ],
 )
 def test_resume_label_reflects_the_stored_route(engine, progress, route_key, expected_label):
@@ -109,3 +110,25 @@ def test_course_status_reflects_real_progress(engine, progress):
     status = compute_hub_status(engine, progress, Settings())
     total = len(all_ids)
     assert status.course_status == f"2/{total} lessons complete"
+
+
+def test_ai_course_status_starts_at_zero_complete(engine, progress):
+    from app.engine.categories import AI_COURSE_CATEGORIES
+
+    status = compute_hub_status(engine, progress, Settings())
+    total = sum(len(engine.lessons_in_category(category)) for category in AI_COURSE_CATEGORIES)
+    assert status.ai_course_status == f"0/{total} lessons complete"
+
+
+def test_ai_course_status_reflects_real_progress(engine, progress):
+    from app.engine.categories import AI_COURSE_CATEGORIES
+
+    all_ids = [
+        lesson.id for category in AI_COURSE_CATEGORIES for lesson in engine.lessons_in_category(category)
+    ]
+    for lesson_id in all_ids[:2]:
+        progress.complete_lesson(lesson_id, 3)
+
+    status = compute_hub_status(engine, progress, Settings())
+    total = len(all_ids)
+    assert status.ai_course_status == f"2/{total} lessons complete"

@@ -1,4 +1,4 @@
-"""Exercises build_learning_hub_view()'s five cards, the resume banner, and
+"""Exercises build_learning_hub_view()'s six cards, the resume banner, and
 the preferred-mode-first ordering -- with a real AppState/LessonEngine
 (so compute_hub_status() is exercised for real, not mocked), same pattern
 as test_dashboard_flet.py."""
@@ -17,6 +17,7 @@ _CARD_TITLES = {
     "advanced_code_crackers": "🧠 Advanced Code Crackers",
     "projects": "🛠️ Build a Project",
     "course": "🎓 Python Learning",
+    "ai_course": "🤖 AI & Machine Learning",
 }
 
 _CARD_ROUTES = {
@@ -25,6 +26,7 @@ _CARD_ROUTES = {
     "advanced_code_crackers": "/categories/advanced_code_crackers",
     "projects": "/projects",
     "course": "/course",
+    "ai_course": "/ai-course",
 }
 
 
@@ -73,7 +75,7 @@ def _card_status(card: ft.Container) -> str:
     return card.content.controls[2].value
 
 
-def test_all_five_cards_present_with_correct_status_text(state):
+def test_all_six_cards_present_with_correct_status_text(state):
     page = FakePage()
     hub_status = compute_hub_status(state.lesson_engine, state.progress, state.settings)
     view = build_learning_hub_view(page, state)
@@ -88,6 +90,7 @@ def test_all_five_cards_present_with_correct_status_text(state):
     assert status_by_title[_CARD_TITLES["advanced_code_crackers"]] == hub_status.advanced_cracker_status
     assert status_by_title[_CARD_TITLES["projects"]] == hub_status.project_status
     assert status_by_title[_CARD_TITLES["course"]] == hub_status.course_status
+    assert status_by_title[_CARD_TITLES["ai_course"]] == hub_status.ai_course_status
 
 
 @pytest.mark.parametrize("key", list(_CARD_TITLES.keys()))

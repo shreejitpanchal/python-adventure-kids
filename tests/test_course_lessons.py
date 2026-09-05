@@ -1,7 +1,7 @@
-"""Content + behavior checks for the "🎓 Python Learning" course's code
-lessons (the "What is X?" and "Sample Program" items in each topic of
-each chapter -- the quiz items have no code and are covered by
-test_course_quiz_content.py instead).
+"""Content + behavior checks for every standalone course's (see
+app.engine.courses.ALL_COURSES) code lessons (the "What is X?" and "Sample
+Program" items in each topic of each chapter -- the quiz items have no code
+and are covered by test_course_quiz_content.py instead).
 
 Same invariant as test_fundamentals_lessons.py: unedited starter code must
 NOT already satisfy the challenge, and the intended solution must produce
@@ -9,7 +9,7 @@ exactly the expected output.
 """
 import pytest
 
-from app.engine.categories import COURSE_CATEGORIES
+from app.engine.courses import ALL_COURSES
 from app.engine.lesson_engine import LessonEngine
 from app.engine.validator import validate_output
 from app.sandbox.runner import run_code
@@ -307,6 +307,79 @@ LESSON_SOLUTIONS = {
         '    return result\n\n'
         'divide(10, 0)'
     ),
+    "ai_foundations_whatisai_1": (
+        'temperature = 90\n'
+        'if temperature > 85:\n'
+        '    print("It\'s hot! Let\'s go swimming.")\n'
+        'elif temperature > 60:\n'
+        '    print("Nice weather! Let\'s play outside.")\n'
+        'else:\n'
+        '    print("It\'s chilly. Let\'s stay in and read.")'
+    ),
+    "ai_foundations_whatisai_2": (
+        'temperature = 75\n'
+        'is_raining = True\n'
+        'if temperature > 85 and not is_raining:\n'
+        '    print("It\'s hot and dry! Let\'s go swimming.")\n'
+        'elif is_raining:\n'
+        '    print("It\'s raining. Let\'s stay in and read.")\n'
+        'else:\n'
+        '    print("Nice weather! Let\'s play outside.")'
+    ),
+    "ai_foundations_rulebased_1": (
+        'symptom = "fever"\n'
+        'if symptom == "cough":\n'
+        '    print("Advice: Drink warm water and rest.")\n'
+        'elif symptom == "fever":\n'
+        '    print("Advice: Rest and monitor your temperature.")\n'
+        'elif symptom == "headache":\n'
+        '    print("Advice: Drink water and rest in a quiet room.")\n'
+        'else:\n'
+        '    print("Advice: Talk to a grown-up about how you feel.")'
+    ),
+    "ai_foundations_rulebased_2": (
+        'message = "what\'s your name?"\n'
+        'message = message.lower()\n'
+        'if "hello" in message:\n'
+        '    print("Hi there! I\'m a simple rule-based chatbot.")\n'
+        'elif "weather" in message:\n'
+        '    print("I can\'t check the weather, but I hope it\'s nice!")\n'
+        'elif "name" in message:\n'
+        '    print("I\'m RoboBot, a rule-based chatbot!")\n'
+        'else:\n'
+        '    print("I don\'t understand yet, but I\'m still learning!")'
+    ),
+    "ai_tools_whatisml_1": (
+        'training_examples = {"cat": "meow", "dog": "woof", "cow": "moo", "duck": "quack"}\n'
+        'print("The robot learned these examples:")\n'
+        'for animal, sound in training_examples.items():\n'
+        '    print(animal + " -> " + sound)'
+    ),
+    "ai_tools_whatisml_2": (
+        'training_data = {"cat": "meow", "dog": "woof", "cow": "moo", "duck": "quack"}\n'
+        'test_word = "duck"\n'
+        'guess = training_data.get(test_word, "Not sure yet!")\n'
+        'print("The robot guesses: " + guess)'
+    ),
+    "ai_tools_whatismcp_1": (
+        'def get_weather(city):\n'
+        '    return "Sunny in " + city\n\n'
+        'request = {"tool": "get_weather", "city": "Tokyo"}\n'
+        'print("The AI is asking for tool: " + request["tool"])\n'
+        'result = get_weather(request["city"])\n'
+        'print("The tool replied: " + result)'
+    ),
+    "ai_tools_whatismcp_2": (
+        'def get_weather(city):\n'
+        '    return "Sunny in " + city\n\n'
+        'def get_time(city):\n'
+        '    return "It\'s 3:00 PM in " + city\n\n'
+        'tools = {"get_weather": get_weather, "get_time": get_time}\n'
+        'request = {"tool": "get_time", "args": {"city": "Paris"}}\n\n'
+        'tool_function = tools[request["tool"]]\n'
+        'result = tool_function(request["args"]["city"])\n'
+        'print(result)'
+    ),
 }
 
 
@@ -318,7 +391,8 @@ def engine():
 def test_every_course_code_lesson_has_a_solution_fixture(engine):
     code_lesson_ids = {
         lesson.id
-        for category in COURSE_CATEGORIES
+        for course in ALL_COURSES
+        for category in course.categories
         for lesson in engine.lessons_in_category(category)
         if not lesson.is_quiz
     }

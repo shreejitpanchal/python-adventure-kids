@@ -12,13 +12,14 @@ VOCABULARY = {
     "errors", "algorithms", "random", "classes", "recursion", "functional",
     "collections", "itertools", "datetime", "json", "concurrency",
     "threading", "async", "observability",
+    "ai", "rule-based", "machine-learning", "mcp",
 }
 
 
 def test_every_question_has_a_concept_tags_list():
     engine = QuizEngine()
     session = engine.start_session()
-    assert len(session) == 484
+    assert len(session) == 524
     for question in session:
         assert isinstance(question.concept_tags, list)
 
@@ -35,4 +36,4 @@ def test_concept_tags_only_use_the_fixed_vocabulary():
 def test_most_questions_have_at_least_one_concept_tag():
     engine = QuizEngine()
     tagged = sum(1 for q in engine.start_session() if q.concept_tags)
-    assert tagged >= 250, f"only {tagged}/484 questions have a non-empty concept_tags list"
+    assert tagged >= 250, f"only {tagged}/524 questions have a non-empty concept_tags list"

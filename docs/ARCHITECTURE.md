@@ -563,6 +563,18 @@ takes its dataclass default.
   the widely-used original. Quiz completion still gets unlock tracking,
   star rewards, and XP for free, and the course needed zero new
   `ProgressStore` schema.
+- **A second course is a parameter, not a copy.** When the "🤖 AI &
+  Machine Learning" course was added, `compute_course_status()`/
+  `maybe_award_course_badge()` and all 6 course-UI screen files (3 CTk + 3
+  Flet) were parameterized by a `categories` list/`badge_id`/
+  `app.engine.courses.CourseSpec` instead of being duplicated — the same
+  category-list-parameterization pattern `CategoryMapFrame(category_filter,
+  heading)` already used for "Build a Project" vs. the plain category
+  browser, applied one level up. Every concept the new course teaches
+  (rule-based decisions, machine learning, MCP) is simulated in plain
+  Python for the same reason `course_concurrency` simulates threading/
+  asyncio: the sandbox has no real AI/ML libraries and the module
+  allowlist is deliberately narrow (see the sandbox note above).
 - **Dual-UI parity by convention, not abstraction.** Rather than building
   a shared widget/view abstraction over both CTk and Flet (which would
   constrain both to their lowest common capability), each UI is a

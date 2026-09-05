@@ -10,6 +10,7 @@ import customtkinter as ctk
 
 from app.engine.categories import get_category_meta, get_topic_icon
 from app.engine.course_status import compute_course_status, is_topic_item_unlocked
+from app.engine.courses import CourseSpec
 from app.ui import theme
 from app.ui.color_utils import contrasting_text_color
 
@@ -17,9 +18,10 @@ _ITEM_LABELS = ["1. What is it?", "2. Your Sample Program", "3. Quiz"]
 
 
 class CourseChapterFrame(ctk.CTkFrame):
-    def __init__(self, app, category: str) -> None:
+    def __init__(self, app, course: CourseSpec, category: str) -> None:
         super().__init__(app, fg_color=theme.COLOR_BG)
         self.app = app
+        self.course = course
         self.category = category
 
         self._build_header()
@@ -36,7 +38,7 @@ class CourseChapterFrame(ctk.CTkFrame):
         header.pack(fill="x", padx=30, pady=(24, 16))
 
         ctk.CTkButton(
-            header, text="🎓 Python Learning", font=theme.font_body(14), width=160, height=36,
+            header, text=self.course.title, font=theme.font_body(14), width=160, height=36,
             fg_color=theme.COLOR_TEXT_MUTED, hover_color=theme.COLOR_TEXT,
             command=self._on_back,
         ).pack(side="left")
@@ -47,7 +49,7 @@ class CourseChapterFrame(ctk.CTkFrame):
         ).pack(side="left", padx=20)
 
     def _build_topics(self) -> None:
-        status = compute_course_status(self.app.lesson_engine, self.app.progress)
+        status = compute_course_status(self.app.lesson_engine, self.app.progress, self.course.categories)
         chapter = next(c for c in status.chapters if c.category == self.category)
         completed_ids = set(self.app.progress.get_completed_lesson_ids())
         meta = get_category_meta(self.category)
@@ -121,4 +123,4 @@ class CourseChapterFrame(ctk.CTkFrame):
         ).pack(anchor="w", padx=20, pady=(0, 16))
 
     def _on_back(self) -> None:
-        self.app.show_course_map()
+        self.app.show_course_map(self.course.id)

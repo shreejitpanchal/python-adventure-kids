@@ -1,0 +1,46 @@
+id: ai_tools_whatismcp_2
+title: "Your Sample Program with MCP 🔌"
+level: 2014
+objective: "Route a structured tool-call request to the correct one of several tools using a dispatch dictionary."
+explanation: |
+  With more than one tool available, the AI's request needs to be routed to the *right* one. A dispatch dictionary (tools) maps each tool's name to the actual function that handles it -- exactly what a real MCP-style system does, just without any real network or protocol involved.
+example_code: |
+  def get_weather(city):
+      return "Sunny in " + city
+
+  def get_time(city):
+      return "It's 3:00 PM in " + city
+
+  tools = {"get_weather": get_weather, "get_time": get_time}
+  request = {"tool": "get_weather", "args": {"city": "Paris"}}
+
+  tool_function = tools[request["tool"]]
+  result = tool_function(request["args"]["city"])
+  print(result)
+starter_code: |
+  def get_weather(city):
+      return "Sunny in " + city
+
+  def get_time(city):
+      return "It's 3:00 PM in " + city
+
+  tools = {"get_weather": get_weather, "get_time": get_time}
+  request = {"tool": "get_weather", "args": {"city": "Paris"}}
+
+  tool_function = tools[request["tool"]]
+  result = tool_function(request["args"]["city"])
+  print(result)
+challenge: |
+  🎯 Challenge: Change request's "tool" to "get_time", then run it.
+expected_output: |
+  It's 3:00 PM in Paris
+hints:
+  - "Change \"get_weather\" to \"get_time\" after \"tool\": in the request dictionary."
+  - "tools[request[\"tool\"]] looks up which function to call, based on the request."
+  - "It should look like: request = {\"tool\": \"get_time\", \"args\": {\"city\": \"Paris\"}}"
+reward_stars: 3
+badge: null
+category: ai_tools
+category_level: 5
+topic: "What is MCP?"
+concept_tags: [mcp, dictionaries, functions]

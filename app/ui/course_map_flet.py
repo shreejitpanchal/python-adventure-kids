@@ -1,4 +1,5 @@
-"""The "🎓 Python Learning" course dashboard: an XP/progress-bar header
+"""A course dashboard (e.g. "🎓 Python Learning" or "🤖 AI & Machine
+Learning" -- see app.engine.courses.CourseSpec): an XP/progress-bar header
 (styled after dashboard_flet.py's _build_xp_hud/_stat_pill) above a grid of
 chapter cards.
 
@@ -15,6 +16,7 @@ import flet as ft
 
 from app.engine.categories import get_category_meta
 from app.engine.course_status import compute_course_status
+from app.engine.courses import PYTHON_COURSE, CourseSpec
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color
 from app.ui.theme_flet import scaled
@@ -22,10 +24,11 @@ from app.ui.theme_flet import scaled
 _CARD_WIDTH = 300
 
 
-def build_course_map_view(page: ft.Page, state: AppState) -> ft.View:
+def build_course_map_view(page: ft.Page, state: AppState, course: CourseSpec = PYTHON_COURSE) -> ft.View:
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
-    status = compute_course_status(state.lesson_engine, state.progress)
+    status = compute_course_status(state.lesson_engine, state.progress, course.categories)
+    route_prefix = "/course" if course.id == "python" else "/ai-course"
 
     header = ft.Row(
         [
@@ -34,7 +37,7 @@ def build_course_map_view(page: ft.Page, state: AppState) -> ft.View:
                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
             ),
             ft.Text(
-                "🎓 Python Learning", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary,
+                course.title, size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary,
                 expand=True,
             ),
         ],
@@ -42,7 +45,7 @@ def build_course_map_view(page: ft.Page, state: AppState) -> ft.View:
     )
 
     return ft.View(
-        route="/course",
+        route=route_prefix,
         bgcolor=theme.bg,
         scroll=ft.ScrollMode.AUTO,
         padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
@@ -52,7 +55,10 @@ def build_course_map_view(page: ft.Page, state: AppState) -> ft.View:
             _build_hud(state, status),
             ft.Container(height=16),
             ft.Row(
-                [_build_chapter_card(page, state, chapter, index + 1) for index, chapter in enumerate(status.chapters)],
+                [
+                    _build_chapter_card(page, route_prefix, state, chapter, index + 1)
+                    for index, chapter in enumerate(status.chapters)
+                ],
                 wrap=True, spacing=16, run_spacing=16,
             ),
         ],
@@ -91,7 +97,7 @@ def _stat_pill(theme, icon: str, text: str, scale: float = 1.0) -> ft.Control:
     )
 
 
-def _build_chapter_card(page: ft.Page, state: AppState, chapter, chapter_number: int) -> ft.Control:
+def _build_chapter_card(page: ft.Page, route_prefix: str, state: AppState, chapter, chapter_number: int) -> ft.Control:
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     meta = get_category_meta(chapter.category)
@@ -102,7 +108,7 @@ def _build_chapter_card(page: ft.Page, state: AppState, chapter, chapter_number:
     status_color = theme.success if all_done else theme.text_muted
 
     def on_click(_e: ft.ControlEvent, category: str = chapter.category) -> None:
-        page.go(f"/course/{category}")
+        page.go(f"{route_prefix}/{category}")
 
     return ft.Container(
         content=ft.Column(

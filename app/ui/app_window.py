@@ -94,25 +94,31 @@ class App(ctk.CTk):
 
         self.show_frame(QuizScreen(self))
 
-    def show_course_map(self) -> None:
+    def show_course_map(self, course_id: str = "python") -> None:
+        from app.engine.courses import get_course
         from app.ui.course_map import CourseMapFrame
 
-        self.show_frame(CourseMapFrame(self))
+        self.show_frame(CourseMapFrame(self, get_course(course_id)))
 
-    def show_course_chapter(self, category: str) -> None:
+    def show_course_chapter(self, course_id: str, category: str) -> None:
+        from app.engine.courses import get_course
         from app.ui.course_chapter import CourseChapterFrame
 
-        self.show_frame(CourseChapterFrame(self, category))
+        self.show_frame(CourseChapterFrame(self, get_course(course_id), category))
 
-    def show_course_quiz(self, lesson_id: str) -> None:
+    def show_course_quiz(self, course_id: str, lesson_id: str) -> None:
+        from app.engine.courses import get_course
         from app.ui.course_quiz_screen import CourseQuizScreen
 
-        self.show_frame(CourseQuizScreen(self, lesson_id))
+        self.show_frame(CourseQuizScreen(self, get_course(course_id), lesson_id))
 
     def show_lesson_or_quiz(self, lesson_id: str) -> None:
         lesson = self.lesson_engine.get(lesson_id)
         if lesson.is_quiz:
-            self.show_course_quiz(lesson_id)
+            from app.engine.courses import find_course_for_category
+
+            course = find_course_for_category(lesson.category)
+            self.show_course_quiz(course.id, lesson_id)
         else:
             self.show_lesson(lesson_id)
 

@@ -94,7 +94,7 @@ def test_hud_reflects_real_progress(state):
 
     page = FakePage()
     view = build_course_map_view(page, state)
-    status = compute_course_status(state.lesson_engine, state.progress)
+    status = compute_course_status(state.lesson_engine, state.progress, COURSE_CATEGORIES)
 
     hud = view.controls[2]
     lessons_text = hud.content.controls[1]

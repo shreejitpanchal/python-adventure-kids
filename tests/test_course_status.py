@@ -35,7 +35,7 @@ def all_course_lesson_ids(engine):
 
 
 def test_status_starts_at_zero_done(engine, progress, all_course_lesson_ids):
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     assert status.items_total == len(all_course_lesson_ids)
     assert status.items_done == 0
     assert status.stars_earned == 0
@@ -46,7 +46,7 @@ def test_status_reflects_real_progress(engine, progress, all_course_lesson_ids):
     progress.complete_lesson(all_course_lesson_ids[0], 2)
     progress.complete_lesson(all_course_lesson_ids[1], 3)
 
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     assert status.items_done == 2
     assert status.stars_earned == 5
 
@@ -56,14 +56,14 @@ def test_chapter_status_reports_per_chapter_completion(engine, progress):
     lessons = engine.lessons_in_category(first_chapter)
     progress.complete_lesson(lessons[0].id, lessons[0].reward_stars)
 
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     chapter = next(c for c in status.chapters if c.category == first_chapter)
     assert chapter.completed_count == 1
     assert chapter.total_count == len(lessons)
 
 
 def test_data_structures_chapter_shows_0_of_12(engine, progress):
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     chapter = next(c for c in status.chapters if c.category == "course_data_structures")
     assert chapter.completed_count == 0
     assert chapter.total_count == 12
@@ -73,7 +73,7 @@ def test_data_structures_chapter_shows_0_of_12(engine, progress):
 
 
 def test_variables_chapter_shows_0_of_15(engine, progress):
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     chapter = next(c for c in status.chapters if c.category == "course_variables")
     assert chapter.completed_count == 0
     assert chapter.total_count == 15
@@ -81,7 +81,7 @@ def test_variables_chapter_shows_0_of_15(engine, progress):
 
 
 def test_intro_setup_chapter_shows_0_of_9(engine, progress):
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     chapter = next(c for c in status.chapters if c.category == "course_intro_setup")
     assert chapter.completed_count == 0
     assert chapter.total_count == 9
@@ -89,7 +89,7 @@ def test_intro_setup_chapter_shows_0_of_9(engine, progress):
 
 
 def test_control_flow_chapter_shows_0_of_9(engine, progress):
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     chapter = next(c for c in status.chapters if c.category == "course_control_flow")
     assert chapter.completed_count == 0
     assert chapter.total_count == 9
@@ -97,7 +97,7 @@ def test_control_flow_chapter_shows_0_of_9(engine, progress):
 
 
 def test_functions_chapter_shows_0_of_9(engine, progress):
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     chapter = next(c for c in status.chapters if c.category == "course_functions")
     assert chapter.completed_count == 0
     assert chapter.total_count == 9
@@ -105,7 +105,7 @@ def test_functions_chapter_shows_0_of_9(engine, progress):
 
 
 def test_advanced_concepts_chapter_shows_0_of_9(engine, progress):
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     chapter = next(c for c in status.chapters if c.category == "course_advanced_concepts")
     assert chapter.completed_count == 0
     assert chapter.total_count == 9
@@ -113,7 +113,7 @@ def test_advanced_concepts_chapter_shows_0_of_9(engine, progress):
 
 
 def test_stdlib_chapter_shows_0_of_12(engine, progress):
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     chapter = next(c for c in status.chapters if c.category == "course_stdlib")
     assert chapter.completed_count == 0
     assert chapter.total_count == 12
@@ -121,7 +121,7 @@ def test_stdlib_chapter_shows_0_of_12(engine, progress):
 
 
 def test_concurrency_chapter_shows_0_of_12(engine, progress):
-    status = compute_course_status(engine, progress)
+    status = compute_course_status(engine, progress, COURSE_CATEGORIES)
     chapter = next(c for c in status.chapters if c.category == "course_concurrency")
     assert chapter.completed_count == 0
     assert chapter.total_count == 12
@@ -133,14 +133,14 @@ def test_concurrency_chapter_shows_0_of_12(engine, progress):
 def test_badge_not_awarded_until_every_item_complete(engine, progress, all_course_lesson_ids):
     for lesson_id in all_course_lesson_ids[:-1]:
         progress.complete_lesson(lesson_id, 3)
-    maybe_award_course_badge(engine, progress)
+    maybe_award_course_badge(engine, progress, COURSE_CATEGORIES, COURSE_BADGE_ID)
     assert COURSE_BADGE_ID not in progress.get_badge_ids()
 
 
 def test_badge_awarded_once_every_item_complete(engine, progress, all_course_lesson_ids):
     for lesson_id in all_course_lesson_ids:
         progress.complete_lesson(lesson_id, 3)
-    maybe_award_course_badge(engine, progress)
+    maybe_award_course_badge(engine, progress, COURSE_CATEGORIES, COURSE_BADGE_ID)
     assert COURSE_BADGE_ID in progress.get_badge_ids()
 
 

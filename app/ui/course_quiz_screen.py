@@ -12,6 +12,7 @@ import customtkinter as ctk
 
 from app.engine.categories import get_category_meta
 from app.engine.course_status import maybe_award_course_badge
+from app.engine.courses import CourseSpec
 from app.ui import theme
 from app.ui.color_utils import contrasting_text_color
 
@@ -22,9 +23,10 @@ _RESULTS_CARD_COLOR = "#FFF3D0"
 
 
 class CourseQuizScreen(ctk.CTkFrame):
-    def __init__(self, app, lesson_id: str) -> None:
+    def __init__(self, app, course: CourseSpec, lesson_id: str) -> None:
         super().__init__(app, fg_color=theme.COLOR_BG)
         self.app = app
+        self.course = course
         self.lesson = app.lesson_engine.get(lesson_id)
 
         self.questions = app.quiz_engine.start_session_for_tags(self.lesson.concept_tags, count=_QUESTION_COUNT)
@@ -52,7 +54,7 @@ class CourseQuizScreen(ctk.CTkFrame):
         header.pack(fill="x", padx=30, pady=(24, 10))
 
         ctk.CTkButton(
-            header, text="🎓 Python Learning", font=theme.font_body(14), width=160, height=36,
+            header, text=self.course.title, font=theme.font_body(14), width=160, height=36,
             fg_color=theme.COLOR_TEXT_MUTED, hover_color=theme.COLOR_TEXT,
             command=self._on_back,
         ).pack(side="left")
@@ -182,7 +184,9 @@ class CourseQuizScreen(ctk.CTkFrame):
 
         if passed:
             self.app.progress.complete_lesson(self.lesson.id, self.lesson.reward_stars)
-            maybe_award_course_badge(self.app.lesson_engine, self.app.progress)
+            maybe_award_course_badge(
+                self.app.lesson_engine, self.app.progress, self.course.categories, self.course.badge_id,
+            )
             self.results_label.configure(
                 text=f"🏁 You scored {self.score}/{self.total} ({percent}%) — Passed!",
             )
@@ -220,4 +224,4 @@ class CourseQuizScreen(ctk.CTkFrame):
         self._render_question()
 
     def _on_back(self) -> None:
-        self.app.show_course_chapter(self.lesson.category)
+        self.app.show_course_chapter(self.course.id, self.lesson.category)

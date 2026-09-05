@@ -12,6 +12,7 @@ import flet as ft
 
 from app.engine.categories import get_category_meta
 from app.engine.course_status import maybe_award_course_badge
+from app.engine.courses import PYTHON_COURSE, CourseSpec
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color
 from app.ui.theme_flet import scaled
@@ -22,16 +23,19 @@ _PASS_PERCENT = 70
 _RESULTS_CARD_COLOR = "#FFF3D0"
 
 
-def build_course_quiz_view(page: ft.Page, state: AppState, lesson_id: str) -> ft.View:
-    return _CourseQuizController(page, state, lesson_id).build_view()
+def build_course_quiz_view(
+    page: ft.Page, state: AppState, lesson_id: str, course: CourseSpec = PYTHON_COURSE,
+) -> ft.View:
+    return _CourseQuizController(page, state, lesson_id, course).build_view()
 
 
 class _CourseQuizController:
-    def __init__(self, page: ft.Page, state: AppState, lesson_id: str) -> None:
+    def __init__(self, page: ft.Page, state: AppState, lesson_id: str, course: CourseSpec = PYTHON_COURSE) -> None:
         self.page = page
         self.state = state
         self.theme = state.theme
         self.scale = state.font_scale
+        self.course = course
         self.lesson = state.lesson_engine.get(lesson_id)
 
         self.questions = state.quiz_engine.start_session_for_tags(self.lesson.concept_tags, count=_QUESTION_COUNT)
@@ -51,7 +55,7 @@ class _CourseQuizController:
         header = ft.Row(
             [
                 ft.Button(
-                    "🎓 Python Learning", on_click=self._on_back, height=48,
+                    self.course.title, on_click=self._on_back, height=48,
                     style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
                 ),
                 ft.Text(f"{meta.icon} {self.lesson.title}", size=self._fs(22), weight=ft.FontWeight.BOLD, color=meta.color, expand=True),
@@ -90,8 +94,9 @@ class _CourseQuizController:
             bgcolor=_RESULTS_CARD_COLOR, border_radius=18, padding=24, visible=False,
         )
 
+        quiz_route_prefix = "/course-quiz" if self.course.id == "python" else "/ai-course-quiz"
         self.view = ft.View(
-            route=f"/course-quiz/{self.lesson.id}",
+            route=f"{quiz_route_prefix}/{self.lesson.id}",
             bgcolor=theme.bg,
             scroll=ft.ScrollMode.AUTO,
             padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
@@ -183,7 +188,9 @@ class _CourseQuizController:
         buttons = []
         if passed:
             self.state.progress.complete_lesson(self.lesson.id, self.lesson.reward_stars)
-            maybe_award_course_badge(self.state.lesson_engine, self.state.progress)
+            maybe_award_course_badge(
+                self.state.lesson_engine, self.state.progress, self.course.categories, self.course.badge_id,
+            )
             self.results_text.value = f"🏁 You scored {self.score}/{self.total} ({percent}%) — Passed!"
             buttons.append(ft.Button(
                 "✅ Continue", on_click=self._on_back, height=52,
@@ -215,4 +222,5 @@ class _CourseQuizController:
         self.page.update()
 
     def _on_back(self, e) -> None:
-        self.page.go(f"/course/{self.lesson.category}")
+        map_route = "/course" if self.course.id == "python" else "/ai-course"
+        self.page.go(f"{map_route}/{self.lesson.category}")

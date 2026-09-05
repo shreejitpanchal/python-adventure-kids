@@ -1,0 +1,42 @@
+id: ai_foundations_rulebased_2
+title: "Your Sample Program with Rule-Based Decisions 💬"
+level: 2005
+objective: "Build a simple rule-based chatbot that matches keywords in a message to a canned reply."
+explanation: |
+  A simple chatbot is just a rule-based system applied to words: check the message for a keyword, and reply accordingly. Real chatbots are more complex, but the core idea -- match input to a response using rules -- is the same one.
+example_code: |
+  message = "hello there"
+  message = message.lower()
+  if "hello" in message:
+      print("Hi there! I'm a simple rule-based chatbot.")
+  elif "weather" in message:
+      print("I can't check the weather, but I hope it's nice!")
+  elif "name" in message:
+      print("I'm RoboBot, a rule-based chatbot!")
+  else:
+      print("I don't understand yet, but I'm still learning!")
+starter_code: |
+  message = "hello there"
+  message = message.lower()
+  if "hello" in message:
+      print("Hi there! I'm a simple rule-based chatbot.")
+  elif "weather" in message:
+      print("I can't check the weather, but I hope it's nice!")
+  elif "name" in message:
+      print("I'm RoboBot, a rule-based chatbot!")
+  else:
+      print("I don't understand yet, but I'm still learning!")
+challenge: |
+  🎯 Challenge: Change message to "what's your name?", then run it.
+expected_output: |
+  I'm RoboBot, a rule-based chatbot!
+hints:
+  - "Change the text inside the quotes after message ="
+  - "\"name\" appears inside \"what's your name?\", so the elif \"name\" in message: rule matches."
+  - "It should look like: message = \"what's your name?\""
+reward_stars: 3
+badge: null
+category: ai_foundations
+category_level: 5
+topic: "Rule-Based Decisions"
+concept_tags: [rule-based, conditionals, strings]
