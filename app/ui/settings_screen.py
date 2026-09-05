@@ -1,8 +1,12 @@
 """Settings screen: pick a color theme from a set of pre-baked presets."""
 from __future__ import annotations
 
+import json
+from tkinter import filedialog
+
 import customtkinter as ctk
 
+from app.progress.store import InvalidProgressFile
 from app.ui import theme
 from app.version import get_version_label
 
@@ -20,6 +24,7 @@ class SettingsFrame(ctk.CTkFrame):
         self._build_sound_card()
         self._build_font_card()
         self._build_theme_card()
+        self._build_progress_card()
         self._build_version_label()
 
     def _build_sound_card(self) -> None:
@@ -193,6 +198,107 @@ class SettingsFrame(ctk.CTkFrame):
             return  # defense in depth -- the button should already be disabled
         self.app.apply_and_persist_theme(theme_key)
         self.app.show_settings()
+
+    def _build_progress_card(self) -> None:
+        card = ctk.CTkFrame(self.body, fg_color=theme.COLOR_CARD, corner_radius=20)
+        card.pack(fill="x", pady=(0, 20))
+
+        ctk.CTkLabel(
+            card, text="💾 Progress", font=theme.font_heading(20), text_color=theme.COLOR_TEXT,
+        ).pack(anchor="w", padx=24, pady=(20, 4))
+
+        ctk.CTkLabel(
+            card, text="Save your progress to a file, or load progress from a file you exported before.",
+            font=theme.font_body(13), text_color=theme.COLOR_TEXT_MUTED,
+        ).pack(anchor="w", padx=24, pady=(0, 16))
+
+        btn_row = ctk.CTkFrame(card, fg_color="transparent")
+        btn_row.pack(anchor="w", padx=24, pady=(0, 8))
+
+        ctk.CTkButton(
+            btn_row, text="⬇️ Export Progress", font=theme.font_body(14), height=40,
+            fg_color=theme.COLOR_PRIMARY, hover_color=theme.COLOR_PRIMARY_HOVER,
+            command=self._on_export_progress,
+        ).pack(side="left", padx=(0, 8))
+        ctk.CTkButton(
+            btn_row, text="⬆️ Import Progress", font=theme.font_body(14), height=40,
+            fg_color=theme.COLOR_DANGER, hover_color="#D94F4F",
+            command=self._on_import_progress,
+        ).pack(side="left")
+
+        self._progress_status_label = ctk.CTkLabel(
+            card, text="", font=theme.font_body(13), text_color=theme.COLOR_SUCCESS,
+            justify="left", wraplength=760,
+        )
+        self._progress_status_label.pack(anchor="w", padx=24, pady=(4, 20))
+
+    def _on_export_progress(self) -> None:
+        path = filedialog.asksaveasfilename(
+            parent=self, title="Export Progress", defaultextension=".json",
+            filetypes=[("JSON files", "*.json")], initialfile="python_adventure_progress.json",
+        )
+        if not path:
+            return
+        data = self.app.progress.export_progress_data()
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+        except OSError as exc:
+            self._progress_status_label.configure(text=f"Couldn't save file: {exc}", text_color=theme.COLOR_DANGER)
+            return
+        self._progress_status_label.configure(text=f"Progress exported to {path}", text_color=theme.COLOR_SUCCESS)
+
+    def _on_import_progress(self) -> None:
+        path = filedialog.askopenfilename(
+            parent=self, title="Import Progress", filetypes=[("JSON files", "*.json")],
+        )
+        if not path:
+            return
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except (OSError, json.JSONDecodeError) as exc:
+            self._progress_status_label.configure(text=f"Couldn't read file: {exc}", text_color=theme.COLOR_DANGER)
+            return
+        self._confirm_import(data)
+
+    def _confirm_import(self, data: dict) -> None:
+        confirm = ctk.CTkToplevel(self)
+        confirm.title("Import progress?")
+        confirm.geometry("420x220")
+        confirm.configure(fg_color=theme.COLOR_BG)
+        confirm.transient(self.winfo_toplevel())
+        confirm.grab_set()
+
+        ctk.CTkLabel(
+            confirm,
+            text="Importing will replace ALL current progress\nwith the data from this file.\nThis can't be undone.",
+            font=theme.font_body(14), text_color=theme.COLOR_TEXT, justify="center",
+        ).pack(pady=(24, 16))
+
+        btn_row = ctk.CTkFrame(confirm, fg_color="transparent")
+        btn_row.pack()
+
+        def do_import() -> None:
+            try:
+                self.app.progress.import_progress_data(data)
+            except InvalidProgressFile as exc:
+                confirm.destroy()
+                self._progress_status_label.configure(text=str(exc), text_color=theme.COLOR_DANGER)
+                return
+            confirm.destroy()
+            self._progress_status_label.configure(
+                text="Progress imported successfully.", text_color=theme.COLOR_SUCCESS,
+            )
+
+        ctk.CTkButton(
+            btn_row, text="Cancel", width=120, fg_color=theme.COLOR_TEXT_MUTED,
+            command=confirm.destroy,
+        ).pack(side="left", padx=8)
+        ctk.CTkButton(
+            btn_row, text="Import & Overwrite", width=180, fg_color=theme.COLOR_DANGER,
+            hover_color="#D94F4F", command=do_import,
+        ).pack(side="left", padx=8)
 
     def _build_version_label(self) -> None:
         card = ctk.CTkFrame(self.body, fg_color=theme.COLOR_CARD, corner_radius=12)

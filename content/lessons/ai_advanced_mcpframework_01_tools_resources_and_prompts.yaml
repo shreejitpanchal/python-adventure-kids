@@ -1,0 +1,28 @@
+id: ai_advanced_mcpframework_1
+title: "The MCP Framework: Tools, Resources, and Prompts 🧰"
+level: 2023
+objective: "Understand that a real MCP server offers three kinds of building blocks: tools, resources, and prompts."
+explanation: |
+  A real MCP server offers an AI assistant three kinds of building blocks: tools (actions the AI can call, like get_weather), resources (data the AI can read, like a file's contents), and prompts (ready-made instructions the AI can reuse).
+
+  Every request to an MCP server says which KIND of building block it wants, plus its name -- that's the "framework" part: a consistent shape every request follows, no matter which server or tool is involved.
+example_code: |
+  request = {"kind": "tool", "name": "get_weather"}
+  print("Requesting a " + request["kind"] + " called " + request["name"])
+starter_code: |
+  request = {"kind": "tool", "name": "get_weather"}
+  print("Requesting a " + request["kind"] + " called " + request["name"])
+challenge: |
+  🎯 Challenge: Change request's "kind" to "resource" and "name" to "weather_data.txt", then run it.
+expected_output: |
+  Requesting a resource called weather_data.txt
+hints:
+  - "Change \"tool\" to \"resource\", and \"get_weather\" to \"weather_data.txt\"."
+  - "The message is built entirely from request[\"kind\"] and request[\"name\"]."
+  - "It should look like: request = {\"kind\": \"resource\", \"name\": \"weather_data.txt\"}"
+reward_stars: 2
+badge: null
+category: ai_advanced
+category_level: 4
+topic: "MCP Framework"
+concept_tags: [mcp-framework, dictionaries]

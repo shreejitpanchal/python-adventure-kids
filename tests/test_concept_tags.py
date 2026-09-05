@@ -19,6 +19,7 @@ VOCABULARY = {
     "collections", "itertools", "datetime", "json", "concurrency",
     "threading", "async", "observability",
     "ai", "rule-based", "machine-learning", "mcp",
+    "ai-types", "neural-networks", "mcp-framework",
 }
 
 

@@ -6284,3 +6284,351 @@ questions:
   explanation: ''
   concept_tags:
   - mcp
+- id: q525
+  question: What is "narrow AI"?
+  options:
+  - AI built to do one specific task really well
+  - AI that can learn any task like a human
+  - A type of computer virus
+  - AI with no rules at all
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai-types
+- id: q526
+  question: What is "general AI"?
+  options:
+  - A hypothetical AI that could learn and reason about any task, like a person
+  - An AI that only plays chess
+  - A synonym for narrow AI
+  - A type of Python loop
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai-types
+- id: q527
+  question: Does general AI exist in real use today?
+  options:
+  - No -- every AI in real use today is narrow AI
+  - Yes, it's in every smartphone
+  - Yes, but only in Japan
+  - Yes, since the 1990s
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai-types
+- id: q528
+  question: Which of these is an example of narrow AI?
+  options:
+  - A chess-playing program
+  - A robot that can learn any human job
+  - A computer that understands everything like a person
+  - None of these are AI
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai-types
+- id: q529
+  question: A movie recommendation system is an example of...
+  options:
+  - Narrow AI
+  - General AI
+  - Neither -- it's not AI at all
+  - Both narrow and general AI equally
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai-types
+- id: q530
+  question: Why is "general AI" often called "strong AI" in some contexts?
+  options:
+  - Because it would be as capable and flexible as a human mind
+  - Because it uses more electricity
+  - Because it never makes mistakes
+  - Because it runs on more powerful computers only
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai-types
+- id: q531
+  question: 'ai_systems = {"chess engine": "narrow", "human-like reasoning AI": "general"}
+
+    What kind is "chess engine"?'
+  options:
+  - narrow
+  - general
+  - Both
+  - Neither
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai-types
+- id: q532
+  question: What's a key limitation of narrow AI compared to a hypothetical general AI?
+  options:
+  - It can only do the specific task it was built for
+  - It runs slower than any other program
+  - It cannot use variables
+  - It cannot be tested
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai-types
+- id: q533
+  question: Which statement best distinguishes narrow AI from general AI?
+  options:
+  - Narrow AI does one job well; general AI would do any job, like a person
+  - Narrow AI is always free; general AI always costs money
+  - Narrow AI uses Python; general AI uses other languages
+  - There is no real difference
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai-types
+- id: q534
+  question: Why does it matter to know the difference between narrow and general AI?
+  options:
+  - It helps set realistic expectations about what a given AI system can actually do
+  - It's required by Python's syntax
+  - It changes how print() works
+  - It only matters for game AI
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - ai-types
+- id: q535
+  question: What is a neural network loosely inspired by?
+  options:
+  - Neurons in the brain
+  - Electrical circuits in a toaster
+  - A spreadsheet
+  - A vending machine
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - neural-networks
+- id: q536
+  question: In a simple artificial neuron, what does a "weight" represent?
+  options:
+  - How important a particular input is
+  - The neuron's file size
+  - The number of neurons in the network
+  - The programming language used
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - neural-networks
+- id: q537
+  question: 'input_value = 3
+
+    weight = 2
+
+    total = input_value * weight
+
+    What is total?'
+  options:
+  - '6'
+  - '3'
+  - '2'
+  - '5'
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - neural-networks
+- id: q538
+  question: A neuron "fires" when...
+  options:
+  - Its total (inputs times weights) meets or exceeds its threshold
+  - It runs out of memory
+  - A random number is picked
+  - The program ends
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - neural-networks
+- id: q539
+  question: 'inputs = [2, 3]
+
+    weights = [1, 2]
+
+    total = 2*1 + 3*2
+
+    What is total?'
+  options:
+  - '8'
+  - '5'
+  - '6'
+  - '10'
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - neural-networks
+- id: q540
+  question: What is a "perceptron"?
+  options:
+  - A simple neuron model that combines multiple weighted inputs into one decision
+  - A type of Python loop
+  - A programming language
+  - A kind of computer virus
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - neural-networks
+- id: q541
+  question: Why does a neural network use MULTIPLE inputs with different weights, instead of just one?
+  options:
+  - So it can weigh several pieces of information together, not just one
+  - Because Python requires at least two variables
+  - To make the code run slower on purpose
+  - Because a single input always causes an error
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - neural-networks
+- id: q542
+  question: total = 4*1 + 3*2; threshold = 10. Does the neuron fire?
+  options:
+  - Yes, because 10 >= 10
+  - No, because 10 < 10
+  - Yes, because 10 is negative
+  - It depends on a random choice
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - neural-networks
+- id: q543
+  question: What does raising or lowering a neuron's threshold change?
+  options:
+  - How easily the neuron fires, given the same inputs
+  - The number of inputs it can accept
+  - The programming language it's written in
+  - Nothing at all
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - neural-networks
+- id: q544
+  question: Why is a threshold check (total >= threshold) useful in a simple neuron model?
+  options:
+  - It turns a raw weighted total into a clear fire/don't-fire decision
+  - It sorts a list of numbers
+  - It deletes unused variables
+  - It converts text to numbers
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - neural-networks
+- id: q545
+  question: What are the three kinds of building blocks a real MCP server offers?
+  options:
+  - Tools, resources, and prompts
+  - Loops, functions, and variables
+  - Lists, dictionaries, and sets
+  - Inputs, outputs, and errors
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp-framework
+- id: q546
+  question: What is a "tool" in the MCP framework?
+  options:
+  - An action the AI can call, like get_weather
+  - A piece of data the AI can only read
+  - A ready-made instruction the AI can reuse
+  - A type of Python variable
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp-framework
+- id: q547
+  question: What is a "resource" in the MCP framework?
+  options:
+  - Data the AI can read, like a file's contents
+  - An action the AI calls to do something
+  - A chatbot's reply
+  - A type of loop
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp-framework
+- id: q548
+  question: What is a "prompt" in the MCP framework?
+  options:
+  - A ready-made instruction the AI can reuse
+  - A number stored in a variable
+  - A function that changes data
+  - A type of error message
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp-framework
+- id: q549
+  question: 'request = {"tool": "get_weather", "kind": "tool"}
+
+    What does request["kind"] tell the program?'
+  options:
+  - Which KIND of building block is being requested
+  - The name of the tool
+  - The result of the tool
+  - An error code
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp-framework
+- id: q550
+  question: Why does every MCP request follow the same consistent shape (kind + name)?
+  options:
+  - So any server or tool can be requested the same predictable way
+  - Because Python requires all dictionaries to have exactly two keys
+  - To make the code run faster
+  - It's just a coincidence, not a real rule
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp-framework
+- id: q551
+  question: "if request[\"kind\"] == \"tool\":\n    result = tools[request[\"name\"]]()\nWhy are parentheses\
+    \ () added here?"
+  options:
+  - Because a tool is an action that gets called (a function)
+  - Because resources also need parentheses
+  - To turn the result into a string
+  - Parentheses here are optional and do nothing
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp-framework
+- id: q552
+  question: Why does a resource get read directly (resources[request["name"]]) instead of being called
+    with ()?
+  options:
+  - Because a resource is just data, not an action to perform
+  - Because resources are always empty
+  - Because Python doesn't allow calling dictionary values
+  - Because resources are secretly tools
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp-framework
+- id: q553
+  question: What is the benefit of having tools, resources, and prompts as three separate categories?
+  options:
+  - It's clear whether a request performs an action, reads data, or reuses instructions
+  - It makes the dictionary smaller
+  - It removes the need for functions
+  - It's required by Python's syntax
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp-framework
+- id: q554
+  question: Does the MCP Framework lesson's sample program use a real network connection to an MCP server?
+  options:
+  - No -- it's simulated entirely with plain Python dictionaries and functions
+  - Yes, it connects to a live MCP server
+  - Yes, but only on Windows
+  - It requires an API key to run
+  correct: 0
+  explanation: ''
+  concept_tags:
+  - mcp-framework

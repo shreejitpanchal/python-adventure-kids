@@ -54,6 +54,7 @@ CATEGORY_META: dict[str, CategoryMeta] = {
     "course_capstone": CategoryMeta("Capstone: To-Do App", "🏁", "#DC2626"),
     "ai_foundations": CategoryMeta("AI Foundations", "🤖", "#7C4DFF"),
     "ai_tools": CategoryMeta("Machine Learning & Tools", "🧠", "#00BFA5"),
+    "ai_advanced": CategoryMeta("Advanced AI Concepts", "🧬", "#5E35B1"),
 }
 
 DEFAULT_META = CategoryMeta("More Adventures", "⭐", "#78909C")
@@ -74,8 +75,9 @@ TOPIC_ICONS: dict[str, str] = {
     "Collections": "🗃️", "Itertools": "🔁", "Datetime": "📅", "JSON": "🧾",
     "Concurrency & Async": "⚡", "Thread Scheduling": "🧵", "Sync vs Async": "🔀",
     "Observability": "🔭",
-    "What is AI?": "🤖", "Rule-Based Decisions": "🚦",
+    "What is AI?": "🤖", "Rule-Based Decisions": "🚦", "Types of AI": "🏷️",
     "What is Machine Learning?": "📊", "What is MCP?": "🔌",
+    "Neural Networks": "🕸️", "MCP Framework": "🧰",
 }
 """Purely presentational icon per sub-topic name, shown next to a topic's
 group heading within a multi-topic course chapter screen (see
@@ -111,12 +113,17 @@ one topic gate in order. Never added to LessonEngine.TODAYS_MISSION_
 CATEGORIES -- this course is reached only through its own Hub card, not
 folded into "Today's Mission"."""
 
-AI_COURSE_CATEGORIES = ["ai_foundations", "ai_tools"]
+AI_COURSE_CATEGORIES = ["ai_foundations", "ai_tools", "ai_advanced"]
 """The "🤖 AI & Machine Learning" course's chapters, in curriculum order --
 a second, standalone course parallel to COURSE_CATEGORIES above, sharing the
 same category/topic/quiz-item machinery via app.engine.courses.CourseSpec
-rather than a duplicated engine. Every concept lesson here teaches AI/ML/MCP
-ideas through plain-Python simulation (dicts, if/else, input()) -- the
-sandbox has no real ML libraries and never should (see app/sandbox/safety.py).
-Never added to LessonEngine.TODAYS_MISSION_CATEGORIES or COURSE_CATEGORIES --
+rather than a duplicated engine. Deliberately ordered low-to-high level:
+ai_foundations covers beginner concepts (What is AI?, Rule-Based Decisions,
+Types of AI), ai_tools covers practical/intermediate ones (What is Machine
+Learning?, What is MCP?), and ai_advanced covers deeper technical ones
+(Neural Networks, MCP Framework). Every concept lesson here teaches AI/ML/MCP
+ideas through plain-Python simulation (dicts, if/else) -- the sandbox has no
+real ML libraries and never should (see app/sandbox/safety.py), and course
+lessons can't use input() either (see the add-course-topic skill). Never
+added to LessonEngine.TODAYS_MISSION_CATEGORIES or COURSE_CATEGORIES --
 reached only through its own Hub card."""

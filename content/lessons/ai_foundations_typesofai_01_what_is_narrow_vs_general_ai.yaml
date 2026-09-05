@@ -1,0 +1,36 @@
+id: ai_foundations_typesofai_1
+title: "Types of AI 🏷️"
+level: 2007
+objective: "Understand the difference between narrow AI (one specific task) and general AI (any task, like a person)."
+explanation: |
+  Narrow AI (sometimes called "weak AI") is built to do ONE specific task really well -- like recommending movies or playing chess. General AI (sometimes called "strong AI") would be able to learn and reason about ANY task, the way a person can.
+
+  Every AI in real use today is narrow AI -- general AI doesn't actually exist yet, even though it shows up a lot in movies and books.
+example_code: |
+  ai_type = "narrow"
+  task = "recommend a movie"
+  if ai_type == "narrow":
+      print("This AI can only do one job: " + task)
+  else:
+      print("This AI could learn to do almost anything!")
+starter_code: |
+  ai_type = "narrow"
+  task = "recommend a movie"
+  if ai_type == "narrow":
+      print("This AI can only do one job: " + task)
+  else:
+      print("This AI could learn to do almost anything!")
+challenge: |
+  🎯 Challenge: Change task to "play chess", then run it.
+expected_output: |
+  This AI can only do one job: play chess
+hints:
+  - "Change the text inside the quotes after task ="
+  - "ai_type is still \"narrow\", so the first branch always prints."
+  - "It should look like: task = \"play chess\""
+reward_stars: 2
+badge: null
+category: ai_foundations
+category_level: 7
+topic: "Types of AI"
+concept_tags: [ai-types, conditionals]

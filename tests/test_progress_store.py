@@ -309,3 +309,77 @@ def test_recent_failure_count_is_isolated_per_lesson(store):
     store.log_event("lesson_11", "attempt_error", "z")
     assert store.get_recent_failure_count("lesson_10") == 1
     assert store.get_recent_failure_count("lesson_11") == 2
+
+
+# -- export / import (Settings screen's "Export/Import Progress") ---------
+def test_export_progress_data_has_the_expected_shape(store):
+    store.complete_lesson("lesson_01", stars_earned=3)
+    store.award_badge("first_program")
+    store.record_quiz_attempt(score=8, total=10)
+
+    data = store.export_progress_data()
+
+    assert data["format_version"] == store_module.PROGRESS_EXPORT_FORMAT_VERSION
+    assert "exported_at" in data
+    assert data["profile"]["total_stars"] == 3
+    assert data["lesson_completions"] == [
+        {"lesson_id": "lesson_01", "stars_earned": 3, "completed_at": data["lesson_completions"][0]["completed_at"]}
+    ]
+    assert data["badges"][0]["badge_id"] == "first_program"
+    assert data["quiz_attempts"][0] == {
+        "score": 8, "total": 10, "completed_at": data["quiz_attempts"][0]["completed_at"],
+    }
+    assert data["player_xp"]["total_xp"] == store.get_player_level().total_xp
+
+
+def test_import_progress_data_round_trips_everything(store, tmp_path):
+    store.complete_lesson("lesson_01", stars_earned=3)
+    store.complete_lesson("lesson_02", stars_earned=2)
+    store.award_badge("first_program")
+    store.record_quiz_attempt(score=8, total=10)
+    store.log_event("lesson_01", "attempt_wrong_output", "oops")
+    exported = store.export_progress_data()
+
+    other = ProgressStore(tmp_path / "other.sqlite3")
+    try:
+        other.import_progress_data(exported)
+
+        assert sorted(other.get_completed_lesson_ids()) == ["lesson_01", "lesson_02"]
+        assert other.get_stars_by_lesson() == store.get_stars_by_lesson()
+        assert other.get_badge_ids() == store.get_badge_ids()
+        assert other.get_quiz_attempt_count() == store.get_quiz_attempt_count()
+        assert other.get_summary() == store.get_summary()
+        assert other.get_player_level() == store.get_player_level()
+    finally:
+        other.close()
+
+
+def test_import_progress_data_overwrites_existing_progress(store, tmp_path):
+    store.complete_lesson("lesson_99", stars_earned=5)
+    store.award_badge("game_creator")
+    exported_empty = ProgressStore(tmp_path / "empty.sqlite3")
+    try:
+        empty_export = exported_empty.export_progress_data()
+    finally:
+        exported_empty.close()
+
+    store.import_progress_data(empty_export)
+
+    assert store.get_completed_lesson_ids() == []
+    assert store.get_badge_ids() == []
+    assert store.get_summary().total_stars == 0
+
+
+def test_import_progress_data_rejects_a_file_with_no_format_version(store):
+    with pytest.raises(store_module.InvalidProgressFile):
+        store.import_progress_data({"lesson_completions": []})
+
+
+def test_import_progress_data_rejects_a_mismatched_format_version(store):
+    with pytest.raises(store_module.InvalidProgressFile):
+        store.import_progress_data({"format_version": 999})
+
+
+def test_import_progress_data_rejects_non_dict_input(store):
+    with pytest.raises(store_module.InvalidProgressFile):
+        store.import_progress_data(["not", "a", "dict"])

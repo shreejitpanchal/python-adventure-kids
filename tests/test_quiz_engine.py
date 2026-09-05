@@ -3,7 +3,7 @@ from app.engine.quiz_engine import QuizEngine
 
 def test_loads_questions_from_content_dir():
     engine = QuizEngine()
-    assert len(engine) == 524
+    assert len(engine) == 554
 
 
 def test_every_question_has_four_options_and_a_valid_correct_index():

@@ -68,7 +68,8 @@ class Lesson:
     indexing, slicing, dictionaries, tuples, sets, iteration, debugging,
     errors, algorithms, random, classes, recursion, functional, collections,
     itertools, datetime, json, concurrency, threading, async, observability,
-    ai, rule-based, machine-learning, mcp)
+    ai, rule-based, machine-learning, mcp, ai-types, neural-networks,
+    mcp-framework)
     -- used by LessonEngine.recommend_practice() to suggest relevant practice
     after repeated failures or a quiz. Empty is the common case; only
     lessons wired into the adaptive-practice pool need this set."""

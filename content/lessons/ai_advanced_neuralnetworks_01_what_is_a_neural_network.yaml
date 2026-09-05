@@ -1,0 +1,38 @@
+id: ai_advanced_neuralnetworks_1
+title: "What is a Neural Network? 🕸️"
+level: 2020
+objective: "Understand a neural network's basic building block: a neuron that weighs its input and decides whether to 'fire'."
+explanation: |
+  A neural network is a machine learning model loosely inspired by neurons in the brain. Each artificial "neuron" takes a number in, multiplies it by a weight (how important that input is), and compares the total against a threshold to decide whether to "fire" (activate) or stay quiet.
+example_code: |
+  input_value = 3
+  weight = 2
+  threshold = 10
+  total = input_value * weight
+  if total >= threshold:
+      print("Neuron fires! Total: " + str(total))
+  else:
+      print("Neuron stays quiet. Total: " + str(total))
+starter_code: |
+  input_value = 3
+  weight = 2
+  threshold = 10
+  total = input_value * weight
+  if total >= threshold:
+      print("Neuron fires! Total: " + str(total))
+  else:
+      print("Neuron stays quiet. Total: " + str(total))
+challenge: |
+  🎯 Challenge: Change input_value to 6, then run it.
+expected_output: |
+  Neuron fires! Total: 12
+hints:
+  - "Change the 3 after input_value = to a 6"
+  - "6 * 2 = 12, which is now >= the threshold of 10, so the neuron fires."
+  - "It should look like: input_value = 6"
+reward_stars: 2
+badge: null
+category: ai_advanced
+category_level: 1
+topic: "Neural Networks"
+concept_tags: [neural-networks, conditionals]

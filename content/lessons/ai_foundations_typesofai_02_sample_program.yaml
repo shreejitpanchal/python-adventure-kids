@@ -1,0 +1,31 @@
+id: ai_foundations_typesofai_2
+title: "Your Sample Program with Types of AI 🏷️"
+level: 2008
+objective: "Classify several real AI systems as narrow or general."
+explanation: |
+  Almost every AI system you've heard of is narrow AI -- built for one job. This program sorts a few well-known examples into narrow vs. general, so you can see just how rare (and mostly hypothetical) general AI really is.
+example_code: |
+  ai_systems = {"chess engine": "narrow", "movie recommender": "narrow", "human-like reasoning AI": "general"}
+  for system, kind in ai_systems.items():
+      print(system + " is an example of " + kind + " AI")
+starter_code: |
+  ai_systems = {"chess engine": "narrow", "movie recommender": "narrow", "human-like reasoning AI": "general"}
+  for system, kind in ai_systems.items():
+      print(system + " is an example of " + kind + " AI")
+challenge: |
+  🎯 Challenge: Add "spam filter": "narrow" to ai_systems, then run it.
+expected_output: |
+  chess engine is an example of narrow AI
+  movie recommender is an example of narrow AI
+  human-like reasoning AI is an example of general AI
+  spam filter is an example of narrow AI
+hints:
+  - "Add , \"spam filter\": \"narrow\" inside the ai_systems dictionary."
+  - "Dictionaries remember the order items were added, so spam filter prints last."
+  - "It should look like: ..., \"human-like reasoning AI\": \"general\", \"spam filter\": \"narrow\"}"
+reward_stars: 3
+badge: null
+category: ai_foundations
+category_level: 8
+topic: "Types of AI"
+concept_tags: [ai-types, dictionaries]

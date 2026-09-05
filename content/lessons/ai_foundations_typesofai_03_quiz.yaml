@@ -1,0 +1,19 @@
+id: ai_foundations_typesofai_3
+title: "Topic Quiz: Types of AI ❓"
+level: 2009
+objective: "Test what you've learned about types of AI."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about types of AI.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: ai_foundations
+category_level: 9
+topic: "Types of AI"
+concept_tags: [ai-types]
+is_quiz: true

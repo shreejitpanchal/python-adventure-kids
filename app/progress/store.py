@@ -53,6 +53,19 @@ CREATE TABLE IF NOT EXISTS player_xp (
 # XP cost to clear level N is N * 100 (level 1->2 costs 100, 2->3 costs 200, ...).
 _XP_PER_LEVEL_STEP = 100
 
+# export_progress_data()/import_progress_data()'s JSON shape version -- bump
+# this and add a migration branch in import_progress_data() if the shape
+# ever needs to change; a file from a mismatched version is rejected
+# outright rather than guessed at.
+PROGRESS_EXPORT_FORMAT_VERSION = 1
+
+
+class InvalidProgressFile(ValueError):
+    """Raised by import_progress_data() when the given data isn't a
+    recognized progress export (wrong shape or unsupported format_version)
+    -- callers should show this message to the user rather than letting it
+    corrupt the store."""
+
 # event_types that count as a struggling attempt for get_recent_failure_count().
 _FAILURE_EVENT_TYPES = {"attempt_error", "attempt_wrong_output", "attempt_timeout", "attempt_blocked"}
 
@@ -384,6 +397,109 @@ class ProgressStore:
             badges_earned=badges_earned,
             active_days=len(active_dates),
         )
+
+    # -- Export / import -----------------------------------------------------
+    def export_progress_data(self) -> dict:
+        """A JSON-serializable snapshot of every progress table -- the
+        Settings screen's "Export Progress" writes this straight to a
+        .json file via json.dump(); import_progress_data() below is its
+        exact inverse."""
+        with closing(self._conn.cursor()) as cur:
+            cur.execute(
+                "SELECT level, total_stars, current_lesson_id, streak_days, last_played_date FROM profile WHERE id = 1"
+            )
+            level, total_stars, current_lesson_id, streak_days, last_played_date = cur.fetchone()
+
+            cur.execute("SELECT lesson_id, stars_earned, completed_at FROM lesson_completions ORDER BY lesson_id")
+            lesson_completions = [
+                {"lesson_id": row[0], "stars_earned": row[1], "completed_at": row[2]} for row in cur.fetchall()
+            ]
+
+            cur.execute("SELECT badge_id, earned_at FROM badges ORDER BY earned_at")
+            badges = [{"badge_id": row[0], "earned_at": row[1]} for row in cur.fetchall()]
+
+            cur.execute("SELECT lesson_id, event_type, detail, timestamp FROM activity_log ORDER BY id")
+            activity_log = [
+                {"lesson_id": row[0], "event_type": row[1], "detail": row[2], "timestamp": row[3]}
+                for row in cur.fetchall()
+            ]
+
+            cur.execute("SELECT score, total, completed_at FROM quiz_attempts ORDER BY id")
+            quiz_attempts = [
+                {"score": row[0], "total": row[1], "completed_at": row[2]} for row in cur.fetchall()
+            ]
+
+            cur.execute("SELECT total_xp FROM player_xp WHERE id = 1")
+            (total_xp,) = cur.fetchone()
+
+        return {
+            "format_version": PROGRESS_EXPORT_FORMAT_VERSION,
+            "exported_at": _now(),
+            "profile": {
+                "level": level,
+                "total_stars": total_stars,
+                "current_lesson_id": current_lesson_id,
+                "streak_days": streak_days,
+                "last_played_date": last_played_date,
+            },
+            "lesson_completions": lesson_completions,
+            "badges": badges,
+            "activity_log": activity_log,
+            "quiz_attempts": quiz_attempts,
+            "player_xp": {"total_xp": total_xp},
+        }
+
+    def import_progress_data(self, data: dict) -> None:
+        """Replaces ALL current progress with `data` (as produced by
+        export_progress_data()). Callers MUST confirm with the user before
+        calling this -- it permanently discards existing progress, the
+        same destructive contract as reset_progress(), just replacing with
+        imported data instead of blank defaults."""
+        if not isinstance(data, dict) or data.get("format_version") != PROGRESS_EXPORT_FORMAT_VERSION:
+            raise InvalidProgressFile(
+                "This file doesn't look like a Python Adventure progress export."
+            )
+
+        profile = data.get("profile", {})
+        with self._conn:
+            self._conn.execute("DELETE FROM lesson_completions")
+            self._conn.execute("DELETE FROM badges")
+            self._conn.execute("DELETE FROM activity_log")
+            self._conn.execute("DELETE FROM quiz_attempts")
+
+            self._conn.execute(
+                """UPDATE profile SET level = ?, total_stars = ?, current_lesson_id = ?,
+                   streak_days = ?, last_played_date = ? WHERE id = 1""",
+                (
+                    profile.get("level", 1), profile.get("total_stars", 0),
+                    profile.get("current_lesson_id"), profile.get("streak_days", 0),
+                    profile.get("last_played_date"),
+                ),
+            )
+            self._conn.execute(
+                "UPDATE player_xp SET total_xp = ? WHERE id = 1",
+                (data.get("player_xp", {}).get("total_xp", 0),),
+            )
+            for row in data.get("lesson_completions", []):
+                self._conn.execute(
+                    "INSERT INTO lesson_completions (lesson_id, stars_earned, completed_at) VALUES (?, ?, ?)",
+                    (row["lesson_id"], row["stars_earned"], row["completed_at"]),
+                )
+            for row in data.get("badges", []):
+                self._conn.execute(
+                    "INSERT INTO badges (badge_id, earned_at) VALUES (?, ?)",
+                    (row["badge_id"], row["earned_at"]),
+                )
+            for row in data.get("activity_log", []):
+                self._conn.execute(
+                    "INSERT INTO activity_log (lesson_id, event_type, detail, timestamp) VALUES (?, ?, ?, ?)",
+                    (row.get("lesson_id"), row["event_type"], row.get("detail", ""), row["timestamp"]),
+                )
+            for row in data.get("quiz_attempts", []):
+                self._conn.execute(
+                    "INSERT INTO quiz_attempts (score, total, completed_at) VALUES (?, ?, ?)",
+                    (row["score"], row["total"], row["completed_at"]),
+                )
 
     # -- Parent controls ---------------------------------------------------
     def reset_progress(self) -> None:

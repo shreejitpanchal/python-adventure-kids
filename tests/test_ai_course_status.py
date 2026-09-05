@@ -48,12 +48,12 @@ def test_status_reflects_real_progress(engine, progress, all_ai_course_lesson_id
     assert status.stars_earned == 5
 
 
-def test_ai_foundations_chapter_shows_0_of_6(engine, progress):
+def test_ai_foundations_chapter_shows_0_of_9(engine, progress):
     status = compute_course_status(engine, progress, AI_ML_COURSE.categories)
     chapter = next(c for c in status.chapters if c.category == "ai_foundations")
     assert chapter.completed_count == 0
-    assert chapter.total_count == 6
-    assert [t.topic for t in chapter.topics] == ["What is AI?", "Rule-Based Decisions"]
+    assert chapter.total_count == 9
+    assert [t.topic for t in chapter.topics] == ["What is AI?", "Rule-Based Decisions", "Types of AI"]
     for topic in chapter.topics:
         assert topic.total_count == 3
 
@@ -64,6 +64,16 @@ def test_ai_tools_chapter_shows_0_of_6(engine, progress):
     assert chapter.completed_count == 0
     assert chapter.total_count == 6
     assert [t.topic for t in chapter.topics] == ["What is Machine Learning?", "What is MCP?"]
+    for topic in chapter.topics:
+        assert topic.total_count == 3
+
+
+def test_ai_advanced_chapter_shows_0_of_6(engine, progress):
+    status = compute_course_status(engine, progress, AI_ML_COURSE.categories)
+    chapter = next(c for c in status.chapters if c.category == "ai_advanced")
+    assert chapter.completed_count == 0
+    assert chapter.total_count == 6
+    assert [t.topic for t in chapter.topics] == ["Neural Networks", "MCP Framework"]
     for topic in chapter.topics:
         assert topic.total_count == 3
 

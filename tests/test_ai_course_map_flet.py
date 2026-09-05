@@ -48,14 +48,14 @@ def test_one_card_per_chapter_in_curriculum_order(state):
     assert titles == [get_category_meta(c).title for c in AI_ML_COURSE.categories]
 
 
-def test_ai_foundations_card_shows_0_of_6(state):
+def test_ai_foundations_card_shows_0_of_9(state):
     page = FakePage()
     view = build_course_map_view(page, state, course=AI_ML_COURSE)
     card = next(
         c for c in _chapter_cards(view)
         if c.content.controls[0].controls[1].value == get_category_meta("ai_foundations").title
     )
-    assert card.content.controls[1].value == "0/6 items"
+    assert card.content.controls[1].value == "0/9 items"
 
 
 def test_ai_tools_card_shows_0_of_6(state):
@@ -64,6 +64,16 @@ def test_ai_tools_card_shows_0_of_6(state):
     card = next(
         c for c in _chapter_cards(view)
         if c.content.controls[0].controls[1].value == get_category_meta("ai_tools").title
+    )
+    assert card.content.controls[1].value == "0/6 items"
+
+
+def test_ai_advanced_card_shows_0_of_6(state):
+    page = FakePage()
+    view = build_course_map_view(page, state, course=AI_ML_COURSE)
+    card = next(
+        c for c in _chapter_cards(view)
+        if c.content.controls[0].controls[1].value == get_category_meta("ai_advanced").title
     )
     assert card.content.controls[1].value == "0/6 items"
 

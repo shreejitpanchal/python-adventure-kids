@@ -6,8 +6,11 @@ ResponsiveRow -- see app/ui/dashboard_flet.py's module docstring for why
 Flet version)."""
 from __future__ import annotations
 
+import json
+
 import flet as ft
 
+from app.progress.store import InvalidProgressFile
 from app.ui.app_state_flet import AppState
 from app.ui.theme_flet import FONT_FAMILY_PRESETS, THEME_PRESETS, ThemePreset, scaled
 from app.version import get_version_label
@@ -40,9 +43,119 @@ def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
         padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
         controls=[
             header, _build_sound_card(page, state), _build_font_card(page, state),
-            _build_theme_card(page, state), _build_version_row(state), ft.Container(height=16),
+            _build_theme_card(page, state), _build_progress_card(page, state),
+            _build_version_row(state), ft.Container(height=16),
         ],
     )
+
+
+def _build_progress_card(page: ft.Page, state: AppState) -> ft.Control:
+    theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
+
+    status_text = ft.Text("", size=fs(13), color=theme.success)
+
+    async def on_export(e: ft.ControlEvent) -> None:
+        path = await state.file_picker.save_file(
+            dialog_title="Export Progress",
+            file_name="python_adventure_progress.json",
+            allowed_extensions=["json"],
+        )
+        if not path:
+            return
+        if not path.lower().endswith(".json"):
+            path += ".json"
+        data = state.progress.export_progress_data()
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+        except OSError as exc:
+            status_text.value = f"Couldn't save file: {exc}"
+            status_text.color = theme.danger
+            page.update()
+            return
+        status_text.value = f"Progress exported to {path}"
+        status_text.color = theme.success
+        page.update()
+
+    async def on_import(e: ft.ControlEvent) -> None:
+        files = await state.file_picker.pick_files(
+            dialog_title="Import Progress", allowed_extensions=["json"], allow_multiple=False,
+        )
+        if not files:
+            return
+        try:
+            with open(files[0].path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except (OSError, json.JSONDecodeError) as exc:
+            status_text.value = f"Couldn't read file: {exc}"
+            status_text.color = theme.danger
+            page.update()
+            return
+        _confirm_import(page, state, data, status_text)
+
+    return ft.Container(
+        content=ft.Column(
+            [
+                ft.Text("💾 Progress", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
+                ft.Text(
+                    "Save your progress to a file, or load progress from a file you exported before.",
+                    size=fs(13), color=theme.text_muted,
+                ),
+                ft.Row(
+                    [
+                        ft.Button(
+                            "⬇️ Export Progress", on_click=on_export, height=44,
+                            style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+                        ),
+                        ft.Button(
+                            "⬆️ Import Progress", on_click=on_import, height=44,
+                            style=ft.ButtonStyle(bgcolor=theme.danger, color="#FFFFFF"),
+                        ),
+                    ],
+                    wrap=True, spacing=8,
+                ),
+                status_text,
+            ],
+            spacing=8,
+        ),
+        bgcolor=theme.card, border_radius=20, padding=24,
+    )
+
+
+def _confirm_import(page: ft.Page, state: AppState, data: dict, status_text: ft.Text) -> None:
+    theme = state.theme
+
+    def cancel(e=None) -> None:
+        page.pop_dialog()
+
+    def do_import(e=None) -> None:
+        try:
+            state.progress.import_progress_data(data)
+        except InvalidProgressFile as exc:
+            page.pop_dialog()
+            status_text.value = str(exc)
+            status_text.color = theme.danger
+            page.update()
+            return
+        page.pop_dialog()
+        status_text.value = "Progress imported successfully."
+        status_text.color = theme.success
+        page.update()
+
+    dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Import progress?"),
+        content=ft.Text(
+            "Importing will replace ALL current progress with the data from this file. "
+            "This can't be undone."
+        ),
+        actions=[
+            ft.TextButton("Cancel", on_click=cancel),
+            ft.TextButton("Import & Overwrite", on_click=do_import, style=ft.ButtonStyle(color=theme.danger)),
+        ],
+    )
+    page.show_dialog(dialog)
 
 
 def _build_version_row(state: AppState) -> ft.Control:

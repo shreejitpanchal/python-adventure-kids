@@ -1,0 +1,56 @@
+id: ai_advanced_mcpframework_2
+title: "Your Sample Program with the MCP Framework 🧰"
+level: 2024
+objective: "Route a request to the correct kind of building block (tool, resource, or prompt) using its 'kind' field."
+explanation: |
+  With all three kinds of building blocks available at once, the framework needs to check request["kind"] first, then look up request["name"] in the matching dictionary -- a tool gets *called*, but a resource or prompt is just *read*.
+example_code: |
+  def get_weather():
+      return "Sunny in Paris"
+
+  tools = {"get_weather": get_weather}
+  resources = {"weather_data.txt": "Temperature: 22C"}
+  prompts = {"summarize": "Please summarize the weather."}
+
+  request = {"kind": "tool", "name": "get_weather"}
+
+  if request["kind"] == "tool":
+      result = tools[request["name"]]()
+  elif request["kind"] == "resource":
+      result = resources[request["name"]]
+  else:
+      result = prompts[request["name"]]
+
+  print(result)
+starter_code: |
+  def get_weather():
+      return "Sunny in Paris"
+
+  tools = {"get_weather": get_weather}
+  resources = {"weather_data.txt": "Temperature: 22C"}
+  prompts = {"summarize": "Please summarize the weather."}
+
+  request = {"kind": "tool", "name": "get_weather"}
+
+  if request["kind"] == "tool":
+      result = tools[request["name"]]()
+  elif request["kind"] == "resource":
+      result = resources[request["name"]]
+  else:
+      result = prompts[request["name"]]
+
+  print(result)
+challenge: |
+  🎯 Challenge: Change request's "kind" to "resource" and "name" to "weather_data.txt", then run it.
+expected_output: |
+  Temperature: 22C
+hints:
+  - "Change \"tool\" to \"resource\", and \"get_weather\" to \"weather_data.txt\" inside request."
+  - "This time the elif request[\"kind\"] == \"resource\": branch runs, reading straight from the dictionary instead of calling a function."
+  - "It should look like: request = {\"kind\": \"resource\", \"name\": \"weather_data.txt\"}"
+reward_stars: 3
+badge: null
+category: ai_advanced
+category_level: 5
+topic: "MCP Framework"
+concept_tags: [mcp-framework, dictionaries, functions]

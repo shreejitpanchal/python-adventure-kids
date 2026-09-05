@@ -1,0 +1,42 @@
+id: ai_advanced_neuralnetworks_2
+title: "Your Sample Program with Neural Networks 🕸️"
+level: 2021
+objective: "Combine multiple weighted inputs into one neuron's decision, like a simple perceptron."
+explanation: |
+  Real neurons usually take several inputs at once, each with its own weight. This adds up every input times its matching weight -- the same idea behind a real "perceptron," just with two inputs instead of hundreds.
+example_code: |
+  inputs = [2, 3]
+  weights = [1, 2]
+  total = 0
+  for i in range(len(inputs)):
+      total = total + inputs[i] * weights[i]
+  threshold = 10
+  if total >= threshold:
+      print("Neuron fires! Total: " + str(total))
+  else:
+      print("Neuron stays quiet. Total: " + str(total))
+starter_code: |
+  inputs = [2, 3]
+  weights = [1, 2]
+  total = 0
+  for i in range(len(inputs)):
+      total = total + inputs[i] * weights[i]
+  threshold = 10
+  if total >= threshold:
+      print("Neuron fires! Total: " + str(total))
+  else:
+      print("Neuron stays quiet. Total: " + str(total))
+challenge: |
+  🎯 Challenge: Change inputs to [4, 3], then run it.
+expected_output: |
+  Neuron fires! Total: 10
+hints:
+  - "Change the 2 to a 4 inside the inputs list."
+  - "4 * 1 + 3 * 2 = 10, which now meets the threshold exactly."
+  - "It should look like: inputs = [4, 3]"
+reward_stars: 3
+badge: null
+category: ai_advanced
+category_level: 2
+topic: "Neural Networks"
+concept_tags: [neural-networks, loops, lists]

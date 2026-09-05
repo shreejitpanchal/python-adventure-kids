@@ -66,14 +66,18 @@ Settings font controls — due for a refresh.*
   timeout and doesn't compose safely with real concurrency. Every topic
   still gets its own "What is it?" explanation, a hands-on sample program,
   and a topic quiz — 90 lessons in all.
-- **AI & Machine Learning course** — a second, standalone 2-chapter course
-  (AI Foundations, Machine Learning & Tools) with its own dashboard,
-  parallel to Python Learning. AI Foundations covers What is AI? and
-  Rule-Based Decisions (including a simulated rule-based chatbot exercise);
-  Machine Learning & Tools covers What is Machine Learning? (with a
-  "Train the Robot" pattern-matching mini-game) and What is MCP?. Every
-  concept is taught through plain-Python simulation — dictionaries,
-  if/elif chains — since the sandbox has no real AI/ML libraries.
+- **AI & Machine Learning course** — a second, standalone 3-chapter course
+  (AI Foundations, Machine Learning & Tools, Advanced AI Concepts) with its
+  own dashboard, parallel to Python Learning, deliberately ordered
+  low-to-high level. AI Foundations (beginner) covers What is AI?,
+  Rule-Based Decisions (including a simulated rule-based chatbot exercise),
+  and Types of AI (narrow vs. general); Machine Learning & Tools
+  (intermediate) covers What is Machine Learning? (with a "Train the Robot"
+  pattern-matching mini-game) and What is MCP?; Advanced AI Concepts covers
+  Neural Networks and a deeper MCP Framework topic (tools, resources, and
+  prompts as the three request kinds). Every concept is taught through
+  plain-Python simulation — dictionaries, if/elif chains — since the
+  sandbox has no real AI/ML libraries. 21 lessons in all.
 - **Practice by Category** — jump into any topic directly and work through
   its full 20-level progression at your own pace, independent of Today's
   Mission.
@@ -96,8 +100,10 @@ Settings font controls — due for a refresh.*
   and day streaks.
 - **A Settings screen that's actually comfortable to use** — multiple color
   themes (including dark mode), adjustable font size and font style so
-  text is easy to read on anything from a phone to a desktop monitor, and
-  a sound toggle.
+  text is easy to read on anything from a phone to a desktop monitor, a
+  sound toggle, and export/import so progress can be backed up to (or
+  restored from) a JSON file — importing always asks for confirmation
+  first, since it replaces all current progress.
 - **A Parent Area** — a summary of progress, recent activity, a way to
   rename your child's profile, and a way to reset progress if needed.
 - **100% offline and private** — everything runs and stays on your device.

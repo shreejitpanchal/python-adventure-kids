@@ -380,6 +380,61 @@ LESSON_SOLUTIONS = {
         'result = tool_function(request["args"]["city"])\n'
         'print(result)'
     ),
+    "ai_foundations_typesofai_1": (
+        'ai_type = "narrow"\n'
+        'task = "play chess"\n'
+        'if ai_type == "narrow":\n'
+        '    print("This AI can only do one job: " + task)\n'
+        'else:\n'
+        '    print("This AI could learn to do almost anything!")'
+    ),
+    "ai_foundations_typesofai_2": (
+        'ai_systems = {"chess engine": "narrow", "movie recommender": "narrow", '
+        '"human-like reasoning AI": "general", "spam filter": "narrow"}\n'
+        'for system, kind in ai_systems.items():\n'
+        '    print(system + " is an example of " + kind + " AI")'
+    ),
+    "ai_advanced_neuralnetworks_1": (
+        'input_value = 6\n'
+        'weight = 2\n'
+        'threshold = 10\n'
+        'total = input_value * weight\n'
+        'if total >= threshold:\n'
+        '    print("Neuron fires! Total: " + str(total))\n'
+        'else:\n'
+        '    print("Neuron stays quiet. Total: " + str(total))'
+    ),
+    "ai_advanced_neuralnetworks_2": (
+        'inputs = [4, 3]\n'
+        'weights = [1, 2]\n'
+        'total = 0\n'
+        'for i in range(len(inputs)):\n'
+        '    total = total + inputs[i] * weights[i]\n'
+        'threshold = 10\n'
+        'if total >= threshold:\n'
+        '    print("Neuron fires! Total: " + str(total))\n'
+        'else:\n'
+        '    print("Neuron stays quiet. Total: " + str(total))'
+    ),
+    "ai_advanced_mcpframework_1": (
+        'request = {"kind": "resource", "name": "weather_data.txt"}\n'
+        'print("Requesting a " + request["kind"] + " called " + request["name"])'
+    ),
+    "ai_advanced_mcpframework_2": (
+        'def get_weather():\n'
+        '    return "Sunny in Paris"\n\n'
+        'tools = {"get_weather": get_weather}\n'
+        'resources = {"weather_data.txt": "Temperature: 22C"}\n'
+        'prompts = {"summarize": "Please summarize the weather."}\n\n'
+        'request = {"kind": "resource", "name": "weather_data.txt"}\n\n'
+        'if request["kind"] == "tool":\n'
+        '    result = tools[request["name"]]()\n'
+        'elif request["kind"] == "resource":\n'
+        '    result = resources[request["name"]]\n'
+        'else:\n'
+        '    result = prompts[request["name"]]\n\n'
+        'print(result)'
+    ),
 }
 
 

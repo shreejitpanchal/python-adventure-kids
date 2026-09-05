@@ -63,6 +63,14 @@ def main(page: ft.Page) -> None:
     # itself, the Settings toggle) is untouched and ready to re-wire with
     # a one-line change once that's confirmed.
 
+    # Unlike sound_player, ft.FilePicker is a core Flet control (no
+    # separate Flutter package/compilation step), so it's safe to always
+    # construct -- built once per session and reused for every Settings
+    # visit rather than rebuilt per view (see AppState.file_picker's
+    # docstring for why: it self-registers into page.overlay).
+    state.file_picker = ft.FilePicker()
+    page.overlay.append(state.file_picker)
+
     # Python-side back-navigation stack -- see module docstring. Holds
     # previous routes, most recent last; "/setup" is never pushed since
     # it's a one-time onboarding flow, not a screen to return to.

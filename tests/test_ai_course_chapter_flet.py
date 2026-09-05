@@ -37,16 +37,16 @@ def state(tmp_path, monkeypatch):
     s.close()
 
 
-def test_ai_foundations_renders_two_topic_headers_and_six_items(state):
+def test_ai_foundations_renders_three_topic_headers_and_nine_items(state):
     page = FakePage()
     view = build_course_chapter_view(page, state, _CHAPTER, course=AI_ML_COURSE)
     rest = view.controls[2:]
 
     headers = [c for c in rest if isinstance(c, ft.Row)]
     items = [c for c in rest if isinstance(c, ft.Container)]
-    expected_topics = ["What is AI?", "Rule-Based Decisions"]
+    expected_topics = ["What is AI?", "Rule-Based Decisions", "Types of AI"]
     assert [h.controls[0].value for h in headers] == [f"{get_topic_icon(t)} {t}" for t in expected_topics]
-    assert len(items) == 6
+    assert len(items) == 9
 
 
 def test_only_first_item_of_each_topic_unlocked_initially(state):
@@ -54,13 +54,17 @@ def test_only_first_item_of_each_topic_unlocked_initially(state):
     view = build_course_chapter_view(page, state, _CHAPTER, course=AI_ML_COURSE)
     items = [c for c in view.controls[2:] if isinstance(c, ft.Container)]
 
-    # Indices 0-2 are "What is AI?"'s 3 items, 3-5 are "Rule-Based Decisions"'.
+    # Indices 0-2 are "What is AI?"'s 3 items, 3-5 are "Rule-Based Decisions"',
+    # 6-8 are "Types of AI"'s.
     assert items[0].content.controls[2].disabled is False
     assert items[1].content.controls[2].disabled is True
     assert items[2].content.controls[2].disabled is True
     assert items[3].content.controls[2].disabled is False  # second topic's first item, always open
     assert items[4].content.controls[2].disabled is True
     assert items[5].content.controls[2].disabled is True
+    assert items[6].content.controls[2].disabled is False  # third topic's first item, always open
+    assert items[7].content.controls[2].disabled is True
+    assert items[8].content.controls[2].disabled is True
 
 
 def test_non_quiz_item_navigates_to_the_shared_lesson_route(state):

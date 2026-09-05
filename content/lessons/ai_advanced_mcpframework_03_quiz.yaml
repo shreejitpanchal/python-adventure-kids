@@ -1,0 +1,19 @@
+id: ai_advanced_mcpframework_3
+title: "Topic Quiz: MCP Framework ❓"
+level: 2025
+objective: "Test what you've learned about the MCP framework."
+explanation: |
+  Answer the multiple-choice questions below to show what you've learned about the MCP framework.
+example_code: ""
+starter_code: ""
+challenge: |
+  🎯 Answer the quiz questions below.
+expected_output: ""
+hints: []
+reward_stars: 3
+badge: null
+category: ai_advanced
+category_level: 6
+topic: "MCP Framework"
+concept_tags: [mcp-framework]
+is_quiz: true

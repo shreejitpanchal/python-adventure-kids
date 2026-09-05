@@ -217,9 +217,11 @@ A second, standalone course reached from the Learning Hub's "🤖 AI &
 Machine Learning" card, built on the exact same shared engine/screens as
 the Python Learning course above (see `app/engine/courses.py`'s
 `CourseSpec`) — just a different `categories` list and `badge_id`
-(`ai_ml_graduate`). It has 2 chapters: `ai_foundations` (topics "What is
-AI?" and "Rule-Based Decisions") and `ai_tools` (topics "What is Machine
-Learning?" and "What is MCP?"), 6 items each, 12 lessons total.
+(`ai_ml_graduate`). It has 3 chapters, deliberately ordered low-to-high
+level: `ai_foundations` (beginner: "What is AI?", "Rule-Based Decisions",
+"Types of AI" — 9 items), `ai_tools` (intermediate: "What is Machine
+Learning?", "What is MCP?" — 6 items), and `ai_advanced` (advanced:
+"Neural Networks", "MCP Framework" — 6 items) — 21 lessons total.
 
 Since the sandbox has no real AI/ML libraries and never should (see "Code
 execution sandbox" below), every concept is taught by simulation in plain
@@ -234,7 +236,14 @@ is a themed mini-game: a dict of labeled training examples the "robot"
 looks up an unseen input against via `.get(key, default)`. "What is MCP?"
 simulates Model Context Protocol as a dispatch dictionary routing a
 structured request (`{"tool": ..., "args": {...}}`) to the matching plain
-Python function — no real network or protocol library involved.
+Python function — no real network or protocol library involved. "Types of
+AI" contrasts narrow AI (built for one task) with hypothetical general AI.
+"Neural Networks" simulates a single artificial neuron as a weighted-sum
+threshold check, then several inputs at once. "MCP Framework" goes deeper
+than "What is MCP?" — a request now carries a `kind` (`tool`/`resource`/
+`prompt`) alongside its `name`, routed to one of three separate
+dictionaries depending on that kind, mirroring a real MCP server's three
+building-block categories.
 
 ### Adaptive practice
 
@@ -393,3 +402,25 @@ app-sandboxed storage directory without touching anything else. On first
 run, `get_data_dir()` (`app/config/settings.py`) copies forward any data
 left in this repo's old dev-convenience `app-data/` location — so moving
 where data lives never resets a child's progress.
+
+**Export/import** — the Settings screen's "💾 Progress" card lets a parent
+back up or restore progress manually, independent of the platform data
+directory. `ProgressStore.export_progress_data()` (`app/progress/store.py`)
+returns a plain JSON-serializable dict covering every table (profile,
+lesson completions, badges, activity log, quiz attempts, XP), tagged with
+a `format_version` (currently `1`) so a future shape change can add a
+migration branch rather than guessing at an old file's structure.
+`import_progress_data()` is its exact inverse — it **fully replaces**
+current progress (delete + re-insert, the same destructive contract as
+`reset_progress()`), and raises `InvalidProgressFile` for anything that
+isn't a recognized export rather than silently corrupting the store. Both
+UIs require an explicit confirm step before import actually runs (CTk: a
+`CTkToplevel` modal, mirroring the Parent Area's reset-progress confirm in
+`app/parent/dashboard.py`; Flet: `page.show_dialog(ft.AlertDialog(...))`,
+the same pattern as `parent_dashboard_flet.py`'s `_confirm_reset()`) —
+export itself needs no confirmation, since it never touches existing data.
+The Flet side's `ft.FilePicker` is constructed once per session in
+`app_window_flet.main()` and stored on `AppState.file_picker` (same
+one-per-session-not-per-screen reasoning as `SoundPlayerFlet` — a fresh
+`FilePicker` self-registers into `page.overlay` on construction, so
+building one per Settings visit would leak instances).
