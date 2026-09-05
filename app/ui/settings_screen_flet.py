@@ -53,9 +53,19 @@ def _build_progress_card(page: ft.Page, state: AppState) -> ft.Control:
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
 
-    status_text = ft.Text("", size=fs(13), color=theme.success)
+    # state.file_picker is None whenever a real ft.FilePicker isn't safe to
+    # use (currently: always, on this Flet build -- see AppState.file_picker's
+    # docstring for why). Guarded here too, defense-in-depth, in case a
+    # button somehow fires despite being disabled below.
+    unavailable = state.file_picker is None
+    status_text = ft.Text(
+        "Export/Import isn't available in this build yet." if unavailable else "",
+        size=fs(13), color=theme.text_muted if unavailable else theme.success,
+    )
 
     async def on_export(e: ft.ControlEvent) -> None:
+        if state.file_picker is None:
+            return
         path = await state.file_picker.save_file(
             dialog_title="Export Progress",
             file_name="python_adventure_progress.json",
@@ -79,6 +89,8 @@ def _build_progress_card(page: ft.Page, state: AppState) -> ft.Control:
         page.update()
 
     async def on_import(e: ft.ControlEvent) -> None:
+        if state.file_picker is None:
+            return
         files = await state.file_picker.pick_files(
             dialog_title="Import Progress", allowed_extensions=["json"], allow_multiple=False,
         )
@@ -105,11 +117,11 @@ def _build_progress_card(page: ft.Page, state: AppState) -> ft.Control:
                 ft.Row(
                     [
                         ft.Button(
-                            "⬇️ Export Progress", on_click=on_export, height=44,
+                            "⬇️ Export Progress", on_click=on_export, height=44, disabled=unavailable,
                             style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
                         ),
                         ft.Button(
-                            "⬆️ Import Progress", on_click=on_import, height=44,
+                            "⬆️ Import Progress", on_click=on_import, height=44, disabled=unavailable,
                             style=ft.ButtonStyle(bgcolor=theme.danger, color="#FFFFFF"),
                         ),
                     ],

@@ -24,12 +24,17 @@ class AppState:
         # directly, so sound-playing call sites must guard for that (see
         # app/ui/lesson_screen_flet.py's _play_success_sounds()).
         self.sound_player = None
-        # Same one-per-session-not-per-screen reasoning as sound_player --
-        # a real ft.FilePicker registers itself in page.overlay on
-        # construction, so building a fresh one on every Settings visit
-        # would leak instances into page.overlay. Set once by
-        # app_window_flet.main(); tests that need one inject a fake with
-        # matching async save_file()/pick_files() methods.
+        # Stays None for the same reason sound_player does: ft.FilePicker
+        # renders as an "Unknown control: FilePicker" red banner on the
+        # generic Flet live-preview client (confirmed via real-device
+        # Android testing) -- and since it self-registers into
+        # page.overlay, which is attached at startup regardless of route,
+        # it broke app launch entirely, not just the Settings screen it's
+        # actually used from. Settings' Export/Import handlers guard for
+        # this being None and show a friendly message instead of crashing
+        # (see settings_screen_flet.py's _build_progress_card()). Tests
+        # that need one inject a fake with matching async
+        # save_file()/pick_files() methods.
         self.file_picker = None
 
     @property

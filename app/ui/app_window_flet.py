@@ -6,15 +6,23 @@ change, rebuilding exactly one view fresh each time (cheap, and avoids
 ever showing stale progress/XP numbers on a view built earlier).
 
 Because page.views is deliberately kept at length 1, it can't double as
-Flet's own back-navigation stack (Flet's on_view_pop pattern expects
-page.views to hold real history to pop from -- with only ever one entry,
-the system/hardware back button on Android had nothing to pop and closed
-the app instead of returning to the previous screen). `history` below is
-a small Python-side stack of prior routes that stands in for that: every
-ordinary forward navigation (any page.go(...) from a button, not a back
-step) pushes the screen being left; on_view_pop pops it and re-navigates
-there; at the true root (Hub, history empty) the back button closes the
-app, matching normal Android behavior for a top-level screen.
+Flet's own back-navigation stack. `history` below is a small Python-side
+stack of prior routes that stands in for that: every ordinary forward
+navigation (any page.go(...) from a button, not a back step) pushes the
+screen being left; at the true root (Hub, history empty) the back button
+closes the app, matching normal Android behavior for a top-level screen.
+
+Each View's `can_pop` defaults to True in this Flet version, which lets
+Flutter's Navigator pop it immediately without ever asking Python first --
+with only one view ever on the stack, a "successful" pop has nothing left
+to reveal, so it just closes the app outright (confirmed via real-device
+Android testing: the hardware back button always closed the app, never
+returned to the previous screen, regardless of the `history` stack below).
+Every view built here gets `can_pop=False` + `on_confirm_pop=confirm_pop`
+instead, so Flutter asks Python before acting: confirm_pop() consults
+`history` and either navigates to the previous route (canceling the actual
+pop, since navigation happens via page.go() instead) or, when history is
+empty, lets the pop proceed and the app close.
 """
 from __future__ import annotations
 
@@ -63,19 +71,32 @@ def main(page: ft.Page) -> None:
     # itself, the Settings toggle) is untouched and ready to re-wire with
     # a one-line change once that's confirmed.
 
-    # Unlike sound_player, ft.FilePicker is a core Flet control (no
-    # separate Flutter package/compilation step), so it's safe to always
-    # construct -- built once per session and reused for every Settings
-    # visit rather than rebuilt per view (see AppState.file_picker's
-    # docstring for why: it self-registers into page.overlay).
-    state.file_picker = ft.FilePicker()
-    page.overlay.append(state.file_picker)
+    # state.file_picker stays None (its default) for the exact same reason
+    # sound_player does, confirmed via the same kind of real-device testing:
+    # ft.FilePicker also renders as an "Unknown control: FilePicker" red
+    # banner on the generic live-preview client -- and because
+    # page.overlay controls are attached at startup regardless of route,
+    # this one broke app launch entirely, not just the Settings screen.
+    # Settings' Export/Import buttons already guard for file_picker being
+    # None (see settings_screen_flet.py) and show a friendly message
+    # instead of crashing. Re-enabling needs the same real `flet build apk`
+    # confirmation flet_audio's Audio control is waiting on above.
 
     # Python-side back-navigation stack -- see module docstring. Holds
     # previous routes, most recent last; "/setup" is never pushed since
     # it's a one-time onboarding flow, not a screen to return to.
     history: list[str] = []
     navigating_back = {"value": False}
+
+    async def confirm_pop(e: ft.ControlEvent) -> None:
+        view = e.control
+        if history:
+            previous_route = history.pop()
+            navigating_back["value"] = True
+            await view.confirm_pop(False)
+            page.go(previous_route)
+        else:
+            await view.confirm_pop(True)
 
     def route_change(_e: ft.RouteChangeEvent) -> None:
         route = page.route
@@ -132,21 +153,20 @@ def main(page: ft.Page) -> None:
         else:
             page.views.append(build_learning_hub_view(page, state))
 
+        # can_pop=False makes Flutter ask confirm_pop() before acting on a
+        # back-navigation attempt (hardware back button, included) instead
+        # of popping (and, since this is the only view, closing the app)
+        # immediately -- see module docstring for why can_pop's default of
+        # True bypassed the `history` stack entirely.
+        page.views[-1].can_pop = False
+        page.views[-1].on_confirm_pop = confirm_pop
+
         page.bgcolor = state.theme.bg
         page.theme_mode = ft.ThemeMode.DARK if state.theme.is_dark else ft.ThemeMode.LIGHT
         page.theme = ft.Theme(font_family=state.font_family)
         page.dark_theme = ft.Theme(font_family=state.font_family)
         page.update()
 
-    def view_pop(_e: ft.ViewPopEvent) -> None:
-        if history:
-            previous_route = history.pop()
-            navigating_back["value"] = True
-            page.go(previous_route)
-        else:
-            page.run_task(page.window.close)
-
     page.on_route_change = route_change
-    page.on_view_pop = view_pop
 
     page.go("/setup" if not state.settings.setup_complete else "/hub")

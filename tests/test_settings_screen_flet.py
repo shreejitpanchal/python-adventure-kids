@@ -190,3 +190,31 @@ def test_import_cancelled_file_pick_does_nothing(tmp_path, state):
 
     assert page.dialogs == []
     assert _status_text(view).value == ""
+
+
+# -- state.file_picker is None (its real default -- see AppState.file_picker's
+# docstring for why: ft.FilePicker renders as an "Unknown control" banner
+# and broke app launch on a real Android device) ---------------------------
+def test_buttons_disabled_and_message_shown_when_file_picker_unavailable(state):
+    assert state.file_picker is None  # the actual default, not overridden here
+    page = FakePage()
+    view = build_settings_view(page, state)
+
+    assert _export_button(view).disabled is True
+    assert _import_button(view).disabled is True
+    assert "isn't available" in _status_text(view).value
+
+
+def test_export_handler_no_ops_when_file_picker_unavailable(state):
+    page = FakePage()
+    view = build_settings_view(page, state)
+    asyncio.run(_export_button(view).on_click(None))
+    # Still the same "unavailable" message -- no crash, nothing written.
+    assert "isn't available" in _status_text(view).value
+
+
+def test_import_handler_no_ops_when_file_picker_unavailable(state):
+    page = FakePage()
+    view = build_settings_view(page, state)
+    asyncio.run(_import_button(view).on_click(None))
+    assert page.dialogs == []
