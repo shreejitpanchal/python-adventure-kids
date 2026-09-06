@@ -71,16 +71,20 @@ def main(page: ft.Page) -> None:
     # itself, the Settings toggle) is untouched and ready to re-wire with
     # a one-line change once that's confirmed.
 
-    # state.file_picker stays None (its default) for the exact same reason
-    # sound_player does, confirmed via the same kind of real-device testing:
-    # ft.FilePicker also renders as an "Unknown control: FilePicker" red
-    # banner on the generic live-preview client -- and because
-    # page.overlay controls are attached at startup regardless of route,
-    # this one broke app launch entirely, not just the Settings screen.
-    # Settings' Export/Import buttons already guard for file_picker being
-    # None (see settings_screen_flet.py) and show a friendly message
-    # instead of crashing. Re-enabling needs the same real `flet build apk`
-    # confirmation flet_audio's Audio control is waiting on above.
+    # Unlike sound_player, there's no state.file_picker built here: an
+    # earlier version of this code built one ft.FilePicker up front and
+    # added it to page.overlay -- the pattern SoundPlayerFlet uses for its
+    # Audio controls (see that class) -- which rendered as an "Unknown
+    # control: FilePicker" error on Android. The actual cause turned out to
+    # be different from sound_player's real limitation above: ft.FilePicker
+    # (and ft.Share) are Service controls, which self-register with
+    # whichever page is current via Service.init()'s
+    # context.page._services.register_service() the moment they're
+    # constructed inside a running page session -- page.overlay is a
+    # different, older registration path meant for visual overlay controls
+    # (like SnackBar), not Service controls. settings_screen_flet.py's
+    # export/import handlers construct a fresh ft.FilePicker()/ft.Share()
+    # inline instead, which registers correctly.
 
     # Python-side back-navigation stack -- see module docstring. Holds
     # previous routes, most recent last; "/setup" is never pushed since

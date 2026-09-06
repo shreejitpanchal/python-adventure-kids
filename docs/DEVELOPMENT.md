@@ -419,8 +419,23 @@ UIs require an explicit confirm step before import actually runs (CTk: a
 `app/parent/dashboard.py`; Flet: `page.show_dialog(ft.AlertDialog(...))`,
 the same pattern as `parent_dashboard_flet.py`'s `_confirm_reset()`) —
 export itself needs no confirmation, since it never touches existing data.
-The Flet side's `ft.FilePicker` is constructed once per session in
-`app_window_flet.main()` and stored on `AppState.file_picker` (same
-one-per-session-not-per-screen reasoning as `SoundPlayerFlet` — a fresh
-`FilePicker` self-registers into `page.overlay` on construction, so
-building one per Settings visit would leak instances).
+
+The Flet side reads/writes by **bytes**, not filesystem paths
+(`ft.FilePicker.save_file(src_bytes=...)` on export, `pick_files(with_data=
+True)` + `.bytes` on import) — the paths a native picker/share sheet hands
+back on Android are often `content://` URIs under scoped storage, not
+plain paths a bare `open()` call can read, so Flet's own byte-transfer
+sidesteps that entirely (works identically on desktop too). On mobile
+(`page.platform.is_mobile()`), export offers a Save to Device/Share/Cancel
+choice first, since there's no single obvious "save" target on a phone;
+Share goes through `ft.Share.share_files()` (a native OS share sheet, so
+the file can be handed to mail, cloud storage, etc. without hardcoding a
+target app). `ft.FilePicker`/`ft.Share` are constructed **fresh inside
+each handler call**, never held on `AppState` or added to `page.overlay`
+— both are `Service` controls that self-register with whichever page is
+current via `Service.init()`'s `context.page._services.register_service()`
+the moment they're constructed inside a running page session; adding a
+persisted instance to `page.overlay` (the pattern `SoundPlayerFlet` uses
+for its `Audio` controls) is a different, older registration path that
+doesn't apply to `Service` controls, and rendered as an "Unknown control:
+FilePicker" error on Android instead of working.

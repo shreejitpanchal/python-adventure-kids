@@ -7,6 +7,7 @@ Flet version)."""
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 
 import flet as ft
 
@@ -49,60 +50,126 @@ def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
     )
 
 
+def _export_filename() -> str:
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    return f"python_adventure_progress_{stamp}.json"
+
+
 def _build_progress_card(page: ft.Page, state: AppState) -> ft.Control:
+    """Export/import all progress as one JSON file. Export offers a plain
+    "save to device" file dialog on desktop, plus a native platform Share
+    sheet choice on mobile (Flet's Share service) so the file can be handed
+    off to whichever app the user picks there (mail, cloud storage, etc.)
+    -- there's no way to target one specific app directly, so this hands
+    the choice to the OS's own share sheet rather than assuming one.
+
+    ft.FilePicker/ft.Share are constructed fresh inside each handler,
+    never held on AppState or added to page.overlay: both are Service
+    controls that self-register with the current page via Service.init()'s
+    context.page._services.register_service() the moment they're
+    constructed inside a running page session. Persisting one instance and
+    adding it to page.overlay -- the pattern used for visual overlay
+    controls like SnackBar -- is a different, older registration path that
+    doesn't apply to Service controls, and is what rendered as an "Unknown
+    control: FilePicker" error on Android instead of actually working.
+
+    Reading/writing by bytes (src_bytes= on save, with_data=True + .bytes
+    on pick) rather than by filesystem path matters specifically on
+    Android: the paths a native picker/share sheet hands back there are
+    often content:// URIs under scoped storage, not plain paths a bare
+    open() call can read -- Flet's own file transfer over src_bytes/.bytes
+    sidesteps that entirely, and works identically on desktop too.
+    """
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
 
-    # state.file_picker is None whenever a real ft.FilePicker isn't safe to
-    # use (currently: always, on this Flet build -- see AppState.file_picker's
-    # docstring for why). Guarded here too, defense-in-depth, in case a
-    # button somehow fires despite being disabled below.
-    unavailable = state.file_picker is None
-    status_text = ft.Text(
-        "Export/Import isn't available in this build yet." if unavailable else "",
-        size=fs(13), color=theme.text_muted if unavailable else theme.success,
-    )
+    status_text = ft.Text("", size=fs(13), color=theme.success)
 
-    async def on_export(e: ft.ControlEvent) -> None:
-        if state.file_picker is None:
-            return
-        path = await state.file_picker.save_file(
-            dialog_title="Export Progress",
-            file_name="python_adventure_progress.json",
-            allowed_extensions=["json"],
-        )
-        if not path:
-            return
-        if not path.lower().endswith(".json"):
-            path += ".json"
-        data = state.progress.export_progress_data()
-        try:
-            with open(path, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=2)
-        except OSError as exc:
-            status_text.value = f"Couldn't save file: {exc}"
-            status_text.color = theme.danger
-            page.update()
-            return
-        status_text.value = f"Progress exported to {path}"
-        status_text.color = theme.success
+    def set_status(message: str, is_error: bool = False) -> None:
+        status_text.value = message
+        status_text.color = theme.danger if is_error else theme.success
         page.update()
 
-    async def on_import(e: ft.ControlEvent) -> None:
-        if state.file_picker is None:
+    async def save_export_to_device(payload: bytes, filename: str) -> None:
+        picker = ft.FilePicker()
+        try:
+            saved_path = await picker.save_file(
+                dialog_title="Export Progress", file_name=filename, src_bytes=payload,
+            )
+        except Exception as exc:  # native dialogs can raise platform-specific errors
+            set_status(f"Export failed: {exc}", is_error=True)
             return
-        files = await state.file_picker.pick_files(
-            dialog_title="Import Progress", allowed_extensions=["json"], allow_multiple=False,
-        )
+        set_status(f"Saved to {saved_path}." if saved_path else "Export cancelled.")
+
+    async def share_export(payload: bytes, filename: str) -> None:
+        sharer = ft.Share()
+        try:
+            result = await sharer.share_files(
+                [ft.ShareFile.from_bytes(payload, mime_type="application/json", name=filename)],
+                subject="Python Adventure progress backup",
+                text="Attached: a Python Adventure progress export.",
+            )
+        except Exception as exc:
+            set_status(f"Share failed: {exc}", is_error=True)
+            return
+        set_status("Shared." if result.status == ft.ShareResultStatus.SUCCESS else "Share cancelled.")
+
+    def show_mobile_export_choice(payload: bytes, filename: str) -> None:
+        def close(e=None) -> None:
+            page.pop_dialog()
+
+        def choose_save(e=None) -> None:
+            close()
+            page.run_task(save_export_to_device, payload, filename)
+
+        def choose_share(e=None) -> None:
+            close()
+            page.run_task(share_export, payload, filename)
+
+        page.show_dialog(ft.AlertDialog(
+            modal=False,
+            title=ft.Text("Export Progress"),
+            content=ft.Text(
+                "Save the backup file on this device, or share it through any app that "
+                "accepts files."
+            ),
+            actions=[
+                ft.TextButton("Save to Device", on_click=choose_save),
+                ft.TextButton("Share…", on_click=choose_share),
+                ft.TextButton("Cancel", on_click=close),
+            ],
+        ))
+
+    async def on_export(e: ft.ControlEvent) -> None:
+        payload = json.dumps(state.progress.export_progress_data(), indent=2).encode("utf-8")
+        filename = _export_filename()
+        if page.platform.is_mobile():
+            show_mobile_export_choice(payload, filename)
+        else:
+            await save_export_to_device(payload, filename)
+
+    async def on_import(e: ft.ControlEvent) -> None:
+        picker = ft.FilePicker()
+        try:
+            files = await picker.pick_files(
+                dialog_title="Import Progress",
+                file_type=ft.FilePickerFileType.CUSTOM,
+                allowed_extensions=["json"],
+                with_data=True,
+            )
+        except Exception as exc:
+            set_status(f"Import failed: {exc}", is_error=True)
+            return
         if not files:
             return
+        picked = files[0]
         try:
-            with open(files[0].path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-        except (OSError, json.JSONDecodeError) as exc:
-            status_text.value = f"Couldn't read file: {exc}"
-            status_text.color = theme.danger
-            page.update()
+            raw = picked.bytes
+            if raw is None:
+                raise ValueError("the selected file couldn't be read")
+            data = json.loads(raw.decode("utf-8"))
+        except (ValueError, json.JSONDecodeError) as exc:
+            set_status(f"Couldn't read file: {exc}", is_error=True)
             return
         _confirm_import(page, state, data, status_text)
 
@@ -117,11 +184,11 @@ def _build_progress_card(page: ft.Page, state: AppState) -> ft.Control:
                 ft.Row(
                     [
                         ft.Button(
-                            "⬇️ Export Progress", on_click=on_export, height=44, disabled=unavailable,
+                            "⬇️ Export Progress", on_click=on_export, height=44,
                             style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
                         ),
                         ft.Button(
-                            "⬆️ Import Progress", on_click=on_import, height=44, disabled=unavailable,
+                            "⬆️ Import Progress", on_click=on_import, height=44,
                             style=ft.ButtonStyle(bgcolor=theme.danger, color="#FFFFFF"),
                         ),
                     ],

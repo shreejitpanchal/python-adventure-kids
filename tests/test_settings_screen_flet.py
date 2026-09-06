@@ -1,39 +1,79 @@
 """Exercises settings_screen_flet.py's "💾 Progress" card -- export/import
-handlers driven via a FakeFilePicker (real OS file dialogs can't be
-automated in a test), same async-handler-invoked-via-asyncio.run() pattern
-as test_lesson_screen_flet.py's _on_run()."""
+handlers driven via fake ft.FilePicker/ft.Share classes (real OS file
+dialogs and native share sheets can't be automated in a test), same
+async-handler-invoked-via-asyncio.run() pattern as
+test_lesson_screen_flet.py's _on_run().
+
+ft.FilePicker()/ft.Share() are constructed fresh inside each handler (see
+_build_progress_card()'s docstring for why), so the fakes are installed by
+monkeypatching the class itself in app.ui.settings_screen_flet's `ft`
+namespace to a factory returning one shared, pre-configured fake instance
+per test -- the handlers don't care that every "fresh" FilePicker() call
+returns the same object, only that it behaves like one.
+"""
 from __future__ import annotations
 
 import asyncio
 import json
 
+import flet as ft
 import pytest
 
+import app.ui.settings_screen_flet as settings_flet
 from app.progress.store import PROGRESS_EXPORT_FORMAT_VERSION, ProgressStore
 from app.ui.app_state_flet import AppState
 from app.ui.settings_screen_flet import build_settings_view
 
 
-class FakeFile:
-    def __init__(self, path: str) -> None:
-        self.path = path
+class FakeFilePickerFile:
+    def __init__(self, data: bytes) -> None:
+        self.bytes = data
 
 
 class FakeFilePicker:
-    def __init__(self, save_path=None, pick_paths=None) -> None:
-        self.save_path = save_path
-        self.pick_paths = pick_paths or []
+    def __init__(self) -> None:
+        self.save_result: str | None = None
+        self.pick_result: list = []
+        self.save_calls: list[dict] = []
+        self.pick_calls: list[dict] = []
+        self.raise_on_save: Exception | None = None
+        self.raise_on_pick: Exception | None = None
 
     async def save_file(self, **kwargs):
-        return self.save_path
+        self.save_calls.append(kwargs)
+        if self.raise_on_save:
+            raise self.raise_on_save
+        return self.save_result
 
     async def pick_files(self, **kwargs):
-        return [FakeFile(p) for p in self.pick_paths]
+        self.pick_calls.append(kwargs)
+        if self.raise_on_pick:
+            raise self.raise_on_pick
+        return self.pick_result
+
+
+class FakeShareResult:
+    def __init__(self, status) -> None:
+        self.status = status
+
+
+class FakeShare:
+    def __init__(self) -> None:
+        self.share_files_calls: list = []
+        self.result_status = ft.ShareResultStatus.SUCCESS
+        self.raise_on_share: Exception | None = None
+
+    async def share_files(self, files, **kwargs):
+        self.share_files_calls.append((files, kwargs))
+        if self.raise_on_share:
+            raise self.raise_on_share
+        return FakeShareResult(self.result_status)
 
 
 class FakePage:
-    def __init__(self) -> None:
+    def __init__(self, platform=ft.PagePlatform.WINDOWS) -> None:
         self.dialogs: list = []
+        self.platform = platform
 
     def update(self) -> None:
         pass
@@ -45,6 +85,11 @@ class FakePage:
         if self.dialogs:
             self.dialogs.pop()
 
+    def run_task(self, fn, *args) -> None:
+        # Real Flet schedules this onto the page's event loop; tests just
+        # need the side effects to happen deterministically, so run it now.
+        asyncio.run(fn(*args))
+
 
 @pytest.fixture
 def state(tmp_path, monkeypatch):
@@ -54,6 +99,20 @@ def state(tmp_path, monkeypatch):
     s = AppState()
     yield s
     s.close()
+
+
+@pytest.fixture
+def fake_picker(monkeypatch):
+    picker = FakeFilePicker()
+    monkeypatch.setattr(settings_flet.ft, "FilePicker", lambda: picker)
+    return picker
+
+
+@pytest.fixture
+def fake_share(monkeypatch):
+    share = FakeShare()
+    monkeypatch.setattr(settings_flet.ft, "Share", lambda: share)
+    return share
 
 
 def _progress_card(view):
@@ -73,45 +132,106 @@ def _import_button(view):
     return _progress_card(view).content.controls[2].controls[1]
 
 
-def test_export_writes_a_json_file(tmp_path, state):
-    out_path = str(tmp_path / "out.json")
-    state.file_picker = FakeFilePicker(save_path=out_path)
+# -- export: desktop (direct save, no share choice) ------------------------
+def test_desktop_export_saves_directly_without_a_choice_dialog(state, fake_picker):
+    fake_picker.save_result = "/tmp/out.json"
     state.progress.complete_lesson("lesson_01", 3)
 
-    page = FakePage()
+    page = FakePage(platform=ft.PagePlatform.WINDOWS)
     view = build_settings_view(page, state)
     asyncio.run(_export_button(view).on_click(None))
 
-    with open(out_path, encoding="utf-8") as f:
-        data = json.load(f)
+    assert page.dialogs == []
+    assert len(fake_picker.save_calls) == 1
+    payload = fake_picker.save_calls[0]["src_bytes"]
+    data = json.loads(payload.decode("utf-8"))
     assert data["format_version"] == PROGRESS_EXPORT_FORMAT_VERSION
     assert data["lesson_completions"][0]["lesson_id"] == "lesson_01"
-    assert "exported to" in _status_text(view).value
+    assert "Saved to /tmp/out.json" in _status_text(view).value
 
 
-def test_export_appends_json_extension_if_missing(tmp_path, state):
-    out_path = str(tmp_path / "out")
-    state.file_picker = FakeFilePicker(save_path=out_path)
-
-    page = FakePage()
+def test_desktop_export_cancelled_reports_cancellation(state, fake_picker):
+    fake_picker.save_result = None
+    page = FakePage(platform=ft.PagePlatform.WINDOWS)
     view = build_settings_view(page, state)
     asyncio.run(_export_button(view).on_click(None))
 
-    assert (tmp_path / "out.json").exists()
+    assert "cancelled" in _status_text(view).value.lower()
 
 
-def test_export_cancelled_does_nothing(tmp_path, state):
-    state.file_picker = FakeFilePicker(save_path=None)
-    page = FakePage()
+def test_desktop_export_failure_shows_error(state, fake_picker):
+    fake_picker.raise_on_save = RuntimeError("disk full")
+    page = FakePage(platform=ft.PagePlatform.WINDOWS)
     view = build_settings_view(page, state)
     asyncio.run(_export_button(view).on_click(None))
-    assert _status_text(view).value == ""
+
+    assert "failed" in _status_text(view).value.lower()
 
 
-def test_import_shows_confirm_dialog_without_overwriting_yet(tmp_path, state):
-    path = tmp_path / "in.json"
-    path.write_text(json.dumps(state.progress.export_progress_data()), encoding="utf-8")
-    state.file_picker = FakeFilePicker(pick_paths=[str(path)])
+# -- export: mobile (Save to Device / Share / Cancel choice) ---------------
+def test_mobile_export_shows_save_share_cancel_choice(state, fake_picker, fake_share):
+    page = FakePage(platform=ft.PagePlatform.ANDROID)
+    view = build_settings_view(page, state)
+    asyncio.run(_export_button(view).on_click(None))
+
+    assert len(page.dialogs) == 1
+    dialog = page.dialogs[0]
+    button_texts = [b.content if isinstance(b.content, str) else b.text for b in dialog.actions]
+    assert any("Save" in str(t) for t in button_texts)
+    assert any("Share" in str(t) for t in button_texts)
+    assert any("Cancel" in str(t) for t in button_texts)
+    # Neither action has actually run yet.
+    assert fake_picker.save_calls == []
+    assert fake_share.share_files_calls == []
+
+
+def test_mobile_export_choosing_save_calls_the_file_picker(state, fake_picker, fake_share):
+    fake_picker.save_result = "/storage/out.json"
+    page = FakePage(platform=ft.PagePlatform.ANDROID)
+    view = build_settings_view(page, state)
+    asyncio.run(_export_button(view).on_click(None))
+
+    dialog = page.dialogs[0]
+    save_button = next(b for b in dialog.actions if "Save" in str(b.content))
+    save_button.on_click(None)
+
+    assert page.dialogs == []
+    assert len(fake_picker.save_calls) == 1
+    assert "Saved to /storage/out.json" in _status_text(view).value
+
+
+def test_mobile_export_choosing_share_calls_the_share_service(state, fake_picker, fake_share):
+    page = FakePage(platform=ft.PagePlatform.ANDROID)
+    view = build_settings_view(page, state)
+    asyncio.run(_export_button(view).on_click(None))
+
+    dialog = page.dialogs[0]
+    share_button = next(b for b in dialog.actions if "Share" in str(b.content))
+    share_button.on_click(None)
+
+    assert page.dialogs == []
+    assert len(fake_share.share_files_calls) == 1
+    assert "Shared" in _status_text(view).value
+
+
+def test_mobile_export_choosing_cancel_does_nothing(state, fake_picker, fake_share):
+    page = FakePage(platform=ft.PagePlatform.ANDROID)
+    view = build_settings_view(page, state)
+    asyncio.run(_export_button(view).on_click(None))
+
+    dialog = page.dialogs[0]
+    cancel_button = next(b for b in dialog.actions if "Cancel" in str(b.content))
+    cancel_button.on_click(None)
+
+    assert page.dialogs == []
+    assert fake_picker.save_calls == []
+    assert fake_share.share_files_calls == []
+
+
+# -- import ------------------------------------------------------------------
+def test_import_shows_confirm_dialog_without_overwriting_yet(state, fake_picker):
+    exported = json.dumps(state.progress.export_progress_data()).encode("utf-8")
+    fake_picker.pick_result = [FakeFilePickerFile(exported)]
     state.progress.complete_lesson("lesson_existing", 2)
 
     page = FakePage()
@@ -119,20 +239,19 @@ def test_import_shows_confirm_dialog_without_overwriting_yet(tmp_path, state):
     asyncio.run(_import_button(view).on_click(None))
 
     assert len(page.dialogs) == 1
+    assert fake_picker.pick_calls[0]["with_data"] is True
     # Not overwritten yet -- only the confirm dialog is shown so far.
     assert state.progress.get_completed_lesson_ids() == ["lesson_existing"]
 
 
-def test_import_confirm_overwrites_progress(tmp_path, state):
+def test_import_confirm_overwrites_progress(state, fake_picker, tmp_path):
     src_store = ProgressStore(tmp_path / "src.sqlite3")
     src_store.complete_lesson("lesson_a", 3)
     src_store.complete_lesson("lesson_b", 3)
-    exported = src_store.export_progress_data()
+    exported = json.dumps(src_store.export_progress_data()).encode("utf-8")
     src_store.close()
 
-    path = tmp_path / "in.json"
-    path.write_text(json.dumps(exported), encoding="utf-8")
-    state.file_picker = FakeFilePicker(pick_paths=[str(path)])
+    fake_picker.pick_result = [FakeFilePickerFile(exported)]
     state.progress.complete_lesson("lesson_existing", 2)
 
     page = FakePage()
@@ -148,10 +267,9 @@ def test_import_confirm_overwrites_progress(tmp_path, state):
     assert "imported successfully" in _status_text(view).value
 
 
-def test_import_cancel_does_not_overwrite(tmp_path, state):
-    path = tmp_path / "in.json"
-    path.write_text(json.dumps(state.progress.export_progress_data()), encoding="utf-8")
-    state.file_picker = FakeFilePicker(pick_paths=[str(path)])
+def test_import_cancel_does_not_overwrite(state, fake_picker):
+    exported = json.dumps(state.progress.export_progress_data()).encode("utf-8")
+    fake_picker.pick_result = [FakeFilePickerFile(exported)]
     state.progress.complete_lesson("lesson_existing", 2)
 
     page = FakePage()
@@ -166,10 +284,9 @@ def test_import_cancel_does_not_overwrite(tmp_path, state):
     assert page.dialogs == []
 
 
-def test_import_rejects_invalid_file_with_status_message(tmp_path, state):
-    path = tmp_path / "bad.json"
-    path.write_text(json.dumps({"not": "a real export"}), encoding="utf-8")
-    state.file_picker = FakeFilePicker(pick_paths=[str(path)])
+def test_import_rejects_invalid_file_with_status_message(state, fake_picker):
+    bad = json.dumps({"not": "a real export"}).encode("utf-8")
+    fake_picker.pick_result = [FakeFilePickerFile(bad)]
 
     page = FakePage()
     view = build_settings_view(page, state)
@@ -182,8 +299,8 @@ def test_import_rejects_invalid_file_with_status_message(tmp_path, state):
     assert "doesn't look like" in _status_text(view).value
 
 
-def test_import_cancelled_file_pick_does_nothing(tmp_path, state):
-    state.file_picker = FakeFilePicker(pick_paths=[])
+def test_import_cancelled_file_pick_does_nothing(state, fake_picker):
+    fake_picker.pick_result = []
     page = FakePage()
     view = build_settings_view(page, state)
     asyncio.run(_import_button(view).on_click(None))
@@ -192,29 +309,11 @@ def test_import_cancelled_file_pick_does_nothing(tmp_path, state):
     assert _status_text(view).value == ""
 
 
-# -- state.file_picker is None (its real default -- see AppState.file_picker's
-# docstring for why: ft.FilePicker renders as an "Unknown control" banner
-# and broke app launch on a real Android device) ---------------------------
-def test_buttons_disabled_and_message_shown_when_file_picker_unavailable(state):
-    assert state.file_picker is None  # the actual default, not overridden here
-    page = FakePage()
-    view = build_settings_view(page, state)
-
-    assert _export_button(view).disabled is True
-    assert _import_button(view).disabled is True
-    assert "isn't available" in _status_text(view).value
-
-
-def test_export_handler_no_ops_when_file_picker_unavailable(state):
-    page = FakePage()
-    view = build_settings_view(page, state)
-    asyncio.run(_export_button(view).on_click(None))
-    # Still the same "unavailable" message -- no crash, nothing written.
-    assert "isn't available" in _status_text(view).value
-
-
-def test_import_handler_no_ops_when_file_picker_unavailable(state):
+def test_import_unreadable_file_shows_error(state, fake_picker):
+    fake_picker.pick_result = [FakeFilePickerFile(b"not valid json")]
     page = FakePage()
     view = build_settings_view(page, state)
     asyncio.run(_import_button(view).on_click(None))
+
     assert page.dialogs == []
+    assert "couldn't read" in _status_text(view).value.lower()
