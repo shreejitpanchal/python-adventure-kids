@@ -8,3 +8,22 @@ product = "Python Adventure"
 org = "com.shreejitpanchal"
 company = "Shreejit Panchal"
 copyright = "Copyright (C) 2026 Shreejit Panchal"
+
+[tool.flet.app]
+# `flet build` doesn't read .gitignore -- it zips the whole project root
+# as the app payload by default (only "build" is excluded automatically),
+# so anything not listed here rides along verbatim. Without this, a build
+# was shipping the entire dev .venv (~80MB, and already redundant: real
+# runtime deps are correctly resolved from requirements.txt separately
+# into the app's actual Python bundle), full git history, the graphify
+# knowledge-graph cache, and the developer's own local progress.sqlite3.
+exclude = [
+    ".venv",
+    ".git",
+    ".claude",
+    ".pytest_cache",
+    "__pycache__",
+    "app-data",
+    "graphify-out",
+    "tests",
+]
