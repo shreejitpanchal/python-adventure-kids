@@ -1,8 +1,12 @@
-"""Content checks for the extended `input` category bonus practice levels
-(category_level 2-20, lesson_320-lesson_338), bringing "Ask a Question" from
-1 level to a full 20-level progression. Same shape as
-test_bonus_levels_extended.py, but every lesson here uses input(), so
-run_code needs stdin_text and validate_output needs input_value."""
+"""Content checks for the full `input` category progression (category_level
+1-40), "Ask a Question". Same shape as test_bonus_levels_extended.py, but
+every lesson here uses input(), so run_code needs stdin_text and
+validate_output needs input_value.
+
+category_level 1 is lesson_09 (the original, badge-awarding level) and is
+intentionally excluded from SOLUTIONS below -- it isn't a bonus/practice
+level like the rest and isn't covered by this file's metadata assumptions
+(main_path/next_lesson_id/badge)."""
 import pytest
 
 from app.engine.lesson_engine import LessonEngine
@@ -19,6 +23,10 @@ SOLUTIONS: dict[str, tuple[str, str]] = {
         'n = int(input("Type a number: "))\nprint(n * 2)',
         "6",
     ),
+    "lesson_324": (
+        'n = int(input("Type a number: "))\nprint(n * 3)',
+        "4",
+    ),
     "lesson_322": (
         'n = int(input("Type a number: "))\nprint(n * n)',
         "5",
@@ -27,21 +35,17 @@ SOLUTIONS: dict[str, tuple[str, str]] = {
         'n = int(input("Type a number: "))\nprint(n + 10)',
         "8",
     ),
-    "lesson_324": (
-        'n = int(input("Type a number: "))\nprint(n * 3)',
-        "4",
+    "lesson_326": (
+        'age = int(input("How old are you? "))\nprint(age + 1)',
+        "9",
     ),
     "lesson_325": (
         'n = float(input("Type a number: "))\nprint(n / 2)',
         "10",
     ),
-    "lesson_326": (
-        'age = int(input("How old are you? "))\nprint(age + 1)',
-        "9",
-    ),
-    "lesson_327": (
-        'age = int(input("How old are you? "))\nprint(age + 10)',
-        "9",
+    "lesson_336": (
+        'price = float(input("What is the price? "))\nprint(price * 2)',
+        "5",
     ),
     "lesson_328": (
         'n = int(input("Type a number: "))\nprint(-n)',
@@ -75,10 +79,6 @@ SOLUTIONS: dict[str, tuple[str, str]] = {
         'n = int(input("Type a number: "))\nprint((n + 10) / 2)',
         "20",
     ),
-    "lesson_336": (
-        'price = float(input("What is the price? "))\nprint(price * 2)',
-        "5",
-    ),
     "lesson_337": (
         'celsius = float(input("What is the temperature in Celsius? "))\nprint(celsius * 9 / 5 + 32)',
         "20",
@@ -86,6 +86,10 @@ SOLUTIONS: dict[str, tuple[str, str]] = {
     "lesson_338": (
         'n = int(input("Type a number: "))\nprint(n + 4)\nprint(n - 4)\nprint(n * 4)',
         "10",
+    ),
+    "lesson_339": (
+        'n = int(input("Type a number: "))\nprint(n > 10)',
+        "8",
     ),
     "lesson_640": (
         'n = int(input("Type a number: "))\nprint(round(n / 3, 1))',
@@ -112,8 +116,8 @@ SOLUTIONS: dict[str, tuple[str, str]] = {
         "the cat sat down",
     ),
     "lesson_646": (
-        'price = float(input("What is the price? "))\nprint(price - price * 0.1)',
-        "20",
+        'sentence = input("Type a short sentence: ")\nprint(sentence.split()[0])',
+        "a quick brown fox",
     ),
     "lesson_647": (
         'n = int(input("Type a number: "))\nprint(n // 3)\nprint(n % 3)',

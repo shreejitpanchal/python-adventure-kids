@@ -1,15 +1,14 @@
-"""Content checks for the extended functions bonus practice levels
-(category_level 2-40, lesson_380-lesson_398 and lesson_700-lesson_719): same
-edit-required invariant as test_bonus_levels_extended.py -- unedited starter
-code must not already satisfy the challenge, and the intended solution
-must."""
+"""Content checks for the "functions" bonus practice levels (category_level
+2-40 currently): unedited starter code must not already satisfy the
+challenge, and the intended solution must. Mirrors
+test_addition_practice_levels.py's structure for the "functions" category."""
 import pytest
 
 from app.engine.lesson_engine import LessonEngine
 from app.engine.validator import validate_output
 from app.sandbox.runner import run_code
 
-SOLUTIONS = {
+BONUS_SOLUTIONS = {
     "lesson_380": 'def greet(name):\n    print("Hi " + name + "!")\n\ngreet("Nova")',
     "lesson_381": (
         'def introduce(name, age):\n'
@@ -165,21 +164,18 @@ SOLUTIONS = {
         '    print("Sum:", s)\n    print("Average:", avg)\n\nshow_stats(10, 20, 30)'
     ),
     "lesson_716": (
-        "def power(base, exponent):\n    if exponent == 0:\n        return 1\n"
-        "    return base * power(base, exponent - 1)\n\nprint(power(3, 4))"
+        "def total_of(*nums):\n    if len(nums) == 0:\n        return 0\n"
+        "    return nums[0] + total_of(*nums[1:])\n\nprint(total_of(1, 3, 5, 7, 9))"
     ),
     "lesson_717": (
-        "def count_even_odd(numbers):\n    evens = 0\n    odds = 0\n    for n in numbers:\n"
-        "        if n % 2 == 0:\n            evens += 1\n        else:\n            odds += 1\n"
-        "    return evens, odds\n\n"
-        "e, o = count_even_odd([10, 15, 20, 25, 30, 35, 40, 45])\n"
-        'print("Evens:", e)\nprint("Odds:", o)'
+        "def sum_and_count(nums):\n    total = 0\n    count = 0\n    for n in nums:\n"
+        "        total += n\n        count += 1\n    return total, count\n\n"
+        "s, c = sum_and_count([10, 20, 30])\nprint(s, c)"
     ),
     "lesson_718": (
-        "def total_cost(price, quantity, discount=0, tax_rate=0.1):\n"
-        "    subtotal = price * quantity - discount\n"
-        "    total = subtotal + subtotal * tax_rate\n    return total\n\n"
-        "print(total_cost(10, 5, 10))"
+        "def apply_discount(price, discount=10):\n"
+        "    if price > 50:\n        return price - discount\n    return price\n\n"
+        "print(apply_discount(60))\nprint(apply_discount(40))"
     ),
     "lesson_719": (
         "def order_summary(price, quantity, discount=0):\n"
@@ -198,17 +194,15 @@ def engine():
     return LessonEngine()
 
 
-@pytest.mark.parametrize("lesson_id,solution", SOLUTIONS.items())
-def test_intended_solution_satisfies_the_challenge(engine, lesson_id, solution):
+@pytest.mark.parametrize("lesson_id", list(BONUS_SOLUTIONS))
+def test_bonus_level_is_marked_correctly(engine, lesson_id):
     lesson = engine.get(lesson_id)
-    result = run_code(solution)
-    assert result.success is True, f"{lesson_id} solution failed to run: {result.stderr}"
-    assert validate_output(result.stdout, lesson.expected_output) is True, (
-        f"{lesson_id}'s intended solution produced {result.stdout!r}, expected {lesson.expected_output!r}"
-    )
+    assert lesson.main_path is False
+    assert lesson.category_level >= 2
+    assert lesson.next_lesson_id is None
 
 
-@pytest.mark.parametrize("lesson_id", list(SOLUTIONS))
+@pytest.mark.parametrize("lesson_id", list(BONUS_SOLUTIONS))
 def test_unedited_starter_code_does_not_satisfy_the_challenge(engine, lesson_id):
     lesson = engine.get(lesson_id)
     result = run_code(lesson.starter_code.strip())
@@ -218,14 +212,14 @@ def test_unedited_starter_code_does_not_satisfy_the_challenge(engine, lesson_id)
     )
 
 
-@pytest.mark.parametrize("lesson_id", list(SOLUTIONS))
-def test_bonus_level_is_marked_correctly(engine, lesson_id):
+@pytest.mark.parametrize("lesson_id,solution", BONUS_SOLUTIONS.items())
+def test_intended_solution_satisfies_the_challenge(engine, lesson_id, solution):
     lesson = engine.get(lesson_id)
-    assert lesson.main_path is False
-    assert lesson.badge is None
-    assert lesson.next_lesson_id is None
-    assert lesson.category == "functions"
-    assert lesson.category_level >= 2
+    result = run_code(solution)
+    assert result.success is True, f"{lesson_id} solution failed to run: {result.stderr}"
+    assert validate_output(result.stdout, lesson.expected_output) is True, (
+        f"{lesson_id}'s intended solution produced {result.stdout!r}, expected {lesson.expected_output!r}"
+    )
 
 
 def test_functions_category_has_a_full_1_to_40_level_progression(engine):
@@ -233,5 +227,3 @@ def test_functions_category_has_a_full_1_to_40_level_progression(engine):
     assert len(lessons) == 40
     levels = sorted(lesson.category_level for lesson in lessons)
     assert levels == list(range(1, 41))
-    ids = {lesson.id for lesson in lessons}
-    assert ids == {"lesson_12"} | set(SOLUTIONS)

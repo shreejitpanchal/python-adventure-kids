@@ -1,0 +1,23 @@
+id: lesson_114
+title: "Multiplication: Level 10 ✖️"
+level: 114
+objective: "Practice multiplying by zero with different numbers."
+explanation: |
+  You just learned that anything multiplied by zero is always zero. Let's practice that fact again with new numbers.
+example_code: |
+  print(23 * 6)
+starter_code: |
+  print(23 * 6)
+challenge: |
+  🎯 Challenge: Can you make Python multiply 84 by 0?
+expected_output: "0"
+hints:
+  - "Change both numbers: 84 and 0."
+  - "Anything multiplied by zero is always zero."
+  - "It should look like: print(84 * 0)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 10
+main_path: false

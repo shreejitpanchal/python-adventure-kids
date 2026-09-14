@@ -1,0 +1,24 @@
+id: lesson_81
+title: "Addition: Level 18 ➕"
+level: 81
+objective: "Practice == with a different target number."
+explanation: |
+  Let's try == again with new numbers, so it really sticks.
+
+  9 + 3 == 12 works out 9 + 3 first (12), then checks if that equals 12.
+example_code: |
+  print(9 + 3 == 12)
+starter_code: |
+  print(9 + 3 == 12)
+challenge: |
+  🎯 Challenge: Is 7 + 5 equal to 13? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 7 + 5 == 13."
+  - "It should look like: print(7 + 5 == 13)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 18
+main_path: false

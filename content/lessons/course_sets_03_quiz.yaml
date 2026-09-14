@@ -13,7 +13,7 @@ hints: []
 reward_stars: 3
 badge: null
 category: course_data_structures
-category_level: 12
+category_level: 9
 topic: Sets
 concept_tags: [sets]
 is_quiz: true

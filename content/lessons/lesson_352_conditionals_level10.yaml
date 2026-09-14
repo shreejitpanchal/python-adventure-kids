@@ -1,0 +1,33 @@
+id: lesson_352
+title: "Decisions: Level 10 🚦"
+level: 352
+objective: "Practice not with a different boolean."
+explanation: |
+  Let's practice not again. Remember: not flips a condition around, turning True into False, and False into True.
+
+  if not is_closed: means "if is_closed is FALSE" — in other words, if it is NOT closed.
+example_code: |
+  is_closed = True
+  if not is_closed:
+      print("Come on in, we're open!")
+  else:
+      print("Sorry, we're closed.")
+starter_code: |
+  is_closed = True
+  if not is_closed:
+      print("Come on in, we're open!")
+  else:
+      print("Sorry, we're closed.")
+challenge: |
+  🎯 Challenge: Change is_closed so Python prints "Come on in, we're open!" instead.
+expected_output: "Come on in, we're open!"
+hints:
+  - "not flips True to False and False to True."
+  - "Try changing is_closed to False."
+  - "When is_closed is False, not is_closed becomes True."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 10
+main_path: false

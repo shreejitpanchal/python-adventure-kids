@@ -1,0 +1,22 @@
+id: lesson_591
+title: "Division: Level 22 ➗"
+level: 591
+objective: "Practice int() conversion with a different pair of numbers."
+explanation: |
+  Let's convert text into a number and divide it again, with new numbers.
+example_code: |
+  print(int("18") / 3)
+starter_code: |
+  print(int("18") / 3)
+challenge: |
+  🎯 Challenge: Convert the text "40" into a number and divide it by 8.
+expected_output: "5.0"
+hints:
+  - "Change \"18\" to \"40\", and 3 to 8."
+  - "It should look like: print(int(\"40\") / 8)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 22
+main_path: false

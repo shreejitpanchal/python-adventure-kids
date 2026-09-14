@@ -1,0 +1,24 @@
+id: lesson_509
+title: "Numbers: Level 18 🔢"
+level: 509
+objective: "Practice checking if two numbers are different with !=."
+explanation: |
+  Let's practice != again — it asks if two numbers are NOT equal.
+
+  print(8 != 3) is True, because 8 and 3 really are different.
+example_code: |
+  print(8 != 3)
+starter_code: |
+  print(8 != 3)
+challenge: |
+  🎯 Challenge: Can you make Python check if 14 is NOT equal to 14?
+expected_output: "False"
+hints:
+  - "Change both numbers to 14."
+  - "It should look like: print(14 != 14)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 18
+main_path: false

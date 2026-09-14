@@ -22,7 +22,7 @@ def test_lessons_in_category_sorted_by_category_level(engine):
     addition_lessons = engine.lessons_in_category("addition")
     levels = [lesson.category_level for lesson in addition_lessons]
     assert levels == sorted(levels)
-    assert len(addition_lessons) == 40  # lesson_03 + 39 bonus levels (2-40)
+    assert len(addition_lessons) == 37  # lesson_03 + 36 bonus levels (2-37)
 
 
 def test_lessons_in_category_unknown_category_returns_empty(engine):
@@ -145,16 +145,16 @@ def test_each_course_topic_has_exactly_three_items(engine):
             assert len(items) == 3, f"'{category}' topic '{topic}' has {len(items)} items, expected 3"
 
 
-def test_course_data_structures_chapter_has_four_topics_totaling_12_items(engine):
+def test_course_data_structures_chapter_has_three_topics_totaling_9_items(engine):
     lessons = engine.lessons_in_category("course_data_structures")
-    assert len(lessons) == 12
-    assert set(_topics_in(lessons)) == {"Lists", "Tuples", "Dictionaries", "Sets"}
+    assert len(lessons) == 9
+    assert set(_topics_in(lessons)) == {"Tuples", "Dictionaries", "Sets"}
 
 
-def test_course_variables_chapter_has_five_topics_totaling_15_items(engine):
+def test_course_variables_chapter_has_two_topics_totaling_6_items(engine):
     lessons = engine.lessons_in_category("course_variables")
-    assert len(lessons) == 15
-    assert set(_topics_in(lessons)) == {"Variables", "Numbers", "Strings", "Booleans", "Type Conversion"}
+    assert len(lessons) == 6
+    assert set(_topics_in(lessons)) == {"Booleans", "Type Conversion"}
 
 
 def test_course_chapters_excluded_from_todays_mission(engine):

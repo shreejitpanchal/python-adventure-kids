@@ -15,12 +15,12 @@ starter_code: |
   average = sum(grades) / len(grades)
   print(average)
 challenge: |
-  🎯 Challenge: Can you compute and print the average of these four grades?
-expected_output: "85.0"
+  🎯 Challenge: Can you change the grades to [60, 75, 85, 100] and print their average?
+expected_output: "80.0"
 hints:
-  - "sum(...) adds up every number in a list, and len(...) counts them."
-  - "Divide the sum by the length to get the average."
-  - "It should look like: average = sum(grades) / len(grades), then print(average)"
+  - "Change grades = [...] to the new list of four grades."
+  - "sum(...) and len(...) still work the same way — divide the sum by the length."
+  - "It should look like: grades = [60, 75, 85, 100], average = sum(grades) / len(grades), then print(average)"
 reward_stars: 4
 badge: null
 next_lesson_id: null

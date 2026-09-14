@@ -47,25 +47,26 @@ Settings font controls — due for a refresh.*
   and works through Numbers, Addition, Subtraction, Multiplication,
   Division, Variables, Strings, Input, Decisions, Loops, Functions, and
   Lists a level at a time, looping back around for deeper levels as you go.
-- **Python Learning course** — a structured 9-chapter course (Intro &
-  Setup, Variables & Data Types, Control Flow, Functions, Data
-  Structures, Advanced Programming Concepts, Standard Library Deep Dive,
-  Concurrency & Observability, Capstone: To-Do App). Most chapters go
-  deeper by splitting into their own topics instead of one flat lesson:
-  Intro & Setup covers Print, Comments, and Reading Errors; Variables &
-  Data Types covers Variables, Numbers, Strings, Booleans, and Type
-  Conversion; Control Flow covers Conditionals, For Loops, and While
-  Loops; Functions covers Defining Functions, Parameters, and Return
-  Values; Data Structures covers Lists, Tuples, Dictionaries, and Sets;
-  Advanced Programming Concepts covers Algorithms, Recursion, and
-  Functional Programming; Standard Library Deep Dive covers Collections,
-  Itertools, Datetime, and JSON; and Concurrency & Observability covers
-  Concurrency & Async, Thread Scheduling, Sync vs Async, and
-  Observability — taught as simulated, concept-only exercises rather than
-  real threading/asyncio, since this app's sandbox hard-kills code after a
-  timeout and doesn't compose safely with real concurrency. Every topic
-  still gets its own "What is it?" explanation, a hands-on sample program,
-  and a topic quiz — 90 lessons in all.
+- **Python Learning course** — a structured 7-chapter course (Intro &
+  Setup, Variables & Data Types, Data Structures, Advanced Programming
+  Concepts, Standard Library Deep Dive, Concurrency & Observability,
+  Capstone: To-Do App) that deliberately covers ground the fundamentals
+  path below *doesn't* rather than re-teaching it: variables, numbers,
+  strings, conditionals, loops, functions, and basic lists already get
+  much deeper, more gradually-paced coverage in Today's Mission's
+  fundamentals categories, so this course focuses on what's genuinely
+  additive — Intro & Setup covers Print, Comments, and Reading Errors;
+  Variables & Data Types covers Booleans and Type Conversion; Data
+  Structures covers Tuples, Dictionaries, and Sets; Advanced Programming
+  Concepts covers Algorithms, Recursion, and Functional Programming;
+  Standard Library Deep Dive covers Collections, Itertools, Datetime, and
+  JSON; and Concurrency & Observability covers Concurrency & Async,
+  Thread Scheduling, Sync vs Async, and Observability — taught as
+  simulated, concept-only exercises rather than real threading/asyncio,
+  since this app's sandbox hard-kills code after a timeout and doesn't
+  compose safely with real concurrency. Every topic still gets its own
+  "What is it?" explanation, a hands-on sample program, and a topic quiz
+  — 60 lessons in all.
 - **AI & Machine Learning course** — a second, standalone 3-chapter course
   (AI Foundations, Machine Learning & Tools, Advanced AI Concepts) with its
   own dashboard, parallel to Python Learning, deliberately ordered

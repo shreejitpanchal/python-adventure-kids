@@ -15,12 +15,12 @@ starter_code: |
   fruits.remove("apple")
   print(fruits)
 challenge: |
-  🎯 Challenge: Can you take "apple" out of this backpack and print what's left?
-expected_output: "['banana', 'orange']"
+  🎯 Challenge: Can you change the backpack to ["mango", "kiwi", "pear"], take "kiwi" out, and print what's left?
+expected_output: "['mango', 'pear']"
 hints:
-  - ".remove(...) takes a specific item out of a list by name."
-  - "Call fruits.remove(\"apple\") before printing the list."
-  - "It should look like: fruits.remove(\"apple\") then print(fruits)"
+  - "Change fruits = [...] to the new list of three fruits."
+  - ".remove(...) still takes a specific item out by name — call it like fruits.remove(\"kiwi\")."
+  - "It should look like: fruits = [\"mango\", \"kiwi\", \"pear\"], fruits.remove(\"kiwi\"), then print(fruits)"
 reward_stars: 3
 badge: null
 next_lesson_id: null

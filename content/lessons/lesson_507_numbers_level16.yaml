@@ -1,0 +1,24 @@
+id: lesson_507
+title: "Numbers: Level 16 🔢"
+level: 507
+objective: "Practice checking if two numbers are equal with ==."
+explanation: |
+  Let's practice == again — two equal signs ask if two numbers are exactly the same.
+
+  print(8 == 8) is True, because they match exactly.
+example_code: |
+  print(8 == 8)
+starter_code: |
+  print(8 == 8)
+challenge: |
+  🎯 Challenge: Can you make Python check if 12 is equal to 15?
+expected_output: "False"
+hints:
+  - "Change the numbers to 12 and 15."
+  - "It should look like: print(12 == 15)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 16
+main_path: false

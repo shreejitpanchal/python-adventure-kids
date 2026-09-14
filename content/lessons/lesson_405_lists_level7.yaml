@@ -15,15 +15,16 @@ starter_code: |
   for i in range(len(letters)):
       print(i, letters[i])
 challenge: |
-  🎯 Challenge: Can you print each letter's position number next to the letter itself?
+  🎯 Challenge: Can you change the backpack to ["x", "y", "z", "w"] and print each letter's position number next to the letter itself?
 expected_output: |
-  0 a
-  1 b
-  2 c
+  0 x
+  1 y
+  2 z
+  3 w
 hints:
-  - "range(len(letters)) creates a position number for every item in the list."
-  - "Use letters[i] inside the loop to grab the item at position i."
-  - "It should look like: for i in range(len(letters)): then print(i, letters[i])"
+  - "Change letters = [...] to the new list of four letters."
+  - "range(len(letters)) and letters[i] don't need to change — they work for any list."
+  - "It should look like: letters = [\"x\", \"y\", \"z\", \"w\"], then for i in range(len(letters)): print(i, letters[i])"
 reward_stars: 3
 badge: null
 next_lesson_id: null

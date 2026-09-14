@@ -19,12 +19,12 @@ starter_code: |
       total += n
   print(total)
 challenge: |
-  🎯 Challenge: Can you add up every number in this backpack and print the total?
-expected_output: "27"
+  🎯 Challenge: Can you change the backpack to [10, 20, 30, 5], then add up every number and print the total?
+expected_output: "65"
 hints:
-  - "Start a total variable at 0 before the loop."
-  - "Inside the loop, use total += n to keep a running sum."
-  - "It should look like: total = 0, then for n in numbers: total += n, then print(total)"
+  - "Change numbers = [...] to the new list of four numbers."
+  - "The loop itself doesn't need to change — total = 0, then for n in numbers: total += n."
+  - "It should look like: numbers = [10, 20, 30, 5], total = 0, then for n in numbers: total += n, then print(total)"
 reward_stars: 3
 badge: null
 next_lesson_id: null

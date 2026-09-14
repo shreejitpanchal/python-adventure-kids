@@ -13,12 +13,12 @@ starter_code: |
   fruits = ["apple", "banana", "orange"]
   print(", ".join(fruits))
 challenge: |
-  🎯 Challenge: Can you join every fruit in this backpack into one string, separated by ", "?
-expected_output: "apple, banana, orange"
+  🎯 Challenge: Can you change the backpack to ["sun", "moon", "stars"] and join every item into one string, separated by ", "?
+expected_output: "sun, moon, stars"
 hints:
-  - ".join(...) glues a list of strings together into one string."
-  - "Put the separator in quotes before .join, like \", \".join(fruits)."
-  - "It should look like: print(\", \".join(fruits))"
+  - "Change fruits = [...] to the new list of three items."
+  - ".join(...) doesn't need to change — it still glues the list together with \", \" in between."
+  - "It should look like: fruits = [\"sun\", \"moon\", \"stars\"], then print(\", \".join(fruits))"
 reward_stars: 3
 badge: null
 next_lesson_id: null

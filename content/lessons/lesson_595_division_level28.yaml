@@ -1,0 +1,22 @@
+id: lesson_595
+title: "Division: Level 28 ➗"
+level: 595
+objective: "Practice combining / and ** with a different pair of numbers."
+explanation: |
+  Let's divide first, then raise the result to a power again, with new numbers.
+example_code: |
+  print((16 / 4) ** 2)
+starter_code: |
+  print((16 / 4) ** 2)
+challenge: |
+  🎯 Challenge: Divide 45 by 9, then raise the result to the power of 2.
+expected_output: "25.0"
+hints:
+  - "Change the division to 45 / 9, keep ** 2."
+  - "It should look like: print((45 / 9) ** 2)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: division
+category_level: 28
+main_path: false

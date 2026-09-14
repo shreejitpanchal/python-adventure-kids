@@ -13,7 +13,7 @@ hints: []
 reward_stars: 3
 badge: null
 category: course_variables
-category_level: 15
+category_level: 6
 topic: Type Conversion
 concept_tags: [type-conversion]
 is_quiz: true

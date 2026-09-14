@@ -21,12 +21,12 @@ starter_code: |
           evens.append(n)
   print(evens)
 challenge: |
-  🎯 Challenge: Can you build a new list containing only the EVEN numbers from this backpack?
-expected_output: "[2, 4, 6, 8]"
+  🎯 Challenge: Can you change the backpack to hold the numbers 1 through 12 and build a new list of only the EVEN ones?
+expected_output: "[2, 4, 6, 8, 10, 12]"
 hints:
-  - "Start with an empty list to hold the even numbers."
-  - "Use n % 2 == 0 inside an if to test whether a number is even."
-  - "It should look like: evens = [], then for n in numbers: if n % 2 == 0: evens.append(n), then print(evens)"
+  - "Change numbers = [...] to hold 1 through 12 instead of 1 through 8."
+  - "The rest doesn't need to change — n % 2 == 0 still tests whether a number is even."
+  - "It should look like: numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], then filter into evens, then print(evens)"
 reward_stars: 4
 badge: null
 next_lesson_id: null

@@ -13,7 +13,7 @@ hints: []
 reward_stars: 3
 badge: null
 category: course_data_structures
-category_level: 6
+category_level: 3
 topic: Tuples
 concept_tags: [tuples]
 is_quiz: true

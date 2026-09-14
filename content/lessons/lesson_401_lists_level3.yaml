@@ -13,12 +13,12 @@ starter_code: |
   snacks = ["chips", "pretzels", "popcorn"]
   print(snacks[-1])
 challenge: |
-  🎯 Challenge: Can you print the LAST snack in the backpack using negative indexing?
-expected_output: "popcorn"
+  🎯 Challenge: Can you print the SECOND-TO-LAST snack in the backpack instead, using negative indexing?
+expected_output: "pretzels"
 hints:
   - "Negative indexing counts backward from the end of the list."
-  - "snacks[-1] always means the last item, no matter the list's length."
-  - "It should look like: print(snacks[-1])"
+  - "snacks[-2] means the second-to-last item, no matter the list's length."
+  - "It should look like: print(snacks[-2])"
 reward_stars: 3
 badge: null
 next_lesson_id: null

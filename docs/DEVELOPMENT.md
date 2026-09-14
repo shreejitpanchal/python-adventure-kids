@@ -125,15 +125,26 @@ other automatically.
 
 ### Python Learning course
 
-A third, separate guided path — a fixed 9-chapter course (Intro &
-Setup, Variables & Data Types, Control Flow, Functions, Data
-Structures, Advanced Programming Concepts, Standard Library Deep Dive,
-Concurrency & Observability, Capstone: To-Do App), reached from the
-Learning Hub's "🎓 Python Learning" card. It's built almost entirely by
-reusing the category-browser machinery above rather than inventing a
-parallel content model: each chapter is just a lesson `category`
+A third, separate guided path — a fixed 7-chapter course (Intro &
+Setup, Variables & Data Types, Data Structures, Advanced Programming
+Concepts, Standard Library Deep Dive, Concurrency & Observability,
+Capstone: To-Do App), reached from the Learning Hub's "🎓 Python
+Learning" card. It's built almost entirely by reusing the
+category-browser machinery above rather than inventing a parallel
+content model: each chapter is just a lesson `category`
 (`course_intro_setup`, `course_variables`, `course_data_structures`,
 ...). Chapters themselves are never locked.
+
+This course deliberately does **not** re-teach ground the fundamentals
+path (`TODAYS_MISSION_CATEGORIES`, "Today's Mission" above) already owns
+in much finer, more gradually-paced detail — `course_control_flow` and `course_functions`
+were retired entirely (fully covered by the fundamentals `conditionals`/
+`loops`/`functions` categories), and `course_variables`/
+`course_data_structures` had their Variables/Numbers/Strings and Lists
+topics removed for the same reason, keeping only what the fundamentals
+path doesn't cover (Booleans, Type Conversion, Tuples, Dictionaries,
+Sets). The course's role is "the deeper/structured companion," not a
+second pass over material the fundamentals path already teaches.
 
 This course and the "🤖 AI & Machine Learning" course below share one
 engine (`app/engine/course_status.py`'s `compute_course_status()`/
@@ -150,26 +161,23 @@ the Flet route dispatch's `/course...` vs `/ai-course...` prefixes are the
 only genuinely course-specific bits.
 
 **Topics within a chapter.** A chapter isn't always one flat 3-item
-list — `Lesson.topic` (e.g. `"Lists"`, `"Numbers"`) optionally sub-groups
+list — `Lesson.topic` (e.g. `"Tuples"`, `"Booleans"`) optionally sub-groups
 a chapter's items into several independent named topics, each still
 exactly 3 items (a concept lesson "What is X?", a coding exercise "Your
-Sample Program", and a quiz). Eight of the nine chapters use this: `course_
-data_structures` holds 4 topics (Lists/Tuples/Dictionaries/Sets, 12 items
-— each data structure gets its own quiz since each has its own gotchas
-worth testing separately, e.g. sets have no guaranteed print order,
-tuples are immutable), `course_variables` holds 5 (Variables/Numbers/
-Strings/Booleans/Type Conversion, 15 items), `course_intro_setup` holds 3
-(Print/Comments/Reading Errors, 9 items), `course_control_flow` holds 3
-(Conditionals/For Loops/While Loops, 9 items), `course_functions` holds 3
-(Defining Functions/Parameters/Return Values, 9 items),
-`course_advanced_concepts` holds 3 (Algorithms/Recursion/Functional
-Programming, 9 items), `course_stdlib` holds 4 (Collections/Itertools/
-Datetime/JSON, 12 items), and `course_concurrency` holds 4 (Concurrency &
-Async/Thread Scheduling/Sync vs Async/Observability, 12 items) — 90
-lessons across the whole course. Only `course_capstone` has no
-sub-grouping: every lesson there shares `topic=""`, which collapses back
-to the original flat 3-item list — the UI renders no topic heading in
-that case.
+Sample Program", and a quiz). Five of the seven chapters use this: `course_
+data_structures` holds 3 topics (Tuples/Dictionaries/Sets, 9 items — each
+data structure gets its own quiz since each has its own gotchas worth
+testing separately, e.g. sets have no guaranteed print order, tuples are
+immutable), `course_variables` holds 2 (Booleans/Type Conversion, 6
+items), `course_intro_setup` holds 3 (Print/Comments/Reading Errors, 9
+items), `course_advanced_concepts` holds 3 (Algorithms/Recursion/
+Functional Programming, 9 items), `course_stdlib` holds 4 (Collections/
+Itertools/Datetime/JSON, 12 items), and `course_concurrency` holds 4
+(Concurrency & Async/Thread Scheduling/Sync vs Async/Observability, 12
+items) — 60 lessons across the whole course. Only `course_capstone` has
+no sub-grouping: every lesson there shares `topic=""`, which collapses
+back to the original flat 3-item list — the UI renders no topic heading
+in that case.
 
 `course_concurrency`'s four topics are deliberately concept-only —
 their sample programs simulate concurrency/threading/async ideas with

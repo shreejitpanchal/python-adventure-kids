@@ -1,0 +1,22 @@
+id: lesson_596
+title: "Division: Level 30 ➗"
+level: 596
+objective: "Practice rounding a division result to a set number of decimal digits."
+explanation: |
+  Let's round another division result to a chosen number of decimal digits, just like before.
+example_code: |
+  print(round(17 / 6, 2))
+starter_code: |
+  print(round(17 / 6, 2))
+challenge: |
+  🎯 Challenge: Divide 8 by 3, then round the result to 2 decimal places.
+expected_output: "2.67"
+hints:
+  - "Change the numbers to 8 and 3, and keep the digit count at 2."
+  - "It should look like: print(round(8 / 3, 2))"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: division
+category_level: 30
+main_path: false

@@ -1,0 +1,30 @@
+id: lesson_374
+title: "Loops: Level 7 🔁"
+level: 374
+objective: "Practice building a running total with += over a different range."
+explanation: |
+  Let's use += again with a different range, so it really sticks.
+
+  total starts at 0, and total += i adds each number in the loop to it.
+example_code: |
+  total = 0
+  for i in range(1, 9):
+      total += i
+  print(total)
+starter_code: |
+  total = 0
+  for i in range(1, 9):
+      total += i
+  print(total)
+challenge: |
+  🎯 Challenge: Can you add up all the numbers from 1 through 12 instead?
+expected_output: "78"
+hints:
+  - "Change range(1, 9) to range(1, 13)."
+  - "total starts at 0 and += i adds each number as the loop goes."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: loops
+category_level: 7
+main_path: false

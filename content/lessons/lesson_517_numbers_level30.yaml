@@ -1,0 +1,24 @@
+id: lesson_517
+title: "Numbers: Level 30 🔢"
+level: 517
+objective: "Practice using % to find the remainder left over after dividing."
+explanation: |
+  Let's practice % again — it gives you the remainder left over after dividing.
+
+  13 % 4 is 1, because 4 goes into 13 three times with 1 left over.
+example_code: |
+  print(13 % 4)
+starter_code: |
+  print(13 % 4)
+challenge: |
+  🎯 Challenge: You pack 29 crayons into boxes of 6. Can you make Python print how many crayons are left over?
+expected_output: "5"
+hints:
+  - "Change 13 % 4 to 29 % 6."
+  - "It should look like: print(29 % 6)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 30
+main_path: false

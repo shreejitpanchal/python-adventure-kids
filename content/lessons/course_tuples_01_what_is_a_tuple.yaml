@@ -32,6 +32,6 @@ hints:
 reward_stars: 2
 badge: null
 category: course_data_structures
-category_level: 4
+category_level: 1
 topic: Tuples
 concept_tags: [tuples, indexing]

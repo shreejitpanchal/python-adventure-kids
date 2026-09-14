@@ -1,0 +1,24 @@
+id: lesson_97
+title: "Subtraction: Level 16 ➖"
+level: 97
+objective: "Practice int() conversion with different numbers."
+explanation: |
+  Let's try int() again with a new piece of text, so it really sticks.
+
+  int("30") turns the text "30" into a real number, so you can subtract from it like any other number.
+example_code: |
+  print(int("30") - 12)
+starter_code: |
+  print(int("30") - 12)
+challenge: |
+  🎯 Challenge: Convert the text "45" into a number and subtract 9 from it.
+expected_output: "36"
+hints:
+  - "Change \"30\" to \"45\", and 12 to 9."
+  - "It should look like: print(int(\"45\") - 9)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 16
+main_path: false

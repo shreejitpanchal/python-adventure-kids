@@ -1,0 +1,23 @@
+id: lesson_566
+title: "Multiplication: Level 16 ✖️"
+level: 566
+objective: "Practice comparing a multiplication result with >."
+explanation: |
+  Python still multiplies first, then checks if that answer is bigger than the other number.
+example_code: |
+  print(5 * 5 > 30)
+starter_code: |
+  print(5 * 5 > 30)
+challenge: |
+  🎯 Challenge: Is 6 * 4 greater than 20? Make Python check.
+expected_output: "True"
+hints:
+  - "Change the problem to 6 * 4 > 20."
+  - "Python multiplies first, then compares."
+  - "It should look like: print(6 * 4 > 20)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 16
+main_path: false

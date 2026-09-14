@@ -1,0 +1,24 @@
+id: lesson_540
+title: "Subtraction: Level 20 ➖"
+level: 540
+objective: "Practice ** with a different difference."
+explanation: |
+  Let's try ** again with new numbers, so it really sticks.
+
+  (8 - 3) ** 2 subtracts first (getting 5), then squares it: 25.
+example_code: |
+  print((8 - 3) ** 2)
+starter_code: |
+  print((8 - 3) ** 2)
+challenge: |
+  🎯 Challenge: Subtract 6 from 13, then raise the result to the power of 2.
+expected_output: "49"
+hints:
+  - "Change the difference to 13 - 6, keep ** 2."
+  - "It should look like: print((13 - 6) ** 2)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 20
+main_path: false

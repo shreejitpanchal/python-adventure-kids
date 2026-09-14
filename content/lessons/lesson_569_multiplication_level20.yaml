@@ -1,0 +1,22 @@
+id: lesson_569
+title: "Multiplication: Level 20 ✖️"
+level: 569
+objective: "Practice checking whether a product equals a target number."
+explanation: |
+  == still checks if the product you calculated matches exactly what you expected.
+example_code: |
+  print(4 * 5 == 20)
+starter_code: |
+  print(4 * 5 == 20)
+challenge: |
+  🎯 Challenge: Is 6 * 6 equal to 42? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 6 * 6 == 42."
+  - "It should look like: print(6 * 6 == 42)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 20
+main_path: false

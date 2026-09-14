@@ -1,0 +1,24 @@
+id: lesson_510
+title: "Numbers: Level 20 🔢"
+level: 510
+objective: "Practice using max() to find the bigger of two numbers."
+explanation: |
+  Let's practice max() again — it hands you back whichever number is bigger.
+
+  max(6, 15) is 15, because 15 is the bigger of the two.
+example_code: |
+  print(max(6, 15))
+starter_code: |
+  print(max(6, 15))
+challenge: |
+  🎯 Challenge: Can you make Python print the bigger of 48 and 31?
+expected_output: "48"
+hints:
+  - "Change the numbers to 48 and 31."
+  - "It should look like: print(max(48, 31))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 20
+main_path: false

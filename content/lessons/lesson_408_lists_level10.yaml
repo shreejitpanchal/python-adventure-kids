@@ -13,12 +13,12 @@ starter_code: |
   fruits = ["apple", "banana", "orange", "grape"]
   print(fruits[0:2])
 challenge: |
-  🎯 Challenge: Can you slice out just the first two fruits from this backpack of four?
-expected_output: "['apple', 'banana']"
+  🎯 Challenge: Can you slice out the MIDDLE two fruits instead — positions 1 and 2?
+expected_output: "['banana', 'orange']"
 hints:
   - "A slice uses two numbers inside the brackets, separated by a colon."
-  - "fruits[0:2] grabs positions 0 and 1, but stops before position 2."
-  - "It should look like: print(fruits[0:2])"
+  - "Change fruits[0:2] to fruits[1:3] to grab positions 1 and 2, stopping before position 3."
+  - "It should look like: print(fruits[1:3])"
 reward_stars: 3
 badge: null
 next_lesson_id: null

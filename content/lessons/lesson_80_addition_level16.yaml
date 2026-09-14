@@ -1,0 +1,24 @@
+id: lesson_80
+title: "Addition: Level 16 ➕"
+level: 80
+objective: "Practice int() conversion with different numbers."
+explanation: |
+  Let's try int() again with a new piece of text, so it really sticks.
+
+  int("30") turns the text "30" into a real number, so you can add to it like any other number.
+example_code: |
+  print(int("30") + 12)
+starter_code: |
+  print(int("30") + 12)
+challenge: |
+  🎯 Challenge: Convert the text "45" into a number and add 9 to it.
+expected_output: "54"
+hints:
+  - "Change \"30\" to \"45\", and 12 to 9."
+  - "It should look like: print(int(\"45\") + 9)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 16
+main_path: false

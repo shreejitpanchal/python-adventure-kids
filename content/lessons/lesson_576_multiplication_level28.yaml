@@ -1,0 +1,22 @@
+id: lesson_576
+title: "Multiplication: Level 28 ✖️"
+level: 576
+objective: "Practice comparing two multiplication results and finding the bigger one."
+explanation: |
+  max() still works out both products first, then hands back the bigger one.
+example_code: |
+  print(max(2 * 6, 3 * 5))
+starter_code: |
+  print(max(2 * 6, 3 * 5))
+challenge: |
+  🎯 Challenge: Which is bigger: 5 * 3 or 2 * 9? Make Python find out.
+expected_output: "18"
+hints:
+  - "Change the two problems to 5 * 3 and 2 * 9."
+  - "It should look like: print(max(5 * 3, 2 * 9))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 28
+main_path: false

@@ -1,0 +1,23 @@
+id: lesson_115
+title: "Multiplication: Level 12 ✖️"
+level: 115
+objective: "Practice rounding the result of a multiplication."
+explanation: |
+  round() works the same way every time — Python multiplies first, then rounds the answer to the nearest whole number.
+example_code: |
+  print(round(2.6 * 1.8))
+starter_code: |
+  print(round(2.6 * 1.8))
+challenge: |
+  🎯 Challenge: Multiply 3.7 by 2.2, then round the result.
+expected_output: "8"
+hints:
+  - "Change the numbers to 3.7 and 2.2."
+  - "Python multiplies first, then rounds."
+  - "It should look like: print(round(3.7 * 2.2))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 12
+main_path: false

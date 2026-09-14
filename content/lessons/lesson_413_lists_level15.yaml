@@ -19,12 +19,12 @@ starter_code: |
   else:
       print("Not found.")
 challenge: |
-  🎯 Challenge: Can you check whether "banana" is packed in this backpack, and print "Found it!" if it is?
-expected_output: "Found it!"
+  🎯 Challenge: Can you change the backpack to ["mango", "kiwi", "pear"] and check whether "banana" is packed inside it?
+expected_output: "Not found."
 hints:
-  - "The in keyword checks whether an item is inside a list."
-  - "Use it inside an if: if \"banana\" in fruits:"
-  - "It should look like: if \"banana\" in fruits: print(\"Found it!\") else: print(\"Not found.\")"
+  - "Change fruits = [...] to the new list of three fruits — \"banana\" isn't one of them."
+  - "The in keyword still checks whether an item is inside a list: if \"banana\" in fruits:"
+  - "It should look like: fruits = [\"mango\", \"kiwi\", \"pear\"], then if \"banana\" in fruits: print(\"Found it!\") else: print(\"Not found.\")"
 reward_stars: 4
 badge: null
 next_lesson_id: null

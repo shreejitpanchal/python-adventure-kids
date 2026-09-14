@@ -1,0 +1,24 @@
+id: lesson_98
+title: "Subtraction: Level 18 ➖"
+level: 98
+objective: "Practice == with a different target number."
+explanation: |
+  Let's try == again with new numbers, so it really sticks.
+
+  12 - 5 == 7 works out 12 - 5 first (7), then checks if that equals 7.
+example_code: |
+  print(12 - 5 == 7)
+starter_code: |
+  print(12 - 5 == 7)
+challenge: |
+  🎯 Challenge: Is 14 - 3 equal to 12? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 14 - 3 == 12."
+  - "It should look like: print(14 - 3 == 12)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 18
+main_path: false

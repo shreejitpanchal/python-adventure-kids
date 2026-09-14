@@ -1,0 +1,25 @@
+id: lesson_528
+title: "Addition: Level 22 ➕"
+level: 528
+objective: "Practice // with a different sum."
+explanation: |
+  Let's try // again with new numbers, so it really sticks.
+
+  (20 + 16) // 6 adds first (getting 36), then floor-divides by 6: 6.
+example_code: |
+  print((20 + 16) // 6)
+starter_code: |
+  print((20 + 16) // 6)
+challenge: |
+  🎯 Challenge: Add 26 and 19, then floor-divide the result by 5.
+expected_output: "9"
+hints:
+  - "Change the numbers to 26, 19, and 5."
+  - "The parentheses make sure the addition happens first."
+  - "It should look like: print((26 + 19) // 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 22
+main_path: false

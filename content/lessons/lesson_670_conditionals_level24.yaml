@@ -1,0 +1,33 @@
+id: lesson_670
+title: "Decisions: Level 24 🚦"
+level: 670
+objective: "Practice a chained comparison with a different range."
+explanation: |
+  Let's practice a chained comparison again. Remember: 65 <= temperature <= 75 checks that temperature is 65 or more AND 75 or less, all at once.
+
+  This is a shortcut for writing temperature >= 65 and temperature <= 75 — Python understands it directly.
+example_code: |
+  temperature = 100
+  if 65 <= temperature <= 75:
+      print("Comfortable temperature!")
+  else:
+      print("Outside the comfortable range.")
+starter_code: |
+  temperature = 100
+  if 65 <= temperature <= 75:
+      print("Comfortable temperature!")
+  else:
+      print("Outside the comfortable range.")
+challenge: |
+  🎯 Challenge: Change temperature so Python prints "Comfortable temperature!" instead.
+expected_output: "Comfortable temperature!"
+hints:
+  - "temperature needs to land between 65 and 75, including both ends."
+  - "65 <= temperature <= 75 checks both boundaries in a single line."
+  - "Try temperature = 70."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 24
+main_path: false

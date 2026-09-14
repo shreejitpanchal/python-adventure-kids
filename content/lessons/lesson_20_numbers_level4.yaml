@@ -1,0 +1,24 @@
+id: lesson_20
+title: "Numbers: Level 4 🔢"
+level: 20
+objective: "Practice printing a negative number."
+explanation: |
+  Let's practice negative numbers again! The minus sign goes right before the digits, with no space.
+
+  print(-9) shows negative nine.
+example_code: |
+  print(-9)
+starter_code: |
+  print(-9)
+challenge: |
+  🎯 Challenge: The temperature dropped to 20 degrees below zero. Can you make Python print -20?
+expected_output: "-20"
+hints:
+  - "Change -9 to -20, keep the minus sign."
+  - "It should look like: print(-20)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 4
+main_path: false

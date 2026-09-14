@@ -1,0 +1,24 @@
+id: lesson_511
+title: "Numbers: Level 22 🔢"
+level: 511
+objective: "Practice using min() to find the smaller of two numbers."
+explanation: |
+  Let's practice min() again — it's the opposite of max(), handing back whichever number is smaller.
+
+  min(6, 15) is 6, because 6 is the smaller of the two.
+example_code: |
+  print(min(6, 15))
+starter_code: |
+  print(min(6, 15))
+challenge: |
+  🎯 Challenge: Can you make Python print the smaller of 44 and 27?
+expected_output: "27"
+hints:
+  - "Change the numbers to 44 and 27."
+  - "It should look like: print(min(44, 27))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 22
+main_path: false

@@ -57,24 +57,24 @@ def test_chapter_card_status_starts_at_zero_of_its_total(state):
     assert card.content.controls[1].value == f"0/{total} items"
 
 
-def test_data_structures_card_shows_0_of_12(state):
+def test_data_structures_card_shows_0_of_9(state):
     page = FakePage()
     view = build_course_map_view(page, state)
     card = next(
         c for c in _chapter_cards(view)
         if c.content.controls[0].controls[1].value == get_category_meta("course_data_structures").title
     )
-    assert card.content.controls[1].value == "0/12 items"
+    assert card.content.controls[1].value == "0/9 items"
 
 
-def test_variables_card_shows_0_of_15(state):
+def test_variables_card_shows_0_of_6(state):
     page = FakePage()
     view = build_course_map_view(page, state)
     card = next(
         c for c in _chapter_cards(view)
         if c.content.controls[0].controls[1].value == get_category_meta("course_variables").title
     )
-    assert card.content.controls[1].value == "0/15 items"
+    assert card.content.controls[1].value == "0/6 items"
 
 
 def test_chapter_card_click_navigates_to_its_chapter_route(state):

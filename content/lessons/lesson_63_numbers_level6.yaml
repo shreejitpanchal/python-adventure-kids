@@ -1,0 +1,24 @@
+id: lesson_63
+title: "Numbers: Level 6 🔢"
+level: 63
+objective: "Practice printing a decimal number."
+explanation: |
+  Let's practice decimals again! A decimal point lets you show parts of a number, like halves and quarters.
+
+  print(6.5) shows six and a half.
+example_code: |
+  print(6.5)
+starter_code: |
+  print(6.5)
+challenge: |
+  🎯 Challenge: A puppy weighs 9.75 pounds. Can you make Python print 9.75?
+expected_output: "9.75"
+hints:
+  - "Change 6.5 to 9.75."
+  - "It should look like: print(9.75)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 6
+main_path: false

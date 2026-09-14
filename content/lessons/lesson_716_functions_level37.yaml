@@ -1,32 +1,31 @@
 id: lesson_716
 title: "Functions: Level 37 ⚙️"
 level: 716
-objective: "Write a recursive function with two parameters, where one shrinks toward a base case."
+objective: "Combine recursion with *args to total any number of arguments."
 explanation: |
-  Recursion isn't limited to a single parameter -- power(base, exponent) keeps base the same on every call, while exponent shrinks by 1 each time, until it hits the base case at 0.
+  A recursive function can accept *args too — it just peels off one argument at a time and calls itself with the rest.
 
-  Each call multiplies base by the result of the smaller call, building up the full power step by step.
+  total_of(*nums) checks if there are any numbers left; if not, it returns 0. Otherwise it adds the first number to the result of calling itself on all the rest.
 example_code: |
-  def power(base, exponent):
-      if exponent == 0:
-          return 1
-      return base * power(base, exponent - 1)
+  def total_of(*nums):
+      if len(nums) == 0:
+          return 0
+      return nums[0] + total_of(*nums[1:])
 
-  print(power(2, 5))
+  print(total_of(2, 4, 6, 8))
 starter_code: |
-  def power(base, exponent):
-      if exponent == 0:
-          return 1
-      return base * power(base, exponent - 1)
+  def total_of(*nums):
+      if len(nums) == 0:
+          return 0
+      return nums[0] + total_of(*nums[1:])
 
-  print(power(2, 5))
+  print(total_of(2, 4, 6, 8))
 challenge: |
-  🎯 Challenge: Can you call power with base 3 and exponent 4 instead, so it prints 81?
-expected_output: "81"
+  🎯 Challenge: Can you call total_of with 1, 3, 5, 7, and 9 instead?
+expected_output: "25"
 hints:
-  - "Change both numbers you pass into power(...)."
-  - "power(3, 4) means 3 x 3 x 3 x 3."
-  - "It should look like: print(power(3, 4))"
+  - "Change the numbers passed into total_of(...)."
+  - "It should look like: print(total_of(1, 3, 5, 7, 9))"
 reward_stars: 6
 badge: null
 next_lesson_id: null

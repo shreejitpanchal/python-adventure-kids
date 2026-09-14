@@ -26,6 +26,6 @@ hints:
 reward_stars: 3
 badge: null
 category: course_variables
-category_level: 11
+category_level: 2
 topic: Booleans
 concept_tags: [booleans, comparison, conditionals]

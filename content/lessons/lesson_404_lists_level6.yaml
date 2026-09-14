@@ -15,15 +15,16 @@ starter_code: |
   for color in colors:
       print(color)
 challenge: |
-  🎯 Challenge: Can you print every color in this backpack, one per line, using a for loop?
+  🎯 Challenge: Can you change the backpack to ["purple", "orange", "pink", "teal"] and print every color, one per line, using a for loop?
 expected_output: |
-  red
-  green
-  blue
+  purple
+  orange
+  pink
+  teal
 hints:
-  - "A for loop can visit every item in a list without needing index numbers."
-  - "for color in colors: — then print(color) indented underneath."
-  - "It should look like: for color in colors: then print(color) indented on the next line."
+  - "Change colors = [...] to the new list of four colors."
+  - "The for loop doesn't need to change — for color in colors: then print(color) indented underneath."
+  - "It should look like: colors = [\"purple\", \"orange\", \"pink\", \"teal\"], then for color in colors: print(color)"
 reward_stars: 3
 badge: null
 next_lesson_id: null

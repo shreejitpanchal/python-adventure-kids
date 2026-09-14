@@ -1,0 +1,25 @@
+id: lesson_548
+title: "Subtraction: Level 22 ➖"
+level: 548
+objective: "Practice // with a different difference."
+explanation: |
+  Let's try // again with new numbers, so it really sticks.
+
+  (40 - 10) // 6 subtracts first (getting 30), then floor-divides by 6: 5.
+example_code: |
+  print((40 - 10) // 6)
+starter_code: |
+  print((40 - 10) // 6)
+challenge: |
+  🎯 Challenge: Subtract 14 from 45, then floor-divide the result by 5.
+expected_output: "6"
+hints:
+  - "Change the numbers to 45, 14, and 5."
+  - "The parentheses make sure the subtraction happens first."
+  - "It should look like: print((45 - 14) // 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 22
+main_path: false

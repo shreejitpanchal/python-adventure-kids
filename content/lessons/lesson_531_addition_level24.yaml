@@ -1,0 +1,25 @@
+id: lesson_531
+title: "Addition: Level 24 ➕"
+level: 531
+objective: "Practice % with a different sum."
+explanation: |
+  Let's try % again with new numbers, so it really sticks.
+
+  (17 + 8) % 6 adds first (getting 25), then finds the remainder when divided by 6: 1.
+example_code: |
+  print((17 + 8) % 6)
+starter_code: |
+  print((17 + 8) % 6)
+challenge: |
+  🎯 Challenge: Add 23 and 19, then find the remainder when the result is divided by 7.
+expected_output: "0"
+hints:
+  - "Change the numbers to 23, 19, and 7."
+  - "The parentheses make sure the addition happens first."
+  - "It should look like: print((23 + 19) % 7)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 24
+main_path: false

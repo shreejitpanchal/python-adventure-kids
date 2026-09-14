@@ -1,0 +1,24 @@
+id: lesson_520
+title: "Addition: Level 20 ➕"
+level: 520
+objective: "Practice ** with a different sum."
+explanation: |
+  Let's try ** again with new numbers, so it really sticks.
+
+  (5 + 1) ** 2 adds first (getting 6), then squares it: 36.
+example_code: |
+  print((5 + 1) ** 2)
+starter_code: |
+  print((5 + 1) ** 2)
+challenge: |
+  🎯 Challenge: Add 7 + 3, then raise the result to the power of 2.
+expected_output: "100"
+hints:
+  - "Change the sum to 7 + 3, keep ** 2."
+  - "It should look like: print((7 + 3) ** 2)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: addition
+category_level: 20
+main_path: false

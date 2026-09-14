@@ -1,0 +1,24 @@
+id: lesson_514
+title: "Numbers: Level 28 🔢"
+level: 514
+objective: "Practice using // to floor-divide two numbers."
+explanation: |
+  Let's practice // again — it divides two numbers and drops anything after the decimal point.
+
+  13 // 4 is 3, because 4 goes into 13 three whole times.
+example_code: |
+  print(13 // 4)
+starter_code: |
+  print(13 // 4)
+challenge: |
+  🎯 Challenge: You have 26 crayons to pack into boxes of 4. Can you make Python print how many full boxes you can make?
+expected_output: "6"
+hints:
+  - "Change 13 // 4 to 26 // 4."
+  - "It should look like: print(26 // 4)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 28
+main_path: false

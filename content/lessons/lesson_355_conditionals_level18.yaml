@@ -1,0 +1,33 @@
+id: lesson_355
+title: "Decisions: Level 18 🚦"
+level: 355
+objective: "Practice % with a different number to check even or odd."
+explanation: |
+  Let's practice % again. Remember: number % 2 is 0 for even numbers, and 1 for odd numbers.
+
+  if number % 2 == 0: is a quick way to ask Python "is this number even?"
+example_code: |
+  number = 15
+  if number % 2 == 0:
+      print("That's an even number!")
+  else:
+      print("That's an odd number!")
+starter_code: |
+  number = 15
+  if number % 2 == 0:
+      print("That's an even number!")
+  else:
+      print("That's an odd number!")
+challenge: |
+  🎯 Challenge: Change number so Python prints "That's an even number!" instead.
+expected_output: "That's an even number!"
+hints:
+  - "% 2 gives the remainder when dividing by 2."
+  - "An even number has a remainder of 0 when divided by 2."
+  - "Try number = 16."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 18
+main_path: false

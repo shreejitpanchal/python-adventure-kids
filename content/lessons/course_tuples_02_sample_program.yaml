@@ -28,6 +28,6 @@ hints:
 reward_stars: 3
 badge: null
 category: course_data_structures
-category_level: 5
+category_level: 2
 topic: Tuples
 concept_tags: [tuples, iteration, for-loops]

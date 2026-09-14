@@ -60,7 +60,7 @@ picking free numbers.
 
 ## 3. The lesson YAML schema
 
-Copy an existing file (e.g. `content/lessons/course_variables_numbers_01_what_is_a_number.yaml`
+Copy an existing file (e.g. `content/lessons/course_variables_booleans_01_what_is_a_boolean.yaml`
 for the Python course, or `content/lessons/ai_tools_whatismcp_01_what_is_mcp.yaml`
 for the AI course) as your template. Required fields: `id`, `title`,
 `level`, `objective`, `explanation`, `example_code`, `starter_code`,
@@ -70,13 +70,23 @@ of every topic) additionally set `is_quiz: true` and leave
 `example_code`/`starter_code`/`expected_output` empty, `hints: []`.
 
 Filename/`id` convention: match your **category's actual name**, not a
-reflexive `course_` prefix — e.g. `course_variables_numbers_01_...yaml` /
-`id: course_variables_numbers_1` for the `course_variables` category, but
+reflexive `course_` prefix — e.g. `course_variables_booleans_01_...yaml` /
+`id: course_variables_booleans_1` for the `course_variables` category, but
 `ai_tools_whatismcp_01_...yaml` / `id: ai_tools_whatismcp_1` for the
 `ai_tools` category (which has no `course_` prefix). Pattern:
 `<category>_<topic_slug>_<01|02|03>_<short_desc>.yaml`, id
 `<category>_<topic_slug>_<1|2|3>` (trailing digit matches `category_level`'s
 position within the topic).
+
+Before adding a new topic to `course_variables`/`course_data_structures`
+(or any chapter), check whether the fundamentals path
+(`app.engine.lesson_engine.TODAYS_MISSION_CATEGORIES`) already teaches
+that concept — this course deliberately does NOT re-teach ground the
+fundamentals path owns (see `app/engine/categories.py`'s
+`COURSE_CATEGORIES` docstring); `course_control_flow` and
+`course_functions` were retired, and `course_variables`/
+`course_data_structures` had their overlapping topics removed, for
+exactly this reason.
 
 `starter_code` is normally identical to `example_code` — the challenge asks
 the child to edit one specific value, and `expected_output` reflects the

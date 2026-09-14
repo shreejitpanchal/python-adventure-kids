@@ -1,0 +1,24 @@
+id: lesson_95
+title: "Subtraction: Level 14 ➖"
+level: 95
+objective: "Practice comparing a difference with a different target number."
+explanation: |
+  Let's try > again with new numbers, so it really sticks.
+
+  Python works out 12 - 4 first, then checks if that answer is greater than 5.
+example_code: |
+  print(12 - 4 > 5)
+starter_code: |
+  print(12 - 4 > 5)
+challenge: |
+  🎯 Challenge: Is 9 - 7 greater than 5? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 9 - 7 > 5."
+  - "It should look like: print(9 - 7 > 5)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 14
+main_path: false

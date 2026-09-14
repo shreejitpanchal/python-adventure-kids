@@ -1,0 +1,22 @@
+id: lesson_589
+title: "Division: Level 18 ➗"
+level: 589
+objective: "Practice % with a different pair of numbers."
+explanation: |
+  Let's practice finding the remainder again with a new pair of numbers.
+example_code: |
+  print(19 % 4)
+starter_code: |
+  print(19 % 4)
+challenge: |
+  🎯 Challenge: What's left over when 29 is divided by 6? Use % to find out.
+expected_output: "5"
+hints:
+  - "Change the numbers to 29 and 6."
+  - "It should look like: print(29 % 6)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 18
+main_path: false

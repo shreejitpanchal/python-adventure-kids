@@ -19,12 +19,12 @@ starter_code: |
   prices = [3, 5, 10]
   print(total_of(prices))
 challenge: |
-  🎯 Challenge: Can you write a function that takes a list of prices and returns their total, then print the result?
-expected_output: "18"
+  🎯 Challenge: Can you change the prices to [12, 8, 25] and print their total using the function?
+expected_output: "45"
 hints:
-  - "A function can take a list as its parameter, just like any other value."
-  - "Use return sum(numbers) inside the function to hand back the total."
-  - "It should look like: def total_of(numbers): return sum(numbers), then print(total_of(prices))"
+  - "Change prices = [...] to the new list of three prices."
+  - "The function itself doesn't need to change — total_of(numbers) still returns sum(numbers)."
+  - "It should look like: prices = [12, 8, 25], then print(total_of(prices))"
 reward_stars: 4
 badge: null
 next_lesson_id: null

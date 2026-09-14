@@ -13,12 +13,12 @@ starter_code: |
   fruits = ["apple", "banana", "orange"]
   print(fruits[2])
 challenge: |
-  🎯 Challenge: This backpack has three fruits. Can you print the fruit sitting at position 2 — the THIRD item?
-expected_output: "orange"
+  🎯 Challenge: This backpack has three fruits. Can you print the fruit at position 1 instead — the SECOND item?
+expected_output: "banana"
 hints:
-  - "Position 2 is the third item, since counting starts at 0."
-  - "Use square brackets after the list name: fruits[2]."
-  - "It should look like: print(fruits[2])"
+  - "Position 1 is the second item, since counting starts at 0."
+  - "Change fruits[2] to fruits[1]."
+  - "It should look like: print(fruits[1])"
 reward_stars: 3
 badge: null
 next_lesson_id: null

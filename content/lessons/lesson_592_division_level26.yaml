@@ -1,0 +1,22 @@
+id: lesson_592
+title: "Division: Level 26 ➗"
+level: 592
+objective: "Practice == with a different target number."
+explanation: |
+  Let's check another division answer against a target number, just like before.
+example_code: |
+  print(12 / 3 == 4.0)
+starter_code: |
+  print(12 / 3 == 4.0)
+challenge: |
+  🎯 Challenge: Is 20 divided by 5 equal to 3? Make Python check.
+expected_output: "False"
+hints:
+  - "Change the problem to 20 / 5 == 3."
+  - "It should look like: print(20 / 5 == 3)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: division
+category_level: 26
+main_path: false

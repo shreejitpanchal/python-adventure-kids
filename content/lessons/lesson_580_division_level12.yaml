@@ -1,0 +1,22 @@
+id: lesson_580
+title: "Division: Level 12 ➗"
+level: 580
+objective: "Practice abs() with a different division result."
+explanation: |
+  Let's find the absolute value of another division result, just like before.
+example_code: |
+  print(abs(-24 / 6))
+starter_code: |
+  print(abs(-24 / 6))
+challenge: |
+  🎯 Challenge: Divide -49 by 7, then find the absolute value of the result.
+expected_output: "7.0"
+hints:
+  - "Change the numbers to -49 and 7."
+  - "It should look like: print(abs(-49 / 7))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 12
+main_path: false

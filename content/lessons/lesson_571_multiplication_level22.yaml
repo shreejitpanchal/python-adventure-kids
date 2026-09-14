@@ -1,0 +1,22 @@
+id: lesson_571
+title: "Multiplication: Level 22 ✖️"
+level: 571
+objective: "Practice multiplying two numbers, then raising the result to a power."
+explanation: |
+  Just like before, Python multiplies first inside the parentheses, then raises that answer to the power.
+example_code: |
+  print((3 * 2) ** 2)
+starter_code: |
+  print((3 * 2) ** 2)
+challenge: |
+  🎯 Challenge: Multiply 3 by 4, then raise the result to the power of 2.
+expected_output: "144"
+hints:
+  - "Change the product to 3 * 4, keep ** 2."
+  - "It should look like: print((3 * 4) ** 2)"
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: multiplication
+category_level: 22
+main_path: false

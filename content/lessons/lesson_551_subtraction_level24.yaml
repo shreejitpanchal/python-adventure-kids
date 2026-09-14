@@ -1,0 +1,25 @@
+id: lesson_551
+title: "Subtraction: Level 24 ➖"
+level: 551
+objective: "Practice % with a different difference."
+explanation: |
+  Let's try % again with new numbers, so it really sticks.
+
+  (22 - 5) % 6 subtracts first (getting 17), then finds the remainder when divided by 6: 5.
+example_code: |
+  print((22 - 5) % 6)
+starter_code: |
+  print((22 - 5) % 6)
+challenge: |
+  🎯 Challenge: Subtract 9 from 40, then find the remainder when the result is divided by 7.
+expected_output: "3"
+hints:
+  - "Change the numbers to 40, 9, and 7."
+  - "The parentheses make sure the subtraction happens first."
+  - "It should look like: print((40 - 9) % 7)"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 24
+main_path: false

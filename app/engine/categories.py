@@ -44,9 +44,7 @@ CATEGORY_META: dict[str, CategoryMeta] = {
     "robot_adventure": CategoryMeta("Robot Adventure", "🤖", "#546E7A"),
     "advanced_code_crackers": CategoryMeta("Advanced Code Crackers", "🕵️", "#37474F"),
     "course_intro_setup": CategoryMeta("Intro to Python & Setup", "🧭", "#4F46E5"),
-    "course_variables": CategoryMeta("Variables & Data Types", "🧮", "#0EA5E9"),
-    "course_control_flow": CategoryMeta("Control Flow", "🔀", "#F97316"),
-    "course_functions": CategoryMeta("Functions", "🧰", "#7C3AED"),
+    "course_variables": CategoryMeta("Booleans & Type Conversion", "🧮", "#0EA5E9"),
     "course_data_structures": CategoryMeta("Data Structures", "🗂️", "#10B981"),
     "course_advanced_concepts": CategoryMeta("Advanced Programming Concepts", "🧠", "#0891B2"),
     "course_stdlib": CategoryMeta("Standard Library Deep Dive", "📚", "#9333EA"),
@@ -65,12 +63,9 @@ def get_category_meta(category: str) -> CategoryMeta:
 
 
 TOPIC_ICONS: dict[str, str] = {
-    "Lists": "📃", "Tuples": "🔗", "Dictionaries": "📖", "Sets": "🧺",
-    "Variables": "📦", "Numbers": "🔢", "Strings": "🔤", "Booleans": "🔘",
-    "Type Conversion": "🔄",
+    "Tuples": "🔗", "Dictionaries": "📖", "Sets": "🧺",
+    "Booleans": "🔘", "Type Conversion": "🔄",
     "Print": "🖨️", "Comments": "💬", "Reading Errors": "🐞",
-    "Conditionals": "🚦", "For Loops": "🔁", "While Loops": "🔂",
-    "Defining Functions": "🧰", "Parameters": "🧩", "Return Values": "↩️",
     "Algorithms": "📐", "Recursion": "🪆", "Functional Programming": "🧬",
     "Collections": "🗃️", "Itertools": "🔁", "Datetime": "📅", "JSON": "🧾",
     "Concurrency & Async": "⚡", "Thread Scheduling": "🧵", "Sync vs Async": "🔀",
@@ -96,9 +91,9 @@ CATEGORIES), "basics", or one of the two Code Crackers tracks (which get
 their own direct Hub cards instead of being lumped in here)."""
 
 COURSE_CATEGORIES = [
-    "course_intro_setup", "course_variables", "course_control_flow",
-    "course_functions", "course_data_structures", "course_advanced_concepts",
-    "course_stdlib", "course_concurrency", "course_capstone",
+    "course_intro_setup", "course_variables", "course_data_structures",
+    "course_advanced_concepts", "course_stdlib", "course_concurrency",
+    "course_capstone",
 ]
 """The "🎓 Python Learning" course's chapters, in curriculum order -- each
 one a lesson category, grouped by Lesson.topic into 3-item sub-groups
@@ -106,12 +101,25 @@ one a lesson category, grouped by Lesson.topic into 3-item sub-groups
 app/engine/course_status.py's TopicStatus/is_topic_item_unlocked(). A
 chapter can hold just one implicit topic (topic="" on every lesson, e.g.
 course_intro_setup) or several independent named topics (e.g.
-course_data_structures: Lists/Tuples/Dictionaries/Sets, course_variables:
-Variables/Numbers/Strings/Booleans/Type Conversion) -- topics within a
-chapter are never locked relative to each other, only the 3 items within
-one topic gate in order. Never added to LessonEngine.TODAYS_MISSION_
-CATEGORIES -- this course is reached only through its own Hub card, not
-folded into "Today's Mission"."""
+course_data_structures: Tuples/Dictionaries/Sets, course_variables:
+Booleans/Type Conversion) -- topics within a chapter are never locked
+relative to each other, only the 3 items within one topic gate in order.
+
+course_control_flow and course_functions were retired entirely, and
+course_variables/course_data_structures had their Variables/Numbers/
+Strings and Lists topics removed respectively -- all of that ground
+(conditionals, for/while loops, defining functions/parameters/return
+values, variables, numbers, strings, lists) is already taught in much
+finer-grained, gradually-paced detail by the fundamentals path's own
+conditionals/loops/functions/variables/numbers/strings/lists categories
+(see LessonEngine.TODAYS_MISSION_CATEGORIES) -- this course now only
+covers what the fundamentals path doesn't (Booleans, Type Conversion,
+Tuples, Dictionaries, Sets, plus the more advanced chapters), rather than
+re-teaching the same ground twice.
+
+Never added to LessonEngine.TODAYS_MISSION_CATEGORIES -- this course is
+reached only through its own Hub card, not folded into "Today's
+Mission"."""
 
 AI_COURSE_CATEGORIES = ["ai_foundations", "ai_tools", "ai_advanced"]
 """The "🤖 AI & Machine Learning" course's chapters, in curriculum order --

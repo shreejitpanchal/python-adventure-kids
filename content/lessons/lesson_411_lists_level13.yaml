@@ -13,12 +13,12 @@ starter_code: |
   numbers = [9, 3, 7, 1]
   print(sorted(numbers))
 challenge: |
-  🎯 Challenge: Can you print this backpack of numbers sorted from smallest to largest?
-expected_output: "[1, 3, 7, 9]"
+  🎯 Challenge: Can you change the backpack to [42, 7, 19, 3, 88] and print it sorted from smallest to largest?
+expected_output: "[3, 7, 19, 42, 88]"
 hints:
-  - "sorted(...) puts the items of a list in order."
-  - "Wrap the list name inside sorted(...)."
-  - "It should look like: print(sorted(numbers))"
+  - "Change numbers = [...] to the new list of five numbers."
+  - "sorted(...) doesn't need to change — it still puts the items in order."
+  - "It should look like: numbers = [42, 7, 19, 3, 88], then print(sorted(numbers))"
 reward_stars: 3
 badge: null
 next_lesson_id: null

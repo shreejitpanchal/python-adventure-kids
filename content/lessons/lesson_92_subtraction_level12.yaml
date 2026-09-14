@@ -1,0 +1,24 @@
+id: lesson_92
+title: "Subtraction: Level 12 ➖"
+level: 92
+objective: "Practice abs() with a different subtraction result."
+explanation: |
+  Let's try abs() again with new numbers, so it really sticks.
+
+  abs(4 - 15) subtracts first (getting -11), then shows how far -11 is from zero: 11.
+example_code: |
+  print(abs(4 - 15))
+starter_code: |
+  print(abs(4 - 15))
+challenge: |
+  🎯 Challenge: Subtract 30 from 8, then find the absolute value of the result.
+expected_output: "22"
+hints:
+  - "Change the numbers to 8 and 30."
+  - "It should look like: print(abs(8 - 30))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 12
+main_path: false

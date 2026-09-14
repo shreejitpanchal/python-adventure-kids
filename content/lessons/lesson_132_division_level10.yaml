@@ -1,0 +1,22 @@
+id: lesson_132
+title: "Division: Level 10 ➗"
+level: 132
+objective: "Practice rounding the result of a different division."
+explanation: |
+  Let's round the answer to another division, just like you practiced before.
+example_code: |
+  print(round(13 / 4))
+starter_code: |
+  print(round(13 / 4))
+challenge: |
+  🎯 Challenge: Divide 19 by 5, then round the result.
+expected_output: "4"
+hints:
+  - "Change the numbers to 19 and 5."
+  - "It should look like: print(round(19 / 5))"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: division
+category_level: 10
+main_path: false

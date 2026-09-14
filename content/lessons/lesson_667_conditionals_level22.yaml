@@ -1,0 +1,35 @@
+id: lesson_667
+title: "Decisions: Level 22 🚦"
+level: 667
+objective: "Practice != with a different pair of codes."
+explanation: |
+  Let's practice != again. Remember: != means "not equal to" — the condition is true only when the two sides are different.
+
+  if entered_code != correct_code: runs its block when entered_code does NOT match correct_code.
+example_code: |
+  correct_code = "4321"
+  entered_code = "4321"
+  if entered_code != correct_code:
+      print("Wrong code, try again.")
+  else:
+      print("Code accepted!")
+starter_code: |
+  correct_code = "4321"
+  entered_code = "4321"
+  if entered_code != correct_code:
+      print("Wrong code, try again.")
+  else:
+      print("Code accepted!")
+challenge: |
+  🎯 Challenge: Change entered_code so Python prints "Wrong code, try again." instead.
+expected_output: "Wrong code, try again."
+hints:
+  - "!= is true when the two sides are different - so entered_code needs to be DIFFERENT from correct_code this time."
+  - "The else only runs when entered_code != correct_code is false, meaning they're equal."
+  - "Try entered_code = \"0000\"."
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 22
+main_path: false

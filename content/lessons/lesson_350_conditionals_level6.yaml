@@ -1,0 +1,35 @@
+id: lesson_350
+title: "Decisions: Level 6 🚦"
+level: 350
+objective: "Practice and with a different pair of conditions."
+explanation: |
+  Let's practice and again. Remember: the whole condition is only true when BOTH sides are true.
+
+  if score >= 100 and lives >= 2: only lets the bonus round start when score AND lives both meet the rule.
+example_code: |
+  score = 50
+  lives = 1
+  if score >= 100 and lives >= 2:
+      print("Bonus round unlocked!")
+  else:
+      print("Keep playing to unlock the bonus round.")
+starter_code: |
+  score = 50
+  lives = 1
+  if score >= 100 and lives >= 2:
+      print("Bonus round unlocked!")
+  else:
+      print("Keep playing to unlock the bonus round.")
+challenge: |
+  🎯 Challenge: Change score and lives so Python prints "Bonus round unlocked!" instead.
+expected_output: "Bonus round unlocked!"
+hints:
+  - "Both score and lives need to be big enough this time."
+  - "and means BOTH sides must be true - not just one."
+  - "Try score = 100 and lives = 2."
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 6
+main_path: false

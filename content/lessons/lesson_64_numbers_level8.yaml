@@ -1,0 +1,24 @@
+id: lesson_64
+title: "Numbers: Level 8 🔢"
+level: 64
+objective: "Practice printing two numbers at once."
+explanation: |
+  Let's practice printing two numbers together again — separate them with a comma and Python adds a space for you.
+
+  print(3, 9) shows both numbers on the same line.
+example_code: |
+  print(3, 9)
+starter_code: |
+  print(3, 9)
+challenge: |
+  🎯 Challenge: Can you make Python print 6 and 30 together?
+expected_output: "6 30"
+hints:
+  - "Change the numbers to 6 and 30, keep the comma."
+  - "It should look like: print(6, 30)"
+reward_stars: 3
+badge: null
+next_lesson_id: null
+category: numbers
+category_level: 8
+main_path: false

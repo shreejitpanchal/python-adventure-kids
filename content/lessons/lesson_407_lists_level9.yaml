@@ -21,12 +21,12 @@ starter_code: |
           biggest = s
   print(biggest)
 challenge: |
-  🎯 Challenge: Can you find and print the biggest score in this backpack?
-expected_output: "45"
+  🎯 Challenge: Can you change the backpack to [8, 22, 61, 19, 5] and find and print the biggest score?
+expected_output: "61"
 hints:
-  - "Start by assuming the first item is the biggest."
-  - "Compare every item with if s > biggest: and update biggest when you find something bigger."
-  - "It should look like: biggest = scores[0], then loop with if s > biggest: biggest = s, then print(biggest)"
+  - "Change scores = [...] to the new list of five scores."
+  - "The rest doesn't need to change: biggest = scores[0], then loop with if s > biggest: biggest = s."
+  - "It should look like: scores = [8, 22, 61, 19, 5], then find biggest, then print(biggest)"
 reward_stars: 3
 badge: null
 next_lesson_id: null

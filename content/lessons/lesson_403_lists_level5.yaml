@@ -15,12 +15,12 @@ starter_code: |
   pets.append("fish")
   print(pets)
 challenge: |
-  🎯 Challenge: Start with a backpack of two pets, then add "fish" to the end and print the whole list.
-expected_output: "['cat', 'dog', 'fish']"
+  🎯 Challenge: Can you change the backpack to ["hamster", "bird", "turtle"], then add "rabbit" to the end and print the whole list?
+expected_output: "['hamster', 'bird', 'turtle', 'rabbit']"
 hints:
-  - ".append(...) adds a new item to the end of a list."
-  - "Call it like pets.append(\"fish\") before printing pets."
-  - "It should look like: pets.append(\"fish\") then print(pets)"
+  - "Change pets = [...] to the new list of three pets."
+  - ".append(...) still adds a new item to the end — call it like pets.append(\"rabbit\")."
+  - "It should look like: pets = [\"hamster\", \"bird\", \"turtle\"], pets.append(\"rabbit\"), then print(pets)"
 reward_stars: 3
 badge: null
 next_lesson_id: null

@@ -1,0 +1,25 @@
+id: lesson_552
+title: "Subtraction: Level 26 ➖"
+level: 552
+objective: "Practice f-strings with a different subtraction."
+explanation: |
+  Let's try f-strings again with new numbers, so it really sticks.
+
+  f"Remaining: {20 - 7}" shows the words "Remaining: " followed by the answer, 13.
+example_code: |
+  print(f"Remaining: {20 - 7}")
+starter_code: |
+  print(f"Remaining: {20 - 7}")
+challenge: |
+  🎯 Challenge: Can you make Python print "Remaining: " followed by 35 - 19?
+expected_output: "Remaining: 16"
+hints:
+  - "Change 20 - 7 to 35 - 19, inside the curly braces."
+  - "Keep the f right before the quotes, and the curly braces {} around the math."
+  - "It should look like: print(f\"Remaining: {35 - 19}\")"
+reward_stars: 4
+badge: null
+next_lesson_id: null
+category: subtraction
+category_level: 26
+main_path: false

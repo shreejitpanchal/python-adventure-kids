@@ -1,0 +1,35 @@
+id: lesson_671
+title: "Decisions: Level 28 🚦"
+level: 671
+objective: "Practice .isdigit() with a different value before converting."
+explanation: |
+  Let's practice .isdigit() again. Remember: it's smart to check text is really a number before converting it with int() — otherwise int() would crash.
+
+  if quantity_text.isdigit(): only converts and uses quantity_text when every character in it really is a digit.
+example_code: |
+  quantity_text = "xyz"
+  if quantity_text.isdigit():
+      quantity = int(quantity_text)
+      print("You ordered " + str(quantity) + " items.")
+  else:
+      print("That doesn't look like a valid quantity.")
+starter_code: |
+  quantity_text = "xyz"
+  if quantity_text.isdigit():
+      quantity = int(quantity_text)
+      print("You ordered " + str(quantity) + " items.")
+  else:
+      print("That doesn't look like a valid quantity.")
+challenge: |
+  🎯 Challenge: Change quantity_text so Python prints "You ordered 5 items." instead.
+expected_output: "You ordered 5 items."
+hints:
+  - "quantity_text needs to be a string of digits, not letters."
+  - ".isdigit() only lets the if branch run when the text is all digits."
+  - "Try quantity_text = \"5\"."
+reward_stars: 5
+badge: null
+next_lesson_id: null
+category: conditionals
+category_level: 28
+main_path: false
