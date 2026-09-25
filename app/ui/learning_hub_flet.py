@@ -93,8 +93,8 @@ _CARD_ACCENTS: dict[str, str | None] = {
 }
 
 # Settings.preferred_learning_mode's semantic keys (guided/projects/
-# crackers/advanced -- set during the setup wizard, see setup_wizard_flet.py)
-# map onto the Hub's own card keys, which mirror last_learning_route's
+# crackers/advanced -- no longer asked by the setup wizard, but honored if
+# an older settings.json carries one) map onto the Hub's own card keys, which mirror last_learning_route's
 # vocabulary instead (guided/code_crackers/advanced_code_crackers/projects)
 # -- "crackers" means the (non-advanced) Code Crackers card.
 _PREFERRED_MODE_TO_CARD_KEY: dict[str, str] = {

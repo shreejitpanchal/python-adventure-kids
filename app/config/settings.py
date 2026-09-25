@@ -85,10 +85,13 @@ class Settings:
     advanced_code_crackers/projects. Each UI's Hub screen maps this key to
     its own navigation call, same pattern as `theme`/`font_family` above."""
     preferred_learning_mode: str = ""
-    """A semantic key set (optionally) during setup -- "" (unset, treated
-    the same as "guided") or one of guided/projects/crackers/advanced.
-    Only affects which Learning Hub card is shown first/emphasized; never
-    hides or restricts any card."""
+    """A semantic key -- "" (unset, treated the same as "guided") or one of
+    guided/projects/crackers/advanced. Only affects which Learning Hub card
+    is shown first/emphasized; never hides or restricts any card. The
+    setup wizard no longer asks for it (the extra first-run screen was cut
+    so a child goes from typing their name straight to the app), so on a
+    fresh install it stays ""; it's kept because older settings.json files
+    may carry a value and the Hub still honors it."""
 
     def has_parent_pin(self) -> bool:
         return bool(self.parent_pin_hash)

@@ -1,5 +1,8 @@
-"""First-run setup wizard: just the child's name and, optionally, a
-preferred learning mode -- see app/ui/parent_dashboard_flet.py for Parent Area."""
+"""First-run setup wizard: just the child's name, then straight to the
+"all set" screen -- see app/ui/parent_dashboard_flet.py for Parent Area.
+Settings.preferred_learning_mode is no longer asked here (it stays at its
+default, so the Hub leads with the guided path); the Hub still honors the
+setting if a settings.json from an older build carries one."""
 from __future__ import annotations
 
 import flet as ft
@@ -53,7 +56,7 @@ class _SetupWizard:
                 self.page.update()
                 return
             self.state.settings.child_name = name
-            self.show_mode_step()
+            self.show_finish_step()
 
         name_field.on_submit = go_next
 
@@ -71,49 +74,7 @@ class _SetupWizard:
             ),
         ])
 
-    # -- Step 2: preferred learning mode (skippable) -----------------------------
-    def show_mode_step(self) -> None:
-        """Sets Settings.preferred_learning_mode, which the Learning Hub
-        (app/ui/learning_hub_flet.py) uses to decide which of its five
-        cards renders first/largest. Purely a preference nudge -- every
-        mode stays reachable from the Hub regardless of what's picked (or
-        skipped) here, so getting it "wrong" costs nothing."""
-        options = [
-            ("Learn Python from the beginning", "guided"),
-            ("Make games and creative projects", "projects"),
-            ("Practise coding puzzles", "crackers"),
-            ("I already know some Python", "advanced"),
-        ]
-
-        def choose(mode_key: str):
-            def handler(_e=None) -> None:
-                self.state.settings.preferred_learning_mode = mode_key
-                self.show_finish_step()
-            return handler
-
-        def skip(_e=None) -> None:
-            self.show_finish_step()
-
-        option_buttons = [
-            ft.Button(
-                label, width=320, height=56, on_click=choose(mode_key),
-                style=ft.ButtonStyle(bgcolor=self.theme.primary, color="#FFFFFF"),
-            )
-            for label, mode_key in options
-        ]
-
-        self._set([
-            ft.Text("What sounds most fun today?", size=self._fs(28), weight=ft.FontWeight.BOLD, color=self.theme.primary),
-            ft.Container(height=10),
-            ft.Column(option_buttons, spacing=12, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-            ft.Container(height=10),
-            ft.TextButton(
-                "Skip for now", on_click=skip,
-                style=ft.ButtonStyle(color=self.theme.text_muted),
-            ),
-        ])
-
-    # -- Step 3: finish ----------------------------------------------------------
+    # -- Step 2: finish ----------------------------------------------------------
     def show_finish_step(self) -> None:
         name = self.state.settings.child_name or "Explorer"
 
