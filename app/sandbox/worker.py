@@ -2,36 +2,22 @@
 
 Invoked as: python -I worker.py <path-to-child-code.py>
 Second layer of defense — app/sandbox/safety.py already statically rejected
-anything obviously dangerous before this process was even spawned.
+anything obviously dangerous before this process was even spawned. The
+restricted environment itself (allowed builtins, allowlisted-module views)
+comes from app/sandbox/allowed_builtins.py, shared with the in-process
+engine so the two can't drift apart.
 """
 from __future__ import annotations
 
-import builtins
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
-from app.sandbox.allowed_builtins import ALLOWED_BUILTIN_NAMES
-
-# Kept in sync with app/sandbox/safety.py's ALLOWED_MODULES -- that AST check
-# already rejects anything else before this process is even spawned; this is
-# the second, defense-in-depth layer.
-ALLOWED_MODULES = {"random", "time", "collections", "itertools", "datetime", "json", "functools"}
-
-
-def _restricted_import(name, globals=None, locals=None, fromlist=(), level=0):
-    root_module = name.split(".")[0]
-    if root_module not in ALLOWED_MODULES:
-        raise ImportError(f"Importing '{name}' is not allowed here yet.")
-    return builtins.__import__(name, globals, locals, fromlist, level)
+from app.sandbox.allowed_builtins import build_safe_builtins
 
 
 def build_safe_globals() -> dict:
-    safe_builtins = {
-        name: getattr(builtins, name) for name in ALLOWED_BUILTIN_NAMES if hasattr(builtins, name)
-    }
-    safe_builtins["__import__"] = _restricted_import
-    return {"__builtins__": safe_builtins}
+    return {"__builtins__": build_safe_builtins()}
 
 
 def main() -> None:

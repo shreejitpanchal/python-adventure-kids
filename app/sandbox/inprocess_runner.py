@@ -3,17 +3,28 @@
 Replaces the subprocess-based runner.py/worker.py -- Android's app
 sandboxing won't let a non-rooted app spawn a sibling OS process the way
 Windows' subprocess.Popen does, so this runs identically on both
-platforms: a static AST check, then exec() against a restricted builtins
-set, with a cooperative watchdog (app/sandbox/watchdog.py) standing in for
-the OS-level kill that used to handle infinite loops.
+platforms: a static AST check, then exec() against the restricted
+environment from app/sandbox/allowed_builtins.py, with a cooperative
+watchdog (app/sandbox/watchdog.py) standing in for the OS-level kill that
+used to handle infinite loops.
 
-Also serves graphical lessons (Snake) via the optional `game` parameter,
-injected into the exec globals -- this folds what used to be a separate
-app/games/graphical_runner.py into the same engine, so there's exactly one
-execution path instead of two that could drift apart. Graphical lessons
-pass disallow_while=True for the same reason they always have: animation
-must use game.after(...) callbacks that yield control, not a blocking
-loop.
+Also serves graphical lessons via the optional `game` parameter, injected
+into the exec globals -- for both UIs. The CTk lesson screen passes
+app/games/game_canvas.GameCanvas (drawing into a GameWindow), the Flet one
+passes app/games/game_canvas_flet.GameCanvas (drawing into an inline
+canvas); this is what used to be a separate app/games/graphical_runner.py,
+folded in so there's exactly one execution path instead of two that could
+drift apart. Graphical lessons pass disallow_while=True for the same reason
+they always have: animation must use game.after(...) callbacks that yield
+control, not a blocking loop.
+
+Blocking calls need special care because the watchdog only sees loop
+iterations: `time.sleep` is served by a watchdog-aware replacement (see
+_make_guarded_sleep) so `time.sleep(999)` times out and cancels like any
+loop would. Anything that still can't be interrupted (see watchdog.py's
+known limitation) at least can't wedge the engine for good: the next run
+waits at most its own timeout for the run lock, then reports the sandbox as
+busy instead of blocking forever.
 
 This function is synchronous and blocking, like the runner it replaces --
 a caller that must keep a UI thread responsive (as the lesson screen does)
@@ -22,20 +33,26 @@ before.
 """
 from __future__ import annotations
 
-import builtins
 import contextlib
 import io
 import threading
+import time
 import traceback
 from dataclasses import dataclass
 from typing import Any, Optional
 
-from app.sandbox.allowed_builtins import ALLOWED_BUILTIN_NAMES
-from app.sandbox.safety import ALLOWED_MODULES, SafetyViolation, check_code_safety
+from app.sandbox.allowed_builtins import build_safe_builtins
+from app.sandbox.safety import SafetyViolation, check_code_safety
 from app.sandbox.watchdog import TICK_FUNC_NAME, Watchdog, WatchdogTimeout, compile_with_watchdog
 
 DEFAULT_TIMEOUT_SECONDS = 5.0
 CODE_FILENAME = "<your code>"
+
+# How long the guarded time.sleep replacement sleeps between watchdog
+# checks -- the upper bound on how late a timeout/cancel is noticed mid-sleep.
+SLEEP_SLICE_SECONDS = 0.05
+
+BUSY_MESSAGE = "Another program is still running — wait a moment, then press RUN again."
 
 # contextlib.redirect_stdout mutates process-global state (sys.stdout), so
 # only one sandboxed run can be in flight at a time -- enforced here as a
@@ -79,11 +96,25 @@ class RunHandle:
                 self._watchdog.cancel()
 
 
-def _restricted_import(name, globals=None, locals=None, fromlist=(), level=0):
-    root_module = name.split(".")[0]
-    if root_module not in ALLOWED_MODULES:
-        raise ImportError(f"Importing '{name}' is not allowed here yet.")
-    return builtins.__import__(name, globals, locals, fromlist, level)
+def _make_guarded_sleep(watchdog: Watchdog):
+    """A time.sleep replacement that sleeps in short slices and asks the
+    watchdog between them, so a long sleep still honors the run's deadline
+    and a Stop request. Same contract as time.sleep otherwise, including
+    rejecting a negative duration."""
+
+    def sleep(seconds) -> None:
+        seconds = float(seconds)
+        if seconds < 0:
+            raise ValueError("sleep length must be non-negative")
+        end = time.monotonic() + seconds
+        while True:
+            watchdog.check()
+            remaining = end - time.monotonic()
+            if remaining <= 0:
+                return
+            time.sleep(min(remaining, SLEEP_SLICE_SECONDS))
+
+    return sleep
 
 
 def _make_input(answers: list[str], out: io.StringIO):
@@ -110,10 +141,9 @@ def _split_stdin(stdin_text: Optional[str]) -> list[str]:
 def _build_globals(
     watchdog: Watchdog, out: io.StringIO, stdin_text: Optional[str], game: Optional[Any]
 ) -> dict:
-    safe_builtins = {
-        name: getattr(builtins, name) for name in ALLOWED_BUILTIN_NAMES if hasattr(builtins, name)
-    }
-    safe_builtins["__import__"] = _restricted_import
+    safe_builtins = build_safe_builtins(
+        module_overrides={"time": {"sleep": _make_guarded_sleep(watchdog)}},
+    )
     safe_builtins["input"] = _make_input(_split_stdin(stdin_text), out)
 
     exec_globals: dict = {"__builtins__": safe_builtins, TICK_FUNC_NAME: watchdog.tick}
@@ -136,7 +166,9 @@ def run_code(
     except SafetyViolation as violation:
         return ExecutionResult(success=False, blocked=True, blocked_message=violation.message)
 
-    with _run_lock:
+    if not _run_lock.acquire(timeout=timeout):
+        return ExecutionResult(success=False, blocked=True, blocked_message=BUSY_MESSAGE)
+    try:
         watchdog = Watchdog(timeout)
         if handle is not None:
             handle._attach(watchdog)
@@ -152,5 +184,7 @@ def run_code(
             return ExecutionResult(success=False, timed_out=True, stdout=out.getvalue())
         except Exception:
             return ExecutionResult(success=False, stdout=out.getvalue(), stderr=traceback.format_exc())
+    finally:
+        _run_lock.release()
 
     return ExecutionResult(success=True, stdout=out.getvalue())

@@ -9,7 +9,7 @@ import pytest
 from app.engine.lesson_engine import LessonEngine
 from app.engine.validator import validate_ast_contains
 from app.games.game_canvas import GameCanvas
-from app.games.graphical_runner import run_graphical_code
+from app.sandbox.inprocess_runner import run_code
 
 ART_IDS = [f"art_{i:02d}" for i in range(1, 9)]
 
@@ -50,15 +50,15 @@ def test_is_a_bonus_graphical_level_with_ast_contains_set(engine, lesson_id):
 @pytest.mark.parametrize("lesson_id", ART_IDS)
 def test_example_code_runs_cleanly_and_satisfies_ast_contains(engine, lesson_id, game_canvas):
     lesson = engine.get(lesson_id)
-    result = run_graphical_code(lesson.example_code.strip(), game_canvas)
-    assert result.success is True, f"{lesson_id} failed: {result.traceback_text}"
+    result = run_code(lesson.example_code.strip(), game=game_canvas, disallow_while=True)
+    assert result.success is True, f"{lesson_id} failed: {result.stderr}"
     assert validate_ast_contains(lesson.example_code, lesson.ast_contains) is True
 
 
 @pytest.mark.parametrize("lesson_id", CLOSED_SHAPE_IDS)
 def test_closed_shape_returns_to_the_starting_point(engine, lesson_id, game_canvas):
     lesson = engine.get(lesson_id)
-    run_graphical_code(lesson.example_code.strip(), game_canvas)
+    run_code(lesson.example_code.strip(), game=game_canvas, disallow_while=True)
     assert (game_canvas._turtle_x, game_canvas._turtle_y) == pytest.approx((50.0, 50.0), abs=0.01), (
         f"{lesson_id}'s turn angle doesn't close the shape back to the start"
     )

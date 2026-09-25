@@ -6,7 +6,7 @@ import pytest
 
 from app.engine.lesson_engine import LessonEngine
 from app.games.game_canvas import GameCanvas
-from app.games.graphical_runner import run_graphical_code
+from app.sandbox.inprocess_runner import run_code
 
 SNAKE_LESSON_IDS = ["lesson_16", "lesson_17", "lesson_18"]
 
@@ -43,20 +43,20 @@ def test_lesson_is_marked_graphical(engine, lesson_id):
 @pytest.mark.parametrize("lesson_id", SNAKE_LESSON_IDS)
 def test_starter_code_runs_cleanly_against_a_real_canvas(engine, lesson_id, game_canvas):
     lesson = engine.get(lesson_id)
-    result = run_graphical_code(lesson.starter_code.strip(), game_canvas)
-    assert result.success is True, result.traceback_text
+    result = run_code(lesson.starter_code.strip(), game=game_canvas, disallow_while=True)
+    assert result.success is True, result.stderr
 
 
 def test_step_16_sets_title_and_background(engine, game_canvas):
     lesson = engine.get("lesson_16")
-    run_graphical_code(lesson.starter_code.strip(), game_canvas)
+    run_code(lesson.starter_code.strip(), game=game_canvas, disallow_while=True)
     assert game_canvas._canvas.cget("bg") == "black"
     assert game_canvas._window.title() == "My Snake Game"
 
 
 def test_step_17_draws_a_snake_rectangle(engine, game_canvas):
     lesson = engine.get("lesson_17")
-    run_graphical_code(lesson.starter_code.strip(), game_canvas)
+    run_code(lesson.starter_code.strip(), game=game_canvas, disallow_while=True)
     assert len(game_canvas._canvas.find_all()) == 1
 
 
@@ -65,7 +65,7 @@ def test_step_18_schedules_movement_without_blocking(engine, game_canvas):
 
     lesson = engine.get("lesson_18")
     start = time.time()
-    result = run_graphical_code(lesson.starter_code.strip(), game_canvas)
+    result = run_code(lesson.starter_code.strip(), game=game_canvas, disallow_while=True)
     elapsed = time.time() - start
 
     assert result.success is True

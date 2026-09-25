@@ -73,3 +73,44 @@ def test_watchdog_tick_is_cheap_for_a_large_fast_loop():
 
     assert len(calls) == 200000
     assert elapsed < 2.0
+
+
+def test_compile_with_watchdog_injects_tick_into_comprehensions():
+    calls = []
+    compiled = compile_with_watchdog(
+        "a = [x for x in range(3)]\n"
+        "b = {x: x for x in range(2)}\n"
+        "c = sum(x for x in range(4))\n"
+        "s = {x for x in range(1)}\n"
+    )
+    namespace = {TICK_FUNC_NAME: lambda: calls.append(1), "__builtins__": {"range": range, "sum": sum}}
+    exec(compiled, namespace)
+    assert namespace["a"] == [0, 1, 2]
+    assert namespace["b"] == {0: 0, 1: 1}
+    assert namespace["c"] == 6
+    assert namespace["s"] == {0}
+    assert len(calls) == 3 + 2 + 4 + 1, "one tick per produced element, values unchanged"
+
+
+def test_check_raises_immediately_once_deadline_elapses_without_needing_ticks():
+    wd = Watchdog(timeout=0.01)
+    time.sleep(0.05)
+    with pytest.raises(WatchdogTimeout):
+        wd.check()
+
+
+def test_check_does_not_raise_before_deadline():
+    Watchdog(timeout=5.0).check()
+
+
+def test_check_raises_once_cancelled():
+    wd = Watchdog(timeout=5.0)
+    wd.cancel()
+    with pytest.raises(WatchdogTimeout):
+        wd.check()
+
+
+def test_tick_function_name_is_a_dunder_so_the_safety_check_protects_it():
+    # app/sandbox/safety.py rejects dunder identifiers wherever child code
+    # could bind one -- that rule is what stops `__pyadv_tick__ = lambda: None`.
+    assert TICK_FUNC_NAME.startswith("__") and TICK_FUNC_NAME.endswith("__")

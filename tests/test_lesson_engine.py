@@ -1,3 +1,5 @@
+import pytest
+
 from app.engine.lesson_engine import TODAYS_MISSION_CATEGORIES, LessonEngine
 
 
@@ -246,3 +248,46 @@ def test_recommend_practice_for_tags_matches_the_union_of_given_tags():
 def test_recommend_practice_for_tags_empty_tag_set_returns_nothing():
     engine = LessonEngine()
     assert engine.recommend_practice_for_tags(set(), completed_ids=[]) == []
+
+
+# -- loading fails loudly, naming the file --------------------------------------
+
+_MINIMAL_LESSON = """
+id: {lesson_id}
+title: "T"
+level: {level}
+objective: "obj"
+explanation: "exp"
+example_code: "print(1)"
+starter_code: "print(1)"
+challenge: "go"
+expected_output: "1"
+"""
+
+
+def _write_lesson(path, lesson_id, level, extra=""):
+    path.write_text(_MINIMAL_LESSON.format(lesson_id=lesson_id, level=level) + extra, encoding="utf-8")
+
+
+def test_duplicate_lesson_ids_fail_loudly_naming_both_files(tmp_path):
+    _write_lesson(tmp_path / "one.yaml", "dup", 1)
+    _write_lesson(tmp_path / "two.yaml", "dup", 2)
+    with pytest.raises(ValueError) as excinfo:
+        LessonEngine(content_dir=tmp_path)
+    message = str(excinfo.value)
+    assert "dup" in message and "one.yaml" in message and "two.yaml" in message
+
+
+def test_unknown_lesson_field_fails_loudly_naming_the_file(tmp_path):
+    _write_lesson(tmp_path / "typo.yaml", "a", 1, extra="expected_ouput: '1'\n")
+    with pytest.raises(ValueError) as excinfo:
+        LessonEngine(content_dir=tmp_path)
+    assert "typo.yaml" in str(excinfo.value)
+    assert "expected_ouput" in str(excinfo.value)
+
+
+def test_non_mapping_lesson_file_fails_loudly_naming_the_file(tmp_path):
+    (tmp_path / "list.yaml").write_text("- just\n- a list\n", encoding="utf-8")
+    with pytest.raises(ValueError) as excinfo:
+        LessonEngine(content_dir=tmp_path)
+    assert "list.yaml" in str(excinfo.value)

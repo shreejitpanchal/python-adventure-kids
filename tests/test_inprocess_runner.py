@@ -195,3 +195,102 @@ def test_graphical_random_module_is_usable(game_canvas):
         "import random\nx = random.randint(0, 100)\ngame.draw_rect(x, 0, 5, 5)", game=gc, disallow_while=True,
     )
     assert result.success is True
+
+
+# -- hardening from the architecture review -------------------------------------
+
+def test_private_module_attribute_escape_is_blocked_before_anything_runs():
+    result = run_code("import random\nprint(random._os.getcwd())\nprint('leaked')")
+    assert result.blocked is True
+    assert result.stdout == ""
+
+
+def test_module_views_hide_submodules_at_runtime_too():
+    # No underscore, no dunder -- the AST check alone would let this through.
+    result = run_code("import json\nprint(json.decoder)")
+    assert result.success is False
+    assert result.blocked is False
+    assert "AttributeError" in result.stderr
+
+
+def test_dotted_submodule_import_is_rejected_at_runtime():
+    result = run_code("import json.decoder\nprint('leaked')")
+    assert result.success is False
+    assert "ImportError" in result.stderr
+    assert "leaked" not in result.stdout
+
+
+def test_generator_frame_escape_is_blocked():
+    code = (
+        "def g():\n"
+        "    yield gen.gi_frame.f_back.f_globals\n"
+        "gen = g()\n"
+        "for real_globals in gen:\n"
+        "    print(real_globals)\n"
+    )
+    assert run_code(code).blocked is True
+
+
+def test_shadowing_the_watchdog_tick_is_blocked():
+    result = run_code("__pyadv_tick__ = lambda: None\nwhile True:\n    pass", timeout=1.0)
+    assert result.blocked is True
+
+
+def test_time_sleep_respects_the_run_timeout():
+    start = time.time()
+    result = run_code("import time\ntime.sleep(60)", timeout=0.5)
+    elapsed = time.time() - start
+    assert result.timed_out is True
+    assert elapsed < 5, "a long sleep must not outlive the run's deadline"
+
+
+def test_time_sleep_is_cancellable_from_another_thread():
+    handle = RunHandle()
+
+    def cancel_soon():
+        time.sleep(0.1)
+        handle.cancel()
+
+    threading.Thread(target=cancel_soon).start()
+    start = time.time()
+    result = run_code("import time\ntime.sleep(60)", timeout=30, handle=handle)
+    elapsed = time.time() - start
+    assert result.timed_out is True
+    assert elapsed < 5
+
+
+def test_short_time_sleep_still_actually_sleeps():
+    result = run_code(
+        "import time\nstart = time.monotonic()\ntime.sleep(0.2)\nprint(time.monotonic() - start >= 0.19)"
+    )
+    assert result.success is True, result.stderr
+    assert result.stdout.strip() == "True"
+
+
+def test_negative_time_sleep_raises_like_the_real_one():
+    result = run_code("import time\ntime.sleep(-1)")
+    assert result.success is False
+    assert "ValueError" in result.stderr
+
+
+def test_comprehension_over_a_huge_range_times_out_instead_of_hanging():
+    result = run_code("squares = [x * x for x in range(10 ** 12)]", timeout=1.0)
+    assert result.timed_out is True
+
+
+def test_a_busy_sandbox_reports_itself_instead_of_waiting_forever():
+    from app.sandbox import inprocess_runner
+
+    assert inprocess_runner._run_lock.acquire(timeout=1)
+    try:
+        start = time.time()
+        result = run_code("print(1)", timeout=0.2)
+        elapsed = time.time() - start
+    finally:
+        inprocess_runner._run_lock.release()
+
+    assert result.blocked is True
+    assert result.blocked_message == inprocess_runner.BUSY_MESSAGE
+    assert elapsed < 3
+    # and the lock is usable again afterwards
+    assert run_code("print(2)").stdout.strip() == "2"

@@ -75,3 +75,29 @@ def test_random_module_is_usable_end_to_end():
 def test_disallowed_module_is_blocked_even_though_random_is_allowed():
     result = run_code("import subprocess")
     assert result.blocked is True
+
+
+# -- the subprocess engine shares app/sandbox/allowed_builtins.py's environment --
+
+def test_private_module_attribute_escape_is_blocked_in_the_subprocess_engine_too():
+    result = run_code("import random\nprint(random._os.getcwd())")
+    assert result.blocked is True
+
+
+def test_worker_serves_module_views_so_submodules_are_hidden_at_runtime():
+    result = run_code("import json\nprint(json.dumps([1]))\nprint(json.decoder)")
+    assert result.success is False
+    assert result.stdout.strip() == "[1]"
+    assert "AttributeError" in result.stderr
+
+
+def test_course_stdlib_modules_work_end_to_end_in_the_subprocess_engine():
+    result = run_code(
+        "import itertools, datetime\n"
+        "from collections import Counter\n"
+        "from functools import reduce\n"
+        "print(list(itertools.chain([1], [2])), datetime.date(2026, 1, 1), "
+        "Counter('aab')['a'], reduce(lambda a, b: a + b, [1, 2, 3]))\n"
+    )
+    assert result.success is True, result.stderr
+    assert result.stdout.strip() == "[1, 2] 2026-01-01 2 6"

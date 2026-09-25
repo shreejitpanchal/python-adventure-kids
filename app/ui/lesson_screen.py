@@ -12,7 +12,7 @@ from app.engine.courses import find_course_for_category
 from app.engine.lesson import Lesson
 from app.engine.validator import validate_ast_contains, validate_output
 from app.games.game_window import GameWindow
-from app.games.graphical_runner import run_graphical_code
+from app.sandbox import inprocess_runner
 from app.sandbox.errors import extract_error_line_number, translate_error
 from app.sandbox.runner import ExecutionResult, RunHandle, run_code
 from app.ui import theme
@@ -339,7 +339,7 @@ class LessonScreen(ctk.CTkFrame):
 
         self.game_window = GameWindow(self.app, on_close=self._forget_game_window)
         code = self.editor.get_code()
-        result = run_graphical_code(code, self.game_window.game_canvas)
+        result = inprocess_runner.run_code(code, game=self.game_window.game_canvas, disallow_while=True)
 
         if result.blocked:
             self._show_output(f"🚫 {result.blocked_message}", theme.COLOR_DANGER)
@@ -347,12 +347,12 @@ class LessonScreen(ctk.CTkFrame):
             return
 
         if not result.success:
-            friendly, hint = translate_error(result.traceback_text)
-            self._show_output(f"{friendly}\n\n💡 {hint}", theme.COLOR_DANGER, raw=result.traceback_text)
-            line = extract_error_line_number(result.traceback_text)
+            friendly, hint = translate_error(result.stderr)
+            self._show_output(f"{friendly}\n\n💡 {hint}", theme.COLOR_DANGER, raw=result.stderr)
+            line = extract_error_line_number(result.stderr)
             if line:
                 self.editor.highlight_error_line(line)
-            self.app.progress.log_event(self.lesson.id, "attempt_error", result.traceback_text[-200:])
+            self.app.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
             return
 
         ast_ok = (

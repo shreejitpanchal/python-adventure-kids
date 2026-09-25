@@ -153,11 +153,16 @@ Also update the course chapter-count/lesson-count mentions in `README.md`,
 ## 6. Sandbox module allowlist (only if a lesson needs a new stdlib import)
 
 The sandbox only allows explicitly listed modules —
-`app/sandbox/safety.py`'s `ALLOWED_MODULES` (AST-level check) **and**
-`app/sandbox/worker.py`'s `ALLOWED_MODULES` (subprocess-level restricted
-`__import__`) must both be updated, kept identical. Only add
-pure-computation or clock-reading modules with no filesystem/network/
-process access. `threading`/`asyncio`/`logging` are deliberately excluded —
+`app/sandbox/safety.py`'s `ALLOWED_MODULES` is the single source of truth
+(the AST check reads it directly and `app/sandbox/allowed_builtins.py`'s
+restricted `__import__` imports it, so there is nothing else to keep in
+sync). Child code only ever sees a *view* of an allowlisted module — its
+public, non-module attributes — so a lesson can use `json.dumps` but never
+`json.decoder` or any `_private` name; write lesson code accordingly. Only
+add pure-computation or clock-reading modules with no filesystem/network/
+process access, and check the module's *public* surface doesn't hand out
+anything dangerous (the view hides private names and submodules for you,
+it doesn't review public functions). `threading`/`asyncio`/`logging` are deliberately excluded —
 real concurrency doesn't compose safely with the sandbox's hard-kill-after-
 5s-timeout model; teach those concepts with simulated plain-loop/dict/`zip()`
 examples instead (see `course_concurrency`'s lessons for the pattern).

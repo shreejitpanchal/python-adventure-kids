@@ -32,10 +32,35 @@ class LessonEngine:
         self._load()
 
     def _load(self) -> None:
-        lessons = []
+        """Loads every content/lessons/*.yaml. Fails loudly, naming the
+        offending file, on anything that would otherwise corrupt the
+        catalogue silently: a file that isn't a mapping, a key the Lesson
+        schema doesn't know (usually a typo), or two files claiming the
+        same id (the later one would quietly overwrite the earlier while
+        the ordering still counted both)."""
+        lessons: list[Lesson] = []
+        source_files: dict[str, Path] = {}
         for path in sorted(self.content_dir.glob("*.yaml")):
             data = yaml.safe_load(path.read_text(encoding="utf-8"))
-            lessons.append(Lesson(**data))
+            if not isinstance(data, dict):
+                raise ValueError(
+                    f"Lesson file {path.name} must be a YAML mapping of lesson fields, "
+                    f"got {type(data).__name__}."
+                )
+            try:
+                lesson = Lesson(**data)
+            except TypeError as exc:
+                raise ValueError(
+                    f"Lesson file {path.name} doesn't match the Lesson schema "
+                    f"(app/engine/lesson.py): {exc}"
+                ) from exc
+            if lesson.id in source_files:
+                raise ValueError(
+                    f"Duplicate lesson id {lesson.id!r}: defined in both "
+                    f"{source_files[lesson.id].name} and {path.name} -- every lesson id must be unique."
+                )
+            source_files[lesson.id] = path
+            lessons.append(lesson)
         lessons.sort(key=lambda lesson: lesson.level)
         self._order = [lesson.id for lesson in lessons]
         self._lessons = {lesson.id: lesson for lesson in lessons}
