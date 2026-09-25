@@ -42,3 +42,13 @@ def darken(hex_color: str, amount: float = 0.15) -> str:
 
 def lighten(hex_color: str, amount: float = 0.15) -> str:
     return shade(hex_color, abs(amount))
+
+
+def with_alpha(hex_color: str, opacity: float) -> str:
+    """"#RRGGBB" plus a 0..1 opacity -> "#AARRGGBB", the 8-digit hex form
+    Flutter (and therefore Flet) accepts anywhere a color is expected --
+    for translucent overlays, glows and shadows without a framework
+    helper."""
+    alpha = max(0, min(255, round(opacity * 255)))
+    r, g, b = _hex_to_rgb(hex_color)
+    return "#{:02X}{:02X}{:02X}{:02X}".format(alpha, r, g, b)

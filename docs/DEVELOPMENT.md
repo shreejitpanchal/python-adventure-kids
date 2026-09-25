@@ -63,10 +63,10 @@ app/
              # output validator + quiz model/engine + badge display metadata +
              # course_status.py (per-course progress/badge, shared by every
              # course) + courses.py (the CourseSpec registry)
-  sandbox/   # AST safety check + two execution engines (see "Code execution
-             # sandbox" below for why there are currently two)
-  games/     # GameCanvas/GameWindow + in-process graphical runner (Snake,
-             # Creative Arts, Arcade Lab, and Robot Adventure's execution model)
+  sandbox/   # AST safety check + shared restricted environment + two execution
+             # engines (see "Code execution sandbox" below for why there are two)
+  games/     # GameCanvas/GameWindow drawing surfaces injected as `game` into
+             # graphical lessons (Snake, Creative Arts, Arcade Lab, Robot Adventure)
 content/
   lessons/   # lesson content (YAML), kept separate from app code
   quiz/      # the quiz question bank (YAML), same content-not-code principle
@@ -297,7 +297,7 @@ special engine support needed: `starter_code` is deliberately broken,
 code match `expected_output`. The "Advanced Code Crackers" lessons target
 experienced developers (closures/late binding, mutable defaults, aliasing
 vs. copying, floating-point precision, etc.) rather than beginner syntax
-errors, and lean on Python's only-`random`-importable sandbox — see "Code
+errors, and lean on the sandbox's short stdlib allowlist — see "Code
 execution sandbox" below — for what's actually expressible: no `class`
 statement will run in the sandbox today (`__build_class__` isn't in the
 restricted builtins set), so class-attribute-sharing-style lessons use an
@@ -307,30 +307,47 @@ equivalent dict/factory-function example instead and explain the real
 ### Code execution sandbox
 
 Child code runs through two layers before anything executes:
-1. **Static AST check** (`app/sandbox/safety.py`) — rejects imports and
-   dangerous builtins (`eval`, `exec`, `open`, dunder access, …) before any
-   process is spawned.
-2. **Isolated subprocess** (`app/sandbox/runner.py` + `worker.py`) — runs in
-   a separate `python -I` process with a restricted builtins set, a hard
-   timeout (default 5s, kills runaway loops), and no filesystem/network
-   access granted. The UI can cancel a run mid-flight via `RunHandle`.
+1. **Static AST check** (`app/sandbox/safety.py`) — rejects imports
+   outside `ALLOWED_MODULES`, dangerous builtins (`eval`, `exec`, `open`,
+   …), dunder identifiers anywhere one could be bound (so nothing can
+   shadow the in-process watchdog's injected `__pyadv_tick__`),
+   frame/generator/traceback introspection attributes (`gi_frame`,
+   `f_back`, `tb_frame`, …) and leading-underscore attributes
+   (`random._os` is the real `os` module; namedtuple's `_replace`-style
+   API is the one exception) before anything runs.
+2. **Restricted runtime environment** (`app/sandbox/allowed_builtins.py`)
+   — `build_safe_builtins()` is the one place both engines get their
+   builtins from: the short `ALLOWED_BUILTIN_NAMES` list plus a restricted
+   `__import__` that returns a *view* of each allowlisted module holding
+   only its public, non-module attributes, so `json.decoder` (which chains
+   through `re` and `enum` to `sys`) simply isn't there. Views are built
+   per run, so one run mutating `random.randint` can't affect the next.
+
+That environment is then run by one of two engines:
+- **Isolated subprocess** (`app/sandbox/runner.py` + `worker.py`, the CTk
+  app's ordinary lessons) — a separate `python -I` process with a hard
+  timeout (default 5s, kills runaway loops). The UI can cancel a run
+  mid-flight via `RunHandle`.
+- **In-process** (`app/sandbox/inprocess_runner.py` + `watchdog.py`, the
+  Flet app's everything and both UIs' graphical lessons) — exists because
+  Android doesn't allow a sandboxed app to spawn a sibling OS process. A
+  cooperative watchdog stands in for the process kill: an AST transform
+  injects a cheap tick at the top of every loop body and inside every
+  comprehension, `time.sleep` is served by a watchdog-aware replacement so
+  a long sleep still times out and cancels, and a run that can't be
+  interrupted at all (see `watchdog.py`'s known limitation) can't wedge the
+  engine — the next run waits at most its own timeout for the run lock,
+  then reports the sandbox as busy.
 
 Errors are translated into friendly, kid-appropriate messages
 (`app/sandbox/errors.py`) with an optional "I'm curious" toggle to reveal
 the raw traceback.
 
-**Currently in transition**: an Android port is underway (see Status above
-— the shipping app today is still Windows-only CustomTkinter). Android
-doesn't allow a sandboxed app to spawn a sibling OS process, so
-`app/sandbox/inprocess_runner.py` + `app/sandbox/watchdog.py` implement a
-second engine that runs child code in-process instead, using a cooperative
-watchdog (an AST transform injects a cheap check at the top of every loop
-body) in place of the OS-level process kill. It also folds in what
-`app/games/graphical_runner.py` does for Snake, so eventually there's one
-engine instead of two. The old subprocess engine stays live and in use
-until the Flet rewrite of the lesson screen actually switches over to the
-new one — at that point `runner.py`, `worker.py`, and
-`graphical_runner.py` get deleted.
+**Currently in transition**: the shipping app today is still Windows-only
+CustomTkinter (see Status above) and its ordinary lessons still use the
+subprocess engine. Once the Flet rewrite of the lesson screen is the only
+one left, `runner.py` and `worker.py` get deleted and everything routes
+through the in-process engine — graphical lessons already do, in both UIs.
 
 ### Lessons that take input
 
@@ -345,9 +362,9 @@ message instead of hanging until the timeout.
 
 ### Games with randomness
 
-Lessons 14–15 introduce `random`, which is now allowlisted through both
-safety layers (`app/sandbox/safety.py`'s `ALLOWED_MODULES` and
-`worker.py`'s restricted `__import__` — everything else stays blocked).
+Lessons 14–15 introduce `random`, one of the few modules in
+`app/sandbox/safety.py`'s `ALLOWED_MODULES` (the single allowlist both
+engines read — everything else stays blocked).
 Because the outcome is genuinely random, these lessons validate with
 `expected_output_pattern` (a regex covering every valid outcome) instead
 of an exact string, via `validate_output()`'s `expected_output_pattern`
@@ -355,11 +372,12 @@ parameter.
 
 ### Graphical lessons (the Snake project)
 
-Snake needs a live, continuously-updating window — something the
+Snake needs a live, continuously-updating canvas — something the
 subprocess-sandboxed model (built for one-shot "run code, capture
-stdout" exercises) can't provide. Tkinter widgets must also be created
-and touched from the main thread, so this is a deliberate second
-execution path with different tradeoffs, not a bug:
+stdout" exercises) can't provide, and Tkinter widgets must be created and
+touched from the main thread anyway. Graphical lessons therefore run
+through the in-process engine in both UIs, with a drawing surface injected
+as `game`:
 
 - **`app/games/game_canvas.py`** — the only surface a graphical lesson's
   code can touch: `set_title`, `set_background`, `draw_rect`,
@@ -369,14 +387,15 @@ execution path with different tradeoffs, not a bug:
 - **`app/games/game_window.py`** — owns the real `CTkToplevel` + `Canvas`
   a lesson draws into; one live window per lesson screen, recreated on
   each RUN.
-- **`app/games/graphical_runner.py`** — runs the lesson's code **in the
-  main process**, not a subprocess. It still applies the same AST safety
-  check and restricted builtins as defense in depth, **plus a `while`-loop
-  ban** (`check_code_safety(..., disallow_while=True)`), since there's no
-  OS-level timeout here to recover from a runaway loop. Lessons use
-  `game.after(ms, callback)` — a self-scheduling function — for animation
-  instead, which returns control to Tkinter's own event loop immediately
-  and never blocks.
+- **`app/sandbox/inprocess_runner.py`'s `run_code(code, game=..., disallow_while=True)`**
+  — the same engine the Flet app uses for everything, called on the main
+  thread. It applies the same AST safety check and restricted environment
+  as every other run, **plus a `while`-loop ban** (`disallow_while=True`):
+  top-level code must hand control straight back to the UI's event loop.
+  Lessons use `game.after(ms, callback)` — a self-scheduling function —
+  for animation instead, which never blocks. (`app/games/graphical_runner.py`
+  is now only a thin compatibility wrapper over this call, kept for
+  `tests/test_graphical_runner.py` and scheduled for deletion.)
 - Validation for graphical lessons is "ran without raising" — the visual
   result in the game window *is* the feedback, matching the visual-first
   philosophy used throughout the app.
@@ -394,6 +413,55 @@ double-confirmation "Reset Progress" action. **Not currently PIN-gated**:
 (`app/config/settings.py`) implement a salted-hash PIN model and are
 unit-tested (`tests/test_settings.py`), but no screen in either UI calls
 them yet — anyone with access to the app can open the Parent Area today.
+
+### Game-world UI and come-back mechanics (Flet)
+
+The Flet core-loop screens (Hub, Dashboard, Adventure Map, Category
+Levels, Lesson) share one "game world" look built from
+`app/ui/components/adventure_kit_flet.py`: a sky-gradient hero header per
+screen (`hero_header()`, colors from `theme_flet.SKY_COLORS`), gradient
+"world tile" cards and chunky 3D-lipped discs/buttons (`hero_card()`,
+`emoji_badge()`, `game_button_flet.build_game_button(chunky=True)`), HUD
+chips (`stat_chip()`) and an animated XP `power_bar()`. It is emoji-only
+by design -- no bundled illustrations -- so adding a screen never needs an
+asset pipeline. Every key control carries `data={"kind": ...}`, and tests
+find controls by role via `find_by_kind()` (`tests/flet_testing.py`)
+instead of positional indexes.
+
+Motion (`app/ui/components/motion_flet.py`) is Flet's implicit animation
+plus a property flip scheduled on `page.run_task`: staggered entrance
+reveals, pops, pulses, wobbles, bobs. Two rules: every scheduled task is
+**bounded** (views are rebuilt on each route change, so a looping task
+would leak), and every helper degrades when the page can't schedule
+(tests' `FakePage`/`NoTaskPage`): reveals apply their final state at
+once, the rest no-op. No Lottie/Rive extension controls -- those don't
+render in the `flet run` live-preview client on Android.
+
+Come-back mechanics, all driven by existing progress data plus one new
+profile column:
+
+- **Streak flame + welcome-back moment** (`streak_flame_flet.py`).
+  `app_window_flet.main()` calls `ProgressStore.record_play_today()` at
+  launch (it now returns a `PlayToday`) and stores it on
+  `AppState.welcome`; the Hub shows a popping banner once when
+  `first_play_today` is True (streak continued / fresh start / first day
+  wording) and then clears it. The HUD flame grows through tiers
+  (`streak_tier()`) and pulses from 3 days on.
+- **Daily Treasure chest** (`treasure_chest_flet.py`). One tap per UTC
+  day; `ProgressStore.open_daily_chest()` grants a random base XP bonus in
+  multiples of 5 plus a capped streak bonus (`CHEST_*` constants), XP only
+  (stars are recomputed from completions). Tracked by
+  `profile.last_chest_date`, added to existing databases by the
+  `_PROFILE_COLUMN_MIGRATIONS` step in `_init_schema()`, exported/imported
+  with the rest of the profile, cleared by reset.
+- **Celebrations** (`celebration_flet.py`). On lesson success the reward
+  card fires an emoji confetti burst, pops a trophy disc, and -- only when
+  the success crossed an XP level boundary -- shows a LEVEL UP banner.
+- **Codey everywhere** (`codey_avatar_flet.build_codey_companion()`): the
+  mascot floats in every core-loop header with a context line (chest
+  waiting, resume, streak, next stop on the map) and cheers when the chest
+  opens; on the maps a small Codey marker hovers over the next node to play
+  (`map_path_flet.build_you_are_here()`).
 
 ## Data storage
 

@@ -4,10 +4,12 @@ threaded through every view-builder function as an explicit parameter
 (no global state, no framework-managed dependency injection)."""
 from __future__ import annotations
 
+from typing import Optional
+
 from app.config.settings import Settings, get_db_path, load_settings, save_settings
 from app.engine.lesson_engine import LessonEngine
 from app.engine.quiz_engine import QuizEngine
-from app.progress.store import ProgressStore
+from app.progress.store import PlayToday, ProgressStore
 from app.ui.theme_flet import (
     ThemePreset, get_preset, resolve_font_family, resolve_font_scale,
 )
@@ -24,6 +26,14 @@ class AppState:
         # directly, so sound-playing call sites must guard for that (see
         # app/ui/lesson_screen_flet.py's _play_success_sounds()).
         self.sound_player = None
+        # The result of this launch's ProgressStore.record_play_today(),
+        # set by app_window_flet.main() so the streak is advanced the
+        # moment the app opens (not only when the Dashboard is visited).
+        # The Learning Hub consumes it -- shows the once-a-day welcome-back
+        # moment when first_play_today is True, then sets this back to
+        # None so a later visit to the Hub doesn't replay it. Stays None
+        # in tests that construct AppState directly.
+        self.welcome: Optional[PlayToday] = None
         # No file_picker field here, unlike sound_player -- ft.FilePicker/
         # ft.Share are Service controls that self-register with whichever
         # page is current at construction time (see Service.init()), so

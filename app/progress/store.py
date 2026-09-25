@@ -1,6 +1,7 @@
 """SQLite-backed progress, gamification, and activity tracking for the single child profile."""
 from __future__ import annotations
 
+import random
 import sqlite3
 from contextlib import closing
 from dataclasses import dataclass
@@ -15,7 +16,8 @@ CREATE TABLE IF NOT EXISTS profile (
     total_stars INTEGER NOT NULL DEFAULT 0,
     current_lesson_id TEXT,
     streak_days INTEGER NOT NULL DEFAULT 0,
-    last_played_date TEXT
+    last_played_date TEXT,
+    last_chest_date TEXT
 );
 
 CREATE TABLE IF NOT EXISTS lesson_completions (
@@ -50,8 +52,26 @@ CREATE TABLE IF NOT EXISTS player_xp (
 );
 """
 
+# Columns added to `profile` after the first release. CREATE TABLE IF NOT
+# EXISTS never alters an existing table, so _init_schema() adds any of
+# these that a pre-existing progress.sqlite3 is missing -- the only
+# migration mechanism this store has, and all it needs while every new
+# field is nullable.
+_PROFILE_COLUMN_MIGRATIONS: dict[str, str] = {
+    "last_chest_date": "ALTER TABLE profile ADD COLUMN last_chest_date TEXT",
+}
+
 # XP cost to clear level N is N * 100 (level 1->2 costs 100, 2->3 costs 200, ...).
 _XP_PER_LEVEL_STEP = 100
+
+# Daily treasure chest (see open_daily_chest): a random base XP bonus in
+# multiples of 5, plus a streak bonus that rewards coming back on
+# consecutive days -- capped so the chest stays a small daily nudge, never
+# the main way to level up (a lesson is worth reward_stars * 10 XP).
+CHEST_MIN_BASE_XP = 15
+CHEST_MAX_BASE_XP = 40
+CHEST_STREAK_BONUS_XP_PER_DAY = 5
+CHEST_STREAK_BONUS_CAP_DAYS = 5
 
 # export_progress_data()/import_progress_data()'s JSON shape version -- bump
 # this and add a migration branch in import_progress_data() if the shape
@@ -92,6 +112,10 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _today() -> str:
+    return datetime.now(timezone.utc).date().isoformat()
+
+
 @dataclass
 class ProfileSummary:
     level: int
@@ -122,6 +146,36 @@ class WeeklySummary:
     *consecutive* days going back from today regardless of window size."""
 
 
+@dataclass(frozen=True)
+class PlayToday:
+    """What record_play_today() learned about this launch -- enough for a
+    UI to stage a once-a-day "welcome back" moment (see
+    app/ui/components/streak_flame_flet.py's welcome_message()) without
+    re-deriving streak math from the profile row."""
+    first_play_today: bool
+    """True only on the first call of a given (UTC) day; later calls the
+    same day return False so the moment plays once."""
+    streak_days: int
+    streak_continued: bool
+    """Today extended yesterday's streak (streak_days went up by one)."""
+    streak_reset: bool
+    """A previous streak was broken by a gap of 2+ days, so today starts a
+    fresh one at 1."""
+
+
+@dataclass(frozen=True)
+class ChestReward:
+    """What open_daily_chest() granted."""
+    xp: int
+    streak_bonus_xp: int
+    level: "PlayerLevel"
+    leveled_up: bool
+
+    @property
+    def total_xp(self) -> int:
+        return self.xp + self.streak_bonus_xp
+
+
 class ProgressStore:
     """Owns the SQLite connection for the child's progress data."""
 
@@ -134,6 +188,10 @@ class ProgressStore:
     def _init_schema(self) -> None:
         with self._conn:
             self._conn.executescript(SCHEMA)
+            existing_columns = {row[1] for row in self._conn.execute("PRAGMA table_info(profile)")}
+            for column, statement in _PROFILE_COLUMN_MIGRATIONS.items():
+                if column not in existing_columns:
+                    self._conn.execute(statement)
             self._conn.execute(
                 "INSERT OR IGNORE INTO profile (id, level, total_stars) VALUES (1, 1, 0)"
             )
@@ -174,18 +232,31 @@ class ProgressStore:
         with self._conn:
             self._conn.execute("UPDATE profile SET level = ? WHERE id = 1", (level,))
 
-    def record_play_today(self) -> None:
-        today = datetime.now(timezone.utc).date().isoformat()
+    def record_play_today(self) -> PlayToday:
+        """Marks today as played and advances/resets the streak. Idempotent
+        within a day: the first call of the day does the bookkeeping and
+        reports first_play_today=True; every later call that day is a no-op
+        reporting False, so callers can key a once-a-day moment off it."""
+        today = _today()
         with closing(self._conn.cursor()) as cur:
             cur.execute("SELECT last_played_date, streak_days FROM profile WHERE id = 1")
             last_played, streak = cur.fetchone()
         if last_played == today:
-            return
+            return PlayToday(
+                first_play_today=False, streak_days=streak, streak_continued=False, streak_reset=False,
+            )
+        continued = False
+        reset = False
         if last_played is not None:
             gap_days = (
                 datetime.fromisoformat(today) - datetime.fromisoformat(last_played)
             ).days
-            streak = streak + 1 if gap_days == 1 else 1
+            if gap_days == 1:
+                streak = streak + 1
+                continued = True
+            else:
+                reset = streak > 0
+                streak = 1
         else:
             streak = 1
         with self._conn:
@@ -193,6 +264,38 @@ class ProgressStore:
                 "UPDATE profile SET last_played_date = ?, streak_days = ? WHERE id = 1",
                 (today, streak),
             )
+        return PlayToday(
+            first_play_today=True, streak_days=streak, streak_continued=continued, streak_reset=reset,
+        )
+
+    # -- Daily treasure chest ------------------------------------------------
+    def can_open_daily_chest(self) -> bool:
+        """True until the chest has been opened once on today's (UTC) date."""
+        with closing(self._conn.cursor()) as cur:
+            cur.execute("SELECT last_chest_date FROM profile WHERE id = 1")
+            (last_chest_date,) = cur.fetchone()
+        return last_chest_date != _today()
+
+    def open_daily_chest(self, rng: Optional[random.Random] = None) -> Optional[ChestReward]:
+        """Grants today's chest -- a random base XP bonus plus a streak bonus
+        (see the CHEST_* constants) -- or returns None if it was already
+        opened today. XP only, never stars: total_stars is recomputed from
+        lesson_completions on every completion (see complete_lesson), so a
+        bonus star would be silently overwritten anyway."""
+        if not self.can_open_daily_chest():
+            return None
+        chooser = rng if rng is not None else random
+        base_xp = chooser.randint(CHEST_MIN_BASE_XP // 5, CHEST_MAX_BASE_XP // 5) * 5
+        streak_days = self.get_summary().streak_days
+        streak_bonus_xp = min(streak_days, CHEST_STREAK_BONUS_CAP_DAYS) * CHEST_STREAK_BONUS_XP_PER_DAY
+        level_before = self.get_player_level().level
+        with self._conn:
+            self._conn.execute("UPDATE profile SET last_chest_date = ? WHERE id = 1", (_today(),))
+        level = self.add_xp(base_xp + streak_bonus_xp)
+        self.log_event(None, "chest_opened", f"xp={base_xp + streak_bonus_xp}")
+        return ChestReward(
+            xp=base_xp, streak_bonus_xp=streak_bonus_xp, level=level, leveled_up=level.level > level_before,
+        )
 
     # -- Lessons -------------------------------------------------------
     def complete_lesson(self, lesson_id: str, stars_earned: int) -> None:
@@ -406,9 +509,10 @@ class ProgressStore:
         exact inverse."""
         with closing(self._conn.cursor()) as cur:
             cur.execute(
-                "SELECT level, total_stars, current_lesson_id, streak_days, last_played_date FROM profile WHERE id = 1"
+                "SELECT level, total_stars, current_lesson_id, streak_days, last_played_date, last_chest_date "
+                "FROM profile WHERE id = 1"
             )
-            level, total_stars, current_lesson_id, streak_days, last_played_date = cur.fetchone()
+            level, total_stars, current_lesson_id, streak_days, last_played_date, last_chest_date = cur.fetchone()
 
             cur.execute("SELECT lesson_id, stars_earned, completed_at FROM lesson_completions ORDER BY lesson_id")
             lesson_completions = [
@@ -441,6 +545,7 @@ class ProgressStore:
                 "current_lesson_id": current_lesson_id,
                 "streak_days": streak_days,
                 "last_played_date": last_played_date,
+                "last_chest_date": last_chest_date,
             },
             "lesson_completions": lesson_completions,
             "badges": badges,
@@ -469,11 +574,11 @@ class ProgressStore:
 
             self._conn.execute(
                 """UPDATE profile SET level = ?, total_stars = ?, current_lesson_id = ?,
-                   streak_days = ?, last_played_date = ? WHERE id = 1""",
+                   streak_days = ?, last_played_date = ?, last_chest_date = ? WHERE id = 1""",
                 (
                     profile.get("level", 1), profile.get("total_stars", 0),
                     profile.get("current_lesson_id"), profile.get("streak_days", 0),
-                    profile.get("last_played_date"),
+                    profile.get("last_played_date"), profile.get("last_chest_date"),
                 ),
             )
             self._conn.execute(
@@ -509,6 +614,7 @@ class ProgressStore:
             self._conn.execute("DELETE FROM activity_log")
             self._conn.execute("DELETE FROM quiz_attempts")
             self._conn.execute(
-                "UPDATE profile SET level = 1, total_stars = 0, current_lesson_id = NULL, streak_days = 0, last_played_date = NULL WHERE id = 1"
+                "UPDATE profile SET level = 1, total_stars = 0, current_lesson_id = NULL, streak_days = 0, "
+                "last_played_date = NULL, last_chest_date = NULL WHERE id = 1"
             )
             self._conn.execute("UPDATE player_xp SET total_xp = 0 WHERE id = 1")

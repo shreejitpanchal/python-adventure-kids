@@ -55,6 +55,11 @@ def main(page: ft.Page) -> None:
     page.fonts = {"Baloo 2": "fonts/Baloo2-Regular.ttf"}
 
     state = AppState()
+    # Advance the day streak the moment the app opens -- the Hub is the
+    # landing screen and shows the streak/welcome-back moment, so waiting
+    # for a Dashboard visit (which also calls this, idempotently) would
+    # leave the Hub a day behind. See AppState.welcome.
+    state.welcome = state.progress.record_play_today()
     # state.sound_player stays None (its default -- see AppState.__init__)
     # rather than constructing SoundPlayerFlet(page) here: flet_audio's
     # Audio control needs its Flutter/Dart implementation compiled into

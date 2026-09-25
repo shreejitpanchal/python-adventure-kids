@@ -1,24 +1,17 @@
-"""Exercises the phase-12 Adventure Map rewrite of the level-selection
-screen: a winding node path within one category, lock/unlock/complete
-state still derived purely from LessonEngine.is_unlocked() + the real
-progress store, same pattern as test_category_map_flet.py."""
+"""Exercises the Adventure Map level-selection screen: a winding road within
+one category, lock/unlock/complete state still derived purely from
+LessonEngine.is_unlocked() + the real progress store, plus the category
+progress bar and Codey's marker over the next playable level."""
 from __future__ import annotations
 
 import pytest
 
+from app.ui.adventure_map_layout import marker_position, zigzag_positions
 from app.ui.app_state_flet import AppState
-from app.ui.category_levels_flet import build_category_levels_view
+from app.ui.category_levels_flet import COMPLETED, LOCKED, UNLOCKED, build_category_levels_view, codey_levels_line
+from tests.flet_testing import FakePage, all_of, one
 
-
-class FakePage:
-    def __init__(self) -> None:
-        self.routes_visited: list[str] = []
-
-    def update(self) -> None:
-        pass
-
-    def go(self, route: str) -> None:
-        self.routes_visited.append(route)
+CATEGORY = "code_crackers"
 
 
 @pytest.fixture
@@ -31,86 +24,86 @@ def state(tmp_path, monkeypatch):
     s.close()
 
 
-def _stack(view):
-    # controls = [header, Row([Stack])]
-    return view.controls[1].controls[0]
-
-
-def _nodes(stack):
-    """[(circle, caption), ...] -- stack.controls[0] is the connector layer."""
-    body = stack.controls[1:]
-    return list(zip(body[0::2], body[1::2]))
-
-
-def test_view_has_one_node_pair_per_lesson_plus_the_connector_layer(state):
-    category = "code_crackers"
-    lessons = state.lesson_engine.lessons_in_category(category)
-    page = FakePage()
-    view = build_category_levels_view(page, state, category)
-
-    stack = _stack(view)
-    assert len(stack.controls) == 1 + 2 * len(lessons)
+def test_one_node_and_caption_per_lesson_plus_one_marker(state):
+    lessons = state.lesson_engine.lessons_in_category(CATEGORY)
+    view = build_category_levels_view(FakePage(), state, CATEGORY)
+    assert len(all_of(view, "map_node")) == len(lessons)
+    assert len(all_of(view, "map_caption")) == len(lessons)
+    assert len(all_of(view, "you_are_here")) == 1
 
 
 def test_first_level_starts_unlocked_and_shows_its_number(state):
-    category = "code_crackers"
-    lessons = state.lesson_engine.lessons_in_category(category)
-    page = FakePage()
-    view = build_category_levels_view(page, state, category)
+    lessons = state.lesson_engine.lessons_in_category(CATEGORY)
+    view = build_category_levels_view(FakePage(), state, CATEGORY)
 
-    circle, caption = _nodes(_stack(view))[0]
-    assert circle.content.value == str(lessons[0].category_level)
-    assert circle.on_click is not None
-    title_text, status_text = caption.content.controls
-    assert title_text.value == lessons[0].title
-    assert status_text.value == "🔓 Ready to play!"
+    node = all_of(view, "map_node")[0]
+    caption = all_of(view, "map_caption")[0]
+    assert node.data["state"] == UNLOCKED
+    assert node.data["label"] == str(lessons[0].category_level)
+    assert node.on_click is not None
+    assert caption.data["title"] == lessons[0].title
+    assert caption.data["status"] == "🔓 Ready to play!"
 
 
 def test_second_level_starts_locked(state):
-    category = "code_crackers"
-    page = FakePage()
-    view = build_category_levels_view(page, state, category)
+    view = build_category_levels_view(FakePage(), state, CATEGORY)
+    node = all_of(view, "map_node")[1]
+    caption = all_of(view, "map_caption")[1]
+    assert node.data["state"] == LOCKED
+    assert node.data["label"] == "🔒"
+    assert node.on_click is None
+    assert caption.on_click is None
+    assert caption.data["status"] == "🔒 Locked"
 
-    circle, caption = _nodes(_stack(view))[1]
-    assert circle.content.value == "🔒"
-    assert circle.on_click is None
-    _title_text, status_text = caption.content.controls
-    assert status_text.value == "🔒 Locked"
 
-
-def test_completing_the_first_level_unlocks_and_stars_it(state):
-    category = "code_crackers"
-    lessons = state.lesson_engine.lessons_in_category(category)
+def test_completing_the_first_level_stars_it_unlocks_the_next_and_moves_the_marker(state):
+    lessons = state.lesson_engine.lessons_in_category(CATEGORY)
     state.progress.complete_lesson(lessons[0].id, 3)
 
+    view = build_category_levels_view(FakePage(), state, CATEGORY)
+    nodes = all_of(view, "map_node")
+    captions = all_of(view, "map_caption")
+    assert nodes[0].data["state"] == COMPLETED
+    assert nodes[0].data["stars"] == 3
+    assert captions[0].data["status"] == "⭐⭐⭐"
+    assert nodes[1].data["state"] == UNLOCKED
+    assert nodes[1].on_click is not None
+
+    positions = zigzag_positions(len(lessons))
+    marker = one(view, "you_are_here")
+    assert (marker.left, marker.top) == marker_position(positions[1])
+
+    progress = one(view, "category_progress")
+    assert (progress.data["done"], progress.data["total"]) == (1, len(lessons))
+    assert one(progress, "power_bar").data["ratio"] == 1 / len(lessons)
+
+
+def test_tapping_an_unlocked_node_or_its_caption_navigates_to_the_lesson(state):
+    lessons = state.lesson_engine.lessons_in_category(CATEGORY)
     page = FakePage()
-    view = build_category_levels_view(page, state, category)
-    circle_0, caption_0 = _nodes(_stack(view))[0]
-    circle_1, _caption_1 = _nodes(_stack(view))[1]
+    view = build_category_levels_view(page, state, CATEGORY)
 
-    _title_text, status_text = caption_0.content.controls
-    assert status_text.value == "⭐⭐⭐"
-    assert circle_1.content.value == str(lessons[1].category_level)  # now unlocked
-    assert circle_1.on_click is not None
+    all_of(view, "map_node")[0].on_click(None)
+    all_of(view, "map_caption")[0].on_click(None)
+    assert page.routes_visited == [f"/lesson/{lessons[0].id}"] * 2
 
 
-def test_tapping_an_unlocked_node_navigates_to_its_lesson(state):
-    category = "code_crackers"
-    lessons = state.lesson_engine.lessons_in_category(category)
-    page = FakePage()
-    view = build_category_levels_view(page, state, category)
-
-    circle, _caption = _nodes(_stack(view))[0]
-    circle.on_click(None)
-    assert page.routes_visited == [f"/lesson/{lessons[0].id}"]
+def test_road_has_two_strokes_per_segment(state):
+    lessons = state.lesson_engine.lessons_in_category(CATEGORY)
+    view = build_category_levels_view(FakePage(), state, CATEGORY)
+    canvas = one(view, "map_stack").controls[0].content
+    assert len(canvas.shapes) == 2 * (len(lessons) - 1)
 
 
-def test_tapping_the_caption_also_navigates_when_unlocked(state):
-    category = "code_crackers"
-    lessons = state.lesson_engine.lessons_in_category(category)
-    page = FakePage()
-    view = build_category_levels_view(page, state, category)
+def test_header_uses_the_category_title(state):
+    from app.engine.categories import get_category_meta
 
-    _circle, caption = _nodes(_stack(view))[0]
-    caption.on_click(None)
-    assert page.routes_visited == [f"/lesson/{lessons[0].id}"]
+    meta = get_category_meta(CATEGORY)
+    view = build_category_levels_view(FakePage(), state, CATEGORY)
+    assert one(view, "hero_header").data["title"] == f"{meta.icon} {meta.title}"
+
+
+def test_codey_levels_line():
+    assert codey_levels_line("Numbers", 20, 20, None) == "Numbers conquered! Every level done ⭐"
+    assert codey_levels_line("Numbers", 0, 20, "Counting") == "Up next: Counting. Let's go!"
+    assert codey_levels_line("Numbers", 0, 0, None) == "Welcome to Numbers!"

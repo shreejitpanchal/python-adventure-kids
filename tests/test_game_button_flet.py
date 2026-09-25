@@ -61,3 +61,20 @@ def test_width_and_height_are_applied():
     gd = build_game_button("Go", lambda e: None, page, bgcolor="#4F8FF7", width=240, height=64)
     assert gd.content.width == 240
     assert gd.content.height == 64
+
+
+def test_chunky_button_uses_a_gradient_face_over_a_hard_lip_shadow():
+    page = FakePage()
+    gd = build_game_button("Go", lambda e: None, page, bgcolor="#4F8FF7", chunky=True)
+    container = gd.content
+    assert container.bgcolor is None
+    assert container.gradient is not None
+    assert container.shadow is not None and container.shadow.blur_radius == 0
+    assert container.border_radius >= 18
+    assert container.data == {"kind": "game_button", "text": "Go"}
+
+
+def test_flat_button_keeps_the_plain_look():
+    gd = build_game_button("Go", lambda e: None, FakePage(), bgcolor="#4F8FF7")
+    assert gd.content.bgcolor == "#4F8FF7"
+    assert gd.content.gradient is None and gd.content.shadow is None

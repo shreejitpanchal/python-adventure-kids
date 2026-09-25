@@ -1,7 +1,7 @@
 """Pure position math for the Flet Adventure Map (category browser +
-level screen, phase 12) -- a winding, node-based path replacing the old
-vertical list of full-width cards. Kept dependency-free (no flet import)
-so the zigzag math is trivially unit-testable and so both
+level screen) -- a winding, node-based path replacing the old vertical
+list of full-width cards. Kept dependency-free (no flet import) so the
+zigzag and curve math is trivially unit-testable and so both
 category_map_flet.py and category_levels_flet.py share one source of
 truth instead of duplicating the layout formula.
 """
@@ -9,12 +9,17 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-NODE_SIZE = 64.0
-ROW_HEIGHT = 130.0
+NODE_SIZE = 72.0
+# Extra height under each node for its chunky 3D "base" (the darker disc
+# offset a few pixels below the face) -- see adventure_kit_flet.py.
+NODE_LIP = 6.0
+ROW_HEIGHT = 144.0
 PATH_WIDTH = 300.0
 LEFT_MARGIN = 20.0
-TOP_MARGIN = 20.0
-CAPTION_HEIGHT = 46.0
+# Room above the first node for the "you are here" Codey marker.
+TOP_MARGIN = 44.0
+CAPTION_HEIGHT = 50.0
+MARKER_SIZE = 40.0
 
 
 @dataclass(frozen=True)
@@ -48,4 +53,19 @@ def total_path_height(count: int) -> float:
     """Stack/Canvas height needed to fit every node plus its caption."""
     if count == 0:
         return TOP_MARGIN
-    return TOP_MARGIN + (count - 1) * ROW_HEIGHT + NODE_SIZE + CAPTION_HEIGHT
+    return TOP_MARGIN + (count - 1) * ROW_HEIGHT + NODE_SIZE + NODE_LIP + CAPTION_HEIGHT
+
+
+def curve_control_points(start: NodePosition, end: NodePosition) -> tuple[float, float, float, float]:
+    """(cp1_x, cp1_y, cp2_x, cp2_y) for a cubic Bezier from start's center
+    to end's center that leaves the first node straight down and arrives at
+    the second straight down -- a smooth S-bend road between two zigzag
+    nodes instead of a straight diagonal line. Both control points sit at
+    the vertical midpoint, each directly below/above its own node."""
+    mid_y = (start.center_y + end.center_y) / 2
+    return start.center_x, mid_y, end.center_x, mid_y
+
+
+def marker_position(node: NodePosition) -> tuple[float, float]:
+    """(left, top) of the "you are here" marker centered above a node."""
+    return node.center_x - MARKER_SIZE / 2, node.y - MARKER_SIZE + 6

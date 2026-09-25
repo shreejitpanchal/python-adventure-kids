@@ -115,6 +115,32 @@ def get_preset(theme_key: str) -> ThemePreset:
     return THEME_PRESETS.get(theme_key, THEME_PRESETS[DEFAULT_THEME_KEY])
 
 
+# (top, bottom) of the "sky" gradient behind every screen's hero header in
+# the game-world UI (see app/ui/components/adventure_kit_flet.py's
+# sky_gradient()) -- a tinted band that fades into the preset's own bg so
+# the scrolling content below still sits on the flat bg color. Kept as a
+# side table rather than two more ThemePreset fields so the CTk-mirrored
+# ThemePreset shape (see module docstring) stays identical.
+SKY_COLORS: dict[str, tuple[str, str]] = {
+    "sunny_light": ("#FFE3A3", "#FFF9EE"),
+    "ocean_breeze": ("#B4E6F4", "#EAF7FA"),
+    "sunset_glow": ("#FFC9A6", "#FFF1E6"),
+    "forest_adventure": ("#BFEBC8", "#EFF7EC"),
+    "midnight_dark": ("#2F3358", "#1A1B26"),
+    "galaxy": ("#41276F", "#1B1130"),
+    "space_odyssey": ("#1C2B6E", "#0B1026"),
+    "cyberpunk": ("#45105F", "#160221"),
+    "enchanted_forest": ("#1F5438", "#0D1F16"),
+}
+
+
+def sky_colors(theme: ThemePreset) -> tuple[str, str]:
+    """(top, bottom) sky colors for a preset; a preset with no entry in
+    SKY_COLORS (e.g. one added later) falls back to a flat band of its own
+    card color fading into its bg, so nothing renders unstyled."""
+    return SKY_COLORS.get(theme.key, (theme.card, theme.bg))
+
+
 # Semantic keys (not real font names) so the same settings.json value means
 # something sensible on both UIs -- see app/config/settings.py's
 # Settings.font_family docstring, and app/ui/theme.py's FONT_FAMILY_PRESETS

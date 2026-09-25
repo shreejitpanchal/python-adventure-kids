@@ -1,4 +1,4 @@
-from app.ui.color_utils import contrasting_text_color, darken, lighten, relative_luminance
+from app.ui.color_utils import contrasting_text_color, darken, lighten, relative_luminance, with_alpha
 
 
 def test_relative_luminance_white_is_max_black_is_min():
@@ -41,3 +41,14 @@ def test_darken_and_lighten_stay_within_valid_hex_range():
         for result in (darken(hex_color, 0.5), lighten(hex_color, 0.5)):
             assert len(result) == 7 and result.startswith("#")
             int(result[1:], 16)  # raises if not valid hex
+
+
+def test_with_alpha_prefixes_the_alpha_byte_in_aarrggbb_order():
+    assert with_alpha("#4C97FF", 1.0) == "#FF4C97FF"
+    assert with_alpha("#4C97FF", 0.0) == "#004C97FF"
+    assert with_alpha("#4c97ff", 0.5) == "#804C97FF"  # 0.5 * 255 rounds to 128 = 0x80
+
+
+def test_with_alpha_clamps_out_of_range_opacity():
+    assert with_alpha("#000000", 2.0) == "#FF000000"
+    assert with_alpha("#000000", -1.0) == "#00000000"

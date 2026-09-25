@@ -133,6 +133,21 @@ def test_back_navigates_through_multiple_screens_in_order(page):
     assert fake_view.confirm_pop_calls == [True]
 
 
+def test_startup_records_todays_play_and_the_hub_shows_the_welcome_moment_once(page):
+    from app.ui.components.adventure_kit_flet import find_by_kind
+
+    # main() called record_play_today() for a fresh profile -> first play
+    # today -> the Hub greets the child once, then consumes the moment.
+    page.go("/hub")
+    banners = find_by_kind(page.views[-1], "welcome_banner")
+    assert len(banners) == 1
+    assert "Welcome" in banners[0].data["message"]
+
+    page.go("/dashboard")
+    page.go("/hub")
+    assert find_by_kind(page.views[-1], "welcome_banner") == []
+
+
 def test_setup_route_is_never_pushed_to_history(page):
     # main() lands on /setup first (setup_complete defaults to False for a
     # fresh settings file) -- going straight to /hub from there must not

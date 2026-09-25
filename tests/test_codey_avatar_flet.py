@@ -1,5 +1,7 @@
-from app.ui.components.codey_avatar_flet import CodeyState, build_codey_avatar
+from app.ui.components import motion_flet as motion
+from app.ui.components.codey_avatar_flet import CodeyState, build_codey_avatar, build_codey_companion
 from app.ui.theme_flet import get_preset
+from tests.flet_testing import FakePage, NoTaskPage, one
 
 
 def test_starts_in_the_idle_state():
@@ -52,3 +54,32 @@ def test_control_is_built_and_contains_the_live_text_controls():
 
     assert contains(handle.control, handle.face_text)
     assert contains(handle.control, handle.caption_text)
+
+
+# -- the companion (Hub / Dashboard / Map) --------------------------------------
+def test_companion_shows_its_line_and_can_change_it():
+    handle = build_codey_companion(get_preset("sunny_light"), 1.0, "Hello there!")
+    assert one(handle.control, "codey_companion") is handle.control
+    assert handle.line_text.value == "Hello there!"
+    assert handle.face_text.value == "🤖"
+    handle.set_line("New line")
+    assert handle.line_text.value == "New line"
+
+
+def test_companion_floats_only_when_given_a_page():
+    page = FakePage()
+    build_codey_companion(get_preset("sunny_light"), 1.0, "hi", page=page)
+    assert len(page.scheduled(motion._bob)) == 1
+
+    quiet = FakePage()
+    build_codey_companion(get_preset("sunny_light"), 1.0, "hi")
+    assert quiet.run_task_calls == []
+
+
+def test_companion_cheer_switches_face_and_pulses():
+    handle = build_codey_companion(get_preset("sunny_light"), 1.0, "hi")
+    page = FakePage()
+    assert handle.cheer(page) is True
+    assert handle.face_text.value == "🎉"
+    assert len(page.scheduled(motion._pulse)) == 1
+    assert handle.cheer(NoTaskPage()) is False

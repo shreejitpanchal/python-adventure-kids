@@ -89,8 +89,8 @@ Neither UI imports from the other. `theme.py`/`theme_flet.py` are a
 shape and the same preset *keys*, independently-chosen concrete values per
 platform (a CTk-only Windows font vs. Flet's bundled cross-platform font,
 for instance). Once Flet reaches parity, the CTk tree and `runner.py` /
-`worker.py` / `graphical_runner.py` are meant to be deleted — this is a
-migration-in-progress, not a permanent fork.
+`worker.py` are meant to be deleted — this is a migration-in-progress,
+not a permanent fork.
 
 ## 3. Domain model — class diagram
 
@@ -292,34 +292,45 @@ and rebuilt on navigation rather than holding a long-lived state object).
 
 ## 4. Sandbox architecture
 
-Two independent execution engines exist side by side, both applying the
-same static safety check first.
+Two independent execution engines exist side by side. Both apply the same
+static safety check first, and both run child code against the same
+restricted runtime environment from `app/sandbox/allowed_builtins.py`:
+the allowed builtins plus a restricted `__import__` that hands back a
+public-attributes-only *view* of each allowlisted module, so private
+attributes (`random._os` is the real `os` module) and submodules
+(`json.decoder`, which chains to `sys`) don't exist for child code to walk
+through. The AST check and the runtime environment are deliberately two
+layers: the AST rules reject dangerous *spellings* (dunder identifiers,
+`gi_frame`/`f_back`-style introspection, leading-underscore attributes),
+the environment makes sure the dangerous *objects* aren't reachable even by
+a spelling the AST rules didn't anticipate.
 
 ```mermaid
 flowchart TB
     code["Child's submitted code (str)"]
-    safety["app/sandbox/safety.py\ncheck_code_safety()\nAST walk: blocks eval/exec/open/\ndunder access, disallowed imports\n(only random is allowlisted)"]
+    safety["app/sandbox/safety.py\ncheck_code_safety()\nAST walk: blocks eval/exec/open,\ndunder identifiers, frame/generator\nintrospection attrs, _private attrs,\nimports outside a short stdlib allowlist"]
     code --> safety
     safety -->|SafetyViolation| blocked["Blocked message shown,\nnothing executes"]
-    safety -->|passes| branch{"Which UI /\nlesson type?"}
+    safety -->|passes| env["app/sandbox/allowed_builtins.py\nbuild_safe_builtins(): restricted builtins\n+ restricted __import__ serving\npublic-only module views (per run)"]
+    env --> branch{"Which UI /\nlesson type?"}
 
-    branch -->|CTk, or Flet\nnot-yet-migrated| subprocess["app/sandbox/runner.py\n+ worker.py\n\nSeparate python -I process,\nrestricted builtins,\n5s hard timeout,\nno filesystem/network"]
-    branch -->|Flet, Android-safe --\nno subprocess spawn allowed| inproc["app/sandbox/inprocess_runner.py\n+ watchdog.py\n\nRuns in-process; a cooperative\nAST-injected loop-body check\nstands in for the OS timeout"]
-    branch -->|graphical: true --\nSnake project| graphical["app/games/graphical_runner.py\n\nRuns in the MAIN process against\na live game window; while-loops\nbanned outright, no timeout\nfallback exists here"]
+    branch -->|CTk, ordinary lesson| subprocess["app/sandbox/runner.py\n+ worker.py\n\nSeparate python -I process,\n5s hard timeout kills\nrunaway code"]
+    branch -->|Flet (Android-safe: no subprocess\nspawn allowed), and graphical: true\nlessons in BOTH UIs| inproc["app/sandbox/inprocess_runner.py\n+ watchdog.py\n\nRuns in-process; an AST-injected tick in\nevery loop body and comprehension plus a\nwatchdog-aware time.sleep stand in for\nthe OS timeout. Graphical lessons get a\nGameCanvas injected as `game` and\nwhile-loops banned (disallow_while=True)"]
 
-    subprocess --> result["ExecutionResult\n(stdout, stderr, success, blocked)"]
+    subprocess --> result["ExecutionResult\n(stdout, stderr, success, blocked, timed_out)"]
     inproc --> result
-    graphical --> result
     result --> validator["app/engine/validator.py\nvalidate_output() /\nvalidate_ast_contains()"]
     validator --> outcome{"Correct?"}
     outcome -->|yes| reward["ProgressStore.complete_lesson()\n+ award_badge() + reward UI"]
     outcome -->|no| friendly["app/sandbox/errors.py\ntranslates to a kid-friendly\nmessage + optional raw traceback"]
 ```
 
-The in-process engine and the graphical runner are on a deliberate
-convergence path: once the Flet lesson screen is the only one left,
-`runner.py`, `worker.py`, and `graphical_runner.py` get deleted and
-everything routes through one engine.
+The two engines are on a deliberate convergence path: once the Flet
+lesson screen is the only one left, `runner.py` and `worker.py` get
+deleted and everything routes through the in-process engine — graphical
+lessons already do, in both UIs. The former `app/games/graphical_runner.py`
+is now only a compatibility wrapper over `inprocess_runner.run_code(game=...)`,
+kept for one legacy test and scheduled for deletion.
 
 ## 5. Sequence diagrams
 
@@ -481,6 +492,7 @@ erDiagram
         text current_lesson_id
         int streak_days
         text last_played_date
+        text last_chest_date "Daily Treasure: last (UTC) date opened; added by an ALTER TABLE migration in _init_schema()"
     }
     lesson_completions {
         text lesson_id PK

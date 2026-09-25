@@ -36,6 +36,11 @@ from app.sandbox.inprocess_runner import ExecutionResult, RunHandle, run_code
 from app.ui.app_state_flet import AppState
 from app.ui.code_editor_flet import make_code_editor, make_read_only_code_block
 from app.ui.color_utils import contrasting_text_color
+from app.ui.components import motion_flet as motion
+from app.ui.components.adventure_kit_flet import accent_gradient, lip_shadow, soft_shadow
+from app.ui.components.celebration_flet import (
+    build_confetti, build_level_up_banner, hide_level_up, play_confetti, reset_confetti, show_level_up,
+)
 from app.ui.components.codey_avatar_flet import CodeyState, build_codey_avatar
 from app.ui.components.macro_toolbar_flet import build_macro_toolbar
 from app.ui.theme_flet import scaled
@@ -358,18 +363,37 @@ class _LessonController:
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=4,
             )
 
+        # The celebration layer: an emoji confetti burst over a chunky
+        # trophy disc that pops in, plus a level-up banner that only shows
+        # when this success crossed an XP level boundary -- see
+        # app/ui/components/celebration_flet.py. All three are armed here
+        # and fired from _on_lesson_success().
+        self.confetti = build_confetti()
+        self.level_up_banner = build_level_up_banner(theme, self.scale)
+        self.trophy_disc = ft.Container(
+            content=ft.Text("🏆", size=self._fs(44), text_align=ft.TextAlign.CENTER),
+            width=92, height=92, border_radius=46,
+            gradient=accent_gradient(theme.star), shadow=lip_shadow(theme.star, depth=5),
+            alignment=ft.alignment.Alignment.CENTER,
+        )
+        motion.prepare_pop(self.trophy_disc)
+
         self.reward_card = ft.Container(
             content=ft.Column(
                 [
-                    ft.Text("🏆", size=self._fs(40), text_align=ft.TextAlign.CENTER),
+                    self.confetti,
+                    self.trophy_disc,
+                    self.level_up_banner,
                     self.reward_text,
                     self.badge_text,
                     buttons_section,
                 ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=8,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
             ),
-            bgcolor=_REWARD_CARD_COLOR, border_radius=18, padding=24,
+            gradient=accent_gradient(_REWARD_CARD_COLOR), border_radius=24, padding=24,
+            shadow=[lip_shadow(_REWARD_CARD_COLOR, depth=6), soft_shadow(_REWARD_CARD_COLOR, opacity=0.35)],
             visible=False,
+            data={"kind": "reward_card"},
         )
 
     # -- run flow -----------------------------------------------------------
@@ -550,6 +574,9 @@ class _LessonController:
         self.output_text.color = self.theme.text_muted
         self._codey.set_state(CodeyState.IDLE)
         self.reward_card.visible = False
+        hide_level_up(self.level_up_banner)
+        reset_confetti(self.confetti)
+        self.trophy_disc.scale = 0.6
         # Without this, _on_lesson_success()'s "only run once" guard
         # (self._lesson_passed) stayed True forever after the first
         # correct answer, so Reset -> a fresh correct run would silently
@@ -679,7 +706,16 @@ class _LessonController:
             else:
                 self.next_lesson_caption.value = ""
 
+        if leveled_up:
+            show_level_up(self.page, self.level_up_banner, progress.get_player_level().level)
+        else:
+            hide_level_up(self.level_up_banner)
         self.reward_card.visible = True
+        # Celebration: confetti flight + trophy pop are scheduled on the
+        # page's loop (bounded, see motion_flet) and animate once the card
+        # below is visible on the client.
+        play_confetti(self.page, self.confetti)
+        motion.play_pop(self.page, self.trophy_disc)
         # Flush the reward card's new visibility to the client BEFORE
         # asking it to scroll there -- scroll_to() targets the client's
         # current layout, so scrolling first and updating after (or relying

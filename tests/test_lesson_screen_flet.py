@@ -85,10 +85,51 @@ def test_correct_answer_auto_scrolls_to_the_reward_card(controller, state):
     controller.build_view()
     asyncio.run(controller._on_run(None))
 
-    assert len(controller.page.run_task_calls) == 1
-    handler, _args, kwargs = controller.page.run_task_calls[0]
-    assert handler == controller._content_column.scroll_to
+    # Other run_task calls are the celebration animations (confetti flight,
+    # trophy pop) -- only the scroll matters here.
+    scroll_calls = [
+        (handler, kwargs) for handler, _args, kwargs in controller.page.run_task_calls
+        if handler == controller._content_column.scroll_to
+    ]
+    assert len(scroll_calls) == 1
+    _handler, kwargs = scroll_calls[0]
     assert kwargs.get("offset") == -1
+
+
+def test_correct_answer_fires_confetti_and_pops_the_trophy(controller, state):
+    from app.ui.components import celebration_flet as celebration
+    from app.ui.components import motion_flet as motion
+
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+
+    handlers = [handler for handler, _args, _kwargs in controller.page.run_task_calls]
+    assert celebration._fly_and_fade in handlers
+    assert motion._pop in handlers
+    assert controller.level_up_banner.visible is False, "3 stars = 30 XP, well short of level 2"
+
+
+def test_level_up_banner_shows_when_the_success_crosses_a_level_boundary(controller, state):
+    state.progress.add_xp(80)  # lesson_01 is worth 3 stars = 30 XP -> 110 total -> Level 2
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+
+    assert controller.reward_card.visible is True
+    assert controller.level_up_banner.visible is True
+    assert controller.level_up_banner.data["level"] == 2
+
+
+def test_reset_hides_the_level_up_banner_and_rewinds_the_confetti(controller, state):
+    state.progress.add_xp(80)
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    assert controller.level_up_banner.visible is True
+
+    controller._on_reset(None)
+
+    assert controller.level_up_banner.visible is False
+    assert controller.confetti.data["fired"] is False
+    assert all(particle.opacity == 0.0 for particle in controller.confetti.controls)
 
 
 def test_wrong_answer_does_not_auto_scroll(state):

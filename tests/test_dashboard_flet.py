@@ -1,23 +1,14 @@
-"""Exercises build_dashboard_view()'s layout order and the completed-missions
-sidebar's category-level consolidation -- with a real AppState/LessonEngine,
-same pattern as test_parent_dashboard_flet.py."""
+"""Exercises build_dashboard_view()'s sections and the completed-missions
+sidebar's category-level consolidation -- with a real AppState/LessonEngine.
+Controls are found by their data["kind"] role (tests/flet_testing.py)."""
 from __future__ import annotations
 
 import pytest
 
 from app.ui.app_state_flet import AppState
-from app.ui.dashboard_flet import build_dashboard_view
-
-
-class FakePage:
-    def __init__(self) -> None:
-        self.routes_visited: list[str] = []
-
-    def update(self) -> None:
-        pass
-
-    def go(self, route: str) -> None:
-        self.routes_visited.append(route)
+from app.ui.components.adventure_kit_flet import power_bar_fill
+from app.ui.dashboard_flet import build_dashboard_view, codey_mission_line
+from tests.flet_testing import FakePage, NoTaskPage, all_of, one, texts
 
 
 @pytest.fixture
@@ -30,32 +21,82 @@ def state(tmp_path, monkeypatch):
     s.close()
 
 
-def test_quick_quiz_card_appears_before_completed_missions(state):
+def test_sections_appear_in_order_header_xp_mission_quiz_missions(state):
+    view = build_dashboard_view(FakePage(), state)
+    order = [
+        view.controls.index(one(view, "hero_header")),
+        view.controls.index(one(view, "xp_hud")),
+        view.controls.index(one(view, "mission_card")),
+        view.controls.index(one(view, "quiz_card")),
+        view.controls.index(one(view, "missions_sidebar")),
+    ]
+    assert order == sorted(order)
+
+
+def test_mission_card_targets_the_resolved_current_lesson(state):
+    page = FakePage()
+    view = build_dashboard_view(page, state)
+    card = one(view, "mission_card")
+    summary = state.progress.get_summary()
+    expected = state.lesson_engine.resolve_current(state.progress.get_completed_lesson_ids(), summary.current_lesson_id)
+
+    assert card.data["lesson_id"] == expected.id
+    assert card.data["already_completed"] is False
+    assert expected.title in texts(card)
+
+    button = one(view, "game_button")
+    assert button.data["text"] == "▶ CONTINUE"
+
+
+def test_mission_card_moves_on_once_the_current_lesson_is_done(state):
+    summary = state.progress.get_summary()
+    current = state.lesson_engine.resolve_current([], summary.current_lesson_id)
+    state.progress.complete_lesson(current.id, 3)
+    state.progress.set_current_lesson(current.id)  # a stale pointer at the finished lesson
+
+    view = build_dashboard_view(FakePage(), state)
+    # resolve_current() never trusts a pointer at a completed lesson, so the
+    # mission tile advances to the next incomplete one and still says CONTINUE.
+    card = one(view, "mission_card")
+    assert card.data["lesson_id"] != current.id
+    assert card.data["already_completed"] is False
+    assert one(view, "game_button").data["text"] == "▶ CONTINUE"
+
+
+def test_xp_hud_power_bar_reflects_xp_and_animates_on_arrival(state):
+    state.progress.add_xp(50)  # level 1 needs 100 XP -> half full
     page = FakePage()
     view = build_dashboard_view(page, state)
 
-    # controls = [header, spacer, xp_hud, spacer, mission_card, spacer,
-    #             quiz_card, spacer, missions_sidebar, spacer, footer_text]
-    texts_in_order = []
-    for control in view.controls:
-        content = getattr(control, "content", None)
-        if content is not None and hasattr(content, "controls"):
-            for c in content.controls:
-                if hasattr(c, "value") and c.value:
-                    texts_in_order.append(c.value)
+    hud = one(view, "xp_hud")
+    assert hud.data["level"] == 1
+    bar = one(hud, "power_bar")
+    assert bar.data["ratio"] == 0.5
+    # play_power_bar parked the fill at 0 and scheduled the grow.
+    assert power_bar_fill(bar).width == 0
+    assert any(handler.__name__ == "_grow_fill" for handler, _a, _k in page.run_task_calls)
 
-    quiz_index = next(i for i, t in enumerate(texts_in_order) if "Quick Quiz" in t)
-    missions_index = next(i for i, t in enumerate(texts_in_order) if "Completed Missions" in t)
-    assert quiz_index < missions_index
+
+def test_xp_hud_power_bar_keeps_its_real_width_when_the_page_cannot_animate(state):
+    state.progress.add_xp(50)
+    view = build_dashboard_view(NoTaskPage(), state)
+    bar = one(one(view, "xp_hud"), "power_bar")
+    assert power_bar_fill(bar).width == round(bar.data["width"] * 0.5)
+
+
+def test_quick_quiz_card_navigates_to_the_quiz(state):
+    page = FakePage()
+    view = build_dashboard_view(page, state)
+    one(view, "quiz_card").on_click(None)
+    assert page.routes_visited == ["/quiz"]
 
 
 def test_missions_sidebar_shows_placeholder_with_no_completions(state):
-    page = FakePage()
-    view = build_dashboard_view(page, state)
-
-    sidebar = view.controls[8]  # see index map in the test above
-    texts = [c.value for c in sidebar.content.controls if hasattr(c, "value")]
-    assert any("Finish your first mission" in t for t in texts)
+    view = build_dashboard_view(FakePage(), state)
+    sidebar = one(view, "missions_sidebar")
+    assert sidebar.data["started"] == 0
+    assert any("Finish your first mission" in t for t in texts(sidebar))
+    assert all_of(view, "category_chip") == []
 
 
 def test_missions_sidebar_consolidates_by_category_not_per_lesson(state):
@@ -66,13 +107,10 @@ def test_missions_sidebar_consolidates_by_category_not_per_lesson(state):
     for lesson in numbers_lessons[:3]:
         state.progress.complete_lesson(lesson.id, 3)
 
-    page = FakePage()
-    view = build_dashboard_view(page, state)
-
-    sidebar = view.controls[8]
-    chip_row = sidebar.content.controls[1]
+    view = build_dashboard_view(FakePage(), state)
+    chips = all_of(view, "category_chip")
     # One chip per category with progress (basics, numbers) -- not one per lesson.
-    assert len(chip_row.controls) == 2
+    assert {chip.data["category"] for chip in chips} == {"basics", "numbers"}
 
 
 def test_missions_sidebar_chip_shows_done_over_total_and_navigates_to_category(state):
@@ -82,27 +120,23 @@ def test_missions_sidebar_chip_shows_done_over_total_and_navigates_to_category(s
 
     page = FakePage()
     view = build_dashboard_view(page, state)
-
-    sidebar = view.controls[8]
-    chip_row = sidebar.content.controls[1]
-    numbers_chip = chip_row.controls[0]
-    status_text = numbers_chip.content.controls[1].value
-    assert status_text == f"3/{len(numbers_lessons)} completed"
+    numbers_chip = next(chip for chip in all_of(view, "category_chip") if chip.data["category"] == "numbers")
+    assert numbers_chip.data["status"] == f"3/{len(numbers_lessons)} completed"
+    assert numbers_chip.data["status"] in texts(numbers_chip)
 
     numbers_chip.on_click(None)
     assert page.routes_visited == ["/categories/numbers"]
 
 
 def test_missions_sidebar_chip_shows_all_complete_when_category_finished(state):
-    basics_lessons = state.lesson_engine.lessons_in_category("basics")
-    for lesson in basics_lessons:
+    for lesson in state.lesson_engine.lessons_in_category("basics"):
         state.progress.complete_lesson(lesson.id, 3)
 
-    page = FakePage()
-    view = build_dashboard_view(page, state)
+    view = build_dashboard_view(FakePage(), state)
+    basics_chip = next(chip for chip in all_of(view, "category_chip") if chip.data["category"] == "basics")
+    assert basics_chip.data["status"] == "✅ All levels complete!"
 
-    sidebar = view.controls[8]
-    chip_row = sidebar.content.controls[1]
-    basics_chip = chip_row.controls[0]
-    status_text = basics_chip.content.controls[1].value
-    assert status_text == "✅ All levels complete!"
+
+def test_codey_mission_line():
+    assert codey_mission_line("Meet Python", False) == "Today's mission: Meet Python. You've got this!"
+    assert "Mission complete" in codey_mission_line("Meet Python", True)

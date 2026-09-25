@@ -98,7 +98,10 @@ Settings font controls — due for a refresh.*
   row, the app gently suggests related practice to help instead of leaving
   you stuck.
 - **Rewards that actually mean something** — stars, badges, player levels,
-  and day streaks.
+  and day streaks — plus, in the mobile (Flet) app, a Daily Treasure chest
+  and a once-a-day welcome-back moment on the Hub, a growing streak flame,
+  and confetti-and-level-up celebrations when a lesson is passed, so coming
+  back tomorrow is its own small reward.
 - **A Settings screen that's actually comfortable to use** — multiple color
   themes (including dark mode), adjustable font size and font style so
   text is easy to read on anything from a phone to a desktop monitor, a

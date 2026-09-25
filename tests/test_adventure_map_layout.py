@@ -1,10 +1,14 @@
 from app.ui.adventure_map_layout import (
     CAPTION_HEIGHT,
     LEFT_MARGIN,
+    MARKER_SIZE,
+    NODE_LIP,
     NODE_SIZE,
     PATH_WIDTH,
     ROW_HEIGHT,
     TOP_MARGIN,
+    curve_control_points,
+    marker_position,
     total_path_height,
     zigzag_positions,
 )
@@ -45,4 +49,27 @@ def test_total_path_height_grows_with_row_count():
     h1 = total_path_height(1)
     h2 = total_path_height(2)
     assert h2 - h1 == ROW_HEIGHT
-    assert h1 == TOP_MARGIN + NODE_SIZE + CAPTION_HEIGHT
+    assert h1 == TOP_MARGIN + NODE_SIZE + NODE_LIP + CAPTION_HEIGHT
+
+
+def test_nodes_stay_inside_the_path_width():
+    for position in zigzag_positions(5):
+        assert 0 <= position.x
+        assert position.x + NODE_SIZE <= PATH_WIDTH
+
+
+def test_curve_control_points_leave_and_arrive_vertically():
+    a, b = zigzag_positions(2)
+    cp1_x, cp1_y, cp2_x, cp2_y = curve_control_points(a, b)
+    mid_y = (a.center_y + b.center_y) / 2
+    # First handle straight below the start node, second straight above the end node.
+    assert (cp1_x, cp1_y) == (a.center_x, mid_y)
+    assert (cp2_x, cp2_y) == (b.center_x, mid_y)
+
+
+def test_marker_position_is_centered_above_the_node_and_inside_the_top_margin():
+    node = zigzag_positions(1)[0]
+    left, top = marker_position(node)
+    assert left + MARKER_SIZE / 2 == node.center_x
+    assert top >= 0, "TOP_MARGIN must leave room for the marker above the first node"
+    assert top < node.y

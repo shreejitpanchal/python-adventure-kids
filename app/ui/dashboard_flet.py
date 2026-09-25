@@ -1,124 +1,201 @@
-"""Main screen: greets the child, shows level/progress, starts today's lesson,
-and lists completed missions grouped by category (not one row per lesson --
-that grows too long once a category can have dozens of levels) so the child
-can jump back into any category they've made progress in.
+"""Today's Mission screen: Codey introduces the current mission, the XP
+power bar shows the player level, a big gradient mission tile with a
+chunky CONTINUE button starts today's lesson, and completed missions are
+listed grouped by category (not one row per lesson -- that grows too
+long once a category can have dozens of levels) so the child can jump
+back into any category they've made progress in.
 
-Layout note: `expand=True` on Row children currently renders incorrectly in
-this Flet version (first child consumes all space, siblings vanish --
-verified in isolation, not specific to this screen). Until that's resolved
-or worked around, this screen stacks sections vertically in a Column
-rather than using side-by-side Rows/ResponsiveRow -- which also suits a
-tablet-first layout better anyway, so revisit only if desktop wants a
-wider two-column look during the Phase 8 UX pass."""
+Visuals come from app/ui/components/adventure_kit_flet.py. Key controls
+carry data={"kind": ...} for tests (see adventure_kit_flet.find_by_kind)
+instead of relying on positional indexes.
+
+Layout note: sections stack vertically in a Column -- tablet/phone-first,
+and `expand=True` is only used on the single Text/Column inside a Row
+(the pattern every header here already relies on)."""
 from __future__ import annotations
 
 import flet as ft
 
 from app.engine.categories import get_category_meta
 from app.ui.app_state_flet import AppState
-from app.ui.color_utils import contrasting_text_color
+from app.ui.color_utils import contrasting_text_color, lighten
+from app.ui.components import motion_flet as motion
+from app.ui.components.adventure_kit_flet import (
+    RADIUS_PILL, emoji_badge, hero_card, hero_header, pill_button, plain_card, play_power_bar, power_bar,
+    scene_view, spacer,
+)
+from app.ui.components.codey_avatar_flet import build_codey_companion
+from app.ui.components.game_button_flet import build_game_button
 from app.ui.theme_flet import scaled
+
+
+def codey_mission_line(lesson_title: str, already_completed: bool) -> str:
+    if already_completed:
+        return "Mission complete! Replay it, or pick a new level on the map 🎯"
+    return f"Today's mission: {lesson_title}. You've got this!"
 
 
 def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
     theme = state.theme
-    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
+    scale = state.font_scale
+    fs = lambda base: scaled(base, scale)  # noqa: E731
+    engine = state.lesson_engine
+    summary = state.progress.get_summary()
+    completed_ids = state.progress.get_completed_lesson_ids()
+    current_lesson = engine.resolve_current(completed_ids, summary.current_lesson_id)
+    already_completed = current_lesson.id in completed_ids
 
-    return ft.View(
-        route="/dashboard",
-        bgcolor=theme.bg,
-        scroll=ft.ScrollMode.AUTO,
-        # Extra bottom clearance so the last control isn't hidden behind
-        # Android's gesture/navigation bar -- see learning_hub_flet.py's
-        # build_learning_hub_view() for the full rationale.
-        padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
-        controls=[
-            _build_header(page, state),
-            ft.Container(height=16),
-            _build_xp_hud(state),
-            ft.Container(height=16),
-            _build_mission_card(page, state),
-            ft.Container(height=16),
-            _build_quiz_card(page, state),
-            ft.Container(height=16),
-            _build_missions_sidebar(page, state),
-            ft.Container(height=16),
-            ft.Text("More lessons are on their way! 🚀", size=fs(13), color=theme.text_muted),
+    companion = build_codey_companion(
+        theme, scale, codey_mission_line(current_lesson.title, already_completed), page=page,
+    )
+    header = hero_header(
+        theme, title="Today's Mission", scale=scale,
+        buttons=[
+            pill_button("🏠 Menu", lambda _e: page.go("/hub"), bgcolor=theme.text_muted, color="#FFFFFF"),
+            pill_button("🗺️ Adventure Map", lambda _e: page.go("/categories"), bgcolor=theme.primary),
+            pill_button("🏆 Trophy Room", lambda _e: page.go("/trophy-room"), bgcolor=theme.text_muted, color="#FFFFFF"),
         ],
+        companion=companion.control,
     )
 
+    xp_hud = _build_xp_hud(page, state)
+    mission_card = _build_mission_card(page, state, current_lesson, already_completed, summary)
+    quiz_card = _build_quiz_card(page, state)
+    missions = _build_missions_sidebar(page, state)
+    footer = ft.Container(content=ft.Text("More lessons are on their way! 🚀", size=fs(13), color=theme.text_muted))
 
-def _build_header(page: ft.Page, state: AppState) -> ft.Control:
-    theme = state.theme
-    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
-    name = state.settings.child_name or "Explorer"
+    sections: list[ft.Control] = [xp_hud, mission_card, quiz_card, missions, footer]
+    for section in sections:
+        motion.prepare_entrance(section)
 
-    return ft.Column(
-        [
-            ft.Row(
-                [
-                    ft.Image(src="main-icon.png", width=40, height=40),
-                    ft.Text("Python Adventure", size=fs(22), weight=ft.FontWeight.BOLD, color=theme.primary),
-                ],
-                spacing=8,
-            ),
-            ft.Row(
-                [
-                    ft.Button(
-                        "🏠 Menu", on_click=lambda _e: page.go("/hub"), height=48,
-                        style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
-                    ),
-                    ft.Button(
-                        "📚 Categories", on_click=lambda _e: page.go("/categories"), height=48,
-                        style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
-                    ),
-                    ft.Button(
-                        "🏆 Trophy Room", on_click=lambda _e: page.go("/trophy-room"), height=48,
-                        style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
-                    ),
-                ],
-                spacing=8, wrap=True,
-            ),
-            ft.Text(f"Welcome back, {name}!", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
-        ],
-        spacing=10,
-    )
+    controls: list[ft.Control] = [header]
+    for section in sections:
+        controls.append(spacer(12))
+        controls.append(section)
+
+    view = scene_view("/dashboard", theme, controls)
+    motion.play_entrance(page, sections)
+    return view
 
 
-def _build_xp_hud(state: AppState) -> ft.Control:
-    """Player-level HUD, separate from the existing "Level {n}" stat pill on
-    the mission card below (that one is the current lesson's `level` number,
-    not an XP-derived player level -- two different, pre-existing meanings
-    of "level" in this app, kept visually distinct here rather than
-    conflated)."""
+def _build_xp_hud(page: ft.Page, state: AppState) -> ft.Control:
+    """Player-level HUD -- the XP-derived player level (see
+    ProgressStore.get_player_level), distinct from a lesson's own `level`
+    number, two pre-existing meanings of "level" in this app kept visually
+    apart here."""
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     player = state.progress.get_player_level()
-    progress_ratio = player.xp_into_level / player.xp_needed_for_level if player.xp_needed_for_level else 0.0
+    ratio = player.xp_into_level / player.xp_needed_for_level if player.xp_needed_for_level else 0.0
 
-    return ft.Container(
-        content=ft.Row(
-            [
-                ft.Container(
-                    content=ft.Text(f"LVL {player.level}", size=fs(16), weight=ft.FontWeight.BOLD, color="#FFFFFF"),
-                    bgcolor=theme.warning, border_radius=10,
-                    padding=ft.padding.Padding.symmetric(horizontal=14, vertical=10),
-                ),
-                ft.Column(
-                    [
-                        ft.Text("Player Level", size=fs(13), color=theme.text_muted),
-                        ft.ProgressBar(
-                            value=progress_ratio, color=theme.success, bgcolor=theme.bg,
-                            height=14, border_radius=7, width=240,
-                        ),
-                        ft.Text(f"{player.xp_into_level}/{player.xp_needed_for_level} XP", size=fs(11), color=theme.text_muted),
-                    ],
-                    spacing=4,
-                ),
-            ],
-            spacing=14,
-        ),
-        bgcolor=theme.card, border_radius=16, padding=16,
+    bar = power_bar(theme, ratio, color=theme.success, width=240, height=18)
+    play_power_bar(page, bar)
+
+    card = plain_card(
+        theme,
+        [
+            ft.Row(
+                [
+                    emoji_badge("🏅", size=56, bgcolor=theme.warning, scale=state.font_scale),
+                    ft.Column(
+                        [
+                            ft.Text(f"Player Level {player.level}", size=fs(16), weight=ft.FontWeight.BOLD, color=theme.text),
+                            bar,
+                            ft.Text(
+                                f"{player.xp_into_level}/{player.xp_needed_for_level} XP to Level {player.level + 1}",
+                                size=fs(12), color=theme.text_muted,
+                            ),
+                        ],
+                        spacing=6,
+                    ),
+                ],
+                spacing=14, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+        ],
+        data={"kind": "xp_hud", "level": player.level},
+    )
+    return card
+
+
+def _build_mission_card(page: ft.Page, state: AppState, current_lesson, already_completed: bool, summary) -> ft.Control:
+    theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
+    engine = state.lesson_engine
+    accent = theme.primary
+    text_color = contrasting_text_color(accent)
+    meta = get_category_meta(current_lesson.category)
+
+    total_lessons = max(len(engine.main_path_lessons()), 1)
+    mission_ratio = min(summary.lessons_completed / total_lessons, 1.0)
+    mission_bar = power_bar(theme, mission_ratio, color=theme.star, width=260, height=14)
+    play_power_bar(page, mission_bar)
+
+    button_text = "▶ REPLAY" if already_completed else "▶ CONTINUE"
+    play_button = build_game_button(
+        button_text, lambda _e: page.go(f"/lesson/{current_lesson.id}"), page,
+        bgcolor=theme.success, width=280, height=64, size=18, chunky=True,
+    )
+    motion.pulse(page, play_button.content, times=3, big=1.04)
+
+    return hero_card(
+        theme, accent=accent,
+        children=[
+            ft.Row(
+                [
+                    emoji_badge(meta.icon, size=56, bgcolor=lighten(meta.color, 0.2), scale=state.font_scale),
+                    ft.Column(
+                        [
+                            ft.Text(f"{meta.title} — Level {current_lesson.category_level}", size=fs(12), color=text_color),
+                            ft.Text(current_lesson.title, size=fs(24), weight=ft.FontWeight.BOLD, color=text_color),
+                        ],
+                        spacing=2, expand=True,
+                    ),
+                ],
+                spacing=12, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            ft.Text(
+                "✅ Completed — replay anytime!" if already_completed else current_lesson.objective,
+                size=fs(14), color=text_color,
+            ),
+            ft.Text(f"Mission progress · {summary.lessons_completed}/{total_lessons}", size=fs(12), color=text_color),
+            mission_bar,
+            ft.Row([play_button], alignment=ft.MainAxisAlignment.CENTER),
+        ],
+        padding=22,
+        data={"kind": "mission_card", "lesson_id": current_lesson.id, "already_completed": already_completed},
+    )
+
+
+def _build_quiz_card(page: ft.Page, state: AppState) -> ft.Control:
+    """Same tile pattern as the Quiz entry in the category browser
+    (category_map_flet.py's _build_quiz_tile) -- a quick-access shortcut
+    to the same standalone quiz, not a lesson category."""
+    theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
+    meta = get_category_meta("quiz")
+    best = state.progress.get_best_quiz_score()
+    status = f"🏆 Best: {best[0]}/{best[1]}" if best else f"{len(state.quiz_engine)} questions · Tap to play!"
+    text_color = contrasting_text_color(meta.color)
+
+    return hero_card(
+        theme, accent=meta.color,
+        children=[
+            ft.Row(
+                [
+                    emoji_badge(meta.icon, size=48, bgcolor=lighten(meta.color, 0.3), scale=state.font_scale),
+                    ft.Column(
+                        [
+                            ft.Text("Quick Quiz", size=fs(17), weight=ft.FontWeight.BOLD, color=text_color),
+                            ft.Text(status, size=fs(12), color=text_color),
+                        ],
+                        spacing=2, expand=True,
+                    ),
+                ],
+                spacing=12, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+        ],
+        on_click=lambda _e: page.go("/quiz"), padding=16,
+        data={"kind": "quiz_card", "status": status},
     )
 
 
@@ -148,107 +225,20 @@ def _build_missions_sidebar(page: ft.Page, state: AppState) -> ft.Control:
             text_color = contrasting_text_color(meta.color)
             status = "✅ All levels complete!" if done == total else f"{done}/{total} completed"
             chips.append(
-                ft.Button(
+                ft.Container(
                     content=ft.Column(
                         [
-                            ft.Text(
-                                f"{meta.icon} {meta.title}", size=fs(13), weight=ft.FontWeight.BOLD,
-                                color=text_color,
-                            ),
+                            ft.Text(f"{meta.icon} {meta.title}", size=fs(13), weight=ft.FontWeight.BOLD, color=text_color),
                             ft.Text(status, size=fs(12), color=text_color),
                         ],
                         spacing=2,
                     ),
-                    on_click=lambda _e, cat=category: page.go(f"/categories/{cat}"),
-                    style=ft.ButtonStyle(bgcolor=meta.color),
+                    bgcolor=meta.color, border_radius=RADIUS_PILL,
+                    padding=ft.padding.Padding.symmetric(horizontal=14, vertical=10),
+                    on_click=lambda _e, cat=category: page.go(f"/categories/{cat}"), ink=True,
+                    data={"kind": "category_chip", "category": category, "status": status},
                 )
             )
         items.append(ft.Row(chips, wrap=True, spacing=8, run_spacing=8))
 
-    return ft.Container(
-        content=ft.Column(items, spacing=8),
-        bgcolor=theme.card, border_radius=20, padding=16,
-    )
-
-
-def _build_quiz_card(page: ft.Page, state: AppState) -> ft.Control:
-    """Same tile pattern as the Quiz entry in the category browser
-    (category_map_flet.py's _build_quiz_tile) -- a quick-access shortcut
-    to the same standalone quiz, not a lesson category."""
-    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
-    meta = get_category_meta("quiz")
-    best = state.progress.get_best_quiz_score()
-    status = f"🏆 Best: {best[0]}/{best[1]}" if best else f"{len(state.quiz_engine)} questions · Tap to play!"
-    text_color = contrasting_text_color(meta.color)
-
-    return ft.Container(
-        content=ft.Column(
-            [
-                ft.Text(f"{meta.icon}  Quick Quiz", size=fs(16), weight=ft.FontWeight.BOLD, color=text_color),
-                ft.Text(status, size=fs(12), color=text_color),
-            ],
-            spacing=4,
-        ),
-        bgcolor=meta.color, border_radius=20, padding=16,
-        on_click=lambda _e: page.go("/quiz"),
-        ink=True,
-    )
-
-
-def _build_mission_card(page: ft.Page, state: AppState) -> ft.Control:
-    theme = state.theme
-    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
-    summary = state.progress.get_summary()
-    engine = state.lesson_engine
-
-    completed_ids = state.progress.get_completed_lesson_ids()
-    current_lesson = engine.resolve_current(completed_ids, summary.current_lesson_id)
-    already_completed = current_lesson.id in completed_ids
-
-    stats_row = ft.Row(
-        [
-            _stat_pill(theme, "⭐", f"{summary.total_stars} stars", state.font_scale),
-            _stat_pill(theme, "🏆", f"Level {summary.level}", state.font_scale),
-            _stat_pill(theme, "🔥", f"{summary.streak_days} day streak", state.font_scale),
-            _stat_pill(theme, "🎖️", f"{summary.badges_earned} badges", state.font_scale),
-        ],
-        wrap=True,
-    )
-
-    total_lessons = max(len(engine.main_path_lessons()), 1)
-    progress_bar = ft.ProgressBar(
-        value=min(summary.lessons_completed / total_lessons, 1.0),
-        color=theme.star, bgcolor=theme.bg, height=18, border_radius=9,
-    )
-
-    button_text = "▶ REPLAY" if already_completed else "▶ CONTINUE"
-
-    return ft.Container(
-        content=ft.Column(
-            [
-                stats_row,
-                ft.Text("Today's Mission", size=fs(14), color=theme.text_muted),
-                ft.Text(current_lesson.title, size=fs(26), weight=ft.FontWeight.BOLD, color=theme.text),
-                ft.Text(
-                    "✅ Completed — replay anytime!" if already_completed else current_lesson.objective,
-                    size=fs(14),
-                    color=theme.success if already_completed else theme.text_muted,
-                ),
-                progress_bar,
-                ft.Button(
-                    button_text, width=280, height=64,
-                    on_click=lambda _e: page.go(f"/lesson/{current_lesson.id}"),
-                    style=ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF"),
-                ),
-            ],
-            spacing=12,
-        ),
-        bgcolor=theme.card, border_radius=20, padding=24,
-    )
-
-
-def _stat_pill(theme, icon: str, text: str, scale: float = 1.0) -> ft.Control:
-    return ft.Container(
-        content=ft.Text(f"{icon}  {text}", size=scaled(15, scale), color=theme.text),
-        bgcolor=theme.bg, border_radius=14, padding=ft.padding.Padding.symmetric(horizontal=14, vertical=8),
-    )
+    return plain_card(theme, items, data={"kind": "missions_sidebar", "started": len(started_categories)})

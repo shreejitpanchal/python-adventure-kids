@@ -1,3 +1,4 @@
+import random
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -368,6 +369,144 @@ def test_import_progress_data_overwrites_existing_progress(store, tmp_path):
     assert store.get_completed_lesson_ids() == []
     assert store.get_badge_ids() == []
     assert store.get_summary().total_stars == 0
+
+
+# -- record_play_today() result + daily treasure chest ---------------------------------
+
+def _freeze_date(monkeypatch, year: int, month: int, day: int) -> None:
+    class Frozen(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime(year, month, day, 12, tzinfo=timezone.utc)
+
+    monkeypatch.setattr(store_module, "datetime", Frozen)
+
+
+def test_record_play_today_reports_first_play_and_streak_transitions(store, monkeypatch):
+    _freeze_date(monkeypatch, 2026, 9, 1)
+    first = store.record_play_today()
+    assert (first.first_play_today, first.streak_days, first.streak_continued, first.streak_reset) == (True, 1, False, False)
+
+    again = store.record_play_today()
+    assert again.first_play_today is False and again.streak_days == 1
+
+    _freeze_date(monkeypatch, 2026, 9, 2)
+    continued = store.record_play_today()
+    assert (continued.first_play_today, continued.streak_days, continued.streak_continued) == (True, 2, True)
+    assert continued.streak_reset is False
+
+    _freeze_date(monkeypatch, 2026, 9, 5)  # skipped two days
+    reset = store.record_play_today()
+    assert (reset.first_play_today, reset.streak_days, reset.streak_continued, reset.streak_reset) == (True, 1, False, True)
+
+
+def test_daily_chest_opens_once_per_day_and_grants_xp_in_multiples_of_five(store):
+    assert store.can_open_daily_chest() is True
+    reward = store.open_daily_chest(rng=random.Random(7))
+    assert reward is not None
+    assert store_module.CHEST_MIN_BASE_XP <= reward.xp <= store_module.CHEST_MAX_BASE_XP
+    assert reward.xp % 5 == 0
+    assert reward.streak_bonus_xp == 0  # no streak yet
+    assert store.get_player_level().total_xp == reward.total_xp
+    assert store.can_open_daily_chest() is False
+    assert store.open_daily_chest() is None
+    assert store.get_player_level().total_xp == reward.total_xp, "a second open must not grant again"
+    events = [row["event_type"] for row in store.get_recent_activity()]
+    assert events.count("chest_opened") == 1
+
+
+def test_daily_chest_is_deterministic_for_a_seeded_rng(store, tmp_path):
+    other = ProgressStore(tmp_path / "other.sqlite3")
+    try:
+        assert store.open_daily_chest(rng=random.Random(11)).xp == other.open_daily_chest(rng=random.Random(11)).xp
+    finally:
+        other.close()
+
+
+def test_daily_chest_adds_a_capped_streak_bonus(store, monkeypatch):
+    for day in range(1, 8):  # a 7-day streak
+        _freeze_date(monkeypatch, 2026, 9, day)
+        store.record_play_today()
+    assert store.get_summary().streak_days == 7
+
+    reward = store.open_daily_chest(rng=random.Random(1))
+    assert reward.streak_bonus_xp == store_module.CHEST_STREAK_BONUS_CAP_DAYS * store_module.CHEST_STREAK_BONUS_XP_PER_DAY
+
+
+def test_daily_chest_reports_a_level_up(store):
+    store.add_xp(95)  # 5 short of level 2
+    reward = store.open_daily_chest(rng=random.Random(1))
+    assert reward.leveled_up is True
+    assert reward.level.level == 2
+
+
+def test_daily_chest_can_be_opened_again_the_next_day(store, monkeypatch):
+    _freeze_date(monkeypatch, 2026, 9, 1)
+    assert store.open_daily_chest(rng=random.Random(1)) is not None
+    assert store.can_open_daily_chest() is False
+    _freeze_date(monkeypatch, 2026, 9, 2)
+    assert store.can_open_daily_chest() is True
+
+
+def test_reset_progress_clears_the_chest(store):
+    store.open_daily_chest()
+    store.reset_progress()
+    assert store.can_open_daily_chest() is True
+
+
+def test_export_and_import_round_trip_the_chest_date(store, tmp_path):
+    store.open_daily_chest()
+    data = store.export_progress_data()
+    assert data["profile"]["last_chest_date"] is not None
+
+    other = ProgressStore(tmp_path / "other.sqlite3")
+    try:
+        other.import_progress_data(data)
+        assert other.can_open_daily_chest() is False
+    finally:
+        other.close()
+
+
+def test_import_of_an_older_export_without_the_chest_field_still_works(store, tmp_path):
+    data = store.export_progress_data()
+    del data["profile"]["last_chest_date"]
+    other = ProgressStore(tmp_path / "other.sqlite3")
+    try:
+        other.import_progress_data(data)
+        assert other.can_open_daily_chest() is True
+    finally:
+        other.close()
+
+
+def test_opening_a_legacy_database_adds_the_chest_column(tmp_path):
+    import sqlite3
+
+    db_path = tmp_path / "legacy.sqlite3"
+    conn = sqlite3.connect(str(db_path))
+    conn.executescript(
+        """
+        CREATE TABLE profile (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            level INTEGER NOT NULL DEFAULT 1,
+            total_stars INTEGER NOT NULL DEFAULT 0,
+            current_lesson_id TEXT,
+            streak_days INTEGER NOT NULL DEFAULT 0,
+            last_played_date TEXT
+        );
+        INSERT INTO profile (id, level, total_stars) VALUES (1, 1, 0);
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    legacy = ProgressStore(db_path)
+    try:
+        columns = {row[1] for row in legacy._conn.execute("PRAGMA table_info(profile)")}
+        assert "last_chest_date" in columns
+        assert legacy.can_open_daily_chest() is True
+        assert legacy.open_daily_chest(rng=random.Random(1)) is not None
+    finally:
+        legacy.close()
 
 
 def test_import_progress_data_rejects_a_file_with_no_format_version(store):

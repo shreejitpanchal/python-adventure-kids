@@ -1,16 +1,28 @@
-"""Codey the Robot -- a small companion avatar whose face and caption react
-to what just happened when the child runs their code. Emoji-only, no custom
-art assets, consistent with how the rest of the app already communicates
-everything (rewards, errors, hints) through emoji + short text rather than
-illustrations. Flet only, per the phase 7/8 CTk-parity decision.
+"""Codey the Robot -- the app's companion mascot. Two forms:
+
+- build_codey_avatar(): the small in-lesson reaction strip whose face and
+  caption react to what just happened when the child runs their code
+  (lesson_screen_flet.py).
+- build_codey_companion(): the bigger Hub/Dashboard/Map presence -- a
+  chunky face disc with a speech bubble carrying a context line ("Day 5
+  streak! Ready for today's mission?"), an idle float (motion_flet.bob)
+  and a cheer() for celebrations.
+
+Emoji-only, no custom art assets, consistent with how the rest of the app
+already communicates everything (rewards, errors, hints) through emoji +
+short text rather than illustrations. Flet only, per the phase 7/8
+CTk-parity decision.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, Optional
 
 import flet as ft
 
+from app.ui.color_utils import with_alpha
+from app.ui.components import motion_flet as motion
+from app.ui.components.adventure_kit_flet import accent_gradient, lip_shadow, soft_shadow
 from app.ui.theme_flet import scaled
 
 
@@ -75,3 +87,67 @@ def build_codey_avatar(theme, scale: float = 1.0) -> CodeyHandle:
         caption_text.value = caption
 
     return CodeyHandle(control=control, face_text=face_text, caption_text=caption_text, set_state=set_state)
+
+
+# -- the companion (Hub / Dashboard / Map) -------------------------------------------
+@dataclass
+class CompanionHandle:
+    control: ft.Control
+    face_disc: ft.Container
+    face_text: ft.Text
+    line_text: ft.Text
+    set_line: Callable[[str], None]
+    cheer: Callable[[object], bool]
+    """cheer(page): switch to the celebrating face + a quick pulse. Returns
+    whether the pulse could be scheduled (see motion_flet.schedule)."""
+
+
+def build_codey_companion(
+    theme, scale: float, line: str, *, page: Optional[object] = None, face: str = "🤖",
+) -> CompanionHandle:
+    """Codey as a guide: big face disc on the left, speech bubble on the
+    right. Pass `page` to start the idle float straight away (bounded --
+    see motion_flet); without it (tests) the companion is static."""
+    fs = lambda base: scaled(base, scale)  # noqa: E731
+    face_text = ft.Text(face, size=fs(34), text_align=ft.TextAlign.CENTER)
+    face_disc = ft.Container(
+        content=face_text, width=64, height=64, border_radius=32,
+        gradient=accent_gradient(theme.primary),
+        shadow=lip_shadow(theme.primary, depth=4),
+        alignment=ft.alignment.Alignment.CENTER,
+    )
+    motion.prepare_bob(face_disc)
+
+    line_text = ft.Text(line, size=fs(14), weight=ft.FontWeight.BOLD, color=theme.text)
+    bubble = ft.Container(
+        content=ft.Column(
+            [ft.Text("Codey says", size=fs(10), color=theme.text_muted), line_text],
+            spacing=2,
+        ),
+        bgcolor=with_alpha(theme.card, 0.92), border_radius=18,
+        padding=ft.padding.Padding.symmetric(horizontal=14, vertical=10),
+        shadow=soft_shadow(opacity=0.12, blur=12, dy=4),
+        # expand=True bounds the bubble to the Row's remaining width so a
+        # long line wraps instead of overflowing past the screen edge.
+        expand=True,
+    )
+    control = ft.Row(
+        [face_disc, bubble], spacing=12, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        data={"kind": "codey_companion"},
+    )
+
+    def set_line(text: str) -> None:
+        line_text.value = text
+
+    def cheer(target_page) -> bool:
+        face_text.value = _EXPRESSIONS[CodeyState.SUCCESS][0]
+        motion.prepare_pulse(face_disc)
+        return motion.pulse(target_page, face_disc, times=2, big=1.15)
+
+    if page is not None:
+        motion.bob(page, face_disc)
+
+    return CompanionHandle(
+        control=control, face_disc=face_disc, face_text=face_text, line_text=line_text,
+        set_line=set_line, cheer=cheer,
+    )
