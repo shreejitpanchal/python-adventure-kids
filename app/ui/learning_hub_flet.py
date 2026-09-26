@@ -33,8 +33,8 @@ from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color, lighten, with_alpha
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import (
-    RADIUS_PILL, emoji_badge, hero_card, hero_header, layout_for, pill_button, scene_view, section_title, spacer,
-    stat_chip,
+    RADIUS_PILL, emoji_badge, hero_card, hero_header, layout_for, pill_button, plain_card, scene_view,
+    section_title, spacer, stat_chip,
 )
 from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.components.quest_board_flet import build_quest_board
