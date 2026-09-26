@@ -599,6 +599,70 @@ def test_opening_a_legacy_database_adds_every_migrated_profile_column(tmp_path):
         legacy.close()
 
 
+# -- streak shields ------------------------------------------------------------------------
+
+def _play_days(store, monkeypatch, days):
+    results = []
+    for day in days:
+        _freeze_date(monkeypatch, 2026, 9, day)
+        results.append(store.record_play_today())
+    return results
+
+
+def test_a_shield_is_earned_on_the_seventh_consecutive_day(store, monkeypatch):
+    results = _play_days(store, monkeypatch, range(1, 8))
+    assert [r.shield_earned for r in results] == [False] * 6 + [True]
+    assert results[-1].shields == 1
+    assert store.get_summary().streak_shields == 1
+
+
+def test_a_shield_bridges_exactly_one_missed_day(store, monkeypatch):
+    _play_days(store, monkeypatch, range(1, 8))  # 7-day streak, 1 shield
+    (result,) = _play_days(store, monkeypatch, [9])  # skipped the 8th
+    assert result.shield_used is True
+    assert result.streak_continued is True and result.streak_reset is False
+    assert result.streak_days == 8
+    assert result.shields == 0
+    assert store.get_summary().streak_shields == 0
+
+
+def test_without_a_shield_a_missed_day_still_resets(store, monkeypatch):
+    _play_days(store, monkeypatch, [1, 2, 3])
+    (result,) = _play_days(store, monkeypatch, [5])
+    assert result.streak_reset is True and result.streak_days == 1 and result.shield_used is False
+
+
+def test_a_shield_cannot_bridge_two_missed_days(store, monkeypatch):
+    _play_days(store, monkeypatch, range(1, 8))
+    (result,) = _play_days(store, monkeypatch, [10])  # skipped 8 and 9
+    assert result.streak_reset is True and result.streak_days == 1
+    assert result.shields == 1, "the shield is kept for a single-day gap later"
+
+
+def test_shields_are_capped(store, monkeypatch):
+    results = _play_days(store, monkeypatch, range(1, 22))  # 21 straight days
+    assert results[6].shield_earned and results[13].shield_earned
+    assert results[20].shield_earned is False, "cap of MAX_SHIELDS reached"
+    assert results[-1].shields == store_module.MAX_SHIELDS
+
+
+def test_shields_round_trip_export_import_and_reset(store, monkeypatch, tmp_path):
+    _play_days(store, monkeypatch, range(1, 8))
+    data = store.export_progress_data()
+    assert data["profile"]["streak_shields"] == 1
+    other = ProgressStore(tmp_path / "other.sqlite3")
+    try:
+        other.import_progress_data(data)
+        assert other.get_summary().streak_shields == 1
+        del data["profile"]["streak_shields"]
+        other.import_progress_data(data)
+        assert other.get_summary().streak_shields == 0
+    finally:
+        other.close()
+    store.reset_progress()
+    assert store.get_summary().streak_shields == 0
+
+
 def test_import_progress_data_rejects_a_file_with_no_format_version(store):
     with pytest.raises(store_module.InvalidProgressFile):
         store.import_progress_data({"lesson_completions": []})

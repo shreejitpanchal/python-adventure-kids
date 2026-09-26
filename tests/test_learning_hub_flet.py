@@ -143,6 +143,25 @@ def test_hud_strip_shows_streak_level_xp_stars_and_badges(state):
     assert "0 stars" in labels and "0 badges" in labels
 
 
+def test_shield_chip_appears_only_once_a_shield_is_held(state, monkeypatch):
+    import app.progress.store as store_module
+    from datetime import datetime, timezone
+
+    assert all_of(build_learning_hub_view(FakePage(), state), "shield_chip") == []
+
+    for day in range(1, 8):  # seven straight days earns a shield
+        class Frozen(datetime):
+            @classmethod
+            def now(cls, tz=None, _day=day):
+                return datetime(2026, 9, _day, 12, tzinfo=timezone.utc)
+
+        monkeypatch.setattr(store_module, "datetime", Frozen)
+        state.progress.record_play_today()
+
+    view = build_learning_hub_view(FakePage(), state)
+    assert one(view, "shield_chip").data["shields"] == 1
+
+
 def test_quest_board_is_on_the_hub_with_three_quests(state):
     view = build_learning_hub_view(FakePage(), state)
     board = one(view, "quest_board")

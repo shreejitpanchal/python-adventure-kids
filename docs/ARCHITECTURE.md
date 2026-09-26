@@ -494,6 +494,7 @@ erDiagram
         text last_played_date
         text last_chest_date "Daily Treasure: last (UTC) date opened; added by an ALTER TABLE migration in _init_schema()"
         text last_quest_bonus_date "Daily quests: last (UTC) date the completion bonus was claimed; same migration mechanism"
+        int streak_shields "Streak shields held (earned every 7 days, spent to bridge one missed day); same migration mechanism"
     }
     lesson_completions {
         text lesson_id PK

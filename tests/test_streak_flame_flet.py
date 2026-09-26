@@ -28,6 +28,20 @@ def test_welcome_message_variants():
     assert "Welcome, Sam" in welcome_message("Sam", PlayToday(True, 1, False, False))
 
 
+def test_welcome_message_mentions_shields():
+    from app.ui.components.streak_flame_flet import build_shield_chip
+
+    saved = welcome_message("Sam", PlayToday(True, 8, True, False, shield_used=True, shields=0))
+    assert saved.startswith("🧊") and "8-day streak still alive, Sam" in saved
+
+    earned = welcome_message("Sam", PlayToday(True, 7, True, False, shield_earned=True, shields=1))
+    assert "Day 7 streak, Sam" in earned and earned.endswith("You earned a 🧊 streak shield!")
+
+    chip = build_shield_chip(THEME, 1, 1.0)
+    assert chip.data == {"kind": "shield_chip", "shields": 1, "label": "1 shield"}
+    assert build_shield_chip(THEME, 2, 1.0).data["label"] == "2 shields"
+
+
 def test_streak_chip_is_calm_for_a_new_streak_and_hot_after_three_days():
     calm_page = FakePage()
     calm = build_streak_chip(THEME, 1, 1.0, page=calm_page)

@@ -54,6 +54,25 @@ def world_badge_id(world: World) -> str:
     return f"world_{world.id}"
 
 
+# Each World grows a garden as its levels are completed -- a visible,
+# persistent sign of progress on the map (seedling -> sprout -> young plant
+# -> tree -> tree in fruit).
+GARDEN_STAGES: tuple[str, ...] = ("🌱", "🌿", "🪴", "🌳", "🌳🍎")
+
+
+def garden_stage(done: int, total: int) -> str:
+    if total <= 0 or done <= 0:
+        return GARDEN_STAGES[0]
+    ratio = done / total
+    if ratio >= 1:
+        return GARDEN_STAGES[4]
+    if ratio >= 0.67:
+        return GARDEN_STAGES[3]
+    if ratio >= 0.34:
+        return GARDEN_STAGES[2]
+    return GARDEN_STAGES[1]
+
+
 def worlds_in_order(categories: list[str]) -> list[tuple[World, list[str]]]:
     """Groups `categories` (in the order given, e.g. LessonEngine.categories())
     by world, ordering worlds by where each first appears in that list --

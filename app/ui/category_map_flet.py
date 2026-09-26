@@ -17,7 +17,7 @@ import flet as ft
 import flet.canvas as cv
 
 from app.engine.categories import get_category_meta
-from app.engine.worlds import World, world_status, worlds_in_order
+from app.engine.worlds import World, garden_stage, world_status, worlds_in_order
 from app.ui.adventure_map_layout import NODE_LIP, NODE_SIZE, total_path_height, zigzag_positions
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color, lighten
@@ -104,6 +104,11 @@ def _build_world_header(page, theme, world: World, status, scale: float) -> ft.C
     bar = power_bar(theme, ratio, color=theme.star, width=220, height=12)
     play_power_bar(page, bar)
     caption = "🏆 World complete!" if status.complete else f"{status.done}/{status.total} levels complete"
+    # The world's garden grows with its completion -- see worlds.garden_stage.
+    stage = garden_stage(status.done, status.total)
+    garden = emoji_badge(stage, size=52, bgcolor=lighten(world.color, 0.5), scale=scale, lip=False)
+    garden.tooltip = "Your garden grows as you finish levels here!"
+    garden.data = {"kind": "world_garden", "stage": stage}
     return hero_card(
         theme, accent=world.color,
         children=[
@@ -118,6 +123,7 @@ def _build_world_header(page, theme, world: World, status, scale: float) -> ft.C
                         ],
                         spacing=4, expand=True,
                     ),
+                    garden,
                 ],
                 spacing=12, vertical_alignment=ft.CrossAxisAlignment.CENTER,
             ),
@@ -125,7 +131,7 @@ def _build_world_header(page, theme, world: World, status, scale: float) -> ft.C
         padding=16,
         data={
             "kind": "world_header", "world": world.id, "title": world.title,
-            "done": status.done, "total": status.total, "complete": status.complete,
+            "done": status.done, "total": status.total, "complete": status.complete, "garden": stage,
         },
     )
 

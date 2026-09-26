@@ -54,6 +54,55 @@ def test_play_confetti_schedules_the_flight_or_bursts_immediately():
     assert static.data["fired"] is True
 
 
+def test_star_row_reveals_earned_stars_and_marks_the_missing_ones():
+    row = celebration.build_star_row(THEME, 3, 1.0)
+    slots = row.content.controls
+    assert len(slots) == 3 and row.data == {"kind": "star_row", "max": 3, "earned": None}
+    assert all(s.opacity == 0.0 and s.scale == 0.2 for s in slots)
+
+    page = FakePage()
+    assert celebration.reveal_stars(page, row, 2, THEME) is True
+    assert row.data["earned"] == 2
+    assert [s.content.value for s in slots] == ["⭐", "⭐", "☆"]
+    assert all(s.opacity == 0.0 for s in slots), "the pop-in runs on the page loop"
+    assert len(page.scheduled(celebration._reveal_stars)) == 1
+
+    static = celebration.build_star_row(THEME, 3, 1.0)
+    assert celebration.reveal_stars(NoTaskPage(), static, 3, THEME) is False
+    assert all(s.opacity == 1.0 and s.scale == 1.0 for s in static.content.controls)
+
+    celebration.reset_star_row(static)
+    assert all(s.opacity == 0.0 for s in static.content.controls) and static.data["earned"] is None
+
+
+class DialogPage(FakePage):
+    def __init__(self) -> None:
+        super().__init__()
+        self.dialogs: list = []
+        self.popped = 0
+
+    def show_dialog(self, dialog) -> None:
+        self.dialogs.append(dialog)
+
+    def pop_dialog(self) -> None:
+        self.popped += 1
+
+
+def test_badge_unlock_shows_a_dialog_naming_the_badge_and_spins_it_in():
+    page = DialogPage()
+    assert celebration.show_badge_unlock(page, THEME, "first_program", 1.0) is True
+    (dialog,) = page.dialogs
+    assert dialog.data["badge_id"] == "first_program"
+    assert dialog.data["title"] == "First Program"
+    assert len(page.run_task_calls) == 1  # the spin-in
+    dialog.actions[0].on_click(None)
+    assert page.popped == 1
+
+
+def test_badge_unlock_is_skipped_on_a_page_without_dialogs():
+    assert celebration.show_badge_unlock(FakePage(), THEME, "first_program", 1.0) is False
+
+
 def test_level_up_banner_shows_the_level_and_hides_again():
     banner = celebration.build_level_up_banner(THEME, 1.0)
     assert banner.visible is False and banner.data["level"] is None

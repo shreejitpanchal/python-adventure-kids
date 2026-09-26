@@ -42,9 +42,13 @@ from app.ui.color_utils import contrasting_text_color
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import accent_gradient, lip_shadow, soft_shadow, stat_chip
 from app.ui.components.celebration_flet import (
-    build_confetti, build_level_up_banner, hide_level_up, play_confetti, reset_confetti, show_level_up,
+    build_confetti, build_level_up_banner, build_star_row, hide_level_up, play_confetti, reset_confetti,
+    reset_star_row, reveal_stars, show_badge_unlock, show_level_up,
 )
 from app.ui.components.codey_avatar_flet import CodeyState, build_codey_avatar
+from app.ui.components.codey_performance_flet import (
+    error_performance, graphical_performance, perform, performance_for,
+)
 from app.ui.components.macro_toolbar_flet import build_macro_toolbar
 from app.ui.theme_flet import scaled
 
@@ -406,6 +410,7 @@ class _LessonController:
         # app/ui/components/celebration_flet.py. All three are armed here
         # and fired from _on_lesson_success().
         self.confetti = build_confetti()
+        self.star_row = build_star_row(theme, self.lesson.reward_stars, self.scale)
         self.level_up_banner = build_level_up_banner(theme, self.scale)
         self.trophy_disc = ft.Container(
             content=ft.Text("🏆", size=self._fs(44), text_align=ft.TextAlign.CENTER),
@@ -422,6 +427,7 @@ class _LessonController:
                     self.trophy_disc,
                     self.level_up_banner,
                     self.world_banner,
+                    self.star_row,
                     self.reward_text,
                     self.improve_text,
                     self.badge_text,
@@ -498,6 +504,7 @@ class _LessonController:
             self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
             self._register_failure()
+            perform(self._codey, self.page, error_performance())
             self._maybe_show_practice_quest()
             self.page.update()
             return
@@ -517,6 +524,9 @@ class _LessonController:
             self._show_output(result.stdout or "(no output)", self.theme.success)
             self._codey.set_state(CodeyState.SUCCESS)
             self._on_lesson_success()
+            # A beat later Codey acts out what the program printed
+            # (app/ui/components/codey_performance_flet.py).
+            perform(self._codey, self.page, performance_for(result.stdout, self.lesson))
         elif output_ok and not ast_ok:
             self._show_output(
                 f"Python said:\n{result.stdout or '(no output)'}\n\n"
@@ -573,6 +583,7 @@ class _LessonController:
             self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
             self._register_failure()
+            perform(self._codey, self.page, error_performance())
             self.page.update()
             return
 
@@ -605,6 +616,7 @@ class _LessonController:
         self._show_output("🎮 Your game is running! Check it out above.", self.theme.success)
         self._codey.set_state(CodeyState.SUCCESS)
         self._on_lesson_success()
+        perform(self._codey, self.page, graphical_performance())
         self.page.update()
 
     def _on_reset(self, e) -> None:
@@ -623,6 +635,7 @@ class _LessonController:
         hide_level_up(self.level_up_banner)
         self.world_banner.visible = False
         reset_confetti(self.confetti)
+        reset_star_row(self.star_row)
         self.trophy_disc.scale = 0.6
         # Without this, _on_lesson_success()'s "only run once" guard
         # (self._lesson_passed) stayed True forever after the first
@@ -738,13 +751,15 @@ class _LessonController:
         if self.lesson.badge:
             badge_newly_awarded = progress.award_badge(self.lesson.badge)
         leveled_up = progress.get_player_level().level > level_before
+        reveal_stars(self.page, self.star_row, earned_stars, self.theme)
 
         # World ceremony (app/engine/worlds.py): did this pass finish the
         # last level of its World? Award the world badge and show the banner.
         completed_after = set(progress.get_completed_lesson_ids())
         finished_world = newly_completed_world(engine, self.lesson.category, completed_before, completed_after)
+        world_badge_new = False
         if finished_world is not None:
-            progress.award_badge(world_badge_id(finished_world))
+            world_badge_new = progress.award_badge(world_badge_id(finished_world))
             self.world_banner_text.value = f"{finished_world.icon} World complete: {finished_world.title}!"
             self.world_banner.visible = True
             self.world_banner.data = {"kind": "world_banner", "world": finished_world.id}
@@ -752,6 +767,13 @@ class _LessonController:
         else:
             self.world_banner.visible = False
             self.world_banner.data = {"kind": "world_banner", "world": None}
+
+        # Full-screen "NEW BADGE!" moment -- one per success at most; a lesson
+        # badge wins over a world badge (the world already gets its banner).
+        if badge_newly_awarded:
+            show_badge_unlock(self.page, self.theme, self.lesson.badge, self.scale)
+        elif world_badge_new and finished_world is not None:
+            show_badge_unlock(self.page, self.theme, world_badge_id(finished_world), self.scale)
 
         if self.state.sound_player is not None:
             for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_newly_awarded):

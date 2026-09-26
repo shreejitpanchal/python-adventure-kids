@@ -54,6 +54,9 @@ class CodeyHandle:
     face_text: ft.Text
     caption_text: ft.Text
     set_state: Callable[[str], None]
+    face_container: Optional[ft.Container] = None
+    """The disc around the face -- what codey_performance_flet animates
+    (bounce/spin/wobble) when Codey acts out a run's output."""
 
 
 def build_codey_avatar(theme, scale: float = 1.0) -> CodeyHandle:
@@ -65,6 +68,10 @@ def build_codey_avatar(theme, scale: float = 1.0) -> CodeyHandle:
     face_container = ft.Container(
         content=face_text, bgcolor=theme.bg, border_radius=50, width=48, height=48,
         alignment=ft.alignment.Alignment.CENTER,
+        offset=ft.Offset(0, 0), rotate=0.0, scale=1.0,
+        animate_offset=ft.Animation(220, ft.AnimationCurve.EASE_IN_OUT),
+        animate_rotation=ft.Animation(600, ft.AnimationCurve.EASE_IN_OUT),
+        animate_scale=ft.Animation(220, ft.AnimationCurve.EASE_IN_OUT),
     )
 
     control = ft.Row(
@@ -86,7 +93,10 @@ def build_codey_avatar(theme, scale: float = 1.0) -> CodeyHandle:
         face_text.value = emoji
         caption_text.value = caption
 
-    return CodeyHandle(control=control, face_text=face_text, caption_text=caption_text, set_state=set_state)
+    return CodeyHandle(
+        control=control, face_text=face_text, caption_text=caption_text, set_state=set_state,
+        face_container=face_container,
+    )
 
 
 # -- the companion (Hub / Dashboard / Map) -------------------------------------------

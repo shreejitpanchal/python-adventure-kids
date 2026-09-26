@@ -100,7 +100,8 @@ Settings font controls — due for a refresh.*
 - **Rewards that actually mean something** — stars, badges, player levels,
   and day streaks — plus, in the mobile (Flet) app, a Daily Treasure chest,
   three daily quests with a completion bonus, a once-a-day welcome-back
-  moment, a growing streak flame, skill-based stars (replay without hints
+  moment, a growing streak flame with streak shields that forgive one
+  missed day, Codey acting out what your program printed, skill-based stars (replay without hints
   to earn the missing star), a same-session combo that doubles XP, player
   titles that dress up Codey the mascot, map Worlds with their own
   champion badges, and confetti-and-level-up celebrations when a lesson is

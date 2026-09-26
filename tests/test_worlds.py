@@ -78,6 +78,19 @@ def test_world_status_can_be_scoped_to_a_subset_of_categories(engine):
     assert scoped.complete is True
 
 
+def test_garden_grows_with_completion():
+    from app.engine.worlds import GARDEN_STAGES, garden_stage
+
+    assert garden_stage(0, 0) == GARDEN_STAGES[0]
+    assert garden_stage(0, 10) == GARDEN_STAGES[0]
+    assert garden_stage(1, 10) == GARDEN_STAGES[1]
+    assert garden_stage(4, 10) == GARDEN_STAGES[2]
+    assert garden_stage(7, 10) == GARDEN_STAGES[3]
+    assert garden_stage(10, 10) == GARDEN_STAGES[4]
+    stages = [garden_stage(d, 10) for d in range(11)]
+    assert [GARDEN_STAGES.index(s) for s in stages] == sorted(GARDEN_STAGES.index(s) for s in stages)
+
+
 def test_newly_completed_world_fires_only_on_the_transition(engine):
     world = world_for_category("code_crackers")
     all_ids = {

@@ -63,6 +63,23 @@ def test_mission_card_moves_on_once_the_current_lesson_is_done(state):
     assert one(view, "game_button").data["text"] == "▶ CONTINUE"
 
 
+def test_mission_ribbon_previews_the_next_missions_with_only_the_current_one_tappable(state):
+    page = FakePage()
+    view = build_dashboard_view(page, state)
+    ribbon = one(view, "mission_ribbon")
+    sequence = state.lesson_engine.main_path_lessons()
+    current = one(view, "mission_card").data["lesson_id"]
+    start = next(i for i, lesson in enumerate(sequence) if lesson.id == current)
+
+    assert ribbon.data["lesson_ids"] == [lesson.id for lesson in sequence[start:start + 4]]
+    items = all_of(ribbon, "ribbon_item")
+    assert [item.data["current"] for item in items] == [True, False, False, False]
+    assert items[0].on_click is not None and all(item.on_click is None for item in items[1:])
+
+    items[0].on_click(None)
+    assert page.routes_visited == [f"/lesson/{current}"]
+
+
 def test_xp_hud_power_bar_reflects_xp_and_animates_on_arrival(state):
     state.progress.add_xp(50)  # level 1 needs 100 XP -> half full
     page = FakePage()

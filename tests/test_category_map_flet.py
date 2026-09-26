@@ -67,6 +67,20 @@ def test_world_header_tracks_progress_within_that_world(state):
     assert first_header.data["complete"] is False, "the first world has more categories than the first one"
 
 
+def test_world_garden_starts_as_a_seedling_and_grows(state):
+    from app.engine.worlds import GARDEN_STAGES
+
+    view = build_category_map_view(FakePage(), state)
+    gardens = all_of(view, "world_garden")
+    assert len(gardens) == len(all_of(view, "world_header"))
+    assert all(g.data["stage"] == GARDEN_STAGES[0] for g in gardens)
+    assert gardens[0].content.value == GARDEN_STAGES[0]
+
+    _complete_category(state, state.lesson_engine.categories()[0])
+    grown = all_of(build_category_map_view(FakePage(), state), "world_garden")[0]
+    assert grown.data["stage"] != GARDEN_STAGES[0]
+
+
 def test_filtered_map_shows_only_the_worlds_of_the_filtered_categories(state):
     view = build_category_map_view(FakePage(), state, category_filter=PROJECT_CATEGORIES)
     headers = all_of(view, "world_header")

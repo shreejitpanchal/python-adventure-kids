@@ -256,6 +256,61 @@ def test_level_up_banner_names_the_new_title_when_a_tier_is_reached(controller, 
     assert controller.level_up_banner.data["title"] == "Bug Hunter"
 
 
+def test_stars_reveal_one_slot_per_possible_star_marking_the_missing_ones(controller, state):
+    controller.build_view()
+    assert controller.star_row.data["max"] == 3
+    controller._on_hint(None)
+    asyncio.run(controller._on_run(None))
+    assert controller.star_row.data["earned"] == 2
+    assert [slot.content.value for slot in controller.star_row.content.controls] == ["⭐", "⭐", "☆"]
+    controller._on_reset(None)
+    assert controller.star_row.data["earned"] is None
+
+
+class DialogPage(FakePage):
+    def __init__(self) -> None:
+        super().__init__()
+        self.dialogs: list = []
+
+    def show_dialog(self, dialog) -> None:
+        self.dialogs.append(dialog)
+
+    def pop_dialog(self) -> None:
+        self.dialogs.pop()
+
+
+def test_a_new_badge_gets_a_full_screen_unlock_moment(state):
+    lesson = state.lesson_engine.get("lesson_01")  # awards first_program
+    controller = _LessonController(DialogPage(), state, lesson)
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    (dialog,) = controller.page.dialogs
+    assert dialog.data == {"kind": "badge_unlock", "badge_id": "first_program", "title": "First Program"}
+
+    # Replaying doesn't re-award, so no second moment.
+    replay = _LessonController(DialogPage(), state, lesson)
+    replay.build_view()
+    asyncio.run(replay._on_run(None))
+    assert replay.page.dialogs == []
+
+
+def test_codey_performs_the_output_after_success_and_wobbles_on_an_error(controller, state):
+    from app.ui.components import codey_performance_flet as performance
+
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    ((_page, _handle, perf, _delay), _kwargs), = controller.page.scheduled(performance._perform)
+    assert perf.face == "🗣️" and "Python says" in perf.line
+    assert controller._codey.caption_text.value == "Awesome job!", "the plain reaction shows until the task runs"
+
+    broken = _LessonController(FakePage(), state, state.lesson_engine.get("lesson_02"))
+    broken.build_view()
+    broken.editor.value = "print(1 / 0)"
+    asyncio.run(broken._on_run(None))
+    ((_page, _handle, perf, _delay), _kwargs), = broken.page.scheduled(performance._perform)
+    assert perf.move == "wobble"
+
+
 def test_wrong_answer_does_not_auto_scroll(state):
     # lesson_02, not the shared lesson_01 controller fixture -- lesson_01's
     # "Meet Python" challenge now accepts any print() message (see its

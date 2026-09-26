@@ -22,8 +22,8 @@ from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color, lighten
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import (
-    RADIUS_PILL, emoji_badge, hero_card, hero_header, pill_button, plain_card, play_power_bar, power_bar,
-    scene_view, spacer,
+    RADIUS_PILL, accent_gradient, emoji_badge, hero_card, hero_header, lip_shadow, pill_button, plain_card,
+    play_power_bar, power_bar, scene_view, spacer,
 )
 from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.components.game_button_flet import build_game_button
@@ -62,11 +62,12 @@ def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
 
     xp_hud = _build_xp_hud(page, state)
     mission_card = _build_mission_card(page, state, current_lesson, already_completed, summary)
+    ribbon = _build_mission_ribbon(page, state, current_lesson)
     quiz_card = _build_quiz_card(page, state)
     missions = _build_missions_sidebar(page, state)
     footer = ft.Container(content=ft.Text("More lessons are on their way! 🚀", size=fs(13), color=theme.text_muted))
 
-    sections: list[ft.Control] = [xp_hud, mission_card, quiz_card, missions, footer]
+    sections: list[ft.Control] = [xp_hud, mission_card, ribbon, quiz_card, missions, footer]
     for section in sections:
         motion.prepare_entrance(section)
 
@@ -168,6 +169,65 @@ def _build_mission_card(page: ft.Page, state: AppState, current_lesson, already_
         ],
         padding=22,
         data={"kind": "mission_card", "lesson_id": current_lesson.id, "already_completed": already_completed},
+    )
+
+
+RIBBON_LENGTH = 4
+
+
+def _build_mission_ribbon(page: ft.Page, state: AppState, current_lesson) -> ft.Control:
+    """"What's next": the current mission plus the next few in Today's
+    Mission order as a horizontal strip of capsules -- the current one lit
+    and tappable, the rest dimmed so the road ahead is visible and
+    tempting. Purely a preview of LessonEngine.main_path_lessons()."""
+    theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
+    sequence = state.lesson_engine.main_path_lessons()
+    try:
+        start = next(i for i, lesson in enumerate(sequence) if lesson.id == current_lesson.id)
+    except StopIteration:
+        start = 0
+    upcoming = sequence[start:start + RIBBON_LENGTH]
+
+    capsules: list[ft.Control] = []
+    for index, lesson in enumerate(upcoming):
+        meta = get_category_meta(lesson.category)
+        is_current = index == 0
+        accent = meta.color
+        text_color = contrasting_text_color(accent) if is_current else theme.text_muted
+        capsule = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Text(meta.icon if is_current else "🔒", size=fs(24), text_align=ft.TextAlign.CENTER),
+                    ft.Text(f"Level {lesson.category_level}", size=fs(12), weight=ft.FontWeight.BOLD, color=text_color, text_align=ft.TextAlign.CENTER),
+                    ft.Text(lesson.title, size=fs(11), color=text_color, text_align=ft.TextAlign.CENTER, max_lines=2),
+                ],
+                spacing=2, horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            width=132, padding=12, border_radius=18,
+            gradient=accent_gradient(accent) if is_current else None,
+            bgcolor=None if is_current else theme.card,
+            border=ft.border.Border.all(3, theme.star) if is_current else None,
+            shadow=lip_shadow(accent, depth=4) if is_current else None,
+            on_click=(lambda _e, lesson_id=lesson.id: page.go(f"/lesson/{lesson_id}")) if is_current else None,
+            ink=is_current,
+            data={"kind": "ribbon_item", "lesson_id": lesson.id, "current": is_current},
+        )
+        if is_current:
+            motion.prepare_pulse(capsule)
+            motion.pulse(page, capsule, times=2, big=1.05)
+        capsules.append(capsule)
+        if index < len(upcoming) - 1:
+            capsules.append(ft.Text("➜", size=fs(18), color=theme.text_muted))
+
+    return plain_card(
+        theme,
+        [
+            ft.Text("🧭 Coming up", size=fs(14), weight=ft.FontWeight.BOLD, color=theme.text),
+            ft.Row(capsules, spacing=8, scroll=ft.ScrollMode.AUTO, vertical_alignment=ft.CrossAxisAlignment.CENTER),
+        ],
+        padding=14,
+        data={"kind": "mission_ribbon", "lesson_ids": [lesson.id for lesson in upcoming]},
     )
 
 

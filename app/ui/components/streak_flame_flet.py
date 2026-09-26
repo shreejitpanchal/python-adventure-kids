@@ -51,11 +51,35 @@ def welcome_message(name: str, play: Optional[PlayToday]) -> Optional[str]:
     PlayToday recorded at all -- e.g. tests constructing AppState directly)."""
     if play is None or not play.first_play_today:
         return None
-    if play.streak_continued and play.streak_days > 1:
-        return f"🔥 Day {play.streak_days} streak, {name}! You came back — amazing!"
-    if play.streak_reset:
-        return f"🌱 Fresh start, {name}! A brand-new streak begins today."
-    return f"👋 Welcome, {name}! Day 1 of your adventure begins now."
+    if play.shield_used:
+        message = f"🧊 Your streak shield saved the day — {play.streak_days}-day streak still alive, {name}!"
+    elif play.streak_continued and play.streak_days > 1:
+        message = f"🔥 Day {play.streak_days} streak, {name}! You came back — amazing!"
+    elif play.streak_reset:
+        message = f"🌱 Fresh start, {name}! A brand-new streak begins today."
+    else:
+        message = f"👋 Welcome, {name}! Day 1 of your adventure begins now."
+    if play.shield_earned:
+        message += " You earned a 🧊 streak shield!"
+    return message
+
+
+def build_shield_chip(theme: ThemePreset, shields: int, scale: float) -> ft.Container:
+    """"🧊 1 shield" -- the streak insurance the child holds (see
+    ProgressStore.record_play_today)."""
+    fs = lambda base: scaled(base, scale)  # noqa: E731
+    label = f"{shields} shield" if shields == 1 else f"{shields} shields"
+    return ft.Container(
+        content=ft.Row(
+            [ft.Text("🧊", size=fs(16)), ft.Text(label, size=fs(14), weight=ft.FontWeight.BOLD, color=theme.text)],
+            spacing=6, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+        bgcolor=theme.card, border_radius=RADIUS_PILL,
+        padding=ft.padding.Padding.symmetric(horizontal=14, vertical=8),
+        shadow=soft_shadow(opacity=0.10, blur=10, dy=4),
+        tooltip="A shield keeps your streak alive if you miss one day.",
+        data={"kind": "shield_chip", "shields": shields, "label": label},
+    )
 
 
 def build_streak_chip(theme: ThemePreset, days: int, scale: float, *, page=None) -> ft.Container:

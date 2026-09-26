@@ -522,6 +522,26 @@ rendering them:
   badge (registered in `badges.py`, so it appears in the Trophy Room) and
   pops a "World complete!" banner on the reward card.
 
+Later additions, same pattern:
+
+- **Star reveal + badge unlock moment** (`celebration_flet.build_star_row`/
+  `reveal_stars`, `show_badge_unlock`): earned stars pop in one at a time
+  and the missing ones jiggle; a newly earned badge opens a modal "NEW
+  BADGE!" card with the badge spinning in (skipped silently on a page
+  without dialog support).
+- **Codey acts out the output** (`codey_performance_flet.py`): a beat after
+  a successful run Codey's face changes to the concept taught, his caption
+  types out what Python printed, and his disc bounces (loops), spins
+  (random) or wobbles (errors). `performance_for()` is the pure mapping.
+- **Streak shields** (`ProgressStore.record_play_today`, `SHIELD_EVERY_DAYS`,
+  `MAX_SHIELDS`): every 7 consecutive days earns a shield (max 2); a shield
+  is spent automatically to bridge exactly one missed day. Shown as a HUD
+  chip and in the welcome-back message; stored in `profile.streak_shields`.
+- **Mission ribbon** (`dashboard_flet._build_mission_ribbon`): the current
+  mission plus the next three as capsules, only the current one tappable.
+- **World gardens** (`worlds.garden_stage`): each world header on the map
+  shows a plant that grows through five stages with completion.
+
 Every Flet screen now uses the kit -- Settings, Parent Area (deliberately
 calm: header and cards only, no Codey or celebrations), the standalone and
 course quizzes (confetti on a pass or a 70%+ score), the course map and

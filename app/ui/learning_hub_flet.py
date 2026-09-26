@@ -36,7 +36,9 @@ from app.ui.components.adventure_kit_flet import (
 )
 from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.components.quest_board_flet import build_quest_board
-from app.ui.components.streak_flame_flet import build_streak_chip, build_welcome_banner, welcome_message
+from app.ui.components.streak_flame_flet import (
+    build_shield_chip, build_streak_chip, build_welcome_banner, welcome_message,
+)
 from app.ui.components.treasure_chest_flet import build_daily_chest
 from app.ui.theme_flet import scaled
 
@@ -169,17 +171,16 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
 
     level_chip = stat_chip(theme, "🏅", level_chip_label(player.level), scale, kind="level_chip")
     xp_chip = stat_chip(theme, "⚡", f"{player.xp_into_level}/{player.xp_needed_for_level} XP", scale, kind="xp_chip")
-    stats = ft.Row(
-        [
-            build_streak_chip(theme, summary.streak_days, scale, page=page),
-            level_chip,
-            xp_chip,
-            stat_chip(theme, "⭐", f"{summary.total_stars} stars", scale),
-            stat_chip(theme, "🎖️", f"{summary.badges_earned} badges", scale),
-        ],
-        wrap=True, spacing=8, run_spacing=8,
-        data={"kind": "hud_strip"},
-    )
+    chips: list[ft.Control] = [build_streak_chip(theme, summary.streak_days, scale, page=page)]
+    if summary.streak_shields > 0:
+        chips.append(build_shield_chip(theme, summary.streak_shields, scale))
+    chips.extend([
+        level_chip,
+        xp_chip,
+        stat_chip(theme, "⭐", f"{summary.total_stars} stars", scale),
+        stat_chip(theme, "🎖️", f"{summary.badges_earned} badges", scale),
+    ])
+    stats = ft.Row(chips, wrap=True, spacing=8, run_spacing=8, data={"kind": "hud_strip"})
 
     def refresh_hud(level) -> None:
         level_chip.content.controls[1].value = level_chip_label(level.level)

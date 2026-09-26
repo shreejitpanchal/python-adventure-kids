@@ -16,7 +16,7 @@ from typing import Optional
 
 import flet as ft
 
-from app.ui.color_utils import contrasting_text_color
+from app.ui.color_utils import contrasting_text_color, with_alpha
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import accent_gradient, lip_shadow, soft_shadow
 from app.ui.theme_flet import ThemePreset, scaled
@@ -95,6 +95,139 @@ def play_confetti(page, confetti: ft.Stack) -> bool:
     if not motion.schedule(page, _fly_and_fade, page, confetti):
         burst_now(confetti)
         return False
+    return True
+
+
+# -- star reveal ----------------------------------------------------------------------
+STAR_FILLED = "⭐"
+STAR_EMPTY = "☆"
+STAR_REVEAL_GAP = 0.28
+
+
+def build_star_row(theme: ThemePreset, max_stars: int, scale: float) -> ft.Container:
+    """One slot per possible star, parked tiny and invisible; reveal_stars()
+    pops the earned ones in one by one and jiggles the missing ones so the
+    child sees what's left to earn."""
+    slots: list[ft.Container] = []
+    for _ in range(max_stars):
+        slot = ft.Container(
+            content=ft.Text(STAR_EMPTY, size=scaled(38, scale), color=theme.text_muted, text_align=ft.TextAlign.CENTER),
+            width=52, height=52, alignment=ft.alignment.Alignment.CENTER,
+            scale=0.2, opacity=0.0,
+            animate_scale=ft.Animation(motion.POP_MS, ft.AnimationCurve.ELASTIC_OUT),
+            animate_opacity=ft.Animation(200, ft.AnimationCurve.EASE_OUT),
+        )
+        motion.prepare_wobble(slot)
+        slot.animate_scale = ft.Animation(motion.POP_MS, ft.AnimationCurve.ELASTIC_OUT)
+        slots.append(slot)
+    return ft.Container(
+        content=ft.Row(slots, spacing=4, alignment=ft.MainAxisAlignment.CENTER),
+        data={"kind": "star_row", "max": max_stars, "earned": None},
+    )
+
+
+def _star_slots(row: ft.Container) -> list[ft.Container]:
+    return list(row.content.controls)
+
+
+def set_stars(row: ft.Container, earned: int, theme: ThemePreset) -> None:
+    for index, slot in enumerate(_star_slots(row)):
+        filled = index < earned
+        slot.content.value = STAR_FILLED if filled else STAR_EMPTY
+        slot.content.color = None if filled else theme.text_muted
+    row.data = {**row.data, "earned": earned}
+
+
+def _show_all_stars(row: ft.Container) -> None:
+    for slot in _star_slots(row):
+        slot.scale = 1.0
+        slot.opacity = 1.0
+
+
+def reset_star_row(row: ft.Container) -> None:
+    for slot in _star_slots(row):
+        slot.scale = 0.2
+        slot.opacity = 0.0
+        slot.rotate = 0.0
+    row.data = {**row.data, "earned": None}
+
+
+async def _reveal_stars(page, row: ft.Container, earned: int) -> None:
+    await asyncio.sleep(0.25)
+    slots = _star_slots(row)
+    for slot in slots:
+        slot.scale = 1.0
+        slot.opacity = 1.0
+        page.update()
+        await asyncio.sleep(STAR_REVEAL_GAP)
+    for slot in slots[earned:]:
+        await motion._wobble(page, slot, 4, 0.18)
+
+
+def reveal_stars(page, row: ft.Container, earned: int, theme: ThemePreset) -> bool:
+    set_stars(row, earned, theme)
+    if not motion.schedule(page, _reveal_stars, page, row, earned):
+        _show_all_stars(row)
+        return False
+    return True
+
+
+# -- badge unlock moment ---------------------------------------------------------------
+def show_badge_unlock(page, theme: ThemePreset, badge_id: str, scale: float) -> bool:
+    """A modal 'NEW BADGE!' card: the badge spins in on a glowing disc with
+    its title and description, dismissed by one big button. Returns False
+    (and shows nothing) when the page has no dialog support -- the reward
+    card's badge line still names the badge, so nothing is lost."""
+    show_dialog = getattr(page, "show_dialog", None)
+    if show_dialog is None:
+        return False
+    from app.engine.badges import get_badge_meta  # local import: keeps this module UI-only at import time
+    from app.ui.components.adventure_kit_flet import emoji_badge
+
+    fs = lambda base: scaled(base, scale)  # noqa: E731
+    meta = get_badge_meta(badge_id)
+    disc = emoji_badge(meta.icon, size=120, bgcolor=theme.star, scale=scale)
+    disc.rotate = -0.8
+    disc.scale = 0.3
+    disc.animate_rotation = ft.Animation(700, ft.AnimationCurve.ELASTIC_OUT)
+    disc.animate_scale = ft.Animation(700, ft.AnimationCurve.ELASTIC_OUT)
+    halo = ft.Container(
+        width=170, height=170, border_radius=85, bgcolor=with_alpha(theme.star, 0.35),
+        animate_scale=ft.Animation(900, ft.AnimationCurve.EASE_IN_OUT), scale=0.8,
+    )
+    showcase = ft.Stack([halo, disc], width=170, height=170, alignment=ft.alignment.Alignment.CENTER)
+
+    def close(_e=None) -> None:
+        pop_dialog = getattr(page, "pop_dialog", None)
+        if pop_dialog is not None:
+            pop_dialog()
+
+    dialog = ft.AlertDialog(
+        modal=True,
+        content=ft.Column(
+            [
+                ft.Text("🎖️ NEW BADGE!", size=fs(22), weight=ft.FontWeight.BOLD, color=theme.primary, text_align=ft.TextAlign.CENTER),
+                showcase,
+                ft.Text(meta.title, size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text, text_align=ft.TextAlign.CENTER),
+                ft.Text(meta.description, size=fs(14), color=theme.text_muted, text_align=ft.TextAlign.CENTER),
+                ft.Text("Codey says: that one's going straight to the Trophy Room! 🏆", size=fs(13), italic=True, color=theme.text_muted, text_align=ft.TextAlign.CENTER),
+            ],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=12, tight=True,
+        ),
+        actions=[ft.TextButton("Awesome! 🎉", on_click=close)],
+        actions_alignment=ft.MainAxisAlignment.CENTER,
+        data={"kind": "badge_unlock", "badge_id": badge_id, "title": meta.title},
+    )
+    show_dialog(dialog)
+
+    async def spin_in() -> None:
+        await asyncio.sleep(0.08)
+        disc.rotate = 0.0
+        disc.scale = 1.0
+        halo.scale = 1.1
+        page.update()
+
+    motion.schedule(page, spin_in)
     return True
 
 

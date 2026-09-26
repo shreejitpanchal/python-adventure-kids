@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS profile (
     streak_days INTEGER NOT NULL DEFAULT 0,
     last_played_date TEXT,
     last_chest_date TEXT,
-    last_quest_bonus_date TEXT
+    last_quest_bonus_date TEXT,
+    streak_shields INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS lesson_completions (
@@ -61,7 +62,14 @@ CREATE TABLE IF NOT EXISTS player_xp (
 _PROFILE_COLUMN_MIGRATIONS: dict[str, str] = {
     "last_chest_date": "ALTER TABLE profile ADD COLUMN last_chest_date TEXT",
     "last_quest_bonus_date": "ALTER TABLE profile ADD COLUMN last_quest_bonus_date TEXT",
+    "streak_shields": "ALTER TABLE profile ADD COLUMN streak_shields INTEGER NOT NULL DEFAULT 0",
 }
+
+# Streak shields (see record_play_today): earned every SHIELD_EVERY_DAYS
+# consecutive days, held up to MAX_SHIELDS, and spent automatically to
+# bridge a single missed day so one busy day doesn't wipe a long streak.
+SHIELD_EVERY_DAYS = 7
+MAX_SHIELDS = 2
 
 # XP cost to clear level N is N * 100 (level 1->2 costs 100, 2->3 costs 200, ...).
 _XP_PER_LEVEL_STEP = 100
@@ -132,6 +140,7 @@ class ProfileSummary:
     streak_days: int
     lessons_completed: int
     badges_earned: int
+    streak_shields: int = 0
 
 
 @dataclass
@@ -169,6 +178,14 @@ class PlayToday:
     streak_reset: bool
     """A previous streak was broken by a gap of 2+ days, so today starts a
     fresh one at 1."""
+    shield_used: bool = False
+    """Exactly one day was missed and a streak shield bridged it, so the
+    streak continued instead of resetting."""
+    shield_earned: bool = False
+    """Today's continuation reached a SHIELD_EVERY_DAYS multiple and
+    granted a new shield."""
+    shields: int = 0
+    """Shields held after today's bookkeeping."""
 
 
 @dataclass(frozen=True)
@@ -214,9 +231,9 @@ class ProgressStore:
     def get_summary(self) -> ProfileSummary:
         with closing(self._conn.cursor()) as cur:
             cur.execute(
-                "SELECT level, total_stars, current_lesson_id, streak_days FROM profile WHERE id = 1"
+                "SELECT level, total_stars, current_lesson_id, streak_days, streak_shields FROM profile WHERE id = 1"
             )
-            level, total_stars, current_lesson_id, streak_days = cur.fetchone()
+            level, total_stars, current_lesson_id, streak_days, streak_shields = cur.fetchone()
             cur.execute("SELECT COUNT(*) FROM lesson_completions")
             lessons_completed = cur.fetchone()[0]
             cur.execute("SELECT COUNT(*) FROM badges")
@@ -228,6 +245,7 @@ class ProgressStore:
             streak_days=streak_days,
             lessons_completed=lessons_completed,
             badges_earned=badges_earned,
+            streak_shields=streak_shields,
         )
 
     def set_current_lesson(self, lesson_id: str) -> None:
@@ -247,14 +265,17 @@ class ProgressStore:
         reporting False, so callers can key a once-a-day moment off it."""
         today = _today()
         with closing(self._conn.cursor()) as cur:
-            cur.execute("SELECT last_played_date, streak_days FROM profile WHERE id = 1")
-            last_played, streak = cur.fetchone()
+            cur.execute("SELECT last_played_date, streak_days, streak_shields FROM profile WHERE id = 1")
+            last_played, streak, shields = cur.fetchone()
         if last_played == today:
             return PlayToday(
                 first_play_today=False, streak_days=streak, streak_continued=False, streak_reset=False,
+                shields=shields,
             )
         continued = False
         reset = False
+        shield_used = False
+        shield_earned = False
         if last_played is not None:
             gap_days = (
                 datetime.fromisoformat(today) - datetime.fromisoformat(last_played)
@@ -262,18 +283,28 @@ class ProgressStore:
             if gap_days == 1:
                 streak = streak + 1
                 continued = True
+            elif gap_days == 2 and shields > 0:
+                # One missed day, bridged by a shield: the streak survives.
+                shields -= 1
+                streak = streak + 1
+                continued = True
+                shield_used = True
             else:
                 reset = streak > 0
                 streak = 1
         else:
             streak = 1
+        if continued and streak % SHIELD_EVERY_DAYS == 0 and shields < MAX_SHIELDS:
+            shields += 1
+            shield_earned = True
         with self._conn:
             self._conn.execute(
-                "UPDATE profile SET last_played_date = ?, streak_days = ? WHERE id = 1",
-                (today, streak),
+                "UPDATE profile SET last_played_date = ?, streak_days = ?, streak_shields = ? WHERE id = 1",
+                (today, streak, shields),
             )
         return PlayToday(
             first_play_today=True, streak_days=streak, streak_continued=continued, streak_reset=reset,
+            shield_used=shield_used, shield_earned=shield_earned, shields=shields,
         )
 
     # -- Daily treasure chest ------------------------------------------------
@@ -547,11 +578,11 @@ class ProgressStore:
         with closing(self._conn.cursor()) as cur:
             cur.execute(
                 "SELECT level, total_stars, current_lesson_id, streak_days, last_played_date, last_chest_date, "
-                "last_quest_bonus_date FROM profile WHERE id = 1"
+                "last_quest_bonus_date, streak_shields FROM profile WHERE id = 1"
             )
             (
                 level, total_stars, current_lesson_id, streak_days, last_played_date, last_chest_date,
-                last_quest_bonus_date,
+                last_quest_bonus_date, streak_shields,
             ) = cur.fetchone()
 
             cur.execute("SELECT lesson_id, stars_earned, completed_at FROM lesson_completions ORDER BY lesson_id")
@@ -587,6 +618,7 @@ class ProgressStore:
                 "last_played_date": last_played_date,
                 "last_chest_date": last_chest_date,
                 "last_quest_bonus_date": last_quest_bonus_date,
+                "streak_shields": streak_shields,
             },
             "lesson_completions": lesson_completions,
             "badges": badges,
@@ -616,12 +648,12 @@ class ProgressStore:
             self._conn.execute(
                 """UPDATE profile SET level = ?, total_stars = ?, current_lesson_id = ?,
                    streak_days = ?, last_played_date = ?, last_chest_date = ?,
-                   last_quest_bonus_date = ? WHERE id = 1""",
+                   last_quest_bonus_date = ?, streak_shields = ? WHERE id = 1""",
                 (
                     profile.get("level", 1), profile.get("total_stars", 0),
                     profile.get("current_lesson_id"), profile.get("streak_days", 0),
                     profile.get("last_played_date"), profile.get("last_chest_date"),
-                    profile.get("last_quest_bonus_date"),
+                    profile.get("last_quest_bonus_date"), profile.get("streak_shields", 0),
                 ),
             )
             self._conn.execute(
@@ -658,6 +690,7 @@ class ProgressStore:
             self._conn.execute("DELETE FROM quiz_attempts")
             self._conn.execute(
                 "UPDATE profile SET level = 1, total_stars = 0, current_lesson_id = NULL, streak_days = 0, "
-                "last_played_date = NULL, last_chest_date = NULL, last_quest_bonus_date = NULL WHERE id = 1"
+                "last_played_date = NULL, last_chest_date = NULL, last_quest_bonus_date = NULL, "
+                "streak_shields = 0 WHERE id = 1"
             )
             self._conn.execute("UPDATE player_xp SET total_xp = 0 WHERE id = 1")
