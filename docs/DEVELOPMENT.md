@@ -542,13 +542,19 @@ Later additions, same pattern:
 - **World gardens** (`worlds.garden_stage`): each world header on the map
   shows a plant that grows through five stages with completion.
 - **Sound on Flet** (`app/ui/components/sound_player_flet.py`, wired in
-  `app_window_flet.main()`): the three chimes play on lesson success /
-  badge / level-up, on opening the chest, claiming the quest bonus and
-  passing a quiz, subject to the child's Settings toggle. `flet build`
-  bundles flet-audio's Flutter side, so this works in a real APK; the
-  generic Flet companion app used for `flet run` live preview on a phone
-  can't render the control and shows a red "Unknown control: Audio"
-  banner -- set `PYADV_SOUND=0` for those sessions.
+  `app_window_flet.main()` **only when `PYADV_SOUND=1`**): the three chimes
+  play on lesson success / badge / level-up, on opening the chest,
+  claiming the quest bonus and passing a quiz, subject to the child's
+  Settings toggle. It is opt-in because a client whose Flutter build lacks
+  the flet_audio package paints a full-height red "Unknown control: Audio"
+  strip over the app -- seen both in the live-preview companion app and,
+  on 2026-09-27, in a real `flet build apk` install. To get sound working,
+  the build has to bundle that package: try `./build_apk.sh --clear-cache`
+  (flet build caches its Flutter project template), inspect a verbose
+  build (`-v`) for `flet_audio` among the Flutter dependencies, and check
+  whether `--cleanup-packages` strips the extension's `flutter/` folder
+  before flet collects it (drop that flag to test). Once an install plays
+  a chime with `PYADV_SOUND=1`, flip `sound_wiring_enabled()`'s default.
 - **Codey's Closet** (`app/engine/outfits.py`, `app/ui/codey_closet_flet.py`,
   route `/closet`): stars finally have a use -- cosmetic outfits bought with
   them. `ProgressStore.get_star_balance()` is total stars minus

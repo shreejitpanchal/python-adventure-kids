@@ -21,9 +21,10 @@ Run all from the repo root, using the project venv at `.venv\Scripts\python.exe`
 
 # Run the in-progress Flet re-platform
 .venv\Scripts\python.exe -m flet run main_flet.py
-# ...when live-previewing on a phone through the generic Flet companion app, which can't
-# render the flet_audio control, silence the chime wiring first:
-$env:PYADV_SOUND = "0"
+# Chimes are opt-in: a client without the flet_audio Flutter package (the live-preview
+# companion app, and so far the APK builds too) paints a red "Unknown control: Audio"
+# strip if the Audio controls exist. Only enable once a build is confirmed to bundle it:
+$env:PYADV_SOUND = "1"
 
 # Full test suite
 .venv\Scripts\python.exe -m pytest tests\ -v

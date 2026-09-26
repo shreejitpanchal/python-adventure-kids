@@ -55,10 +55,14 @@ SOUND_ENV_VAR = "PYADV_SOUND"
 
 
 def sound_wiring_enabled() -> bool:
-    """False only when PYADV_SOUND is set to 0/false/off/no -- the switch
-    for `flet run` live-preview sessions whose client can't render the
-    flet_audio control (see main())."""
-    return os.environ.get(SOUND_ENV_VAR, "1").strip().lower() not in ("0", "false", "off", "no")
+    """True only when PYADV_SOUND is set to 1/true/on/yes. Opt-in, not
+    default: a real `flet build apk` install (2026-09-27, Android) still
+    rendered a full-height red "Unknown control: Audio" strip, i.e. the
+    flet_audio Flutter package was not in the built client either -- not
+    just the live-preview one. Until a build is confirmed to bundle it
+    (see docs/DEVELOPMENT.md "Sound on Flet"), the Audio controls must not
+    be created at all."""
+    return os.environ.get(SOUND_ENV_VAR, "0").strip().lower() in ("1", "true", "on", "yes")
 
 
 def main(page: ft.Page) -> None:
@@ -77,14 +81,11 @@ def main(page: ft.Page) -> None:
     state.welcome = state.progress.record_play_today()
     # Chimes (app/ui/components/sound_player_flet.py). flet_audio's Audio
     # control only renders in a client that has its Flutter package
-    # compiled in: a `flet build apk` output does (flet-audio is in
-    # pyproject's dependencies, so flet build bundles its Flutter side),
-    # but the generic "Flet" companion app used for `flet run` live-preview
-    # on a phone does not and shows a client-side "Unknown control: Audio"
-    # red banner instead. Sound is therefore ON by default for real builds
-    # and switched off with PYADV_SOUND=0 for live-preview sessions. The
-    # Settings toggle (Settings.sound_enabled) is the child's own control
-    # on top of that.
+    # compiled in; otherwise the client paints a red "Unknown control:
+    # Audio" strip over the whole app. That happened in a real APK build,
+    # so the wiring is opt-in (PYADV_SOUND=1) until a build is shown to
+    # bundle the package -- see sound_wiring_enabled(). The Settings toggle
+    # (Settings.sound_enabled) is the child's own control on top of that.
     if sound_wiring_enabled():
         state.sound_player = SoundPlayerFlet(page)
 
