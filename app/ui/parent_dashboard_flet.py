@@ -119,6 +119,7 @@ class _ParentController:
         summary_card = plain_card(theme, summary_rows, padding=20, width=_CARD_WIDTH, data={"kind": "parent_summary"})
 
         rename_card = self._build_rename_card()
+        league_card = self._build_league_toggle_card()
         weekly_card = self._build_weekly_card()
         mastery_card = self._build_mastery_card()
 
@@ -137,6 +138,7 @@ class _ParentController:
             self._header(),
             ft.Row([summary_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([rename_card], alignment=ft.MainAxisAlignment.CENTER),
+            ft.Row([league_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([weekly_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([mastery_card], alignment=ft.MainAxisAlignment.CENTER),
             activity_card,
@@ -185,6 +187,33 @@ class _ParentController:
         self.rename_status_text.value = "Name updated."
         self.rename_status_text.color = theme.success
         self.page.update()
+
+    def _build_league_toggle_card(self) -> ft.Control:
+        """Lets a parent hide the Hub's weekly league (generated, offline
+        standings of Codey's friends) for a child who finds rankings
+        stressful rather than motivating."""
+        theme = self.theme
+
+        def on_toggle(e) -> None:
+            self.state.settings.league_enabled = bool(e.control.value)
+            self.state.save_settings()
+
+        self.league_switch = ft.Switch(
+            value=self.state.settings.league_enabled, on_change=on_toggle, active_color=theme.primary,
+        )
+        return plain_card(
+            theme,
+            [
+                self._card_title("🏁 Weekly League"),
+                ft.Text(
+                    "A friendly, offline leaderboard of Codey's friends around your child's own "
+                    "weekly XP. Turn it off if rankings aren't fun for them.",
+                    size=self._fs(13), color=theme.text_muted,
+                ),
+                ft.Row([ft.Text("Show the league on the Hub", size=self._fs(14), color=theme.text, width=180), self.league_switch]),
+            ],
+            padding=20, width=_CARD_WIDTH, data={"kind": "league_toggle"},
+        )
 
     def _build_weekly_card(self) -> ft.Control:
         theme = self.theme

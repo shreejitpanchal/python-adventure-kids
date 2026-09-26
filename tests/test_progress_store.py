@@ -663,6 +663,70 @@ def test_shields_round_trip_export_import_and_reset(store, monkeypatch, tmp_path
     assert store.get_summary().streak_shields == 0
 
 
+# -- Codey's closet + week activity -----------------------------------------------------
+
+def test_star_balance_is_total_minus_spent_and_buying_equips(store):
+    store.complete_lesson("a", 3)
+    store.complete_lesson("b", 3)
+    assert store.get_star_balance() == 6
+    assert store.buy_outfit("crown", 80) is False, "can't afford"
+    assert store.buy_outfit("bow", 5) is True
+    assert store.get_star_balance() == 1
+    assert store.get_owned_outfits() == ["bow"]
+    assert store.get_equipped_outfit() == "bow"
+    assert store.buy_outfit("bow", 5) is False, "already owned"
+    assert store.get_star_balance() == 1
+    assert store.get_summary().total_stars == 6, "spending never touches total_stars"
+    events = [row["event_type"] for row in store.get_recent_activity()]
+    assert events.count("outfit_bought") == 1
+
+
+def test_equip_requires_ownership_and_none_takes_it_off(store):
+    assert store.equip_outfit("crown") is False
+    assert store.get_equipped_outfit() is None
+    store.complete_lesson("a", 3)
+    store.buy_outfit("glasses", 1)
+    assert store.equip_outfit(None) is True and store.get_equipped_outfit() is None
+    assert store.equip_outfit("glasses") is True and store.get_equipped_outfit() == "glasses"
+
+
+def test_closet_round_trips_export_import_and_reset(store, tmp_path):
+    store.complete_lesson("a", 3)
+    store.buy_outfit("glasses", 2)
+    data = store.export_progress_data()
+    assert data["profile"]["stars_spent"] == 2 and data["profile"]["codey_outfit"] == "glasses"
+    assert data["outfits"][0]["outfit_id"] == "glasses"
+
+    other = ProgressStore(tmp_path / "other.sqlite3")
+    try:
+        other.import_progress_data(data)
+        assert other.get_owned_outfits() == ["glasses"] and other.get_star_balance() == 1
+        del data["outfits"]
+        del data["profile"]["stars_spent"]
+        del data["profile"]["codey_outfit"]
+        other.import_progress_data(data)
+        assert other.get_owned_outfits() == [] and other.get_equipped_outfit() is None
+        assert other.get_star_balance() == 3
+    finally:
+        other.close()
+
+    store.reset_progress()
+    assert store.get_owned_outfits() == [] and store.get_star_balance() == 0
+
+
+def test_week_activity_starts_on_monday_and_week_key_is_iso(store, monkeypatch):
+    _freeze_date(monkeypatch, 2026, 9, 24)  # a Thursday
+    monkeypatch.setattr(store_module, "_now", lambda: "2026-09-20T12:00:00+00:00")  # Sunday before
+    store.log_event("old", "lesson_completed", "stars=3")
+    monkeypatch.setattr(store_module, "_now", lambda: "2026-09-21T00:00:01+00:00")  # Monday
+    store.log_event("mon", "lesson_completed", "stars=1")
+    monkeypatch.setattr(store_module, "_now", lambda: "2026-09-24T09:00:00+00:00")
+    store.log_event("thu", "quiz_completed", "score=5/10")
+
+    assert [e[0] for e in store.get_week_activity()] == ["mon", "thu"]
+    assert store_module.week_key() == "2026-W39"
+
+
 def test_import_progress_data_rejects_a_file_with_no_format_version(store):
     with pytest.raises(store_module.InvalidProgressFile):
         store.import_progress_data({"lesson_completions": []})

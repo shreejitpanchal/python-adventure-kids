@@ -34,6 +34,7 @@ from app.ui.app_state_flet import AppState
 from app.ui.components.adventure_kit_flet import layout_for
 from app.ui.category_levels_flet import build_category_levels_view
 from app.ui.category_map_flet import build_category_map_view
+from app.ui.codey_closet_flet import build_closet_view
 from app.ui.course_chapter_flet import build_course_chapter_view
 from app.ui.course_map_flet import build_course_map_view
 from app.ui.course_quiz_screen_flet import build_course_quiz_view
@@ -163,6 +164,8 @@ def main(page: ft.Page) -> None:
         elif route.startswith("/ai-course/"):
             category = route.removeprefix("/ai-course/")
             page.views.append(build_course_chapter_view(page, state, category, course=AI_ML_COURSE))
+        elif route == "/closet":
+            page.views.append(build_closet_view(page, state))
         elif route == "/trophy-room":
             page.views.append(build_trophy_room_view(page, state))
         elif route.startswith("/lesson/"):

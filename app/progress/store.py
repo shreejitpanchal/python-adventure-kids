@@ -19,7 +19,9 @@ CREATE TABLE IF NOT EXISTS profile (
     last_played_date TEXT,
     last_chest_date TEXT,
     last_quest_bonus_date TEXT,
-    streak_shields INTEGER NOT NULL DEFAULT 0
+    streak_shields INTEGER NOT NULL DEFAULT 0,
+    stars_spent INTEGER NOT NULL DEFAULT 0,
+    codey_outfit TEXT
 );
 
 CREATE TABLE IF NOT EXISTS lesson_completions (
@@ -52,6 +54,11 @@ CREATE TABLE IF NOT EXISTS player_xp (
     id INTEGER PRIMARY KEY CHECK (id = 1),
     total_xp INTEGER NOT NULL DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS outfits (
+    outfit_id TEXT PRIMARY KEY,
+    bought_at TEXT NOT NULL
+);
 """
 
 # Columns added to `profile` after the first release. CREATE TABLE IF NOT
@@ -63,6 +70,8 @@ _PROFILE_COLUMN_MIGRATIONS: dict[str, str] = {
     "last_chest_date": "ALTER TABLE profile ADD COLUMN last_chest_date TEXT",
     "last_quest_bonus_date": "ALTER TABLE profile ADD COLUMN last_quest_bonus_date TEXT",
     "streak_shields": "ALTER TABLE profile ADD COLUMN streak_shields INTEGER NOT NULL DEFAULT 0",
+    "stars_spent": "ALTER TABLE profile ADD COLUMN stars_spent INTEGER NOT NULL DEFAULT 0",
+    "codey_outfit": "ALTER TABLE profile ADD COLUMN codey_outfit TEXT",
 }
 
 # Streak shields (see record_play_today): earned every SHIELD_EVERY_DAYS
@@ -130,6 +139,21 @@ def today_iso() -> str:
     """Today's (UTC) date as YYYY-MM-DD -- the day key the daily chest,
     daily quests and streak all share."""
     return _today()
+
+
+def week_key() -> str:
+    """The current ISO week as "YYYY-Www" -- the key the weekly league
+    (app/engine/league.py) is seeded by, so standings stay stable all week."""
+    year, week, _weekday = datetime.now(timezone.utc).isocalendar()
+    return f"{year}-W{week:02d}"
+
+
+def _week_start_iso() -> str:
+    """Monday 00:00 UTC of the current ISO week, as an ISO timestamp
+    comparable with _now()."""
+    today = datetime.now(timezone.utc).date()
+    monday = today - timedelta(days=today.weekday())
+    return f"{monday.isoformat()}T00:00:00+00:00"
 
 
 @dataclass
@@ -343,6 +367,58 @@ class ProgressStore:
         progress from."""
         rows = self.get_activity_since(f"{_today()}T00:00:00+00:00")
         return [(row["lesson_id"], row["event_type"], row["detail"] or "") for row in reversed(rows)]
+
+    def get_week_activity(self) -> list[tuple[Optional[str], str, str]]:
+        """(lesson_id, event_type, detail) for every event since Monday
+        00:00 UTC, oldest first -- what the weekly league's XP tally reads."""
+        rows = self.get_activity_since(_week_start_iso())
+        return [(row["lesson_id"], row["event_type"], row["detail"] or "") for row in reversed(rows)]
+
+    # -- Codey's closet (outfits bought with stars) ---------------------------------
+    def get_star_balance(self) -> int:
+        """Stars available to spend: total earned minus spent. total_stars
+        itself is never reduced (it's recomputed from completions), so
+        spending is tracked separately in profile.stars_spent."""
+        with closing(self._conn.cursor()) as cur:
+            cur.execute("SELECT total_stars, stars_spent FROM profile WHERE id = 1")
+            total, spent = cur.fetchone()
+        return max(0, total - spent)
+
+    def get_owned_outfits(self) -> list[str]:
+        with closing(self._conn.cursor()) as cur:
+            cur.execute("SELECT outfit_id FROM outfits ORDER BY bought_at")
+            return [row[0] for row in cur.fetchall()]
+
+    def get_equipped_outfit(self) -> Optional[str]:
+        with closing(self._conn.cursor()) as cur:
+            cur.execute("SELECT codey_outfit FROM profile WHERE id = 1")
+            (outfit,) = cur.fetchone()
+        return outfit
+
+    def buy_outfit(self, outfit_id: str, price: int) -> bool:
+        """Buys and equips `outfit_id` for `price` stars. False (and no
+        change) if it's already owned or the balance is too low."""
+        if outfit_id in self.get_owned_outfits() or self.get_star_balance() < price:
+            return False
+        with self._conn:
+            self._conn.execute(
+                "INSERT INTO outfits (outfit_id, bought_at) VALUES (?, ?)", (outfit_id, _now()),
+            )
+            self._conn.execute(
+                "UPDATE profile SET stars_spent = stars_spent + ?, codey_outfit = ? WHERE id = 1",
+                (price, outfit_id),
+            )
+        self.log_event(None, "outfit_bought", f"{outfit_id} for {price} stars")
+        return True
+
+    def equip_outfit(self, outfit_id: Optional[str]) -> bool:
+        """Wears an owned outfit, or None to take it off (Codey then wears
+        the level-title accessory). False if the outfit isn't owned."""
+        if outfit_id is not None and outfit_id not in self.get_owned_outfits():
+            return False
+        with self._conn:
+            self._conn.execute("UPDATE profile SET codey_outfit = ? WHERE id = 1", (outfit_id,))
+        return True
 
     def can_claim_quest_bonus(self) -> bool:
         """True until today's quest-board bonus has been claimed. Whether the
@@ -578,12 +654,15 @@ class ProgressStore:
         with closing(self._conn.cursor()) as cur:
             cur.execute(
                 "SELECT level, total_stars, current_lesson_id, streak_days, last_played_date, last_chest_date, "
-                "last_quest_bonus_date, streak_shields FROM profile WHERE id = 1"
+                "last_quest_bonus_date, streak_shields, stars_spent, codey_outfit FROM profile WHERE id = 1"
             )
             (
                 level, total_stars, current_lesson_id, streak_days, last_played_date, last_chest_date,
-                last_quest_bonus_date, streak_shields,
+                last_quest_bonus_date, streak_shields, stars_spent, codey_outfit,
             ) = cur.fetchone()
+
+            cur.execute("SELECT outfit_id, bought_at FROM outfits ORDER BY bought_at")
+            outfits = [{"outfit_id": row[0], "bought_at": row[1]} for row in cur.fetchall()]
 
             cur.execute("SELECT lesson_id, stars_earned, completed_at FROM lesson_completions ORDER BY lesson_id")
             lesson_completions = [
@@ -619,7 +698,10 @@ class ProgressStore:
                 "last_chest_date": last_chest_date,
                 "last_quest_bonus_date": last_quest_bonus_date,
                 "streak_shields": streak_shields,
+                "stars_spent": stars_spent,
+                "codey_outfit": codey_outfit,
             },
+            "outfits": outfits,
             "lesson_completions": lesson_completions,
             "badges": badges,
             "activity_log": activity_log,
@@ -644,18 +726,26 @@ class ProgressStore:
             self._conn.execute("DELETE FROM badges")
             self._conn.execute("DELETE FROM activity_log")
             self._conn.execute("DELETE FROM quiz_attempts")
+            self._conn.execute("DELETE FROM outfits")
 
             self._conn.execute(
                 """UPDATE profile SET level = ?, total_stars = ?, current_lesson_id = ?,
                    streak_days = ?, last_played_date = ?, last_chest_date = ?,
-                   last_quest_bonus_date = ?, streak_shields = ? WHERE id = 1""",
+                   last_quest_bonus_date = ?, streak_shields = ?, stars_spent = ?, codey_outfit = ?
+                   WHERE id = 1""",
                 (
                     profile.get("level", 1), profile.get("total_stars", 0),
                     profile.get("current_lesson_id"), profile.get("streak_days", 0),
                     profile.get("last_played_date"), profile.get("last_chest_date"),
                     profile.get("last_quest_bonus_date"), profile.get("streak_shields", 0),
+                    profile.get("stars_spent", 0), profile.get("codey_outfit"),
                 ),
             )
+            for row in data.get("outfits", []):
+                self._conn.execute(
+                    "INSERT INTO outfits (outfit_id, bought_at) VALUES (?, ?)",
+                    (row["outfit_id"], row["bought_at"]),
+                )
             self._conn.execute(
                 "UPDATE player_xp SET total_xp = ? WHERE id = 1",
                 (data.get("player_xp", {}).get("total_xp", 0),),
@@ -688,9 +778,10 @@ class ProgressStore:
             self._conn.execute("DELETE FROM badges")
             self._conn.execute("DELETE FROM activity_log")
             self._conn.execute("DELETE FROM quiz_attempts")
+            self._conn.execute("DELETE FROM outfits")
             self._conn.execute(
                 "UPDATE profile SET level = 1, total_stars = 0, current_lesson_id = NULL, streak_days = 0, "
                 "last_played_date = NULL, last_chest_date = NULL, last_quest_bonus_date = NULL, "
-                "streak_shields = 0 WHERE id = 1"
+                "streak_shields = 0, stars_spent = 0, codey_outfit = NULL WHERE id = 1"
             )
             self._conn.execute("UPDATE player_xp SET total_xp = 0 WHERE id = 1")

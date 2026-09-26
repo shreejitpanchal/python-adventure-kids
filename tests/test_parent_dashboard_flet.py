@@ -151,6 +151,22 @@ def test_cancelling_reset_leaves_progress_untouched(state):
     assert controller.page.dialogs_popped == 1
 
 
+def test_league_toggle_saves_the_setting(state):
+    controller = _ParentController(FakePage(), state)
+    controller._show_summary_step()
+    assert controller.league_switch.value is True
+
+    class Event:
+        def __init__(self, value):
+            self.control = type("Ctl", (), {"value": value})()
+
+    controller.league_switch.on_change(Event(False))
+    assert state.settings.league_enabled is False
+    from app.config.settings import load_settings
+
+    assert load_settings().league_enabled is False
+
+
 def test_menu_navigates_to_hub(state):
     controller = _ParentController(FakePage(), state)
     controller._show_summary_step()

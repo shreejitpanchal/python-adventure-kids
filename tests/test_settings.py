@@ -78,6 +78,15 @@ def test_load_settings_ignores_unknown_fields_from_a_newer_or_older_version(tmp_
     assert loaded.font_family == "default"  # missing from the file -- falls back to the dataclass default
 
 
+def test_league_is_enabled_by_default_and_round_trips(tmp_path, monkeypatch):
+    import app.config.settings as settings_module
+
+    monkeypatch.setattr(settings_module, "resolve_platform_data_dir", lambda: tmp_path)
+    assert settings_module.Settings().league_enabled is True
+    settings_module.save_settings(settings_module.Settings(league_enabled=False))
+    assert settings_module.load_settings().league_enabled is False
+
+
 def test_parent_pin_round_trip():
     settings = Settings()
     settings.set_parent_pin("1234")

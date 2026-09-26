@@ -103,7 +103,9 @@ Settings font controls — due for a refresh.*
   moment, a growing streak flame with streak shields that forgive one
   missed day, Codey acting out what your program printed, skill-based stars (replay without hints
   to earn the missing star), a same-session combo that doubles XP, player
-  titles that dress up Codey the mascot, map Worlds with their own
+  titles that dress up Codey the mascot, a closet of outfits to buy for him
+  with stars, an offline weekly league of Codey's friends (parents can turn
+  it off), map Worlds with their own
   champion badges, and confetti-and-level-up celebrations when a lesson is
   passed, so coming back tomorrow is its own small reward.
 - **A Settings screen that's actually comfortable to use** — multiple color

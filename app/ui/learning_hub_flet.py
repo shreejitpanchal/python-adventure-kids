@@ -24,9 +24,11 @@ from __future__ import annotations
 import flet as ft
 
 from app.engine.hub_status import compute_hub_status
+from app.engine.league import MEDALS, child_rank, league_line, league_standings, weekly_xp_from_events
+from app.engine.outfits import codey_accessory
 from app.engine.quests import all_quests_done, daily_quests, quest_progress
 from app.engine.titles import level_title
-from app.progress.store import today_iso
+from app.progress.store import today_iso, week_key
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color, lighten, with_alpha
 from app.ui.components import motion_flet as motion
@@ -158,11 +160,13 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
     companion = build_codey_companion(
         theme, scale,
         codey_hub_line(name, summary.streak_days, hub_status.resume_label is not None, chest_available, quests_ready),
-        page=page, accessory=level_title(player.level).codey_accessory,
+        page=page, accessory=codey_accessory(state.progress.get_equipped_outfit(), player.level),
     )
     header = hero_header(
         theme, title="Python Adventure", scale=scale,
         buttons=[
+            pill_button("👕 Closet", lambda _e: page.go("/closet"), bgcolor=theme.primary),
+            pill_button("🏆 Trophies", lambda _e: page.go("/trophy-room"), bgcolor=theme.text_muted, color="#FFFFFF"),
             pill_button("⚙️ Settings", lambda _e: page.go("/settings"), bgcolor=theme.text_muted, color="#FFFFFF"),
             pill_button("👋 Parent Area", lambda _e: page.go("/parent"), bgcolor=theme.text_muted, color="#FFFFFF"),
         ],
@@ -207,6 +211,8 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
     sections.append(stats)
     sections.append(chest)
     sections.append(quest_board)
+    if state.settings.league_enabled:
+        sections.append(_build_league_card(state, name))
     if hub_status.resume_label is not None:
         sections.append(_build_resume_banner(page, state, hub_status.resume_label))
     sections.append(ft.Container(content=section_title(theme, "🗺️ Choose your adventure", scale)))
@@ -228,6 +234,56 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
     view = scene_view("/hub", theme, controls, page=page)
     motion.play_entrance(page, sections)
     return view
+
+
+def _build_league_card(state: AppState, name: str) -> ft.Control:
+    """This week's league table (app/engine/league.py): Codey's friends'
+    generated scores around the child's real weekly XP, the child's row
+    highlighted, and a nudge line underneath."""
+    theme = state.theme
+    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
+    child_xp = weekly_xp_from_events(state.progress.get_week_activity())
+    standings = league_standings(name, child_xp, week_key())
+    rank = child_rank(standings)
+
+    rows: list[ft.Control] = []
+    for index, standing in enumerate(standings):
+        medal = MEDALS[index] if index < len(MEDALS) else f"{index + 1}."
+        row_color = theme.primary if standing.is_child else theme.card
+        row_text = contrasting_text_color(row_color) if standing.is_child else theme.text
+        rows.append(
+            ft.Container(
+                content=ft.Row(
+                    [
+                        ft.Text(medal, size=fs(16), width=32),
+                        ft.Text(standing.emoji, size=fs(18)),
+                        ft.Text(f"{standing.name}{' (you)' if standing.is_child else ''}", size=fs(14), weight=ft.FontWeight.BOLD, color=row_text, expand=True),
+                        ft.Text(f"{standing.xp} XP", size=fs(13), weight=ft.FontWeight.BOLD, color=row_text),
+                    ],
+                    spacing=8, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+                bgcolor=row_color if standing.is_child else None,
+                border_radius=12, padding=ft.padding.Padding.symmetric(horizontal=10, vertical=6),
+                data={"kind": "league_row", "name": standing.name, "xp": standing.xp, "is_child": standing.is_child},
+            )
+        )
+
+    return plain_card(
+        theme,
+        [
+            ft.Row(
+                [
+                    ft.Text("🏁 Weekly League", size=fs(18), weight=ft.FontWeight.BOLD, color=theme.text, expand=True),
+                    ft.Text(f"You're #{rank}", size=fs(14), weight=ft.FontWeight.BOLD, color=theme.primary),
+                ],
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            *rows,
+            ft.Text(league_line(standings), size=fs(13), italic=True, color=theme.text_muted),
+        ],
+        spacing=6,
+        data={"kind": "league_card", "rank": rank, "child_xp": child_xp},
+    )
 
 
 def _build_resume_banner(page: ft.Page, state: AppState, resume_label: str) -> ft.Control:

@@ -84,6 +84,11 @@ class Settings:
     banner -- "" (unset) or one of guided/skills/code_crackers/
     advanced_code_crackers/projects. Each UI's Hub screen maps this key to
     its own navigation call, same pattern as `theme`/`font_family` above."""
+    league_enabled: bool = True
+    """Whether the Learning Hub shows the weekly league of Codey's friends
+    (app/engine/league.py -- offline, generated standings). A parent can
+    switch it off in the Parent Area for a child who finds rankings
+    stressful rather than motivating."""
     preferred_learning_mode: str = ""
     """A semantic key -- "" (unset, treated the same as "guided") or one of
     guided/projects/crackers/advanced. Only affects which Learning Hub card

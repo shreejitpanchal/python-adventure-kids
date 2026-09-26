@@ -162,6 +162,30 @@ def test_shield_chip_appears_only_once_a_shield_is_held(state, monkeypatch):
     assert one(view, "shield_chip").data["shields"] == 1
 
 
+def test_league_card_shows_the_child_highlighted_and_can_be_switched_off(state):
+    state.settings.child_name = "Kidoo"
+    view = build_learning_hub_view(FakePage(), state)
+    card = one(view, "league_card")
+    rows = all_of(card, "league_row")
+    assert len(rows) == 6
+    child_rows = [r for r in rows if r.data["is_child"]]
+    assert len(child_rows) == 1 and child_rows[0].data["name"] == "Kidoo"
+    assert card.data["rank"] == 6, "no XP yet -> last, but every friend is within one lesson"
+
+    state.settings.league_enabled = False
+    assert all_of(build_learning_hub_view(FakePage(), state), "league_card") == []
+
+
+def test_codey_wears_the_equipped_outfit_over_the_level_accessory(state):
+    state.progress.complete_lesson("lesson_01", 3)
+    state.progress.complete_lesson("lesson_02", 3)
+    state.progress.complete_lesson("lesson_03", 3)
+    state.progress.complete_lesson("lesson_04", 3)
+    state.progress.buy_outfit("glasses", 10)
+    view = build_learning_hub_view(FakePage(), state)
+    assert one(view, "codey_accessory").data["accessory"] == "👓"
+
+
 def test_quest_board_is_on_the_hub_with_three_quests(state):
     view = build_learning_hub_view(FakePage(), state)
     board = one(view, "quest_board")

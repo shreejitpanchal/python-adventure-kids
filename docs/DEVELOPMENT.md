@@ -541,6 +541,19 @@ Later additions, same pattern:
   mission plus the next three as capsules, only the current one tappable.
 - **World gardens** (`worlds.garden_stage`): each world header on the map
   shows a plant that grows through five stages with completion.
+- **Codey's Closet** (`app/engine/outfits.py`, `app/ui/codey_closet_flet.py`,
+  route `/closet`): stars finally have a use -- cosmetic outfits bought with
+  them. `ProgressStore.get_star_balance()` is total stars minus
+  `profile.stars_spent` (total_stars itself is never reduced); owned outfits
+  live in the `outfits` table and the worn one in `profile.codey_outfit`.
+  `outfits.codey_accessory()` decides what Codey wears everywhere: the
+  equipped outfit, else the level-title accessory.
+- **Weekly league** (`app/engine/league.py`, Hub card): five of Codey's
+  friends with scores generated around the child's own weekly XP (tallied
+  from the week's activity events), seeded by the ISO week so the table is
+  stable all week; the child usually sits 2nd-3rd with one lesson's worth
+  of gap. Fully offline. `Settings.league_enabled` (Parent Area switch)
+  hides it.
 
 Every Flet screen now uses the kit -- Settings, Parent Area (deliberately
 calm: header and cards only, no Codey or celebrations), the standalone and

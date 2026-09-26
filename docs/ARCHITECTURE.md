@@ -495,6 +495,12 @@ erDiagram
         text last_chest_date "Daily Treasure: last (UTC) date opened; added by an ALTER TABLE migration in _init_schema()"
         text last_quest_bonus_date "Daily quests: last (UTC) date the completion bonus was claimed; same migration mechanism"
         int streak_shields "Streak shields held (earned every 7 days, spent to bridge one missed day); same migration mechanism"
+        int stars_spent "Stars spent in Codey's Closet; balance = total_stars - stars_spent"
+        text codey_outfit "Equipped outfit id, or NULL for the level-title accessory"
+    }
+    outfits {
+        text outfit_id PK
+        text bought_at
     }
     lesson_completions {
         text lesson_id PK

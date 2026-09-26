@@ -187,6 +187,12 @@ def test_resize_never_rebuilds_a_lesson_in_progress(page):
     assert page.views[-1] is before
 
 
+def test_closet_route_builds_the_closet_view(page):
+    page.go("/hub")
+    page.go("/closet")
+    assert page.views[-1].route == "/closet"
+
+
 def test_setup_route_is_never_pushed_to_history(page):
     # main() lands on /setup first (setup_complete defaults to False for a
     # fresh settings file) -- going straight to /hub from there must not

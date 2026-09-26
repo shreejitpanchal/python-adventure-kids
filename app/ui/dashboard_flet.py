@@ -17,6 +17,7 @@ from __future__ import annotations
 import flet as ft
 
 from app.engine.categories import get_category_meta
+from app.engine.outfits import codey_accessory
 from app.engine.titles import level_title
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color, lighten
@@ -48,7 +49,7 @@ def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
 
     companion = build_codey_companion(
         theme, scale, codey_mission_line(current_lesson.title, already_completed), page=page,
-        accessory=level_title(state.progress.get_player_level().level).codey_accessory,
+        accessory=codey_accessory(state.progress.get_equipped_outfit(), state.progress.get_player_level().level),
     )
     header = hero_header(
         theme, title="Today's Mission", scale=scale,
