@@ -2,6 +2,18 @@
 name = "python-adventure"
 version = "1.0.0"
 description = "A gamified Python-learning adventure for kids"
+# What the PACKAGED Flet app (Android/Windows via `flet build`) needs at
+# runtime -- and nothing else. `flet build` reads this list in preference to
+# requirements.txt, which is the developer environment (run.bat/run.sh) and
+# also carries the CustomTkinter desktop app's deps and pytest; those are
+# useless on a phone and were being bundled into every APK. Pillow is only
+# imported by the CTk-only modules (app/ui/assets.py, game_window.py), and
+# the app makes no network calls, so certifi isn't needed either.
+dependencies = [
+    "flet==0.86.5",
+    "flet-audio==0.86.5",
+    "pyyaml>=6.0",
+]
 
 [tool.flet]
 product = "Python Adventure"
@@ -26,4 +38,6 @@ exclude = [
     "app-data",
     "graphify-out",
     "tests",
+    "docs",
+    "scripts",
 ]

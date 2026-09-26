@@ -82,7 +82,7 @@ app/
              # not currently PIN-gated: Settings.set_parent_pin()/verify_parent_pin() exist but no screen calls them
 content/
   lessons/   # one YAML file per lesson — the actual curriculum content
-  images/    # app icon
+  images/    # app icon (regenerate all sizes with scripts/generate_icon.py; never hand-edit the PNG/ICO)
 tests/       # pytest suite, one file per module roughly mirroring app/
 main.py       # CTk entry point
 main_flet.py  # Flet entry point

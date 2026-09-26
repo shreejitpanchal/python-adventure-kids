@@ -1,3 +1,8 @@
+# Developer / desktop environment (installed by run.bat / run.sh): both UIs
+# plus the test suite. The PACKAGED Flet app's runtime dependencies are the
+# much shorter [project].dependencies list in pyproject.toml, which
+# `flet build` uses instead of this file -- keep the two in sync when a
+# dependency the Flet app actually imports changes.
 customtkinter>=5.2.2
 pillow>=10.0.0
 pyyaml>=6.0

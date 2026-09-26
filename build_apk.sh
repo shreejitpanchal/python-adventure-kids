@@ -78,11 +78,44 @@ export PYTHONUTF8=1
 # --build-number/--build-version set the Android versionCode/versionName
 # and are what app/version.py reads back out of the running app (via
 # BUILD_NUMBER and pyproject.toml respectively) to show in Settings.
+#
+# APK size: a Flet APK is mostly the Flutter engine plus a complete CPython
+# runtime, and a single "universal" APK carries one copy of those native
+# libraries per CPU architecture (arm64-v8a, armeabi-v7a, x86_64), which is
+# what made one build ~150MB. --split-per-abi emits one APK per
+# architecture instead -- install the arm64-v8a one on any phone/tablet made
+# in the last several years. --compile-* turn .py into .pyc and --cleanup-*
+# then drop the sources and packages' tests/docs, trimming the Python payload
+# further. Pass --no-split (handled below) if you really want one universal
+# APK, e.g. for an emulator of unknown ABI.
+SPLIT_FLAGS=(--split-per-abi)
+EXTRA_ARGS=()
+for arg in "$@"; do
+    if [ "$arg" = "--no-split" ]; then
+        SPLIT_FLAGS=()
+    else
+        EXTRA_ARGS+=("$arg")
+    fi
+done
+
 "$FLETEXE" build apk --module-name main_flet --yes \
-    --build-number "$NEW_BUILD" --build-version "$APP_VERSION" "$@"
+    --build-number "$NEW_BUILD" --build-version "$APP_VERSION" \
+    --compile-app --compile-packages --cleanup-app --cleanup-packages \
+    "${SPLIT_FLAGS[@]}" "${EXTRA_ARGS[@]}"
 
-TAGGED_APK="build/apk/python-adventure-v${APP_VERSION}-build${NEW_BUILD}.apk"
-mv "build/apk/python-adventure.apk" "$TAGGED_APK"
-
+# Tag every emitted APK with version + build. Split builds produce
+# python-adventure-<abi>.apk per architecture; a universal build produces a
+# single python-adventure.apk.
 echo
-echo "Done -- APK at $TAGGED_APK"
+echo "Done -- APKs:"
+for apk in build/apk/python-adventure*.apk; do
+    case "$apk" in
+        *-build*.apk) continue ;;  # already tagged by an earlier run
+    esac
+    base="$(basename "$apk" .apk)"
+    suffix="${base#python-adventure}"          # "" or "-arm64-v8a"
+    tagged="build/apk/python-adventure-v${APP_VERSION}-build${NEW_BUILD}${suffix}.apk"
+    mv "$apk" "$tagged"
+    size_mb="$(du -m "$tagged" | cut -f1)"
+    echo "  $tagged  (${size_mb} MB)"
+done
