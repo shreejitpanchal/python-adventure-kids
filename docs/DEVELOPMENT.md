@@ -541,6 +541,14 @@ Later additions, same pattern:
   mission plus the next three as capsules, only the current one tappable.
 - **World gardens** (`worlds.garden_stage`): each world header on the map
   shows a plant that grows through five stages with completion.
+- **Sound on Flet** (`app/ui/components/sound_player_flet.py`, wired in
+  `app_window_flet.main()`): the three chimes play on lesson success /
+  badge / level-up, on opening the chest, claiming the quest bonus and
+  passing a quiz, subject to the child's Settings toggle. `flet build`
+  bundles flet-audio's Flutter side, so this works in a real APK; the
+  generic Flet companion app used for `flet run` live preview on a phone
+  can't render the control and shows a red "Unknown control: Audio"
+  banner -- set `PYADV_SOUND=0` for those sessions.
 - **Codey's Closet** (`app/engine/outfits.py`, `app/ui/codey_closet_flet.py`,
   route `/closet`): stars finally have a use -- cosmetic outfits bought with
   them. `ProgressStore.get_star_balance()` is total stars minus

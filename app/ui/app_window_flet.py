@@ -26,12 +26,15 @@ empty, lets the pop proceed and the app close.
 """
 from __future__ import annotations
 
+import os
+
 import flet as ft
 
 from app.engine.categories import PROJECT_CATEGORIES
 from app.engine.courses import AI_ML_COURSE
 from app.ui.app_state_flet import AppState
 from app.ui.components.adventure_kit_flet import layout_for
+from app.ui.components.sound_player_flet import SoundPlayerFlet
 from app.ui.category_levels_flet import build_category_levels_view
 from app.ui.category_map_flet import build_category_map_view
 from app.ui.codey_closet_flet import build_closet_view
@@ -48,6 +51,16 @@ from app.ui.setup_wizard_flet import build_setup_wizard_view
 from app.ui.trophy_room_flet import build_trophy_room_view
 
 
+SOUND_ENV_VAR = "PYADV_SOUND"
+
+
+def sound_wiring_enabled() -> bool:
+    """False only when PYADV_SOUND is set to 0/false/off/no -- the switch
+    for `flet run` live-preview sessions whose client can't render the
+    flet_audio control (see main())."""
+    return os.environ.get(SOUND_ENV_VAR, "1").strip().lower() not in ("0", "false", "off", "no")
+
+
 def main(page: ft.Page) -> None:
     page.title = "Python Adventure"
     page.window.width = 1000
@@ -62,21 +75,18 @@ def main(page: ft.Page) -> None:
     # for a Dashboard visit (which also calls this, idempotently) would
     # leave the Hub a day behind. See AppState.welcome.
     state.welcome = state.progress.record_play_today()
-    # state.sound_player stays None (its default -- see AppState.__init__)
-    # rather than constructing SoundPlayerFlet(page) here: flet_audio's
-    # Audio control needs its Flutter/Dart implementation compiled into
-    # the connected client to render at all. The generic "Flet" companion
-    # app used for `flet run` live-preview on a real device only knows
-    # Flet's built-in controls -- any extension control (this one
-    # included) shows a client-side "Unknown control: Audio" red banner
-    # that no Python-side fix can suppress, confirmed via real-device
-    # testing. Re-enabling this needs verifying flet-audio's Flutter
-    # package actually gets bundled into a real `flet build apk` output
-    # (not just the live-preview client) before it's safe to turn back on
-    # -- every other sound-related piece (app/audio/player.py's shared
-    # decision logic, CTk's winsound-based playback, SoundPlayerFlet
-    # itself, the Settings toggle) is untouched and ready to re-wire with
-    # a one-line change once that's confirmed.
+    # Chimes (app/ui/components/sound_player_flet.py). flet_audio's Audio
+    # control only renders in a client that has its Flutter package
+    # compiled in: a `flet build apk` output does (flet-audio is in
+    # pyproject's dependencies, so flet build bundles its Flutter side),
+    # but the generic "Flet" companion app used for `flet run` live-preview
+    # on a phone does not and shows a client-side "Unknown control: Audio"
+    # red banner instead. Sound is therefore ON by default for real builds
+    # and switched off with PYADV_SOUND=0 for live-preview sessions. The
+    # Settings toggle (Settings.sound_enabled) is the child's own control
+    # on top of that.
+    if sound_wiring_enabled():
+        state.sound_player = SoundPlayerFlet(page)
 
     # Unlike sound_player, there's no state.file_picker built here: an
     # earlier version of this code built one ft.FilePicker up front and

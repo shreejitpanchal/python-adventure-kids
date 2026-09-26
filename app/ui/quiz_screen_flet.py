@@ -249,6 +249,8 @@ class _QuizController:
             self._codey.set_line("Brilliant brain! That score deserves confetti 🎉")
             self._codey.cheer(self.page)
             play_confetti(self.page, self.confetti)
+            if self.state.sound_player is not None:
+                self.state.sound_player.play("success_chime", self.state.settings)
         else:
             self._codey.set_line("Good effort! The practice picks below will help 💪")
 

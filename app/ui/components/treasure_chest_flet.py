@@ -100,6 +100,8 @@ def build_daily_chest(
         page.update()
         motion.wobble(page, emoji_disc)
         motion.pulse(page, emoji_disc, times=1, big=1.25)
+        if reward is not None and state.sound_player is not None:
+            state.sound_player.play("level_up" if reward.leveled_up else "success_chime", state.settings)
         if reward is not None and on_opened is not None:
             on_opened(reward)
 

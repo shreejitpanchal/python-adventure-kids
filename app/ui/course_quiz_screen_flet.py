@@ -197,6 +197,8 @@ class _CourseQuizController:
             self._codey.set_line("Quiz conquered! That's how it's done 🎉")
             self._codey.cheer(self.page)
             play_confetti(self.page, self.confetti)
+            if self.state.sound_player is not None:
+                self.state.sound_player.play("success_chime", self.state.settings)
             buttons.append(ft.Button(
                 "✅ Continue", on_click=self._on_back, height=52,
                 style=ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF"),

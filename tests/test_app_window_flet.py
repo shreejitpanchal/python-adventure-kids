@@ -38,6 +38,7 @@ class FakePage:
         self.fonts = None
         self.route = "/"
         self.views: list = []
+        self.overlay: list = []
         self.on_route_change = None
         self.bgcolor = None
         self.theme_mode = None
@@ -185,6 +186,29 @@ def test_resize_never_rebuilds_a_lesson_in_progress(page):
     page.width = 1200
     page.on_resized(None)
     assert page.views[-1] is before
+
+
+def test_sound_is_wired_by_default_and_switched_off_by_the_env_var(tmp_path, monkeypatch):
+    import app.config.settings as settings_module
+    from app.ui import app_window_flet
+
+    monkeypatch.setattr(settings_module, "resolve_platform_data_dir", lambda: tmp_path)
+
+    monkeypatch.delenv(app_window_flet.SOUND_ENV_VAR, raising=False)
+    assert app_window_flet.sound_wiring_enabled() is True
+    wired = FakePage()
+    main(wired)
+    # SoundPlayerFlet registers one Audio control per chime when flet_audio
+    # is importable; with the package missing it degrades to no controls.
+    pytest.importorskip("flet_audio")
+    assert len(wired.overlay) == 3
+
+    for value in ("0", "false", "OFF", "no"):
+        monkeypatch.setenv(app_window_flet.SOUND_ENV_VAR, value)
+        assert app_window_flet.sound_wiring_enabled() is False
+    quiet = FakePage()
+    main(quiet)
+    assert quiet.overlay == []
 
 
 def test_closet_route_builds_the_closet_view(page):

@@ -21,6 +21,9 @@ Run all from the repo root, using the project venv at `.venv\Scripts\python.exe`
 
 # Run the in-progress Flet re-platform
 .venv\Scripts\python.exe -m flet run main_flet.py
+# ...when live-previewing on a phone through the generic Flet companion app, which can't
+# render the flet_audio control, silence the chime wiring first:
+$env:PYADV_SOUND = "0"
 
 # Full test suite
 .venv\Scripts\python.exe -m pytest tests\ -v

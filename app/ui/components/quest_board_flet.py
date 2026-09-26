@@ -91,6 +91,8 @@ def build_quest_board(
         board.data = {**board.data, "claimable": False, "claimed": True}
         page.update()
         motion.pulse(page, board, times=1, big=1.03)
+        if level is not None and state.sound_player is not None:
+            state.sound_player.play("badge_unlock", state.settings)
         if level is not None and on_bonus_claimed is not None:
             on_bonus_claimed(level)
 

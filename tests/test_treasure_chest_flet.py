@@ -61,6 +61,20 @@ def test_opening_grants_xp_updates_the_card_and_notifies(state):
     assert len(page.scheduled(motion._wobble)) == 1
 
 
+def test_opening_plays_a_chime_when_a_sound_player_is_attached(state):
+    class FakeSoundPlayer:
+        def __init__(self) -> None:
+            self.calls: list[str] = []
+
+        def play(self, name, settings) -> None:
+            self.calls.append(name)
+
+    state.sound_player = FakeSoundPlayer()
+    card = build_daily_chest(FakePage(), state, scale=1.0)
+    card.on_click(None)
+    assert state.sound_player.calls == ["success_chime"]
+
+
 def test_already_opened_today_renders_the_collected_state(state):
     state.progress.open_daily_chest()
     card = build_daily_chest(NoTaskPage(), state, scale=1.0)
