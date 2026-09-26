@@ -5,7 +5,8 @@ score summary scored out of however many were picked.
 Every question has exactly 4 options (content/quiz/quiz_questions.yaml),
 so the option buttons are built once and reused across questions rather
 than rebuilt each time -- the same mutate-in-place-then-page.update()
-shape as app/ui/lesson_screen_flet.py's _LessonController.
+shape as app/ui/lesson_screen_flet.py's _LessonController. Styled with
+the game-world kit; a strong score fires confetti.
 """
 from __future__ import annotations
 
@@ -13,11 +14,18 @@ import flet as ft
 
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color
+from app.ui.components.adventure_kit_flet import (
+    accent_gradient, hero_header, lip_shadow, pill_button, plain_card, scene_view, soft_shadow,
+)
+from app.ui.components.celebration_flet import build_confetti, play_confetti, reset_confetti
+from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.theme_flet import scaled
 
 _OPTION_COUNT = 4
 _RESULTS_CARD_COLOR = "#FFF3D0"
 _COUNT_CHOICES = [5, 10, 15, 20, 25, 30, 50]
+# From this score (percent) up the results celebrate with confetti.
+_CELEBRATE_PERCENT = 70
 
 
 def build_quiz_view(page: ft.Page, state: AppState) -> ft.View:
@@ -51,17 +59,13 @@ class _QuizController:
     def build_view(self) -> ft.View:
         theme = self.theme
 
-        header = ft.Row(
-            [
-                ft.Button(
-                    "🏠 Menu", on_click=self._on_menu, height=48,
-                    style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
-                ),
-                # expand=True lets the title wrap onto a second line at large
-                # font scales instead of overflowing past the screen edge.
-                ft.Text("❓ Quiz", size=self._fs(26), weight=ft.FontWeight.BOLD, color=theme.primary, expand=True),
-            ],
-            spacing=16,
+        self._codey = build_codey_companion(
+            theme, self.scale, "Brain workout time! How many questions can you handle?", page=self.page,
+        )
+        header = hero_header(
+            theme, title="❓ Quiz", scale=self.scale,
+            buttons=[pill_button("🏠 Menu", self._on_menu, bgcolor=theme.text_muted, color="#FFFFFF")],
+            companion=self._codey.control,
         )
 
         self.setup_card = self._build_setup_card()
@@ -90,10 +94,11 @@ class _QuizController:
         # active theme (a deliberate always-celebratory look), so its text
         # must be too -- theme.text is tuned for dark themes' own dark
         # background and turns near-invisible on this light card (#2547).
-        self.results_text = ft.Text(
-            "", size=self._fs(22), weight=ft.FontWeight.BOLD, color=contrasting_text_color(_RESULTS_CARD_COLOR),
-        )
         results_card_text_color = contrasting_text_color(_RESULTS_CARD_COLOR)
+        self.confetti = build_confetti()
+        self.results_text = ft.Text(
+            "", size=self._fs(22), weight=ft.FontWeight.BOLD, color=results_card_text_color, text_align=ft.TextAlign.CENTER,
+        )
         self.practice_heading = ft.Text(
             "💡 Practice these next:", size=self._fs(15), weight=ft.FontWeight.BOLD, color=results_card_text_color, visible=False,
         )
@@ -101,6 +106,8 @@ class _QuizController:
         self.results_card = ft.Container(
             content=ft.Column(
                 [
+                    self.confetti,
+                    ft.Text("🏁", size=self._fs(44)),
                     self.results_text,
                     self.practice_heading,
                     self.practice_row,
@@ -115,23 +122,18 @@ class _QuizController:
                                 style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
                             ),
                         ],
-                        spacing=10,
+                        spacing=10, wrap=True, alignment=ft.MainAxisAlignment.CENTER,
                     ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=16,
             ),
-            bgcolor=_RESULTS_CARD_COLOR, border_radius=18, padding=24, visible=False,
+            gradient=accent_gradient(_RESULTS_CARD_COLOR), border_radius=24, padding=24, visible=False,
+            shadow=[lip_shadow(_RESULTS_CARD_COLOR, depth=6), soft_shadow(_RESULTS_CARD_COLOR, opacity=0.35)],
+            data={"kind": "results_card"},
         )
 
-        return ft.View(
-            route="/quiz",
-            bgcolor=theme.bg,
-            scroll=ft.ScrollMode.AUTO,
-            # Extra bottom clearance so the last control isn't hidden behind
-            # Android's gesture/navigation bar -- see learning_hub_flet.py's
-            # build_learning_hub_view() for the full rationale.
-            padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
-            controls=[header, self.setup_card, self.question_card, self.results_card],
+        return scene_view(
+            "/quiz", theme, [header, self.setup_card, self.question_card, self.results_card], page=self.page,
         )
 
     def _build_setup_card(self) -> ft.Control:
@@ -150,12 +152,10 @@ class _QuizController:
         ])
 
     def _card(self, title: str, children: list[ft.Control]) -> ft.Control:
-        return ft.Container(
-            content=ft.Column(
-                [ft.Text(title, size=self._fs(18), weight=ft.FontWeight.BOLD, color=self.theme.text), *children],
-                spacing=10,
-            ),
-            bgcolor=self.theme.card, border_radius=18, padding=20,
+        return plain_card(
+            self.theme,
+            [ft.Text(title, size=self._fs(18), weight=ft.FontWeight.BOLD, color=self.theme.text), *children],
+            padding=20,
         )
 
     def _make_option_button(self, index: int) -> ft.Button:
@@ -178,6 +178,7 @@ class _QuizController:
         self.index = 0
         self.score = 0
         self.missed_tags = set()
+        self._codey.set_line(f"{self.total} questions — you've got this!")
         self.setup_card.visible = False
         self.question_card.visible = True
         self._render_question()
@@ -242,7 +243,14 @@ class _QuizController:
     def _show_results(self) -> None:
         self.state.progress.record_quiz_attempt(self.score, self.total)
         percent = round(100 * self.score / self.total)
-        self.results_text.value = f"🏁 You scored {self.score} / {self.total} ({percent}%)"
+        self.results_text.value = f"You scored {self.score} / {self.total} ({percent}%)"
+
+        if percent >= _CELEBRATE_PERCENT:
+            self._codey.set_line("Brilliant brain! That score deserves confetti 🎉")
+            self._codey.cheer(self.page)
+            play_confetti(self.page, self.confetti)
+        else:
+            self._codey.set_line("Good effort! The practice picks below will help 💪")
 
         completed_ids = self.state.progress.get_completed_lesson_ids()
         suggestions = self.state.lesson_engine.recommend_practice_for_tags(self.missed_tags, completed_ids)
@@ -263,6 +271,8 @@ class _QuizController:
     def _on_play_again(self, e) -> None:
         # Back to the setup card rather than silently reusing the last
         # question count -- lets the child pick a different length next time.
+        reset_confetti(self.confetti)
+        self._codey.set_line("Round two? Pick how many questions!")
         self.results_card.visible = False
         self.setup_card.visible = True
         self.page.update()

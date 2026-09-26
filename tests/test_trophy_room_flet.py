@@ -102,6 +102,29 @@ def test_tapping_an_earned_badge_toggles_detail_and_wobble(state):
     assert page.update_count == 2
 
 
+def test_hero_header_codey_line_and_progress_bar(state):
+    from app.ui.components.adventure_kit_flet import find_by_kind
+    from app.ui.trophy_room_flet import codey_trophy_line
+    from tests.flet_testing import texts
+
+    state.progress.award_badge("first_program")
+    view = build_trophy_room_view(FakePage(), state)
+
+    header = view.controls[0]
+    assert header.data["title"] == "🏆 Trophy Room"
+    assert codey_trophy_line(1, len(BADGE_META)) in texts(header)
+    (bar,) = find_by_kind(view, "power_bar")
+    assert bar.data["ratio"] == 1 / len(BADGE_META)
+
+
+def test_codey_trophy_line():
+    from app.ui.trophy_room_flet import codey_trophy_line
+
+    assert "waiting" in codey_trophy_line(0, 10)
+    assert codey_trophy_line(3, 10) == "3 of 10 badges collected — keep going!"
+    assert "legend" in codey_trophy_line(10, 10)
+
+
 def test_earned_badge_outside_the_curated_registry_still_gets_a_card(state):
     state.progress.award_badge("some_future_badge")
     page = FakePage()

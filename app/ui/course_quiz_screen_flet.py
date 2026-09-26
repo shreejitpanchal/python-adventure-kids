@@ -5,6 +5,7 @@ passing at >=70% to complete the item -- see app/engine/course_status.py.
 Same controller shape as quiz_screen_flet.py's _QuizController, but skips
 its "pick how many questions" setup card -- the question count and topic
 are both fixed by the course lesson itself, not chosen by the child.
+Styled with the game-world kit; a pass fires confetti.
 """
 from __future__ import annotations
 
@@ -15,6 +16,11 @@ from app.engine.course_status import maybe_award_course_badge
 from app.engine.courses import PYTHON_COURSE, CourseSpec
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color
+from app.ui.components.adventure_kit_flet import (
+    accent_gradient, hero_header, lip_shadow, pill_button, plain_card, scene_view, soft_shadow,
+)
+from app.ui.components.celebration_flet import build_confetti, play_confetti, reset_confetti
+from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.theme_flet import scaled
 
 _OPTION_COUNT = 4
@@ -52,15 +58,13 @@ class _CourseQuizController:
         theme = self.theme
         meta = get_category_meta(self.lesson.category)
 
-        header = ft.Row(
-            [
-                ft.Button(
-                    self.course.title, on_click=self._on_back, height=48,
-                    style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
-                ),
-                ft.Text(f"{meta.icon} {self.lesson.title}", size=self._fs(22), weight=ft.FontWeight.BOLD, color=meta.color, expand=True),
-            ],
-            spacing=16,
+        self._codey = build_codey_companion(
+            theme, self.scale, f"Quiz time for {meta.title}! Score {_PASS_PERCENT}% or more to pass.", page=self.page,
+        )
+        header = hero_header(
+            theme, title=f"{meta.icon} {self.lesson.title}", scale=self.scale, title_color=meta.color,
+            buttons=[pill_button(self.course.title, self._on_back, bgcolor=theme.text_muted, color="#FFFFFF")],
+            companion=self._codey.control,
         )
 
         self.progress_text = ft.Text("", size=self._fs(14), color=theme.text_muted)
@@ -82,37 +86,35 @@ class _CourseQuizController:
             self.next_button,
         ])
 
+        results_text_color = contrasting_text_color(_RESULTS_CARD_COLOR)
+        self.confetti = build_confetti()
         self.results_text = ft.Text(
-            "", size=self._fs(22), weight=ft.FontWeight.BOLD, color=contrasting_text_color(_RESULTS_CARD_COLOR),
+            "", size=self._fs(22), weight=ft.FontWeight.BOLD, color=results_text_color, text_align=ft.TextAlign.CENTER,
         )
-        self.results_button_row = ft.Row([], spacing=10)
+        self.results_button_row = ft.Row([], spacing=10, wrap=True, alignment=ft.MainAxisAlignment.CENTER)
         self.results_card = ft.Container(
             content=ft.Column(
-                [self.results_text, self.results_button_row],
+                [self.confetti, ft.Text("🏁", size=self._fs(44)), self.results_text, self.results_button_row],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=16,
             ),
-            bgcolor=_RESULTS_CARD_COLOR, border_radius=18, padding=24, visible=False,
+            gradient=accent_gradient(_RESULTS_CARD_COLOR), border_radius=24, padding=24, visible=False,
+            shadow=[lip_shadow(_RESULTS_CARD_COLOR, depth=6), soft_shadow(_RESULTS_CARD_COLOR, opacity=0.35)],
+            data={"kind": "results_card"},
         )
 
         quiz_route_prefix = "/course-quiz" if self.course.id == "python" else "/ai-course-quiz"
-        self.view = ft.View(
-            route=f"{quiz_route_prefix}/{self.lesson.id}",
-            bgcolor=theme.bg,
-            scroll=ft.ScrollMode.AUTO,
-            padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
-            controls=[header, self.question_card, self.results_card],
+        self.view = scene_view(
+            f"{quiz_route_prefix}/{self.lesson.id}", theme, [header, self.question_card, self.results_card], page=self.page,
         )
 
         self._render_question()
         return self.view
 
     def _card(self, title: str, children: list[ft.Control]) -> ft.Control:
-        return ft.Container(
-            content=ft.Column(
-                [ft.Text(title, size=self._fs(18), weight=ft.FontWeight.BOLD, color=self.theme.text), *children],
-                spacing=10,
-            ),
-            bgcolor=self.theme.card, border_radius=18, padding=20,
+        return plain_card(
+            self.theme,
+            [ft.Text(title, size=self._fs(18), weight=ft.FontWeight.BOLD, color=self.theme.text), *children],
+            padding=20,
         )
 
     def _make_option_button(self, index: int) -> ft.Button:
@@ -191,13 +193,17 @@ class _CourseQuizController:
             maybe_award_course_badge(
                 self.state.lesson_engine, self.state.progress, self.course.categories, self.course.badge_id,
             )
-            self.results_text.value = f"🏁 You scored {self.score}/{self.total} ({percent}%) — Passed!"
+            self.results_text.value = f"You scored {self.score}/{self.total} ({percent}%) — Passed!"
+            self._codey.set_line("Quiz conquered! That's how it's done 🎉")
+            self._codey.cheer(self.page)
+            play_confetti(self.page, self.confetti)
             buttons.append(ft.Button(
                 "✅ Continue", on_click=self._on_back, height=52,
                 style=ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF"),
             ))
         else:
-            self.results_text.value = f"🏁 You scored {self.score}/{self.total} ({percent}%) — Try again to pass!"
+            self.results_text.value = f"You scored {self.score}/{self.total} ({percent}%) — Try again to pass!"
+            self._codey.set_line("So close! Every retry makes you sharper 💪")
             buttons.append(ft.Button(
                 "🔁 Try Again", on_click=self._on_retry, height=52,
                 style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
@@ -216,6 +222,7 @@ class _CourseQuizController:
         self.total = len(self.questions)
         self.index = 0
         self.score = 0
+        reset_confetti(self.confetti)
         self.results_card.visible = False
         self.question_card.visible = True
         self._render_question()

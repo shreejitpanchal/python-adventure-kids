@@ -13,40 +13,38 @@ import flet as ft
 
 from app.progress.store import InvalidProgressFile
 from app.ui.app_state_flet import AppState
-from app.ui.theme_flet import FONT_FAMILY_PRESETS, THEME_PRESETS, ThemePreset, scaled
+from app.ui.color_utils import contrasting_text_color
+from app.ui.components.adventure_kit_flet import (
+    RADIUS_CARD, hero_header, lip_shadow, pill_button, plain_card, scene_view, soft_shadow,
+)
+from app.ui.components.codey_avatar_flet import build_codey_companion
+from app.ui.theme_flet import FONT_FAMILY_PRESETS, THEME_PRESETS, ThemePreset, scaled, sky_colors
 from app.version import get_version_label
 
 
 def build_settings_view(page: ft.Page, state: AppState) -> ft.View:
+    """Control positions are fixed for tests: [header, sound, font, theme,
+    progress, version, spacer]. Codey is static here (no page passed) --
+    this is a utility screen, and the settings tests' fake page runs
+    scheduled tasks synchronously, so an idle animation would only slow
+    them down."""
     theme = state.theme
-    fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
 
-    header = ft.Row(
-        [
-            ft.Button(
-                "🏠 Menu", on_click=lambda _e: page.go("/hub"), height=48,
-                style=ft.ButtonStyle(bgcolor=theme.text_muted, color="#FFFFFF"),
-            ),
-            # expand=True lets the title wrap onto a second line at large
-            # font scales instead of overflowing past the screen edge.
-            ft.Text("⚙️ Settings", size=fs(26), weight=ft.FontWeight.BOLD, color=theme.primary, expand=True),
-        ],
-        spacing=16,
+    companion = build_codey_companion(theme, state.font_scale, "Pick your colors and text size — make it yours!")
+    header = hero_header(
+        theme, title="⚙️ Settings", scale=state.font_scale,
+        buttons=[pill_button("🏠 Menu", lambda _e: page.go("/hub"), bgcolor=theme.text_muted, color="#FFFFFF")],
+        companion=companion.control,
     )
 
-    return ft.View(
-        route="/settings",
-        bgcolor=theme.bg,
-        scroll=ft.ScrollMode.AUTO,
-        # Extra bottom clearance so the last control isn't hidden behind
-        # Android's gesture/navigation bar -- see learning_hub_flet.py's
-        # build_learning_hub_view() for the full rationale.
-        padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
-        controls=[
+    return scene_view(
+        "/settings", theme,
+        [
             header, _build_sound_card(page, state), _build_font_card(page, state),
             _build_theme_card(page, state), _build_progress_card(page, state),
             _build_version_row(state), ft.Container(height=16),
         ],
+        page=page,
     )
 
 
@@ -173,32 +171,31 @@ def _build_progress_card(page: ft.Page, state: AppState) -> ft.Control:
             return
         _confirm_import(page, state, data, status_text)
 
-    return ft.Container(
-        content=ft.Column(
-            [
-                ft.Text("💾 Progress", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
-                ft.Text(
-                    "Save your progress to a file, or load progress from a file you exported before.",
-                    size=fs(13), color=theme.text_muted,
-                ),
-                ft.Row(
-                    [
-                        ft.Button(
-                            "⬇️ Export Progress", on_click=on_export, height=44,
-                            style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
-                        ),
-                        ft.Button(
-                            "⬆️ Import Progress", on_click=on_import, height=44,
-                            style=ft.ButtonStyle(bgcolor=theme.danger, color="#FFFFFF"),
-                        ),
-                    ],
-                    wrap=True, spacing=8,
-                ),
-                status_text,
-            ],
-            spacing=8,
-        ),
-        bgcolor=theme.card, border_radius=20, padding=24,
+    # Column order [title, subtitle, Row(export, import), status] is fixed for tests.
+    return plain_card(
+        theme,
+        [
+            ft.Text("💾 Progress", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
+            ft.Text(
+                "Save your progress to a file, or load progress from a file you exported before.",
+                size=fs(13), color=theme.text_muted,
+            ),
+            ft.Row(
+                [
+                    ft.Button(
+                        "⬇️ Export Progress", on_click=on_export, height=44,
+                        style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+                    ),
+                    ft.Button(
+                        "⬆️ Import Progress", on_click=on_import, height=44,
+                        style=ft.ButtonStyle(bgcolor=theme.danger, color="#FFFFFF"),
+                    ),
+                ],
+                wrap=True, spacing=8,
+            ),
+            status_text,
+        ],
+        padding=22, spacing=8, data={"kind": "progress_card"},
     )
 
 
@@ -242,11 +239,11 @@ def _build_version_row(state: AppState) -> ft.Control:
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     return ft.Container(
         content=ft.Text(
-            get_version_label(), size=fs(14), weight=ft.FontWeight.BOLD,
-            color=theme.text, text_align=ft.TextAlign.CENTER,
+            get_version_label(), size=fs(13), weight=ft.FontWeight.BOLD,
+            color=theme.text_muted, text_align=ft.TextAlign.CENTER,
         ),
-        bgcolor=theme.card, border_radius=12, padding=12, margin=ft.margin.Margin.symmetric(vertical=8),
-        alignment=ft.alignment.Alignment.CENTER,
+        bgcolor=theme.card, border_radius=RADIUS_CARD, padding=12, margin=ft.margin.Margin.symmetric(vertical=8),
+        alignment=ft.alignment.Alignment.CENTER, shadow=soft_shadow(opacity=0.08),
     )
 
 
@@ -263,15 +260,18 @@ def _build_sound_card(page: ft.Page, state: AppState) -> ft.Control:
     # parent dashboard's summary-row code for why both of those layout
     # tricks are unreliable in this Flet version; a plain spaced Row is
     # the pattern already proven to work everywhere else in this app.
-    return ft.Container(
-        content=ft.Row(
-            [
-                ft.Text("🔊 Sound Effects", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
-                ft.Switch(value=state.settings.sound_enabled, on_change=on_toggle, active_color=theme.primary),
-            ],
-            spacing=16,
-        ),
-        bgcolor=theme.card, border_radius=20, padding=24,
+    return plain_card(
+        theme,
+        [
+            ft.Row(
+                [
+                    ft.Text("🔊 Sound Effects", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
+                    ft.Switch(value=state.settings.sound_enabled, on_change=on_toggle, active_color=theme.primary),
+                ],
+                spacing=16,
+            ),
+        ],
+        padding=22, data={"kind": "sound_card"},
     )
 
 
@@ -323,22 +323,20 @@ def _build_font_card(page: ft.Page, state: AppState) -> ft.Control:
         for key, label in _FONT_FAMILY_LABELS.items()
     ]
 
-    return ft.Container(
-        content=ft.Column(
-            [
-                ft.Text("🔤 Text Size & Font", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
-                ft.Text(
-                    "Make text bigger or change the style — great for reading on a tablet.",
-                    size=fs(13), color=theme.text_muted,
-                ),
-                ft.Text("Size", size=fs(13), color=theme.text_muted),
-                ft.Row(size_buttons, wrap=True, spacing=8),
-                ft.Text("Style", size=fs(13), color=theme.text_muted),
-                ft.Row(family_buttons, wrap=True, spacing=8),
-            ],
-            spacing=8,
-        ),
-        bgcolor=theme.card, border_radius=20, padding=24,
+    return plain_card(
+        theme,
+        [
+            ft.Text("🔤 Text Size & Font", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
+            ft.Text(
+                "Make text bigger or change the style — great for reading on a tablet.",
+                size=fs(13), color=theme.text_muted,
+            ),
+            ft.Text("Size", size=fs(13), color=theme.text_muted),
+            ft.Row(size_buttons, wrap=True, spacing=8, run_spacing=8),
+            ft.Text("Style", size=fs(13), color=theme.text_muted),
+            ft.Row(family_buttons, wrap=True, spacing=8, run_spacing=8),
+        ],
+        padding=22, spacing=8, data={"kind": "font_card"},
     )
 
 
@@ -353,19 +351,18 @@ def _build_theme_card(page: ft.Page, state: AppState) -> ft.Control:
         for preset in THEME_PRESETS.values()
     ]
 
-    return ft.Container(
-        content=ft.Column(
-            [
-                ft.Text("🎨 Choose a Theme", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
-                ft.Text(
-                    "Pick the colors you like best — you can change this anytime.",
-                    size=fs(13), color=theme.text_muted,
-                ),
-                ft.Row(options, wrap=True, spacing=16, run_spacing=16),
-            ],
-            spacing=8,
-        ),
-        bgcolor=theme.card, border_radius=20, padding=24,
+    return plain_card(
+        theme,
+        [
+            ft.Text("🎨 Choose a Skin", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
+            ft.Text(
+                "Pick the world colors you like best — you can change this anytime. "
+                "Level up to unlock more skins!",
+                size=fs(13), color=theme.text_muted,
+            ),
+            ft.Row(options, wrap=True, spacing=16, run_spacing=16),
+        ],
+        padding=22, spacing=8, data={"kind": "theme_card"},
     )
 
 
@@ -402,6 +399,9 @@ def _build_theme_option(
     else:
         button_text = "✅ Selected" if is_selected else "Select"
 
+    # Each option previews its own sky (the gradient behind every screen's
+    # hero header) so the child sees what the world will look like.
+    sky_top, sky_bottom = sky_colors(preset)
     return ft.Container(
         content=ft.Column(
             [
@@ -414,11 +414,20 @@ def _build_theme_option(
                 ft.Button(
                     button_text,
                     disabled=is_selected or not unlocked, on_click=select, height=48,
-                    style=ft.ButtonStyle(bgcolor=preset.primary if unlocked else preset.text_muted, color="#FFFFFF"),
+                    style=ft.ButtonStyle(
+                        bgcolor=preset.primary if unlocked else preset.text_muted,
+                        color=contrasting_text_color(preset.primary if unlocked else preset.text_muted),
+                    ),
                 ),
             ],
             spacing=10,
         ),
-        bgcolor=preset.bg, border_radius=16, padding=16, width=260,
+        gradient=ft.LinearGradient(
+            begin=ft.alignment.Alignment.TOP_CENTER, end=ft.alignment.Alignment.BOTTOM_CENTER,
+            colors=[sky_top, sky_bottom],
+        ),
+        border_radius=RADIUS_CARD, padding=16, width=260,
         border=ft.border.Border.all(3, state.theme.primary if is_selected else preset.card),
+        shadow=lip_shadow(preset.primary, depth=4) if is_selected else soft_shadow(opacity=0.1),
+        data={"kind": "theme_option", "key": preset.key, "selected": is_selected, "unlocked": unlocked},
     )

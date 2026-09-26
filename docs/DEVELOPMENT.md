@@ -495,6 +495,13 @@ rendering them:
   badge (registered in `badges.py`, so it appears in the Trophy Room) and
   pops a "World complete!" banner on the reward card.
 
+Every Flet screen now uses the kit -- Settings, Parent Area (deliberately
+calm: header and cards only, no Codey or celebrations), the standalone and
+course quizzes (confetti on a pass or a 70%+ score), the course map and
+chapter screens (chapter/item tiles), the Trophy Room (gold tiles, World
+champion badges) and the setup wizard (Codey asks the name, confetti on
+"All set").
+
 Responsive layout: `adventure_kit_flet.layout_for(page)` picks compact
 (phone) or wide (>= 720 px: content capped at 880 px and centered, Hub
 tiles in a wrapping two-up grid, three-lane map roads) from the page's

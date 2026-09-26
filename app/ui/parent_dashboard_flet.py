@@ -7,13 +7,19 @@ showing the summary/activity/reset content directly (the same
 mutable-body pattern setup_wizard_flet.py uses for its steps), with the
 reset confirmation shown as a page.show_dialog(ft.AlertDialog(...)) modal
 instead of a nested popup.
+
+Styled with the game-world kit's header and cards so it matches the rest
+of the app, but deliberately without Codey or celebrations -- this screen
+is for the parent, and the tone stays calm and factual.
 """
 from __future__ import annotations
 
 import flet as ft
 
 from app.engine.categories import get_category_meta
+from app.engine.titles import level_title
 from app.ui.app_state_flet import AppState
+from app.ui.components.adventure_kit_flet import hero_header, pill_button, plain_card, scene_view
 from app.ui.theme_flet import scaled
 
 EVENT_ICONS = {
@@ -24,6 +30,9 @@ EVENT_ICONS = {
     "attempt_timeout": "⏳",
     "attempt_wrong_output": "🔁",
     "hint_used": "💡",
+    "quiz_completed": "❓",
+    "chest_opened": "🎁",
+    "quest_bonus_claimed": "🗺️",
 }
 
 EVENT_LABELS = {
@@ -34,7 +43,12 @@ EVENT_LABELS = {
     "attempt_timeout": "Code took too long",
     "attempt_wrong_output": "Output didn't match yet",
     "hint_used": "Used a hint",
+    "quiz_completed": "Finished a quiz",
+    "chest_opened": "Opened the Daily Treasure",
+    "quest_bonus_claimed": "Claimed the daily quest bonus",
 }
+
+_CARD_WIDTH = 380
 
 
 def build_parent_view(page: ft.Page, state: AppState) -> ft.View:
@@ -56,62 +70,53 @@ class _ParentController:
 
     def build_view(self) -> ft.View:
         self._show_summary_step()
-
-        return ft.View(
-            route="/parent",
-            bgcolor=self.theme.bg,
-            scroll=ft.ScrollMode.AUTO,
-            # Extra bottom clearance so Reset Progress isn't hidden behind
-            # Android's gesture/navigation bar -- see learning_hub_flet.py's
-            # build_learning_hub_view() for the full rationale.
-            padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
-            controls=[self.body],
-        )
+        return scene_view("/parent", self.theme, [self.body], page=self.page)
 
     def _set(self, controls: list[ft.Control]) -> None:
         self.body.controls = controls
         self.page.update()
 
-    def _menu_row(self) -> ft.Control:
-        return ft.Row(
-            [ft.Button(
-                "🏠 Menu", on_click=self._on_menu, height=48,
-                style=ft.ButtonStyle(bgcolor=self.theme.text_muted, color="#FFFFFF"),
-            )],
+    def _header(self) -> ft.Control:
+        return hero_header(
+            self.theme, title="👋 Parent Area", scale=self.scale,
+            buttons=[pill_button("🏠 Menu", self._on_menu, bgcolor=self.theme.text_muted, color="#FFFFFF")],
         )
 
-    # -- summary step -----------------------------------------------------------
-    def _show_summary_step(self) -> None:
-        theme = self.theme
-        summary = self.state.progress.get_summary()
-        child_name = self.state.settings.child_name or "Your child"
-
-        rows = [
-            ("child", "Child", child_name),
-            ("level", "Current level", str(summary.level)),
-            ("stars", "Total stars", f"⭐ {summary.total_stars}"),
-            ("lessons", "Lessons completed", str(summary.lessons_completed)),
-            ("badges", "Badges earned", str(summary.badges_earned)),
-            ("streak", "Day streak", str(summary.streak_days)),
-        ]
+    def _label_row(self, label: str, value_text: ft.Text) -> ft.Control:
         # A fixed label width (rather than Row(alignment=SPACE_BETWEEN), which
         # doesn't reliably respect the parent's actual width -- see
         # dashboard_flet.py's header for the same lesson learned in Phase 4)
         # keeps the value directly after the label instead of pushed off
         # the edge of a Row wider than its container.
+        return ft.Row([ft.Text(label, size=self._fs(15), color=self.theme.text_muted, width=180), value_text])
+
+    def _card_title(self, text: str) -> ft.Text:
+        return ft.Text(text, size=self._fs(18), weight=ft.FontWeight.BOLD, color=self.theme.text)
+
+    # -- summary step -----------------------------------------------------------
+    def _show_summary_step(self) -> None:
+        theme = self.theme
+        summary = self.state.progress.get_summary()
+        player = self.state.progress.get_player_level()
+        child_name = self.state.settings.child_name or "Your child"
+
+        rows = [
+            ("child", "Child", child_name),
+            ("level", "Current level", str(summary.level)),
+            ("player_level", "Player level", f"{player.level} · {level_title(player.level).title}"),
+            ("stars", "Total stars", f"⭐ {summary.total_stars}"),
+            ("lessons", "Lessons completed", str(summary.lessons_completed)),
+            ("badges", "Badges earned", str(summary.badges_earned)),
+            ("streak", "Day streak", str(summary.streak_days)),
+        ]
         self.value_texts = {}
-        summary_rows: list[ft.Control] = []
+        summary_rows: list[ft.Control] = [self._card_title("📋 Summary")]
         for key, label, value in rows:
             value_text = ft.Text(value, size=self._fs(15), color=theme.text)
             self.value_texts[key] = value_text
-            summary_rows.append(
-                ft.Row([ft.Text(label, size=self._fs(15), color=theme.text_muted, width=180), value_text])
-            )
+            summary_rows.append(self._label_row(label, value_text))
 
-        summary_card = ft.Container(
-            content=ft.Column(summary_rows, spacing=10),
-            bgcolor=theme.card, border_radius=16, padding=20, width=380,
-        )
+        summary_card = plain_card(theme, summary_rows, padding=20, width=_CARD_WIDTH, data={"kind": "parent_summary"})
 
         rename_card = self._build_rename_card()
         weekly_card = self._build_weekly_card()
@@ -121,31 +126,26 @@ class _ParentController:
         # comment; this card grows naturally as part of the page's own scroll.
         self.activity_column = ft.Column(spacing=4)
         self._refresh_activity()
-        activity_card = ft.Container(
-            content=self.activity_column, bgcolor=theme.card, border_radius=16, padding=16,
+        activity_card = plain_card(
+            theme, [self._card_title("🕒 Recent Activity"), self.activity_column], padding=16,
+            data={"kind": "parent_activity"},
         )
 
         self.status_text = ft.Text("", size=self._fs(13), color=theme.success)
 
         controls: list[ft.Control] = [
-            self._menu_row(),
-            ft.Text("👋 Parent Area", size=self._fs(22), weight=ft.FontWeight.BOLD, color=theme.text),
+            self._header(),
             ft.Row([summary_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([rename_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([weekly_card], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([mastery_card], alignment=ft.MainAxisAlignment.CENTER),
-            ft.Text("Recent Activity", size=self._fs(16), weight=ft.FontWeight.BOLD, color=theme.text),
             activity_card,
-        ]
-
-        controls.append(self.status_text)
-        controls.append(
+            self.status_text,
             ft.Button(
                 "Reset Progress", on_click=self._confirm_reset, height=48,
                 style=ft.ButtonStyle(bgcolor=theme.danger, color="#FFFFFF"),
-            )
-        )
-
+            ),
+        ]
         self._set(controls)
 
     def _build_rename_card(self) -> ft.Control:
@@ -155,21 +155,21 @@ class _ParentController:
         )
         self.rename_status_text = ft.Text("", size=self._fs(12), color=theme.success)
 
-        return ft.Container(
-            content=ft.Column(
-                [
-                    ft.Text("✏️ Child's Name", size=self._fs(18), weight=ft.FontWeight.BOLD, color=theme.text),
-                    self.rename_field,
-                    ft.Button(
-                        "Save", on_click=self._save_child_name, height=44,
-                        style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
-                    ),
-                    self.rename_status_text,
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
-            ),
-            bgcolor=theme.card, border_radius=16, padding=20, width=380,
+        card = plain_card(
+            theme,
+            [
+                self._card_title("✏️ Child's Name"),
+                self.rename_field,
+                ft.Button(
+                    "Save", on_click=self._save_child_name, height=44,
+                    style=ft.ButtonStyle(bgcolor=theme.primary, color="#FFFFFF"),
+                ),
+                self.rename_status_text,
+            ],
+            padding=20, width=_CARD_WIDTH, data={"kind": "parent_rename"},
         )
+        card.content.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        return card
 
     def _save_child_name(self, e=None) -> None:
         theme = self.theme
@@ -198,21 +198,13 @@ class _ParentController:
             ("active_days", "Active days", f"{weekly.active_days}/7"),
         ]
         self.weekly_value_texts = {}
-        weekly_rows: list[ft.Control] = []
+        weekly_rows: list[ft.Control] = [self._card_title("📅 This Week")]
         for key, label, value in rows:
             value_text = ft.Text(value, size=self._fs(15), color=theme.text)
             self.weekly_value_texts[key] = value_text
-            weekly_rows.append(
-                ft.Row([ft.Text(label, size=self._fs(15), color=theme.text_muted, width=180), value_text])
-            )
+            weekly_rows.append(self._label_row(label, value_text))
 
-        return ft.Container(
-            content=ft.Column(
-                [ft.Text("📅 This Week", size=self._fs(18), weight=ft.FontWeight.BOLD, color=theme.text), *weekly_rows],
-                spacing=10,
-            ),
-            bgcolor=theme.card, border_radius=16, padding=20, width=380,
-        )
+        return plain_card(theme, weekly_rows, padding=20, width=_CARD_WIDTH, data={"kind": "parent_weekly"})
 
     def _build_mastery_card(self) -> ft.Control:
         theme = self.theme
@@ -245,15 +237,10 @@ class _ParentController:
         # hand off between nested scroll regions. Letting this card grow to
         # its full natural height and scroll as part of the page's own
         # scroll (like every other card here) shows every category.
-        return ft.Container(
-            content=ft.Column(
-                [
-                    ft.Text("📊 Category Mastery", size=self._fs(18), weight=ft.FontWeight.BOLD, color=theme.text),
-                    ft.Column(category_rows, spacing=12),
-                ],
-                spacing=10,
-            ),
-            bgcolor=theme.card, border_radius=16, padding=20, width=380,
+        return plain_card(
+            theme,
+            [self._card_title("📊 Category Mastery"), ft.Column(category_rows, spacing=12)],
+            padding=20, width=_CARD_WIDTH, data={"kind": "parent_mastery"},
         )
 
     def _refresh_weekly_and_mastery(self) -> None:
@@ -291,7 +278,9 @@ class _ParentController:
 
     def _refresh_summary_values(self) -> None:
         fresh = self.state.progress.get_summary()
+        player = self.state.progress.get_player_level()
         self.value_texts["level"].value = str(fresh.level)
+        self.value_texts["player_level"].value = f"{player.level} · {level_title(player.level).title}"
         self.value_texts["stars"].value = f"⭐ {fresh.total_stars}"
         self.value_texts["lessons"].value = str(fresh.lessons_completed)
         self.value_texts["badges"].value = str(fresh.badges_earned)

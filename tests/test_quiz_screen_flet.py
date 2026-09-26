@@ -45,6 +45,25 @@ def _answer_all_right(controller) -> None:
         controller._on_next(None)
 
 
+def test_a_strong_score_fires_confetti_and_a_weak_one_does_not(state):
+    strong = _QuizController(FakePage(), state)
+    strong.build_view()
+    strong._on_pick_count(5)
+    _answer_all_right(strong)
+    # FakePage can't schedule tasks, so the burst is applied immediately.
+    assert strong.confetti.data["fired"] is True
+    assert strong.results_card.visible is True
+
+    weak = _QuizController(FakePage(), state)
+    weak.build_view()
+    weak._on_pick_count(5)
+    _answer_all_wrong(weak)
+    assert weak.confetti.data["fired"] is False
+
+    strong._on_play_again(None)
+    assert strong.confetti.data["fired"] is False, "play again rewinds the confetti"
+
+
 def test_missing_every_question_tracks_their_tags(state):
     controller = _QuizController(FakePage(), state)
     controller.build_view()

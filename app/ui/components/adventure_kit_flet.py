@@ -290,12 +290,15 @@ def hero_card(
     )
 
 
-def plain_card(theme: ThemePreset, children: list[ft.Control], *, data: Optional[dict] = None, padding: int = 18) -> ft.Container:
+def plain_card(
+    theme: ThemePreset, children: list[ft.Control], *, data: Optional[dict] = None, padding: int = 18,
+    width: Optional[int] = None, spacing: int = 10,
+) -> ft.Container:
     """A neutral, theme-card-colored panel with a soft drop shadow -- for
     content that shouldn't compete with the hero tiles."""
     return ft.Container(
-        content=ft.Column(children, spacing=10),
-        bgcolor=theme.card, border_radius=RADIUS_CARD, padding=padding,
+        content=ft.Column(children, spacing=spacing),
+        bgcolor=theme.card, border_radius=RADIUS_CARD, padding=padding, width=width,
         shadow=soft_shadow(opacity=0.12),
         data=data,
     )

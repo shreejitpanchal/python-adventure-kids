@@ -57,6 +57,18 @@ def _answer_all_wrong(controller) -> None:
         controller._on_next(None)
 
 
+def test_passing_fires_confetti_and_failing_does_not(state, quiz_lesson_id):
+    passing = _CourseQuizController(FakePage(), state, quiz_lesson_id)
+    passing.build_view()
+    _answer_all_right(passing)
+    assert passing.confetti.data["fired"] is True
+
+    failing = _CourseQuizController(FakePage(), state, quiz_lesson_id)
+    failing.build_view()
+    _answer_all_wrong(failing)
+    assert failing.confetti.data["fired"] is False
+
+
 def test_perfect_score_completes_the_lesson(state, quiz_lesson_id):
     controller = _CourseQuizController(FakePage(), state, quiz_lesson_id)
     controller.build_view()

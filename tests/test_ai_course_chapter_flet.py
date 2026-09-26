@@ -94,8 +94,11 @@ def test_quiz_item_navigates_to_the_ai_course_quiz_route_once_unlocked(state):
 def test_back_button_navigates_to_the_ai_course_map_route(state):
     page = FakePage()
     view = build_course_chapter_view(page, state, _CHAPTER, course=AI_ML_COURSE)
+    from app.ui.components.adventure_kit_flet import iter_controls
+
     header = view.controls[0]
-    back_button = header.controls[0]
+    assert header.data["kind"] == "hero_header"
+    back_button = next(c for c in iter_controls(header) if isinstance(c, ft.Button))
 
     back_button.on_click(None)
     assert page.routes_visited == ["/ai-course"]

@@ -107,5 +107,9 @@ def test_view_route_and_header_title_are_the_ai_course_s(state):
     view = build_course_map_view(page, state, course=AI_ML_COURSE)
     assert view.route == "/ai-course"
 
+    from app.ui.components.adventure_kit_flet import find_by_kind
+
     header = view.controls[0]
-    assert header.controls[1].value == AI_ML_COURSE.title
+    assert header.data["kind"] == "hero_header"
+    assert header.data["title"] == AI_ML_COURSE.title
+    assert find_by_kind(view, "hero_header") == [header]
