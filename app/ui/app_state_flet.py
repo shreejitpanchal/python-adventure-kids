@@ -34,6 +34,11 @@ class AppState:
         # None so a later visit to the Hub doesn't replay it. Stays None
         # in tests that construct AppState directly.
         self.welcome: Optional[PlayToday] = None
+        # Session combo: lessons passed in a row without a failed attempt
+        # (see app/engine/scoring.py). Lives here, not in the store, on
+        # purpose -- it's a hot streak for *this sitting* and resets when
+        # the app restarts, unlike the day streak.
+        self.combo: int = 0
         # No file_picker field here, unlike sound_player -- ft.FilePicker/
         # ft.Share are Service controls that self-register with whichever
         # page is current at construction time (see Service.init()), so

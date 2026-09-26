@@ -29,7 +29,10 @@ from app.engine.categories import get_category_meta
 from app.engine.course_status import next_topic_item
 from app.engine.courses import find_course_for_category
 from app.engine.lesson import Lesson
+from app.engine.scoring import combo_label, combo_multiplier, improvement_hint, stars_for_attempt
+from app.engine.titles import level_title
 from app.engine.validator import validate_ast_contains, validate_output
+from app.engine.worlds import newly_completed_world, world_badge_id
 from app.games.game_canvas_flet import GameCanvas
 from app.sandbox.errors import extract_error_line_number, translate_error
 from app.sandbox.inprocess_runner import ExecutionResult, RunHandle, run_code
@@ -37,7 +40,7 @@ from app.ui.app_state_flet import AppState
 from app.ui.code_editor_flet import make_code_editor, make_read_only_code_block
 from app.ui.color_utils import contrasting_text_color
 from app.ui.components import motion_flet as motion
-from app.ui.components.adventure_kit_flet import accent_gradient, lip_shadow, soft_shadow
+from app.ui.components.adventure_kit_flet import accent_gradient, lip_shadow, soft_shadow, stat_chip
 from app.ui.components.celebration_flet import (
     build_confetti, build_level_up_banner, hide_level_up, play_confetti, reset_confetti, show_level_up,
 )
@@ -79,6 +82,12 @@ class _LessonController:
         self._running = False
         self._run_handle: RunHandle | None = None
         self._hint_index = 0
+        # Failed attempts on this lesson this visit (wrong output, error,
+        # timeout, missing construct, goal not reached) -- with hints used,
+        # decides how many of the lesson's stars this pass earns (see
+        # app/engine/scoring.py). Deliberately NOT reset by Reset, so a
+        # child can't wipe the slate by resetting the editor.
+        self._failed_attempts = 0
         self._lesson_passed = False
         self._next_in_category_id: str | None = None
         self._next_mission_id: str | None = None
@@ -125,7 +134,15 @@ class _LessonController:
         output_card = self._build_output_card()
         self._build_reward_card()
 
-        controls = [header, explanation_card, example_card, challenge_card, code_card]
+        # Session combo chip (app/engine/scoring.py): hidden until two
+        # lessons in a row, then shows the count and the XP multiplier.
+        self.combo_badge = ft.Container(
+            content=stat_chip(theme, "🔥", combo_label(self.state.combo) or "", self.scale, accent=theme.warning, kind="combo_chip"),
+            visible=combo_label(self.state.combo) is not None,
+            data={"kind": "combo_badge", "combo": self.state.combo},
+        )
+
+        controls = [header, self.combo_badge, explanation_card, example_card, challenge_card, code_card]
         if game_panel is not None:
             controls.append(
                 ft.KeyboardListener(
@@ -316,6 +333,26 @@ class _LessonController:
             "", size=self._fs(20), weight=ft.FontWeight.BOLD, color=reward_text_color, text_align=ft.TextAlign.CENTER,
         )
         self.badge_text = ft.Text("", size=self._fs(15), color=reward_text_color, text_align=ft.TextAlign.CENTER)
+        # How to earn the missing star(s) next time (app/engine/scoring.py's
+        # improvement_hint) -- empty when the pass earned the maximum.
+        self.improve_text = ft.Text(
+            "", size=self._fs(13), italic=True, color=reward_text_color, text_align=ft.TextAlign.CENTER,
+            data={"kind": "improve_hint"},
+        )
+        # "World complete!" ceremony banner -- shown only when this pass
+        # finished the last level in its World (app/engine/worlds.py).
+        self.world_banner_text = ft.Text(
+            "", size=self._fs(18), weight=ft.FontWeight.BOLD, color="#FFFFFF", text_align=ft.TextAlign.CENTER,
+        )
+        self.world_banner = ft.Container(
+            content=self.world_banner_text,
+            gradient=accent_gradient(theme.primary), border_radius=20,
+            padding=ft.padding.Padding.symmetric(horizontal=18, vertical=12),
+            shadow=[lip_shadow(theme.primary, depth=5), soft_shadow(theme.primary, opacity=0.3)],
+            visible=False,
+            data={"kind": "world_banner", "world": None},
+        )
+        motion.prepare_pop(self.world_banner)
 
         # Course lessons keep the original Onward/Next Lesson pair (chapter
         # navigation, not a "mission") -- only Today's Mission lessons
@@ -384,7 +421,9 @@ class _LessonController:
                     self.confetti,
                     self.trophy_disc,
                     self.level_up_banner,
+                    self.world_banner,
                     self.reward_text,
+                    self.improve_text,
                     self.badge_text,
                     buttons_section,
                 ],
@@ -445,6 +484,7 @@ class _LessonController:
                 )
                 self._codey.set_state(CodeyState.WARNING)
                 self.state.progress.log_event(self.lesson.id, "attempt_timeout")
+                self._register_failure()
                 self._maybe_show_practice_quest()
             self.page.update()
             return
@@ -457,6 +497,7 @@ class _LessonController:
             self._show_output(f"{friendly}\n\n💡 {hint}", self.theme.danger, raw=result.stderr)
             self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
+            self._register_failure()
             self._maybe_show_practice_quest()
             self.page.update()
             return
@@ -484,6 +525,7 @@ class _LessonController:
                 self.theme.warning,
             )
             self._codey.set_state(CodeyState.WARNING)
+            self._register_failure()
         else:
             self._show_output(
                 f"Python said:\n{result.stdout or '(no output)'}\n\n"
@@ -492,6 +534,7 @@ class _LessonController:
             )
             self._codey.set_state(CodeyState.WARNING)
             self.state.progress.log_event(self.lesson.id, "attempt_wrong_output", result.stdout[-200:])
+            self._register_failure()
             self._maybe_show_practice_quest()
         self.page.update()
 
@@ -529,6 +572,7 @@ class _LessonController:
             self._show_output(f"{friendly}\n\n💡 {hint}", self.theme.danger, raw=result.stderr)
             self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
+            self._register_failure()
             self.page.update()
             return
 
@@ -541,6 +585,7 @@ class _LessonController:
                 self.theme.warning,
             )
             self._codey.set_state(CodeyState.WARNING)
+            self._register_failure()
             self.page.update()
             return
 
@@ -553,6 +598,7 @@ class _LessonController:
                 self.theme.warning,
             )
             self._codey.set_state(CodeyState.WARNING)
+            self._register_failure()
             self.page.update()
             return
 
@@ -575,6 +621,7 @@ class _LessonController:
         self._codey.set_state(CodeyState.IDLE)
         self.reward_card.visible = False
         hide_level_up(self.level_up_banner)
+        self.world_banner.visible = False
         reset_confetti(self.confetti)
         self.trophy_disc.scale = 0.6
         # Without this, _on_lesson_success()'s "only run once" guard
@@ -583,6 +630,19 @@ class _LessonController:
         # never show the reward card again.
         self._lesson_passed = False
         self.page.update()
+
+    def _register_failure(self) -> None:
+        """A failed attempt: costs a star tier after FAILURES_FOR_PENALTY of
+        them and breaks the session combo (app/engine/scoring.py)."""
+        self._failed_attempts += 1
+        self.state.combo = 0
+        self._refresh_combo_badge()
+
+    def _refresh_combo_badge(self) -> None:
+        label = combo_label(self.state.combo)
+        self.combo_badge.visible = label is not None
+        self.combo_badge.content.content.controls[1].value = label or ""
+        self.combo_badge.data = {"kind": "combo_badge", "combo": self.state.combo}
 
     def _on_hint(self, e) -> None:
         if not self.lesson.hints:
@@ -657,12 +717,41 @@ class _LessonController:
         self._lesson_passed = True
 
         progress = self.state.progress
+        engine = self.state.lesson_engine
         level_before = progress.get_player_level().level
-        progress.complete_lesson(self.lesson.id, self.lesson.reward_stars)
+        completed_before = set(progress.get_completed_lesson_ids())
+
+        # Skill-based stars + session combo (app/engine/scoring.py): the
+        # lesson's reward_stars is the maximum; hints and repeated failed
+        # attempts cost a star each, and passing lessons back to back
+        # multiplies first-time XP.
+        max_stars = self.lesson.reward_stars
+        earned_stars = stars_for_attempt(
+            max_stars, hints_used=self._hint_index, failed_attempts=self._failed_attempts,
+        )
+        self.state.combo += 1
+        multiplier = combo_multiplier(self.state.combo)
+        self._refresh_combo_badge()
+
+        progress.complete_lesson(self.lesson.id, earned_stars, xp_multiplier=multiplier)
         badge_newly_awarded = False
         if self.lesson.badge:
             badge_newly_awarded = progress.award_badge(self.lesson.badge)
         leveled_up = progress.get_player_level().level > level_before
+
+        # World ceremony (app/engine/worlds.py): did this pass finish the
+        # last level of its World? Award the world badge and show the banner.
+        completed_after = set(progress.get_completed_lesson_ids())
+        finished_world = newly_completed_world(engine, self.lesson.category, completed_before, completed_after)
+        if finished_world is not None:
+            progress.award_badge(world_badge_id(finished_world))
+            self.world_banner_text.value = f"{finished_world.icon} World complete: {finished_world.title}!"
+            self.world_banner.visible = True
+            self.world_banner.data = {"kind": "world_banner", "world": finished_world.id}
+            motion.play_pop(self.page, self.world_banner)
+        else:
+            self.world_banner.visible = False
+            self.world_banner.data = {"kind": "world_banner", "world": None}
 
         if self.state.sound_player is not None:
             for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_newly_awarded):
@@ -674,10 +763,15 @@ class _LessonController:
             progress.set_level(next_lesson.level)
         self._next_mission_id = next_lesson.id if next_lesson else None
 
-        self.reward_text.value = (
-            f"🎉 Great job! You earned {'⭐' * self.lesson.reward_stars} "
-            f"({self.lesson.reward_stars} stars)"
+        star_summary = (
+            f"{earned_stars} of {max_stars} stars" if earned_stars < max_stars
+            else f"{earned_stars} star{'s' if earned_stars != 1 else ''}"
         )
+        combo_note = f"  🔥 Combo x{self.state.combo} — {multiplier}× XP!" if multiplier > 1 else ""
+        self.reward_text.value = f"🎉 Great job! You earned {'⭐' * earned_stars} ({star_summary}){combo_note}"
+        self.improve_text.value = improvement_hint(
+            earned_stars, max_stars, hints_used=self._hint_index, failed_attempts=self._failed_attempts,
+        ) or ""
         self.badge_text.value = (
             f"🎖️ New badge unlocked: {self.lesson.badge.replace('_', ' ').title()}!"
             if badge_newly_awarded else ""
@@ -707,7 +801,11 @@ class _LessonController:
                 self.next_lesson_caption.value = ""
 
         if leveled_up:
-            show_level_up(self.page, self.level_up_banner, progress.get_player_level().level)
+            new_level = progress.get_player_level().level
+            new_title = level_title(new_level)
+            # Name the title only when this level-up actually reached a new tier.
+            title_text = new_title.title if new_title is not level_title(level_before) else None
+            show_level_up(self.page, self.level_up_banner, new_level, title_text)
         else:
             hide_level_up(self.level_up_banner)
         self.reward_card.visible = True

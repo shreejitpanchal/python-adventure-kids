@@ -31,6 +31,7 @@ import flet as ft
 from app.engine.categories import PROJECT_CATEGORIES
 from app.engine.courses import AI_ML_COURSE
 from app.ui.app_state_flet import AppState
+from app.ui.components.adventure_kit_flet import layout_for
 from app.ui.category_levels_flet import build_category_levels_view
 from app.ui.category_map_flet import build_category_map_view
 from app.ui.course_chapter_flet import build_course_chapter_view
@@ -96,6 +97,11 @@ def main(page: ft.Page) -> None:
     # it's a one-time onboarding flow, not a screen to return to.
     history: list[str] = []
     navigating_back = {"value": False}
+    # Set while route_change() re-runs for the *same* route because a
+    # window resize crossed the compact/wide breakpoint (see on_resized
+    # below) -- a rebuild, not a navigation, so it must not push history.
+    rebuilding = {"value": False}
+    layout_class = {"wide": None}
 
     async def confirm_pop(e: ft.ControlEvent) -> None:
         view = e.control
@@ -110,9 +116,14 @@ def main(page: ft.Page) -> None:
     def route_change(_e: ft.RouteChangeEvent) -> None:
         route = page.route
 
-        if not navigating_back["value"] and page.views and page.views[-1].route != "/setup":
+        if (
+            not navigating_back["value"] and not rebuilding["value"]
+            and page.views and page.views[-1].route != "/setup"
+        ):
             history.append(page.views[-1].route)
         navigating_back["value"] = False
+        rebuilding["value"] = False
+        layout_class["wide"] = layout_for(page).wide
 
         page.views.clear()
 
@@ -177,5 +188,19 @@ def main(page: ft.Page) -> None:
         page.update()
 
     page.on_route_change = route_change
+
+    def on_resized(_e) -> None:
+        """Rebuilds the current view when a resize crosses the compact/wide
+        breakpoint, so a desktop window and a phone get the layout that
+        fits them (adventure_kit_flet.layout_for). Never on a lesson: the
+        lesson screen is width-agnostic and a rebuild would throw away
+        the child's typed code."""
+        if not page.views or page.route.startswith("/lesson/"):
+            return
+        if layout_for(page).wide != layout_class["wide"]:
+            rebuilding["value"] = True
+            route_change(None)
+
+    page.on_resized = on_resized
 
     page.go("/setup" if not state.settings.setup_complete else "/hub")

@@ -93,7 +93,8 @@ def build_codey_avatar(theme, scale: float = 1.0) -> CodeyHandle:
 @dataclass
 class CompanionHandle:
     control: ft.Control
-    face_disc: ft.Container
+    face_disc: ft.Control
+    """The animated Stack (face disc + accessory badge)."""
     face_text: ft.Text
     line_text: ft.Text
     set_line: Callable[[str], None]
@@ -104,18 +105,31 @@ class CompanionHandle:
 
 def build_codey_companion(
     theme, scale: float, line: str, *, page: Optional[object] = None, face: str = "🤖",
+    accessory: str = "",
 ) -> CompanionHandle:
     """Codey as a guide: big face disc on the left, speech bubble on the
     right. Pass `page` to start the idle float straight away (bounded --
-    see motion_flet); without it (tests) the companion is static."""
+    see motion_flet); without it (tests) the companion is static.
+    `accessory` (see app/engine/titles.py's LevelTitle.codey_accessory) is
+    worn as a small badge on the disc -- Codey "evolves" with the player's
+    level."""
     fs = lambda base: scaled(base, scale)  # noqa: E731
     face_text = ft.Text(face, size=fs(34), text_align=ft.TextAlign.CENTER)
-    face_disc = ft.Container(
+    accessory_text = ft.Text(accessory, size=fs(16), text_align=ft.TextAlign.CENTER)
+    disc = ft.Container(
         content=face_text, width=64, height=64, border_radius=32,
         gradient=accent_gradient(theme.primary),
         shadow=lip_shadow(theme.primary, depth=4),
         alignment=ft.alignment.Alignment.CENTER,
     )
+    accessory_badge = ft.Container(
+        content=accessory_text, width=28, height=28, border_radius=14,
+        bgcolor=theme.card, alignment=ft.alignment.Alignment.CENTER,
+        shadow=soft_shadow(opacity=0.2, blur=6, dy=2),
+        right=-4, top=-6, visible=bool(accessory),
+        data={"kind": "codey_accessory", "accessory": accessory},
+    )
+    face_disc = ft.Stack([disc, accessory_badge], width=64, height=64)
     motion.prepare_bob(face_disc)
 
     line_text = ft.Text(line, size=fs(14), weight=ft.FontWeight.BOLD, color=theme.text)

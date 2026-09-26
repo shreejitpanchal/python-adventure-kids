@@ -121,9 +121,13 @@ def build_level_up_banner(theme: ThemePreset, scale: float) -> ft.Container:
     return banner
 
 
-def show_level_up(page, banner: ft.Container, level: int) -> None:
-    banner.content.controls[1].value = f"You reached Level {level}! New skins may be waiting in Settings."
-    banner.data = {**banner.data, "level": level}
+def show_level_up(page, banner: ft.Container, level: int, title: Optional[str] = None) -> None:
+    detail = f"You reached Level {level}!"
+    if title:
+        detail += f" You're now a {title}!"
+    detail += " New skins may be waiting in Settings."
+    banner.content.controls[1].value = detail
+    banner.data = {**banner.data, "level": level, "title": title}
     banner.visible = True
     motion.play_pop(page, banner)
 

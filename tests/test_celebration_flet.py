@@ -62,7 +62,12 @@ def test_level_up_banner_shows_the_level_and_hides_again():
     celebration.show_level_up(page, banner, 3)
     assert banner.visible is True and banner.data["level"] == 3
     assert "Level 3" in banner.content.controls[1].value
+    assert "now a" not in banner.content.controls[1].value
     assert len(page.scheduled(motion._pop)) == 1
+
+    celebration.show_level_up(page, banner, 3, title="Bug Hunter")
+    assert "You're now a Bug Hunter!" in banner.content.controls[1].value
+    assert banner.data["title"] == "Bug Hunter"
 
     celebration.hide_level_up(banner)
     assert banner.visible is False and banner.data["level"] is None

@@ -72,7 +72,8 @@ app/
   ui/components/  # Flet-only shared widgets: adventure_kit (game-world look: sky headers, chunky cards, power bars),
                   # motion (bounded implicit animations), codey_avatar (mascot), streak_flame, treasure_chest,
                   # celebration (confetti/level-up), map_path (Adventure Map road/nodes), game_button, macro_toolbar, sound_player
-  engine/    # Lesson dataclass, YAML loader, category logic, output validator
+  engine/    # Lesson dataclass, YAML loader, category logic, output validator; game rules: worlds (map regions + world
+             # badges), quests (daily goals derived from activity_log), scoring (skill stars + session combo), titles
   sandbox/   # AST safety + shared restricted environment (allowed_builtins) + subprocess engine (runner/worker) + in-process engine (inprocess_runner/watchdog)
   games/     # restricted drawing surfaces injected into graphical lessons as `game`: game_canvas + game_window (CTk), game_canvas_flet (Flet); graphical_runner is a to-be-deleted wrapper
   progress/  # SQLite-backed progress/stars/badges/streaks/daily chest/activity log

@@ -76,6 +76,16 @@ def test_companion_floats_only_when_given_a_page():
     assert quiet.run_task_calls == []
 
 
+def test_companion_accessory_badge_is_hidden_without_one_and_shown_with_one():
+    plain = build_codey_companion(get_preset("sunny_light"), 1.0, "hi")
+    badge = one(plain.control, "codey_accessory")
+    assert badge.visible is False and badge.data["accessory"] == ""
+
+    crowned = build_codey_companion(get_preset("sunny_light"), 1.0, "hi", accessory="👑")
+    badge = one(crowned.control, "codey_accessory")
+    assert badge.visible is True and badge.content.value == "👑"
+
+
 def test_companion_cheer_switches_face_and_pulses():
     handle = build_codey_companion(get_preset("sunny_light"), 1.0, "hi")
     page = FakePage()

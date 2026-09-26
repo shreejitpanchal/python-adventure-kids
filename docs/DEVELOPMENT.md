@@ -463,6 +463,44 @@ profile column:
   opens; on the maps a small Codey marker hovers over the next node to play
   (`map_path_flet.build_you_are_here()`).
 
+More game mechanics, all pure rules in `app/engine/` with the UI only
+rendering them:
+
+- **Daily quests** (`app/engine/quests.py`, `quest_board_flet.py`). Three
+  goals per UTC day picked deterministically from a pool (finish a lesson,
+  earn 5 stars, open the chest, play a quiz, pass without hints, ...).
+  Progress is *derived* from the day's `activity_log` events
+  (`ProgressStore.get_todays_activity()`), so there is no quest table to
+  keep in sync; the only stored state is `profile.last_quest_bonus_date`
+  for the once-a-day +50 XP completion bonus (`claim_quest_bonus()`).
+- **Skill-based stars + session combo** (`app/engine/scoring.py`). A
+  lesson's `reward_stars` is now the maximum: any hint costs a star, two or
+  more failed attempts cost a star, never below one -- and since
+  `complete_lesson()` keeps the best count, replaying to earn the missing
+  star is real progress (the reward card says how). `AppState.combo`
+  counts lessons passed in a row without a failed attempt this sitting;
+  from three it doubles first-time XP (`complete_lesson(..., xp_multiplier)`),
+  shown as a combo chip on the lesson screen. Resets on app restart.
+- **Level titles + Codey evolution** (`app/engine/titles.py`). Player
+  levels map to titles (Curious Coder -> Bug Hunter -> Loop Wizard -> ...)
+  shown on the HUD and Dashboard; each tier gives Codey an accessory badge
+  on the companion disc, and the level-up banner names a newly reached
+  title.
+- **Worlds + completion ceremonies** (`app/engine/worlds.py`). Categories
+  are grouped into named map regions (Number Kingdom, Word Valley, Logic
+  Peaks, Arcade Islands, Bug Swamp, Scholar's Tower, AI Observatory --
+  ordered by where each first appears in the curriculum, so the map starts
+  where the child does). The Adventure Map draws a header card and its own
+  road per world; finishing a world's last level awards a `world_<id>`
+  badge (registered in `badges.py`, so it appears in the Trophy Room) and
+  pops a "World complete!" banner on the reward card.
+
+Responsive layout: `adventure_kit_flet.layout_for(page)` picks compact
+(phone) or wide (>= 720 px: content capped at 880 px and centered, Hub
+tiles in a wrapping two-up grid, three-lane map roads) from the page's
+width at build time; `app_window_flet.main()` rebuilds the current view
+when a resize crosses the breakpoint, never on a lesson in progress.
+
 ## Data storage
 
 Everything lives locally and offline — no cloud, no accounts, no network

@@ -1,12 +1,13 @@
 """Learning Hub: the top-of-hierarchy screen for the Flet app, styled as
 the game world's base camp -- a sky hero header with Codey greeting the
-child, a HUD strip (streak flame, level, stars, badges), the Daily
-Treasure chest, the once-a-day welcome-back moment, and six colorful
-"world tiles" (guided path, two Code Cracker tracks, projects, and the
-Python Learning and AI & Machine Learning courses) instead of dropping
-straight into "Today's Mission" the way the old dashboard did. All status
-text is computed once in app/engine/hub_status.py and just rendered here;
-this screen never recomputes progress numbers itself.
+child, a HUD strip (streak flame, level + title, stars, badges), the Daily
+Treasure chest, Today's Quests, the once-a-day welcome-back moment, and
+six colorful "world tiles" (guided path, two Code Cracker tracks,
+projects, and the Python Learning and AI & Machine Learning courses)
+instead of dropping straight into "Today's Mission" the way the old
+dashboard did. All status text is computed once in
+app/engine/hub_status.py and just rendered here; this screen never
+recomputes progress numbers itself.
 
 Settings and Parent Area live in this screen's header, not the Dashboard's
 -- this is the true top of the navigation hierarchy, so they only need one
@@ -14,21 +15,27 @@ home.
 
 Visuals come from app/ui/components/adventure_kit_flet.py; the retention
 pieces from streak_flame_flet.py / treasure_chest_flet.py /
-codey_avatar_flet.py. Key controls carry data={"kind": ...} for tests.
+quest_board_flet.py / codey_avatar_flet.py. Key controls carry
+data={"kind": ...} for tests. In a wide window (layout_for) the tiles
+form a wrapping two-up grid instead of a single column.
 """
 from __future__ import annotations
 
 import flet as ft
 
 from app.engine.hub_status import compute_hub_status
+from app.engine.quests import all_quests_done, daily_quests, quest_progress
+from app.engine.titles import level_title
+from app.progress.store import today_iso
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color, lighten, with_alpha
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import (
-    RADIUS_PILL, emoji_badge, hero_card, hero_header, pill_button, scene_view, section_title, spacer,
+    RADIUS_PILL, emoji_badge, hero_card, hero_header, layout_for, pill_button, scene_view, section_title, spacer,
     stat_chip,
 )
 from app.ui.components.codey_avatar_flet import build_codey_companion
+from app.ui.components.quest_board_flet import build_quest_board
 from app.ui.components.streak_flame_flet import build_streak_chip, build_welcome_banner, welcome_message
 from app.ui.components.treasure_chest_flet import build_daily_chest
 from app.ui.theme_flet import scaled
@@ -94,9 +101,10 @@ _CARD_ACCENTS: dict[str, str | None] = {
 
 # Settings.preferred_learning_mode's semantic keys (guided/projects/
 # crackers/advanced -- no longer asked by the setup wizard, but honored if
-# an older settings.json carries one) map onto the Hub's own card keys, which mirror last_learning_route's
-# vocabulary instead (guided/code_crackers/advanced_code_crackers/projects)
-# -- "crackers" means the (non-advanced) Code Crackers card.
+# an older settings.json carries one) map onto the Hub's own card keys,
+# which mirror last_learning_route's vocabulary instead (guided/
+# code_crackers/advanced_code_crackers/projects) -- "crackers" means the
+# (non-advanced) Code Crackers card.
 _PREFERRED_MODE_TO_CARD_KEY: dict[str, str] = {
     "guided": "guided",
     "projects": "projects",
@@ -105,9 +113,14 @@ _PREFERRED_MODE_TO_CARD_KEY: dict[str, str] = {
 }
 
 
-def codey_hub_line(name: str, streak_days: int, has_resume: bool, chest_available: bool) -> str:
+def codey_hub_line(
+    name: str, streak_days: int, has_resume: bool, chest_available: bool, quests_ready: bool = False,
+) -> str:
     """What Codey says in the Hub header -- the most actionable nudge wins:
-    an unopened chest, then an unfinished route, then streak pride."""
+    a claimable quest bonus, an unopened chest, then an unfinished route,
+    then streak pride."""
+    if quests_ready:
+        return "All of today's quests are done — claim your bonus! 🏆"
     if chest_available and streak_days >= 3:
         return f"{streak_days} days in a row, {name}! Grab your treasure, then let's play! 🔥"
     if chest_available:
@@ -119,9 +132,14 @@ def codey_hub_line(name: str, streak_days: int, has_resume: bool, chest_availabl
     return f"Ready for today's adventure, {name}? Let's go!"
 
 
+def level_chip_label(level: int) -> str:
+    return f"Lv {level} · {level_title(level).title}"
+
+
 def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
     theme = state.theme
     scale = state.font_scale
+    layout = layout_for(page)
     hub_status = compute_hub_status(state.lesson_engine, state.progress, state.settings)
     summary = state.progress.get_summary()
     player = state.progress.get_player_level()
@@ -133,10 +151,12 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
     state.welcome = None
 
     chest_available = state.progress.can_open_daily_chest()
+    quest_statuses = quest_progress(daily_quests(today_iso()), state.progress.get_todays_activity())
+    quests_ready = all_quests_done(quest_statuses) and state.progress.can_claim_quest_bonus()
     companion = build_codey_companion(
         theme, scale,
-        codey_hub_line(name, summary.streak_days, hub_status.resume_label is not None, chest_available),
-        page=page,
+        codey_hub_line(name, summary.streak_days, hub_status.resume_label is not None, chest_available, quests_ready),
+        page=page, accessory=level_title(player.level).codey_accessory,
     )
     header = hero_header(
         theme, title="Python Adventure", scale=scale,
@@ -147,7 +167,7 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
         companion=companion.control,
     )
 
-    level_chip = stat_chip(theme, "🏅", f"Level {player.level}", scale, kind="level_chip")
+    level_chip = stat_chip(theme, "🏅", level_chip_label(player.level), scale, kind="level_chip")
     xp_chip = stat_chip(theme, "⚡", f"{player.xp_into_level}/{player.xp_needed_for_level} XP", scale, kind="xp_chip")
     stats = ft.Row(
         [
@@ -161,24 +181,40 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
         data={"kind": "hud_strip"},
     )
 
+    def refresh_hud(level) -> None:
+        level_chip.content.controls[1].value = level_chip_label(level.level)
+        xp_chip.content.controls[1].value = f"{level.xp_into_level}/{level.xp_needed_for_level} XP"
+
     def on_chest_opened(reward) -> None:
-        level_chip.content.controls[1].value = f"Level {reward.level.level}"
-        xp_chip.content.controls[1].value = f"{reward.level.xp_into_level}/{reward.level.xp_needed_for_level} XP"
+        refresh_hud(reward.level)
         companion.set_line("Ooh, treasure! Now let's earn some stars ⭐")
         companion.cheer(page)
         page.update()
 
+    def on_bonus_claimed(level) -> None:
+        refresh_hud(level)
+        companion.set_line("Quest bonus collected — you're unstoppable! 🏆")
+        companion.cheer(page)
+        page.update()
+
     chest = build_daily_chest(page, state, scale=scale, on_opened=on_chest_opened)
+    quest_board = build_quest_board(page, state, scale=scale, on_bonus_claimed=on_bonus_claimed)
 
     sections: list[ft.Control] = []
     if message is not None:
         sections.append(build_welcome_banner(theme, message, scale, page=page))
     sections.append(stats)
     sections.append(chest)
+    sections.append(quest_board)
     if hub_status.resume_label is not None:
         sections.append(_build_resume_banner(page, state, hub_status.resume_label))
     sections.append(ft.Container(content=section_title(theme, "🗺️ Choose your adventure", scale)))
-    sections.extend(_build_cards(page, state, hub_status))
+
+    cards = _build_cards(page, state, hub_status, layout.card_width)
+    if layout.wide:
+        sections.append(ft.Row(cards, wrap=True, spacing=12, run_spacing=12, data={"kind": "card_grid"}))
+    else:
+        sections.extend(cards)
 
     for section in sections:
         motion.prepare_entrance(section)
@@ -188,7 +224,7 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
         controls.append(spacer(12))
         controls.append(section)
 
-    view = scene_view("/hub", theme, controls)
+    view = scene_view("/hub", theme, controls, page=page)
     motion.play_entrance(page, sections)
     return view
 
@@ -214,7 +250,7 @@ def _build_resume_banner(page: ft.Page, state: AppState, resume_label: str) -> f
     )
 
 
-def _build_cards(page: ft.Page, state: AppState, hub_status) -> list[ft.Control]:
+def _build_cards(page: ft.Page, state: AppState, hub_status, card_width: int | None) -> list[ft.Control]:
     preferred = _PREFERRED_MODE_TO_CARD_KEY.get(state.settings.preferred_learning_mode, "guided")
 
     ordered_defs = sorted(
@@ -222,14 +258,17 @@ def _build_cards(page: ft.Page, state: AppState, hub_status) -> list[ft.Control]
     )
 
     return [
-        _build_card(page, state, key, icon, title, subtitle, getattr(hub_status, status_attr), route, key == preferred)
+        _build_card(
+            page, state, key, icon, title, subtitle, getattr(hub_status, status_attr), route,
+            key == preferred, card_width,
+        )
         for key, icon, title, subtitle, status_attr, route in ordered_defs
     ]
 
 
 def _build_card(
     page: ft.Page, state: AppState, key: str, icon: str, title: str, subtitle: str,
-    status: str, route: str, featured: bool,
+    status: str, route: str, featured: bool, card_width: int | None,
 ) -> ft.Control:
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
@@ -268,6 +307,6 @@ def _build_card(
 
     return hero_card(
         theme, accent=accent, children=children, on_click=on_click, featured=featured,
-        padding=22 if featured else 16,
+        padding=22 if featured else 16, width=card_width,
         data={"kind": "hub_card", "key": key, "title": title, "status": status, "route": route, "featured": featured},
     )

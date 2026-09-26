@@ -7,6 +7,7 @@ from __future__ import annotations
 import pytest
 
 from app.engine.categories import PROJECT_CATEGORIES, get_category_meta
+from app.engine.worlds import world_for_category, worlds_in_order
 from app.ui.adventure_map_layout import marker_position, zigzag_positions
 from app.ui.app_state_flet import AppState
 from app.ui.category_map_flet import DEFAULT_HEADING, build_category_map_view, codey_map_line
@@ -37,11 +38,54 @@ def test_one_node_and_caption_per_category_plus_one_marker(state):
     assert len(all_of(view, "you_are_here")) == 1
 
 
-def test_road_has_two_strokes_per_segment(state):
+def test_each_world_road_has_two_strokes_per_segment(state):
+    view = build_category_map_view(FakePage(), state)
+    grouped = worlds_in_order(state.lesson_engine.categories())
+    stacks = all_of(view, "map_stack")
+    assert len(stacks) == len(grouped)
+    for stack, (_world, world_categories) in zip(stacks, grouped):
+        canvas = stack.controls[0].content
+        assert len(canvas.shapes) == 2 * (len(world_categories) - 1)
+
+
+def test_worlds_get_a_header_card_each_in_curriculum_order(state):
     view = build_category_map_view(FakePage(), state)
     categories = state.lesson_engine.categories()
-    canvas = one(view, "map_stack").controls[0].content
-    assert len(canvas.shapes) == 2 * (len(categories) - 1)
+    grouped = worlds_in_order(categories)
+    headers = all_of(view, "world_header")
+    assert [h.data["world"] for h in headers] == [world.id for world, _ in grouped]
+    assert headers[0].data["world"] == world_for_category(categories[0]).id
+    assert all(h.data["done"] == 0 and h.data["complete"] is False for h in headers)
+
+
+def test_world_header_tracks_progress_within_that_world(state):
+    categories = state.lesson_engine.categories()
+    _complete_category(state, categories[0])
+    view = build_category_map_view(FakePage(), state)
+    first_header = all_of(view, "world_header")[0]
+    assert first_header.data["done"] == len(state.lesson_engine.lessons_in_category(categories[0]))
+    assert first_header.data["complete"] is False, "the first world has more categories than the first one"
+
+
+def test_filtered_map_shows_only_the_worlds_of_the_filtered_categories(state):
+    view = build_category_map_view(FakePage(), state, category_filter=PROJECT_CATEGORIES)
+    headers = all_of(view, "world_header")
+    assert [h.data["world"] for h in headers] == ["arcade_islands"]
+    assert headers[0].data["total"] == sum(
+        len(state.lesson_engine.lessons_in_category(c)) for c in PROJECT_CATEGORIES
+    )
+
+
+def test_wide_layout_uses_three_lanes_and_a_wider_road(state):
+    page = FakePage()
+    page.width = 1200
+    view = build_category_map_view(page, state)
+    stack = all_of(view, "map_stack")[0]
+    assert stack.width == 620
+    nodes = all_of(stack, "map_node")
+    if len(nodes) >= 3:
+        xs = [node.left for node in nodes[:3]]
+        assert xs[0] < xs[1] < xs[2], "left, middle, right lanes"
 
 
 def test_quiz_tile_is_a_separate_card_not_a_path_node(state):
@@ -117,4 +161,5 @@ def test_default_heading_unchanged_when_heading_not_passed(state):
 
 def test_codey_map_line():
     assert codey_map_line("Numbers") == "Next stop: Numbers. Tap it to explore!"
+    assert codey_map_line("Numbers", "Number Kingdom") == "Next stop: Numbers, in the Number Kingdom. Tap it to explore!"
     assert "Legendary" in codey_map_line(None)

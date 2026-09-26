@@ -8,6 +8,7 @@ from app.ui.adventure_map_layout import (
     ROW_HEIGHT,
     TOP_MARGIN,
     curve_control_points,
+    lane_xs,
     marker_position,
     total_path_height,
     zigzag_positions,
@@ -65,6 +66,19 @@ def test_curve_control_points_leave_and_arrive_vertically():
     # First handle straight below the start node, second straight above the end node.
     assert (cp1_x, cp1_y) == (a.center_x, mid_y)
     assert (cp2_x, cp2_y) == (b.center_x, mid_y)
+
+
+def test_three_lanes_ping_pong_left_middle_right_middle_left():
+    positions = zigzag_positions(6, lanes=3, path_width=620)
+    xs = lane_xs(3, 620)
+    assert xs[0] == LEFT_MARGIN and xs[2] == 620 - NODE_SIZE - LEFT_MARGIN
+    assert xs[0] < xs[1] < xs[2]
+    assert [p.x for p in positions] == [xs[0], xs[1], xs[2], xs[1], xs[0], xs[1]]
+    assert all(0 <= p.x and p.x + NODE_SIZE <= 620 for p in positions)
+
+
+def test_two_lanes_default_matches_the_original_zigzag():
+    assert zigzag_positions(3) == zigzag_positions(3, lanes=2, path_width=PATH_WIDTH)
 
 
 def test_marker_position_is_centered_above_the_node_and_inside_the_top_margin():

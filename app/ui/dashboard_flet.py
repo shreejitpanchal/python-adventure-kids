@@ -17,6 +17,7 @@ from __future__ import annotations
 import flet as ft
 
 from app.engine.categories import get_category_meta
+from app.engine.titles import level_title
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color, lighten
 from app.ui.components import motion_flet as motion
@@ -47,6 +48,7 @@ def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
 
     companion = build_codey_companion(
         theme, scale, codey_mission_line(current_lesson.title, already_completed), page=page,
+        accessory=level_title(state.progress.get_player_level().level).codey_accessory,
     )
     header = hero_header(
         theme, title="Today's Mission", scale=scale,
@@ -73,7 +75,7 @@ def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
         controls.append(spacer(12))
         controls.append(section)
 
-    view = scene_view("/dashboard", theme, controls)
+    view = scene_view("/dashboard", theme, controls, page=page)
     motion.play_entrance(page, sections)
     return view
 
@@ -99,7 +101,10 @@ def _build_xp_hud(page: ft.Page, state: AppState) -> ft.Control:
                     emoji_badge("🏅", size=56, bgcolor=theme.warning, scale=state.font_scale),
                     ft.Column(
                         [
-                            ft.Text(f"Player Level {player.level}", size=fs(16), weight=ft.FontWeight.BOLD, color=theme.text),
+                            ft.Text(
+                                f"Level {player.level} · {level_title(player.level).title}",
+                                size=fs(16), weight=ft.FontWeight.BOLD, color=theme.text,
+                            ),
                             bar,
                             ft.Text(
                                 f"{player.xp_into_level}/{player.xp_needed_for_level} XP to Level {player.level + 1}",

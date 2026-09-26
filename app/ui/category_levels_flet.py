@@ -15,11 +15,12 @@ import flet as ft
 import flet.canvas as cv
 
 from app.engine.categories import get_category_meta
-from app.ui.adventure_map_layout import NODE_LIP, NODE_SIZE, PATH_WIDTH, total_path_height, zigzag_positions
+from app.engine.worlds import world_for_category
+from app.ui.adventure_map_layout import NODE_LIP, NODE_SIZE, total_path_height, zigzag_positions
 from app.ui.app_state_flet import AppState
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import (
-    hero_header, pill_button, plain_card, play_power_bar, power_bar, scene_view, spacer,
+    hero_header, layout_for, pill_button, plain_card, play_power_bar, power_bar, scene_view, spacer,
 )
 from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.components.map_path_flet import build_map_node, build_you_are_here, node_disc, road_shapes
@@ -44,13 +45,15 @@ def build_category_levels_view(page: ft.Page, state: AppState, category: str) ->
     theme = state.theme
     scale = state.font_scale
     fs = lambda base: scaled(base, scale)  # noqa: E731
+    layout = layout_for(page)
     engine = state.lesson_engine
     meta = get_category_meta(category)
+    world = world_for_category(category)
     completed_ids = set(state.progress.get_completed_lesson_ids())
     stars_by_lesson = state.progress.get_stars_by_lesson()
     lessons = engine.lessons_in_category(category)
 
-    positions = zigzag_positions(len(lessons))
+    positions = zigzag_positions(len(lessons), lanes=layout.map_lanes, path_width=layout.map_width)
     path_height = total_path_height(len(lessons))
 
     states = [_lesson_state(lesson, completed_ids, engine) for lesson in lessons]
@@ -59,11 +62,11 @@ def build_category_levels_view(page: ft.Page, state: AppState, category: str) ->
 
     connector_canvas = cv.Canvas(shapes=road_shapes(positions, segment_done, theme))
     stack_children: list[ft.Control] = [
-        ft.Container(content=connector_canvas, width=PATH_WIDTH, height=path_height),
+        ft.Container(content=connector_canvas, width=layout.map_width, height=path_height),
     ]
     for index, (lesson, position, lesson_state) in enumerate(zip(lessons, positions, states)):
         node, caption = _build_node(
-            page, theme, meta, lesson, position, lesson_state, stars_by_lesson, scale,
+            page, theme, meta, lesson, position, lesson_state, stars_by_lesson, scale, layout.map_width,
             highlight=index == current_index,
         )
         stack_children.extend([node, caption])
@@ -89,21 +92,24 @@ def build_category_levels_view(page: ft.Page, state: AppState, category: str) ->
     progress_card = plain_card(
         theme,
         [
+            ft.Text(f"{world.icon} {world.title}", size=fs(12), color=theme.text_muted),
             ft.Text(f"{done_count}/{len(lessons)} levels complete", size=fs(14), weight=ft.FontWeight.BOLD, color=theme.text),
             progress_bar,
         ],
-        data={"kind": "category_progress", "done": done_count, "total": len(lessons)},
+        data={"kind": "category_progress", "done": done_count, "total": len(lessons), "world": world.id},
     )
 
     map_row = ft.Row(
-        [ft.Stack(stack_children, width=PATH_WIDTH, height=path_height, data={"kind": "map_stack"})],
+        [ft.Stack(stack_children, width=layout.map_width, height=path_height, data={"kind": "map_stack"})],
         alignment=ft.MainAxisAlignment.CENTER,
     )
     sections: list[ft.Control] = [progress_card, map_row]
     for section in sections:
         motion.prepare_entrance(section)
 
-    view = scene_view(f"/categories/{category}", theme, [header, spacer(12), progress_card, spacer(12), map_row])
+    view = scene_view(
+        f"/categories/{category}", theme, [header, spacer(12), progress_card, spacer(12), map_row], page=page,
+    )
     motion.play_entrance(page, sections)
     return view
 
@@ -117,7 +123,8 @@ def _lesson_state(lesson, completed_ids, engine) -> str:
 
 
 def _build_node(
-    page, theme, meta, lesson, position, lesson_state: str, stars_by_lesson, scale: float, *, highlight: bool,
+    page, theme, meta, lesson, position, lesson_state: str, stars_by_lesson, scale: float, path_width: float,
+    *, highlight: bool,
 ) -> tuple[ft.Control, ft.Control]:
     fs = lambda base: scaled(base, scale)  # noqa: E731
     stars = stars_by_lesson.get(lesson.id, 0)
@@ -148,7 +155,7 @@ def _build_node(
     )
 
     # Clamped, not just centered on the node -- see category_map_flet.py.
-    caption_left = max(0.0, min(position.center_x - _CAPTION_WIDTH / 2, PATH_WIDTH - _CAPTION_WIDTH))
+    caption_left = max(0.0, min(position.center_x - _CAPTION_WIDTH / 2, path_width - _CAPTION_WIDTH))
     caption = ft.Container(
         content=ft.Column(
             [

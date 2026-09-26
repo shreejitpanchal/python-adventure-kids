@@ -148,6 +148,45 @@ def test_startup_records_todays_play_and_the_hub_shows_the_welcome_moment_once(p
     assert find_by_kind(page.views[-1], "welcome_banner") == []
 
 
+def test_resize_across_the_breakpoint_rebuilds_the_view_without_touching_history(page):
+    from app.ui.components.adventure_kit_flet import find_by_kind
+
+    page.width = 400
+    page.go("/hub")
+    compact_view = page.views[-1]
+    assert find_by_kind(compact_view, "content_column") == []
+
+    page.width = 1200
+    page.on_resized(None)
+    wide_view = page.views[-1]
+    assert wide_view is not compact_view
+    assert wide_view.route == "/hub"
+    assert len(find_by_kind(wide_view, "content_column")) == 1
+
+    # A rebuild is not a navigation: back from the Hub still has nowhere to go.
+    fake_view = _trigger_back(page)
+    assert fake_view.confirm_pop_calls == [True]
+
+
+def test_resize_within_the_same_layout_class_does_not_rebuild(page):
+    page.width = 400
+    page.go("/hub")
+    before = page.views[-1]
+    page.width = 500
+    page.on_resized(None)
+    assert page.views[-1] is before
+
+
+def test_resize_never_rebuilds_a_lesson_in_progress(page):
+    page.width = 400
+    page.go("/hub")
+    page.go("/lesson/lesson_01")
+    before = page.views[-1]
+    page.width = 1200
+    page.on_resized(None)
+    assert page.views[-1] is before
+
+
 def test_setup_route_is_never_pushed_to_history(page):
     # main() lands on /setup first (setup_complete defaults to False for a
     # fresh settings file) -- going straight to /hub from there must not

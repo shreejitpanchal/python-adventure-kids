@@ -137,13 +137,61 @@ def test_hero_header_and_codey_companion_are_present(state):
 def test_hud_strip_shows_streak_level_xp_stars_and_badges(state):
     view = build_learning_hub_view(FakePage(), state)
     assert one(view, "streak_chip").data["days"] == 0
-    assert one(view, "level_chip").data["label"] == "Level 1"
+    assert one(view, "level_chip").data["label"] == "Lv 1 · Curious Coder"
     assert one(view, "xp_chip").data["label"] == "0/100 XP"
     labels = {chip.data["label"] for chip in all_of(view, "stat_chip")}
     assert "0 stars" in labels and "0 badges" in labels
 
 
-def test_codey_hub_line_prioritises_chest_then_resume_then_streak():
+def test_quest_board_is_on_the_hub_with_three_quests(state):
+    view = build_learning_hub_view(FakePage(), state)
+    board = one(view, "quest_board")
+    assert board.data["total"] == 3 and board.data["done"] == 0
+    assert len(all_of(board, "quest_row")) == 3
+
+
+def test_codey_nudges_to_claim_a_finished_quest_board(state):
+    state.progress.complete_lesson("lesson_01", 3)
+    state.progress.complete_lesson("lesson_02", 3)
+    state.progress.open_daily_chest()
+    state.progress.record_quiz_attempt(5, 10)
+    view = build_learning_hub_view(FakePage(), state)
+    assert one(view, "quest_board").data["claimable"] is True
+    assert codey_hub_line("Explorer", 0, False, False, quests_ready=True) in texts(one(view, "codey_companion"))
+
+
+def test_codey_wears_no_accessory_at_level_one_and_a_cap_as_a_bug_hunter(state):
+    view = build_learning_hub_view(FakePage(), state)
+    assert one(view, "codey_accessory").visible is False
+
+    state.progress.add_xp(100 + 200)  # level 3
+    view = build_learning_hub_view(FakePage(), state)
+    accessory = one(view, "codey_accessory")
+    assert accessory.visible is True and accessory.data["accessory"] == "🧢"
+    assert one(view, "level_chip").data["label"] == "Lv 3 · Bug Hunter"
+
+
+# -- responsive layout ------------------------------------------------------------------
+def test_compact_layout_stacks_full_width_cards(state):
+    view = build_learning_hub_view(FakePage(), state)
+    assert all_of(view, "card_grid") == []
+    assert all_of(view, "content_column") == []
+    assert all(card.width is None for card in _cards(view))
+
+
+def test_wide_layout_caps_content_and_lays_cards_out_in_a_wrapping_grid(state):
+    page = FakePage()
+    page.width = 1200
+    view = build_learning_hub_view(page, state)
+    assert one(view, "content_column").width == 880
+    grid = one(view, "card_grid")
+    assert grid.wrap is True
+    assert len(_cards(grid)) == 6
+    assert all(card.width == 340 for card in _cards(view))
+
+
+def test_codey_hub_line_prioritises_quests_then_chest_then_resume_then_streak():
+    assert "claim your bonus" in codey_hub_line("Sam", 5, True, True, quests_ready=True)
     assert "treasure" in codey_hub_line("Sam", 0, False, True).lower()
     assert "3 days in a row, Sam" in codey_hub_line("Sam", 3, True, True)
     assert codey_hub_line("Sam", 0, True, False) == "Want to pick up where you left off?"

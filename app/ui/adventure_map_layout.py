@@ -4,6 +4,11 @@ list of full-width cards. Kept dependency-free (no flet import) so the
 zigzag and curve math is trivially unit-testable and so both
 category_map_flet.py and category_levels_flet.py share one source of
 truth instead of duplicating the layout formula.
+
+The path has `lanes` columns the nodes ping-pong across: two on a phone
+(left, right, left, ...), three in a wide desktop window (left, middle,
+right, middle, left, ...) so the road sweeps across the extra width
+instead of leaving it empty -- see adventure_kit_flet.layout_for().
 """
 from __future__ import annotations
 
@@ -15,6 +20,7 @@ NODE_SIZE = 72.0
 NODE_LIP = 6.0
 ROW_HEIGHT = 144.0
 PATH_WIDTH = 300.0
+WIDE_PATH_WIDTH = 620.0
 LEFT_MARGIN = 20.0
 # Room above the first node for the "you are here" Codey marker.
 TOP_MARGIN = 44.0
@@ -36,16 +42,26 @@ class NodePosition:
         return self.y + NODE_SIZE / 2
 
 
-def zigzag_positions(count: int) -> list[NodePosition]:
-    """One position per node, alternating left/right down the screen --
-    the S-curve a physical board-game path winds along. Node 0 starts on
-    the left; each subsequent node alternates sides and drops one row."""
-    right_x = PATH_WIDTH - NODE_SIZE - LEFT_MARGIN
+def lane_xs(lanes: int, path_width: float = PATH_WIDTH) -> list[float]:
+    """Left x of a node in each lane, spread evenly between the margins."""
+    if lanes <= 1:
+        return [(path_width - NODE_SIZE) / 2]
+    usable = path_width - 2 * LEFT_MARGIN - NODE_SIZE
+    return [LEFT_MARGIN + usable * i / (lanes - 1) for i in range(lanes)]
+
+
+def zigzag_positions(count: int, lanes: int = 2, path_width: float = PATH_WIDTH) -> list[NodePosition]:
+    """One position per node, ping-ponging across `lanes` columns down the
+    screen -- the S-curve a physical board-game path winds along. Node 0
+    starts in the leftmost lane; each subsequent node moves one lane over
+    (bouncing back at the edges) and drops one row."""
+    xs = lane_xs(lanes, path_width)
+    period = max(1, 2 * len(xs) - 2)
     positions = []
     for i in range(count):
-        x = LEFT_MARGIN if i % 2 == 0 else right_x
-        y = TOP_MARGIN + i * ROW_HEIGHT
-        positions.append(NodePosition(x=x, y=y))
+        k = i % period
+        lane = k if k < len(xs) else period - k
+        positions.append(NodePosition(x=xs[lane], y=TOP_MARGIN + i * ROW_HEIGHT))
     return positions
 
 

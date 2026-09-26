@@ -132,6 +132,130 @@ def test_reset_hides_the_level_up_banner_and_rewinds_the_confetti(controller, st
     assert all(particle.opacity == 0.0 for particle in controller.confetti.controls)
 
 
+# -- skill-based stars, session combo, world ceremony ------------------------------------
+
+def test_a_clean_first_try_earns_every_star_with_no_improvement_hint(controller, state):
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    assert "⭐⭐⭐ (3 stars)" in controller.reward_text.value
+    assert controller.improve_text.value == ""
+    assert state.progress.get_summary().total_stars == 3
+
+
+def test_using_a_hint_costs_a_star_and_suggests_a_hint_free_replay(controller, state):
+    controller.build_view()
+    controller._on_hint(None)
+    asyncio.run(controller._on_run(None))
+    assert "⭐⭐ (2 of 3 stars)" in controller.reward_text.value
+    assert "without hints" in controller.improve_text.value
+    assert state.progress.get_summary().total_stars == 2
+
+
+def test_one_failed_attempt_is_free_but_two_cost_a_star(state):
+    lesson = state.lesson_engine.get("lesson_02")
+
+    forgiving = _LessonController(FakePage(), state, lesson)
+    forgiving.build_view()
+    asyncio.run(forgiving._on_run(None))  # starter prints 5, challenge wants 7
+    forgiving.editor.value = "print(7)"
+    asyncio.run(forgiving._on_run(None))
+    assert "⭐⭐⭐ (3 stars)" in forgiving.reward_text.value
+
+    state.progress.reset_progress()
+    struggling = _LessonController(FakePage(), state, lesson)
+    struggling.build_view()
+    asyncio.run(struggling._on_run(None))
+    asyncio.run(struggling._on_run(None))
+    assert struggling._failed_attempts == 2
+    struggling.editor.value = "print(7)"
+    asyncio.run(struggling._on_run(None))
+    assert "⭐⭐ (2 of 3 stars)" in struggling.reward_text.value
+    assert "fewer tries" in struggling.improve_text.value
+    assert state.progress.get_stars_by_lesson()["lesson_02"] == 2
+
+
+def test_replaying_keeps_the_best_star_count(state):
+    lesson = state.lesson_engine.get("lesson_02")
+    first = _LessonController(FakePage(), state, lesson)
+    first.build_view()
+    first._on_hint(None)
+    first.editor.value = "print(7)"
+    asyncio.run(first._on_run(None))
+    assert state.progress.get_stars_by_lesson()["lesson_02"] == 2
+
+    replay = _LessonController(FakePage(), state, lesson)
+    replay.build_view()
+    replay.editor.value = "print(7)"
+    asyncio.run(replay._on_run(None))
+    assert state.progress.get_stars_by_lesson()["lesson_02"] == 3
+
+
+def test_combo_doubles_first_time_xp_from_the_third_lesson_in_a_row(controller, state):
+    state.combo = 2
+    controller.build_view()
+    assert controller.combo_badge.visible is True
+    asyncio.run(controller._on_run(None))
+
+    assert state.combo == 3
+    assert state.progress.get_player_level().total_xp == 60  # 3 stars * 10 XP * 2
+    assert "Combo x3" in controller.reward_text.value
+    assert controller.combo_badge.data["combo"] == 3
+
+
+def test_combo_badge_hidden_for_a_single_lesson(controller, state):
+    controller.build_view()
+    assert controller.combo_badge.visible is False
+    asyncio.run(controller._on_run(None))
+    assert state.combo == 1
+    assert controller.combo_badge.visible is False
+    assert state.progress.get_player_level().total_xp == 30
+
+
+def test_a_failed_attempt_breaks_the_combo(state):
+    state.combo = 2
+    lesson = state.lesson_engine.get("lesson_02")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    assert controller.combo_badge.visible is True
+    asyncio.run(controller._on_run(None))  # wrong output
+    assert state.combo == 0
+    assert controller.combo_badge.visible is False
+
+
+def test_world_banner_stays_hidden_when_the_world_is_not_finished(controller, state):
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    assert controller.world_banner.visible is False
+    assert controller.world_banner.data["world"] is None
+
+
+def test_finishing_the_last_level_of_a_world_awards_its_badge_and_shows_the_banner(controller, state):
+    from app.engine.worlds import world_badge_id, world_for_category
+
+    world = world_for_category("basics")  # lesson_01 is the only basics level
+    for category in world.categories:
+        for lesson in state.lesson_engine.lessons_in_category(category):
+            if lesson.id != "lesson_01":
+                state.progress.complete_lesson(lesson.id, 3)
+
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+
+    assert controller.world_banner.visible is True
+    assert controller.world_banner.data["world"] == world.id
+    assert world.title in controller.world_banner_text.value
+    assert world_badge_id(world) in state.progress.get_badge_ids()
+
+
+def test_level_up_banner_names_the_new_title_when_a_tier_is_reached(controller, state):
+    state.progress.add_xp(100 + 200 - 20)  # 20 XP short of level 3 = Bug Hunter
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    assert controller.level_up_banner.visible is True
+    assert controller.level_up_banner.data["level"] == 3
+    assert controller.level_up_banner.data["title"] == "Bug Hunter"
+
+
 def test_wrong_answer_does_not_auto_scroll(state):
     # lesson_02, not the shared lesson_01 controller fixture -- lesson_01's
     # "Meet Python" challenge now accepts any print() message (see its

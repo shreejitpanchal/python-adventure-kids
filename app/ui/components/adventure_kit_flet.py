@@ -21,6 +21,9 @@ from typing import Callable, Iterable, Optional
 
 import flet as ft
 
+from dataclasses import dataclass
+
+from app.ui.adventure_map_layout import PATH_WIDTH, WIDE_PATH_WIDTH
 from app.ui.color_utils import contrasting_text_color, darken, lighten, with_alpha
 from app.ui.theme_flet import ThemePreset, scaled, sky_colors
 
@@ -30,6 +33,57 @@ SCREEN_PADDING = 20
 # Extra bottom clearance so the last control isn't hidden behind Android's
 # gesture/navigation bar -- see learning_hub_flet.py's history for why.
 BOTTOM_CLEARANCE = 88
+
+# -- responsive layout -------------------------------------------------------------
+# One breakpoint: below it the screen is a phone (single column, full-width
+# tiles, two-lane map); at or above it a tablet/desktop window (content
+# capped and centered, tiles in a wrapping grid, three-lane map). Views are
+# rebuilt on every route change, so a layout is chosen at build time from
+# the page's current width; app_window_flet.py rebuilds the current view
+# when a resize crosses the breakpoint.
+WIDE_BREAKPOINT = 720
+MAX_CONTENT_WIDTH = 880
+WIDE_CARD_WIDTH = 340
+
+
+@dataclass(frozen=True)
+class Layout:
+    wide: bool
+    width: int
+    """Page width the layout was chosen for (0 when unknown)."""
+
+    @property
+    def content_width(self) -> Optional[int]:
+        if not self.wide:
+            return None
+        return min(self.width - 2 * SCREEN_PADDING, MAX_CONTENT_WIDTH)
+
+    @property
+    def card_width(self) -> Optional[int]:
+        return WIDE_CARD_WIDTH if self.wide else None
+
+    @property
+    def map_lanes(self) -> int:
+        return 3 if self.wide else 2
+
+    @property
+    def map_width(self) -> float:
+        return WIDE_PATH_WIDTH if self.wide else PATH_WIDTH
+
+
+def page_width(page) -> int:
+    """The page's current width, or 0 when unknown (tests' FakePage, or a
+    page that hasn't reported a size yet -- both mean 'lay out compact')."""
+    width = getattr(page, "width", None)
+    try:
+        return int(width) if width else 0
+    except (TypeError, ValueError):
+        return 0
+
+
+def layout_for(page) -> Layout:
+    width = page_width(page)
+    return Layout(wide=width >= WIDE_BREAKPOINT, width=width)
 
 
 # -- gradients & shadows -----------------------------------------------------------
@@ -61,9 +115,20 @@ def lip_shadow(color: str, *, depth: float = 5) -> ft.BoxShadow:
 
 
 # -- layout wrappers -----------------------------------------------------------------
-def scene_view(route: str, theme: ThemePreset, controls: list[ft.Control]) -> ft.View:
+def scene_view(route: str, theme: ThemePreset, controls: list[ft.Control], *, page=None) -> ft.View:
     """The standard scrolling screen: flat theme bg, phone-friendly side
-    padding, extra bottom clearance for Android's navigation bar."""
+    padding, extra bottom clearance for Android's navigation bar. In a
+    wide window (see layout_for) the content is capped at
+    MAX_CONTENT_WIDTH and centered instead of stretching edge to edge."""
+    layout = layout_for(page)
+    body: list[ft.Control] = controls
+    if layout.wide:
+        body = [
+            ft.Row(
+                [ft.Column(controls, width=layout.content_width, spacing=10, data={"kind": "content_column"})],
+                alignment=ft.MainAxisAlignment.CENTER,
+            )
+        ]
     return ft.View(
         route=route,
         bgcolor=theme.bg,
@@ -71,7 +136,7 @@ def scene_view(route: str, theme: ThemePreset, controls: list[ft.Control]) -> ft
         padding=ft.padding.Padding.only(
             left=SCREEN_PADDING, top=12, right=SCREEN_PADDING, bottom=BOTTOM_CLEARANCE,
         ),
-        controls=controls,
+        controls=body,
     )
 
 
@@ -209,14 +274,15 @@ def play_power_bar(page, bar: ft.Container) -> bool:
 def hero_card(
     theme: ThemePreset, *, accent: str, children: list[ft.Control],
     on_click: Optional[Callable] = None, data: Optional[dict] = None, padding: int = 20,
-    featured: bool = False,
+    featured: bool = False, width: Optional[int] = None,
 ) -> ft.Container:
     """A gradient 'world tile': the big colorful card every mode/mission
-    lives on. Featured tiles get a bright rim so the one to tap is obvious."""
+    lives on. Featured tiles get a bright rim so the one to tap is obvious.
+    `width` fixes the tile's width for a wrapping grid on wide screens."""
     return ft.Container(
         content=ft.Column(children, spacing=8),
         gradient=accent_gradient(accent),
-        border_radius=RADIUS_CARD, padding=padding,
+        border_radius=RADIUS_CARD, padding=padding, width=width,
         shadow=[lip_shadow(accent, depth=6), soft_shadow(accent, opacity=0.25)],
         border=ft.border.Border.all(3, with_alpha("#FFFFFF", 0.85)) if featured else None,
         on_click=on_click, ink=on_click is not None,

@@ -7,8 +7,9 @@ import dataclasses
 import flet as ft
 
 from app.ui.components.adventure_kit_flet import (
-    RADIUS_CARD, accent_gradient, emoji_badge, find_by_kind, hero_card, hero_header, iter_controls, lip_shadow,
-    plain_card, play_power_bar, power_bar, power_bar_fill, scene_view, sky_gradient, soft_shadow, stat_chip,
+    RADIUS_CARD, SCREEN_PADDING, WIDE_BREAKPOINT, accent_gradient, emoji_badge, find_by_kind, hero_card,
+    hero_header, iter_controls, layout_for, lip_shadow, plain_card, play_power_bar, power_bar, power_bar_fill,
+    scene_view, sky_gradient, soft_shadow, stat_chip,
 )
 from app.ui.color_utils import relative_luminance
 from app.ui.theme_flet import SKY_COLORS, THEME_PRESETS, get_preset, sky_colors
@@ -113,6 +114,38 @@ def test_hero_card_featured_gets_a_rim_and_is_clickable_only_with_a_handler():
     assert clicks == ["e"]
     plain = hero_card(THEME, accent="#4C97FF", children=[ft.Text("t")])
     assert plain.border is None and plain.ink is False and plain.on_click is None
+
+
+def test_layout_for_is_compact_without_a_width_and_wide_from_the_breakpoint():
+    compact = layout_for(FakePage())
+    assert compact.wide is False and compact.card_width is None and compact.map_lanes == 2
+    assert compact.content_width is None
+
+    narrow = FakePage()
+    narrow.width = WIDE_BREAKPOINT - 1
+    assert layout_for(narrow).wide is False
+
+    wide_page = FakePage()
+    wide_page.width = 1200
+    wide = layout_for(wide_page)
+    assert wide.wide is True and wide.card_width == 340 and wide.map_lanes == 3
+    assert wide.content_width == 880 and wide.map_width == 620
+
+    modest = FakePage()
+    modest.width = 800
+    assert layout_for(modest).content_width == 800 - 2 * SCREEN_PADDING
+
+
+def test_scene_view_centers_and_caps_content_only_when_wide():
+    controls = [ft.Text("a"), ft.Text("b")]
+    compact = scene_view("/x", THEME, controls, page=FakePage())
+    assert compact.controls == controls
+
+    page = FakePage()
+    page.width = 1200
+    wide = scene_view("/x", THEME, controls, page=page)
+    column = one(wide, "content_column")
+    assert column.width == 880 and column.controls == controls
 
 
 def test_plain_card_and_find_by_kind_walk_nested_content_and_controls():

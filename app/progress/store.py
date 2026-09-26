@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS profile (
     current_lesson_id TEXT,
     streak_days INTEGER NOT NULL DEFAULT 0,
     last_played_date TEXT,
-    last_chest_date TEXT
+    last_chest_date TEXT,
+    last_quest_bonus_date TEXT
 );
 
 CREATE TABLE IF NOT EXISTS lesson_completions (
@@ -59,6 +60,7 @@ CREATE TABLE IF NOT EXISTS player_xp (
 # field is nullable.
 _PROFILE_COLUMN_MIGRATIONS: dict[str, str] = {
     "last_chest_date": "ALTER TABLE profile ADD COLUMN last_chest_date TEXT",
+    "last_quest_bonus_date": "ALTER TABLE profile ADD COLUMN last_quest_bonus_date TEXT",
 }
 
 # XP cost to clear level N is N * 100 (level 1->2 costs 100, 2->3 costs 200, ...).
@@ -114,6 +116,12 @@ def _now() -> str:
 
 def _today() -> str:
     return datetime.now(timezone.utc).date().isoformat()
+
+
+def today_iso() -> str:
+    """Today's (UTC) date as YYYY-MM-DD -- the day key the daily chest,
+    daily quests and streak all share."""
+    return _today()
 
 
 @dataclass
@@ -297,11 +305,40 @@ class ProgressStore:
             xp=base_xp, streak_bonus_xp=streak_bonus_xp, level=level, leveled_up=level.level > level_before,
         )
 
+    # -- Daily quests --------------------------------------------------------------
+    def get_todays_activity(self) -> list[tuple[Optional[str], str, str]]:
+        """(lesson_id, event_type, detail) for every event logged today
+        (UTC), oldest first -- the input app/engine/quests.py derives quest
+        progress from."""
+        rows = self.get_activity_since(f"{_today()}T00:00:00+00:00")
+        return [(row["lesson_id"], row["event_type"], row["detail"] or "") for row in reversed(rows)]
+
+    def can_claim_quest_bonus(self) -> bool:
+        """True until today's quest-board bonus has been claimed. Whether the
+        quests are actually done is the caller's check (quests.all_quests_done)."""
+        with closing(self._conn.cursor()) as cur:
+            cur.execute("SELECT last_quest_bonus_date FROM profile WHERE id = 1")
+            (last_bonus_date,) = cur.fetchone()
+        return last_bonus_date != _today()
+
+    def claim_quest_bonus(self, xp: int) -> Optional[PlayerLevel]:
+        """Grants the quest-board completion bonus once per day; None if
+        already claimed today."""
+        if not self.can_claim_quest_bonus():
+            return None
+        with self._conn:
+            self._conn.execute("UPDATE profile SET last_quest_bonus_date = ? WHERE id = 1", (_today(),))
+        level = self.add_xp(xp)
+        self.log_event(None, "quest_bonus_claimed", f"xp={xp}")
+        return level
+
     # -- Lessons -------------------------------------------------------
-    def complete_lesson(self, lesson_id: str, stars_earned: int) -> None:
+    def complete_lesson(self, lesson_id: str, stars_earned: int, xp_multiplier: int = 1) -> None:
         # XP is only awarded the first time a lesson is completed -- otherwise
         # replaying an already-completed lesson would let XP be farmed
         # infinitely, unlike stars (which are already capped via MAX() below).
+        # xp_multiplier is the session combo bonus (app/engine/scoring.py);
+        # it scales that first-time XP only.
         first_time = not self.is_lesson_completed(lesson_id)
         with self._conn:
             self._conn.execute(
@@ -317,7 +354,7 @@ class ProgressStore:
             )
         self.log_event(lesson_id, "lesson_completed", f"stars={stars_earned}")
         if first_time:
-            self.add_xp(stars_earned * 10)
+            self.add_xp(stars_earned * 10 * max(1, xp_multiplier))
 
     def is_lesson_completed(self, lesson_id: str) -> bool:
         with closing(self._conn.cursor()) as cur:
@@ -509,10 +546,13 @@ class ProgressStore:
         exact inverse."""
         with closing(self._conn.cursor()) as cur:
             cur.execute(
-                "SELECT level, total_stars, current_lesson_id, streak_days, last_played_date, last_chest_date "
-                "FROM profile WHERE id = 1"
+                "SELECT level, total_stars, current_lesson_id, streak_days, last_played_date, last_chest_date, "
+                "last_quest_bonus_date FROM profile WHERE id = 1"
             )
-            level, total_stars, current_lesson_id, streak_days, last_played_date, last_chest_date = cur.fetchone()
+            (
+                level, total_stars, current_lesson_id, streak_days, last_played_date, last_chest_date,
+                last_quest_bonus_date,
+            ) = cur.fetchone()
 
             cur.execute("SELECT lesson_id, stars_earned, completed_at FROM lesson_completions ORDER BY lesson_id")
             lesson_completions = [
@@ -546,6 +586,7 @@ class ProgressStore:
                 "streak_days": streak_days,
                 "last_played_date": last_played_date,
                 "last_chest_date": last_chest_date,
+                "last_quest_bonus_date": last_quest_bonus_date,
             },
             "lesson_completions": lesson_completions,
             "badges": badges,
@@ -574,11 +615,13 @@ class ProgressStore:
 
             self._conn.execute(
                 """UPDATE profile SET level = ?, total_stars = ?, current_lesson_id = ?,
-                   streak_days = ?, last_played_date = ?, last_chest_date = ? WHERE id = 1""",
+                   streak_days = ?, last_played_date = ?, last_chest_date = ?,
+                   last_quest_bonus_date = ? WHERE id = 1""",
                 (
                     profile.get("level", 1), profile.get("total_stars", 0),
                     profile.get("current_lesson_id"), profile.get("streak_days", 0),
                     profile.get("last_played_date"), profile.get("last_chest_date"),
+                    profile.get("last_quest_bonus_date"),
                 ),
             )
             self._conn.execute(
@@ -615,6 +658,6 @@ class ProgressStore:
             self._conn.execute("DELETE FROM quiz_attempts")
             self._conn.execute(
                 "UPDATE profile SET level = 1, total_stars = 0, current_lesson_id = NULL, streak_days = 0, "
-                "last_played_date = NULL, last_chest_date = NULL WHERE id = 1"
+                "last_played_date = NULL, last_chest_date = NULL, last_quest_bonus_date = NULL WHERE id = 1"
             )
             self._conn.execute("UPDATE player_xp SET total_xp = 0 WHERE id = 1")

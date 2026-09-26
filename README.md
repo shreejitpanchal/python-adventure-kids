@@ -98,10 +98,13 @@ Settings font controls — due for a refresh.*
   row, the app gently suggests related practice to help instead of leaving
   you stuck.
 - **Rewards that actually mean something** — stars, badges, player levels,
-  and day streaks — plus, in the mobile (Flet) app, a Daily Treasure chest
-  and a once-a-day welcome-back moment on the Hub, a growing streak flame,
-  and confetti-and-level-up celebrations when a lesson is passed, so coming
-  back tomorrow is its own small reward.
+  and day streaks — plus, in the mobile (Flet) app, a Daily Treasure chest,
+  three daily quests with a completion bonus, a once-a-day welcome-back
+  moment, a growing streak flame, skill-based stars (replay without hints
+  to earn the missing star), a same-session combo that doubles XP, player
+  titles that dress up Codey the mascot, map Worlds with their own
+  champion badges, and confetti-and-level-up celebrations when a lesson is
+  passed, so coming back tomorrow is its own small reward.
 - **A Settings screen that's actually comfortable to use** — multiple color
   themes (including dark mode), adjustable font size and font style so
   text is easy to read on anything from a phone to a desktop monitor, a

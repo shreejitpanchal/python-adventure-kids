@@ -509,6 +509,96 @@ def test_opening_a_legacy_database_adds_the_chest_column(tmp_path):
         legacy.close()
 
 
+# -- combo XP multiplier + daily quest bonus ---------------------------------------------
+
+def test_complete_lesson_xp_multiplier_scales_first_time_xp_only(store):
+    store.complete_lesson("lesson_a", 3, xp_multiplier=2)
+    assert store.get_player_level().total_xp == 60
+    store.complete_lesson("lesson_a", 3, xp_multiplier=3)  # replay: no XP at all
+    assert store.get_player_level().total_xp == 60
+    store.complete_lesson("lesson_b", 2)  # default multiplier 1
+    assert store.get_player_level().total_xp == 80
+
+
+def test_get_todays_activity_is_oldest_first_and_only_today(store, monkeypatch):
+    monkeypatch.setattr(store_module, "_now", lambda: "2026-09-25T23:59:00+00:00")
+    store.log_event("old", "lesson_completed", "stars=3")
+    monkeypatch.setattr(store_module, "_now", lambda: "2026-09-26T08:00:00+00:00")
+    _freeze_date(monkeypatch, 2026, 9, 26)
+    store.log_event("a", "hint_used", "h")
+    monkeypatch.setattr(store_module, "_now", lambda: "2026-09-26T09:00:00+00:00")
+    store.log_event("a", "lesson_completed", "stars=2")
+
+    events = store.get_todays_activity()
+    assert events == [("a", "hint_used", "h"), ("a", "lesson_completed", "stars=2")]
+
+
+def test_quest_bonus_is_claimable_once_per_day(store):
+    assert store.can_claim_quest_bonus() is True
+    level = store.claim_quest_bonus(50)
+    assert level is not None and level.total_xp == 50
+    assert store.can_claim_quest_bonus() is False
+    assert store.claim_quest_bonus(50) is None
+    assert store.get_player_level().total_xp == 50
+    events = [row["event_type"] for row in store.get_recent_activity()]
+    assert events.count("quest_bonus_claimed") == 1
+
+
+def test_quest_bonus_resets_the_next_day_and_with_reset_progress(store, monkeypatch):
+    _freeze_date(monkeypatch, 2026, 9, 1)
+    store.claim_quest_bonus(50)
+    _freeze_date(monkeypatch, 2026, 9, 2)
+    assert store.can_claim_quest_bonus() is True
+    store.claim_quest_bonus(50)
+    store.reset_progress()
+    assert store.can_claim_quest_bonus() is True
+
+
+def test_export_and_import_round_trip_the_quest_bonus_date(store, tmp_path):
+    store.claim_quest_bonus(50)
+    data = store.export_progress_data()
+    assert data["profile"]["last_quest_bonus_date"] is not None
+    other = ProgressStore(tmp_path / "other.sqlite3")
+    try:
+        other.import_progress_data(data)
+        assert other.can_claim_quest_bonus() is False
+        del data["profile"]["last_quest_bonus_date"]
+        other.import_progress_data(data)
+        assert other.can_claim_quest_bonus() is True
+    finally:
+        other.close()
+
+
+def test_opening_a_legacy_database_adds_every_migrated_profile_column(tmp_path):
+    import sqlite3
+
+    db_path = tmp_path / "legacy.sqlite3"
+    conn = sqlite3.connect(str(db_path))
+    conn.executescript(
+        """
+        CREATE TABLE profile (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            level INTEGER NOT NULL DEFAULT 1,
+            total_stars INTEGER NOT NULL DEFAULT 0,
+            current_lesson_id TEXT,
+            streak_days INTEGER NOT NULL DEFAULT 0,
+            last_played_date TEXT
+        );
+        INSERT INTO profile (id, level, total_stars) VALUES (1, 1, 0);
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    legacy = ProgressStore(db_path)
+    try:
+        columns = {row[1] for row in legacy._conn.execute("PRAGMA table_info(profile)")}
+        assert set(store_module._PROFILE_COLUMN_MIGRATIONS) <= columns
+        assert legacy.can_claim_quest_bonus() is True
+    finally:
+        legacy.close()
+
+
 def test_import_progress_data_rejects_a_file_with_no_format_version(store):
     with pytest.raises(store_module.InvalidProgressFile):
         store.import_progress_data({"lesson_completions": []})
