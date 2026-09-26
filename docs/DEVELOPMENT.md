@@ -55,14 +55,14 @@ size is what it is:
   environment and also carries CustomTkinter, Pillow and pytest, which are
   useless on a phone.
 - **Most of the size is the runtime**: the Flutter engine plus a complete
-  CPython interpreter and standard library. A single "universal" APK bundles
-  those native libraries once per CPU architecture, which is how a build
-  reached ~150 MB. The script therefore builds `--split-per-abi` (one APK per
-  architecture; install the `arm64-v8a` one on real devices, ~a third of the
-  universal size) and passes `--compile-app --compile-packages --cleanup-app
-  --cleanup-packages` to ship `.pyc` files without sources or packages'
-  tests/docs. Pass `--no-split` for one universal APK (e.g. an emulator of
-  unknown ABI). Extra arguments are forwarded to `flet build`.
+  CPython interpreter and standard library. The single "universal" APK the
+  script builds bundles those native libraries once per CPU architecture
+  (arm64-v8a, armeabi-v7a, x86_64), which is why it is large; one file that
+  installs on any device is the deliberate trade-off. The script passes
+  `--compile-app --compile-packages --cleanup-app --cleanup-packages` to
+  ship `.pyc` files without sources or packages' tests/docs. Extra arguments
+  are forwarded to `flet build`; `./build_apk.sh --split-per-abi` gives one
+  smaller APK per architecture if you ever want that.
 
 ## Running the tests
 

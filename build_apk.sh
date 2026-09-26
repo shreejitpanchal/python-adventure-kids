@@ -80,32 +80,21 @@ export PYTHONUTF8=1
 # BUILD_NUMBER and pyproject.toml respectively) to show in Settings.
 #
 # APK size: a Flet APK is mostly the Flutter engine plus a complete CPython
-# runtime, and a single "universal" APK carries one copy of those native
-# libraries per CPU architecture (arm64-v8a, armeabi-v7a, x86_64), which is
-# what made one build ~150MB. --split-per-abi emits one APK per
-# architecture instead -- install the arm64-v8a one on any phone/tablet made
-# in the last several years. --compile-* turn .py into .pyc and --cleanup-*
-# then drop the sources and packages' tests/docs, trimming the Python payload
-# further. Pass --no-split (handled below) if you really want one universal
-# APK, e.g. for an emulator of unknown ABI.
-SPLIT_FLAGS=(--split-per-abi)
-EXTRA_ARGS=()
-for arg in "$@"; do
-    if [ "$arg" = "--no-split" ]; then
-        SPLIT_FLAGS=()
-    else
-        EXTRA_ARGS+=("$arg")
-    fi
-done
-
+# runtime, and this single "universal" APK carries one copy of those native
+# libraries per CPU architecture (arm64-v8a, armeabi-v7a, x86_64) -- that,
+# not the app payload (~6MB), is the bulk of the file. One APK that installs
+# anywhere is the deliberate choice here; pass --split-per-abi (forwarded to
+# flet build) to get one smaller APK per architecture instead.
+# --compile-* turn .py into .pyc and --cleanup-* then drop the sources and
+# packages' tests/docs, trimming the Python payload.
 "$FLETEXE" build apk --module-name main_flet --yes \
     --build-number "$NEW_BUILD" --build-version "$APP_VERSION" \
     --compile-app --compile-packages --cleanup-app --cleanup-packages \
-    "${SPLIT_FLAGS[@]}" "${EXTRA_ARGS[@]}"
+    "$@"
 
-# Tag every emitted APK with version + build. Split builds produce
-# python-adventure-<abi>.apk per architecture; a universal build produces a
-# single python-adventure.apk.
+# Tag every emitted APK with version + build: a universal build produces a
+# single python-adventure.apk; an opt-in --split-per-abi build produces
+# python-adventure-<abi>.apk per architecture.
 echo
 echo "Done -- APKs:"
 for apk in build/apk/python-adventure*.apk; do
