@@ -7,6 +7,9 @@ import pytest
 from app.engine.badges import BADGE_META
 from app.ui.app_state_flet import AppState
 from app.ui.trophy_room_flet import build_trophy_room_view
+import flet as ft  # noqa: E402 -- album-link test below
+from app.ui.components.adventure_kit_flet import iter_controls as _iter_controls  # noqa: E402
+from tests.flet_testing import texts as _texts  # noqa: E402
 
 
 class FakePage:
@@ -115,6 +118,18 @@ def test_hero_header_codey_line_and_progress_bar(state):
     assert codey_trophy_line(1, len(BADGE_META)) in texts(header)
     (bar,) = find_by_kind(view, "power_bar")
     assert bar.data["ratio"] == 1 / len(BADGE_META)
+
+
+def test_trophy_room_links_to_the_card_album_and_lights_its_tab(state):
+    page = FakePage()
+    view = build_trophy_room_view(page, state)
+    album = next(
+        c for c in _iter_controls(view.controls[0])
+        if isinstance(c, ft.Button) and any("Album" in t for t in _texts(c))
+    )
+    album.on_click(None)
+    assert page.routes_visited == ["/cards"]
+    assert view.bottom_appbar.data["active"] == "trophies"
 
 
 def test_codey_trophy_line():

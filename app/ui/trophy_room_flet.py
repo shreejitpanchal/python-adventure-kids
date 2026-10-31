@@ -20,7 +20,9 @@ from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import (
     accent_gradient, hero_header, lip_shadow, pill_button, plain_card, play_power_bar, power_bar, scene_view, spacer,
 )
+from app.ui.components.ambience_flet import build_sky_backdrop, sky_moment
 from app.ui.components.codey_avatar_flet import build_codey_companion
+from app.ui.components.nav_bar_flet import build_nav_bar
 from app.ui.theme_flet import scaled
 
 
@@ -40,7 +42,7 @@ def codey_trophy_line(earned: int, total: int) -> str:
     return f"{earned} of {total} badges collected — keep going!"
 
 
-def build_trophy_room_view(page: ft.Page, state: AppState) -> ft.View:
+def build_trophy_room_view(page: ft.Page, state: AppState, *, hour: int | None = None) -> ft.View:
     theme = state.theme
     scale = state.font_scale
     fs = lambda base: scaled(base, scale)  # noqa: E731
@@ -56,8 +58,12 @@ def build_trophy_room_view(page: ft.Page, state: AppState) -> ft.View:
     companion = build_codey_companion(theme, scale, codey_trophy_line(len(earned_by_id), len(all_badge_ids)), page=page)
     header = hero_header(
         theme, title="🏆 Trophy Room", scale=scale,
-        buttons=[pill_button("🏠 Menu", lambda _e: page.go("/hub"), bgcolor=theme.text_muted, color="#FFFFFF")],
+        buttons=[
+            pill_button("🏠 Menu", lambda _e: page.go("/hub"), bgcolor=theme.text_muted, color="#FFFFFF"),
+            pill_button("🃏 Card Album", lambda _e: page.go("/cards"), bgcolor=theme.primary),
+        ],
         companion=companion.control,
+        backdrop=build_sky_backdrop(theme, moment=sky_moment(hour), scale=scale, page=page),
     )
 
     progress_text = ft.Text(
@@ -76,7 +82,10 @@ def build_trophy_room_view(page: ft.Page, state: AppState) -> ft.View:
 
     for section in (progress_card, shelf):
         motion.prepare_entrance(section)
-    view = scene_view("/trophy-room", theme, [header, progress_text, progress_card, spacer(4), shelf], page=page)
+    view = scene_view(
+        "/trophy-room", theme, [header, progress_text, progress_card, spacer(4), shelf], page=page,
+        nav_bar=build_nav_bar(page, theme, "trophies", scale=scale, state=state),
+    )
     motion.play_entrance(page, [progress_card, shelf])
     return view
 

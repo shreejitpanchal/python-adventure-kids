@@ -16,6 +16,8 @@ from app.ui.components.adventure_kit_flet import (
     emoji_badge, hero_card, hero_header, pill_button, plain_card, scene_view, spacer, stat_chip,
 )
 from app.ui.components.codey_avatar_flet import build_codey_companion
+from app.ui.components.nav_bar_flet import build_nav_bar
+from app.ui.components.pet_flet import build_pet_card
 from app.ui.theme_flet import scaled
 
 TILE_WIDTH = 168
@@ -68,14 +70,18 @@ def build_closet_view(page: ft.Page, state: AppState) -> ft.View:
         tiles.append(_build_outfit_tile(page, state, outfit, balance, outfit.id in owned, outfit.id == equipped, rebuild))
     grid = ft.Row(tiles, wrap=True, spacing=12, run_spacing=12)
 
-    sections: list[ft.Control] = [balance_row, plain_card(theme, [grid], padding=14, data={"kind": "closet_grid"})]
+    # Codey's buddy lives here too (the Hub card taps through to this tab).
+    pet_card = build_pet_card(page, state, scale=scale)
+    sections: list[ft.Control] = [balance_row, pet_card, plain_card(theme, [grid], padding=14, data={"kind": "closet_grid"})]
     for section in sections:
         motion.prepare_entrance(section)
     controls: list[ft.Control] = [header]
     for section in sections:
         controls.append(spacer(12))
         controls.append(section)
-    view = scene_view("/closet", theme, controls, page=page)
+    view = scene_view(
+        "/closet", theme, controls, page=page, nav_bar=build_nav_bar(page, theme, "codey", scale=scale, state=state),
+    )
     motion.play_entrance(page, sections)
     return view
 

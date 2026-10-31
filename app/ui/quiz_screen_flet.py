@@ -17,8 +17,16 @@ from app.ui.color_utils import contrasting_text_color
 from app.ui.components.adventure_kit_flet import (
     accent_gradient, hero_header, lip_shadow, pill_button, plain_card, scene_view, soft_shadow,
 )
-from app.ui.components.celebration_flet import build_confetti, play_confetti, reset_confetti
+from app.engine.boss import (
+    BOSS_PASS_PERCENT, BOSS_QUESTION_COUNT, boss_badge_id, boss_result_line, boss_tags, boss_title, boss_won, world_by_id,
+)
+from app.engine.worlds import World
+from app.ui.components.ambience_flet import SKY_MOMENTS, build_sky_backdrop, sky_moment
+from app.ui.components.celebration_flet import build_confetti, play_confetti, reset_confetti, show_badge_unlock
 from app.ui.components.codey_avatar_flet import build_codey_companion
+from app.ui.components.nav_bar_flet import build_nav_bar
+from app.ui.components.scenery_flet import build_skyline
+from app.ui.components.world_skin_flet import skinned_theme
 from app.ui.theme_flet import scaled
 
 _OPTION_COUNT = 4
@@ -28,16 +36,23 @@ _COUNT_CHOICES = [5, 10, 15, 20, 25, 30, 50]
 _CELEBRATE_PERCENT = 70
 
 
-def build_quiz_view(page: ft.Page, state: AppState) -> ft.View:
-    return _QuizController(page, state).build_view()
+def build_quiz_view(page: ft.Page, state: AppState, boss_world_id: str | None = None) -> ft.View:
+    """`boss_world_id` turns the quiz into that World's boss battle (see
+    app/engine/boss.py): fixed length, questions drawn from the World's
+    concept tags, a boss badge on a win. An unknown world id falls back to
+    the ordinary quiz rather than a broken screen."""
+    boss = world_by_id(boss_world_id) if boss_world_id else None
+    return _QuizController(page, state, boss=boss).build_view()
 
 
 class _QuizController:
-    def __init__(self, page: ft.Page, state: AppState) -> None:
+    def __init__(self, page: ft.Page, state: AppState, boss: World | None = None) -> None:
         self.page = page
         self.state = state
-        self.theme = state.theme
+        self.theme = skinned_theme(state.theme, boss) if boss is not None else state.theme
         self.scale = state.font_scale
+        self.boss = boss
+        self.boss_won = False
 
         # The question count is picked on the setup card before a session
         # starts -- see _on_pick_count().
@@ -59,13 +74,16 @@ class _QuizController:
     def build_view(self) -> ft.View:
         theme = self.theme
 
-        self._codey = build_codey_companion(
-            theme, self.scale, "Brain workout time! How many questions can you handle?", page=self.page,
-        )
+        if self.boss is not None:
+            codey_line = f"The {self.boss.title} boss awaits! {BOSS_QUESTION_COUNT} questions — beat {BOSS_PASS_PERCENT}% to win ⚔️"
+        else:
+            codey_line = "Brain workout time! How many questions can you handle?"
+        self._codey = build_codey_companion(theme, self.scale, codey_line, page=self.page)
         header = hero_header(
-            theme, title="❓ Quiz", scale=self.scale,
+            theme, title=boss_title(self.boss) if self.boss is not None else "❓ Quiz", scale=self.scale,
             buttons=[pill_button("🏠 Menu", self._on_menu, bgcolor=theme.text_muted, color="#FFFFFF")],
             companion=self._codey.control,
+            backdrop=self._build_backdrop(),
         )
 
         self.setup_card = self._build_setup_card()
@@ -132,9 +150,36 @@ class _QuizController:
             data={"kind": "results_card"},
         )
 
-        return scene_view(
-            "/quiz", theme, [header, self.setup_card, self.question_card, self.results_card], page=self.page,
+        route = f"/boss/{self.boss.id}" if self.boss is not None else "/quiz"
+        view = scene_view(
+            route, theme, [header, self.setup_card, self.question_card, self.results_card], page=self.page,
+            nav_bar=build_nav_bar(self.page, theme, "map" if self.boss is not None else "mission", scale=self.scale, state=self.state),
         )
+        if self.boss is not None:
+            # A boss fight has a fixed length: skip the "how many?" card and
+            # start straight away from the World's own concept tags.
+            self.setup_card.visible = False
+            self._start_boss()
+        return view
+
+    def _build_backdrop(self) -> ft.Control:
+        """Night sky with the World's skyline for a boss fight; the plain
+        time-of-day sky otherwise."""
+        if self.boss is None:
+            return build_sky_backdrop(self.theme, moment=sky_moment(), scale=self.scale, page=self.page)
+        backdrop = build_sky_backdrop(self.theme, moment=SKY_MOMENTS["night"], scale=self.scale, page=self.page)
+        backdrop.controls.insert(1 if backdrop.controls and backdrop.controls[0].data.get("kind") == "sky_tint" else 0, build_skyline(self.boss.id, self.boss.color))
+        return backdrop
+
+    def _start_boss(self) -> None:
+        tags = boss_tags(self.state.lesson_engine, self.boss)
+        self.questions = self.state.quiz_engine.start_session_for_tags(tags, BOSS_QUESTION_COUNT)
+        self.total = len(self.questions)
+        self.index = 0
+        self.score = 0
+        self.missed_tags = set()
+        self.question_card.visible = True
+        self._render_question()
 
     def _build_setup_card(self) -> ft.Control:
         available = len(self.state.quiz_engine)
@@ -245,7 +290,9 @@ class _QuizController:
         percent = round(100 * self.score / self.total)
         self.results_text.value = f"You scored {self.score} / {self.total} ({percent}%)"
 
-        if percent >= _CELEBRATE_PERCENT:
+        if self.boss is not None:
+            self._show_boss_results()
+        elif percent >= _CELEBRATE_PERCENT:
             self._codey.set_line("Brilliant brain! That score deserves confetti 🎉")
             self._codey.cheer(self.page)
             play_confetti(self.page, self.confetti)
@@ -270,12 +317,37 @@ class _QuizController:
         self.results_card.visible = True
         self.page.update()
 
+    def _show_boss_results(self) -> None:
+        """Win or lose the boss fight. A win awards the World's boss badge
+        (once -- a rematch of a beaten boss is just for fun) with the full
+        badge-unlock moment, confetti and the reward buzz."""
+        self.boss_won = boss_won(self.score, self.total)
+        self.results_text.value = boss_result_line(self.boss, self.boss_won, self.score, self.total)
+        self._codey.set_line("Boss defeated! The whole World is yours ⚔️🏆" if self.boss_won else "So close! Every boss falls eventually 💪")
+        if not self.boss_won:
+            return
+        self._codey.cheer(self.page)
+        play_confetti(self.page, self.confetti)
+        badge_id = boss_badge_id(self.boss)
+        if self.state.progress.award_badge(badge_id):
+            show_badge_unlock(self.page, self.theme, badge_id, self.scale)
+        if self.state.sound_player is not None:
+            self.state.sound_player.play("badge_unlock", self.state.settings)
+        if self.state.haptics is not None:
+            self.state.haptics.reward(self.state.settings)
+
     def _on_play_again(self, e) -> None:
+        reset_confetti(self.confetti)
+        self.results_card.visible = False
+        if self.boss is not None:
+            # A rematch restarts the fight directly (there is no length to pick).
+            self._codey.set_line("Rematch! Show that boss who's learned the most ⚔️")
+            self._start_boss()
+            self.page.update()
+            return
         # Back to the setup card rather than silently reusing the last
         # question count -- lets the child pick a different length next time.
-        reset_confetti(self.confetti)
         self._codey.set_line("Round two? Pick how many questions!")
-        self.results_card.visible = False
         self.setup_card.visible = True
         self.page.update()
 

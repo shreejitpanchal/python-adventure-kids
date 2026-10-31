@@ -91,7 +91,7 @@ def test_tapping_an_unlocked_node_or_its_caption_navigates_to_the_lesson(state):
 def test_road_has_two_strokes_per_segment(state):
     lessons = state.lesson_engine.lessons_in_category(CATEGORY)
     view = build_category_levels_view(FakePage(), state, CATEGORY)
-    canvas = one(view, "map_stack").controls[0].content
+    canvas = one(view, "road").content
     assert len(canvas.shapes) == 2 * (len(lessons) - 1)
 
 
@@ -120,6 +120,21 @@ def test_levels_road_shares_its_worlds_weather_and_sky(state):
     assert weather and all(p.data["world"] == world.id for p in weather)
     assert {p.data["emoji"] for p in weather} <= set(world_ambience_emoji(world.id))
     assert one(view, "sky_backdrop").data["moment"] == "night"
+
+
+def test_levels_screen_wears_the_worlds_skin_scenery_and_skyline(state):
+    from app.engine.worlds import world_for_category
+    from app.ui.components.world_skin_flet import skinned_theme
+
+    category = state.lesson_engine.categories()[0]
+    world = world_for_category(category)
+    view = build_category_levels_view(FakePage(), state, category)
+    skinned = skinned_theme(state.theme, world)
+    assert view.bgcolor == skinned.bg and view.bgcolor != state.theme.bg
+    assert one(view, "scenery").data["world"] == world.id
+    assert one(view, "skyline").data["world"] == world.id
+    assert one(view, "hero_header").gradient.colors[0] != state.theme.bg
+    assert view.bottom_appbar.data["active"] == "map"
 
 
 def test_only_playable_level_nodes_squash_under_the_finger(state):

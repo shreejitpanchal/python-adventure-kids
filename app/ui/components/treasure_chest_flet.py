@@ -10,13 +10,15 @@ this component only renders and animates. Flet only.
 """
 from __future__ import annotations
 
+import math
 from typing import Callable, Optional
 
 import flet as ft
+import flet.canvas as cv
 
-from app.progress.store import ChestReward
+from app.progress.store import CHEST_MAX_BASE_XP, CHEST_MIN_BASE_XP, ChestReward
 from app.ui.app_state_flet import AppState
-from app.ui.color_utils import contrasting_text_color
+from app.ui.color_utils import contrasting_text_color, with_alpha
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import RADIUS_CARD, accent_gradient, lip_shadow, pressable, soft_shadow
 from app.ui.theme_flet import scaled
@@ -39,6 +41,61 @@ def reward_lines(reward: ChestReward) -> tuple[str, str]:
     else:
         detail = "Keep your streak going for a bonus tomorrow!"
     return headline, detail
+
+
+# -- the treasure wheel -----------------------------------------------------------------
+WHEEL_SIZE = 150.0
+WHEEL_SPINS = 3
+WHEEL_SPIN_MS = 2200
+WHEEL_VALUES: tuple[int, ...] = tuple(range(CHEST_MIN_BASE_XP, CHEST_MAX_BASE_XP + 1, 5))
+"""One wedge per possible base XP (multiples of 5 between the chest's
+min and max), so the pointer can always land on the real reward."""
+_WHEEL_COLORS = ("#FF9F1C", "#EC407A", "#7E57C2", "#26C6DA", "#66BB6A", "#FFC93C")
+
+
+def wheel_angle_for(xp: int) -> float:
+    """Rotation (radians) that brings the wedge for `xp` under the pointer
+    at the top, after WHEEL_SPINS full turns for the show. Unknown values
+    land on the first wedge."""
+    index = WHEEL_VALUES.index(xp) if xp in WHEEL_VALUES else 0
+    wedge = 2 * math.pi / len(WHEEL_VALUES)
+    # Wedge i spans [i*wedge, (i+1)*wedge) clockwise from the top; rotating
+    # the wheel by -(center of wedge i) puts that center under the pointer.
+    return WHEEL_SPINS * 2 * math.pi - (index + 0.5) * wedge
+
+
+def wheel_shapes(theme, size: float = WHEEL_SIZE) -> list:
+    """Pie wedges with their XP labels, a hub, and a pointer notch."""
+    shapes: list = []
+    wedge = 360.0 / len(WHEEL_VALUES)
+    radius = size / 2
+    for index, value in enumerate(WHEEL_VALUES):
+        start_deg = -90 + index * wedge
+        shapes.append(cv.Arc(
+            0, 0, size, size, math.radians(start_deg), math.radians(wedge), use_center=True,
+            paint=ft.Paint(color=_WHEEL_COLORS[index % len(_WHEEL_COLORS)], style=ft.PaintingStyle.FILL),
+        ))
+        mid = math.radians(start_deg + wedge / 2)
+        shapes.append(cv.Text(
+            radius + math.cos(mid) * radius * 0.65, radius + math.sin(mid) * radius * 0.65, f"{value}",
+            style=ft.TextStyle(size=13, weight=ft.FontWeight.BOLD, color="#FFFFFF"),
+            alignment=ft.alignment.Alignment.CENTER,
+        ))
+    shapes.append(cv.Circle(radius, radius, radius * 0.16, paint=ft.Paint(color=theme.card, style=ft.PaintingStyle.FILL)))
+    shapes.append(cv.Circle(radius, radius, radius, paint=ft.Paint(color=with_alpha("#000000", 0.25), style=ft.PaintingStyle.STROKE, stroke_width=4)))
+    return shapes
+
+
+def build_treasure_wheel(theme, size: float = WHEEL_SIZE) -> ft.Container:
+    """The spinning disc (rotate tweens with animate_rotation) under a fixed
+    pointer triangle drawn above it."""
+    disc = ft.Container(
+        content=cv.Canvas(shapes=wheel_shapes(theme, size), width=size, height=size),
+        width=size, height=size, rotate=0.0,
+        animate_rotation=ft.Animation(WHEEL_SPIN_MS, ft.AnimationCurve.EASE_OUT),
+        data={"kind": "treasure_wheel", "values": list(WHEEL_VALUES)},
+    )
+    return disc
 
 
 def build_daily_chest(
@@ -68,14 +125,20 @@ def build_daily_chest(
     subtitle_text = ft.Text(CLOSED_SUBTITLE if can_open else OPENED_SUBTITLE, size=fs(13), color=muted_color)
 
     card = ft.Container(
-        content=ft.Row(
+        content=ft.Column(
             [
-                emoji_disc,
-                # expand=True bounds the text column to the remaining width
-                # so long lines wrap instead of overflowing.
-                ft.Column([title_text, subtitle_text], spacing=4, expand=True),
+                ft.Row(
+                    [
+                        emoji_disc,
+                        # expand=True bounds the text column to the remaining
+                        # width so long lines wrap instead of overflowing.
+                        ft.Column([title_text, subtitle_text], spacing=4, expand=True),
+                    ],
+                    spacing=14, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+                wheel_slot,
             ],
-            spacing=14, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=10,
         ),
         gradient=accent_gradient(accent) if can_open else None,
         bgcolor=None if can_open else theme.card,
@@ -83,6 +146,12 @@ def build_daily_chest(
         shadow=[lip_shadow(accent, depth=6), soft_shadow(accent, opacity=0.25)] if can_open else soft_shadow(opacity=0.10),
         data={"kind": "daily_chest", "opened": not can_open},
     )
+
+    # The treasure wheel: hidden until the chest opens, then spins to the
+    # wedge matching the reward's base XP (the store already decided it;
+    # the wheel just lands there) -- see wheel_angle_for().
+    wheel = build_treasure_wheel(theme)
+    wheel_slot = ft.Container(content=wheel, visible=False, alignment=ft.alignment.Alignment.CENTER, data={"kind": "wheel_slot"})
 
     def open_chest(_e) -> None:
         reward = state.progress.open_daily_chest()
@@ -92,6 +161,8 @@ def build_daily_chest(
             headline, detail = OPENED_TITLE, OPENED_SUBTITLE
         else:
             headline, detail = reward_lines(reward)
+            wheel_slot.visible = True
+            wheel.rotate = wheel_angle_for(reward.xp)
         emoji_text.value = OPEN_EMOJI
         title_text.value = headline
         subtitle_text.value = detail

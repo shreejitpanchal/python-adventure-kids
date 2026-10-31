@@ -79,7 +79,10 @@ def graphical_performance() -> Performance:
 
 async def _perform(page, handle: CodeyHandle, performance: Performance, delay: float) -> None:
     await asyncio.sleep(delay)
-    handle.face_text.value = performance.face
+    if handle.show_face is not None:
+        handle.show_face(performance.face)  # drawn expression + emoji badge
+    else:
+        handle.face_text.value = performance.face
     line = performance.line
     for end in range(TYPEWRITER_CHARS_PER_STEP, len(line) + TYPEWRITER_CHARS_PER_STEP, TYPEWRITER_CHARS_PER_STEP):
         handle.caption_text.value = line[:end]

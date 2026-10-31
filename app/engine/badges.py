@@ -62,6 +62,29 @@ BADGE_META: dict[str, BadgeMeta] = {
     "world_ai_observatory": BadgeMeta(
         "AI Observatory Astronomer", "🔭", "Explored every corner of the AI Observatory!",
     ),
+    # One per World boss (app/engine/boss.py, ids via boss_badge_id()),
+    # awarded by the quiz screen when the boss battle is won.
+    "boss_number_kingdom": BadgeMeta(
+        "Number Kingdom Boss Slayer", "⚔️", "Beat the Number Kingdom boss quiz!",
+    ),
+    "boss_word_valley": BadgeMeta(
+        "Word Valley Boss Slayer", "⚔️", "Beat the Word Valley boss quiz!",
+    ),
+    "boss_logic_peaks": BadgeMeta(
+        "Logic Peaks Boss Slayer", "⚔️", "Beat the Logic Peaks boss quiz!",
+    ),
+    "boss_arcade_islands": BadgeMeta(
+        "Arcade Islands Boss Slayer", "⚔️", "Beat the Arcade Islands boss quiz!",
+    ),
+    "boss_bug_swamp": BadgeMeta(
+        "Bug Swamp Boss Slayer", "⚔️", "Beat the Bug Swamp boss quiz!",
+    ),
+    "boss_scholar_tower": BadgeMeta(
+        "Scholar's Tower Boss Slayer", "⚔️", "Beat the Scholar's Tower boss quiz!",
+    ),
+    "boss_ai_observatory": BadgeMeta(
+        "AI Observatory Boss Slayer", "⚔️", "Beat the AI Observatory boss quiz!",
+    ),
 }
 
 DEFAULT_BADGE_META = BadgeMeta("Mystery Badge", "🏅", "A special achievement!")

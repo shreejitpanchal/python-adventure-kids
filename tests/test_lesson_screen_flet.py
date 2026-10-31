@@ -1143,6 +1143,48 @@ def test_a_miss_shakes_the_output_card_and_bumps_without_a_flash(state):
     assert state.haptics.calls == ["error", "error"]
 
 
+def test_lesson_wears_its_worlds_skin(controller, state):
+    from app.engine.worlds import world_for_category
+    from app.ui.components.world_skin_flet import skinned_theme
+
+    view = controller.build_view()
+    expected = skinned_theme(state.theme, world_for_category(controller.lesson.category))
+    assert controller.theme.key == expected.key
+    assert view.bgcolor == expected.bg
+    assert controller.output_text.color == state.theme.text_muted, "text palette is the preset's"
+
+
+def test_a_first_pass_unlocks_the_lessons_concept_cards(controller, state):
+    from app.engine.cards import card_meta
+
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    tags = list(dict.fromkeys(controller.lesson.concept_tags))
+    assert controller.card_text.data["tags"] == tags
+    assert controller.card_text.value.startswith("🃏 New card")
+    assert all(card_meta(tag).title in controller.card_text.value for tag in tags)
+
+    again = _LessonController(FakePage(), state, controller.lesson)
+    again.build_view()
+    asyncio.run(again._on_run(None))
+    assert again.card_text.value == "" and again.card_text.data["tags"] == []
+
+
+def test_the_buddy_grows_when_a_pass_crosses_a_stage(controller, state):
+    state.progress.add_xp(30)  # 30 + 30 from lesson_01 = 60 -> Hatchling
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    assert controller.pet_text.data["stage"] == "hatchling"
+    assert "Hatchling" in controller.pet_text.value
+
+    state.progress.add_xp(5)
+    quiet = _LessonController(FakePage(), state, state.lesson_engine.get("lesson_02"))
+    quiet.build_view()
+    quiet.editor.value = 'print("Hello!")'
+    asyncio.run(quiet._on_run(None))
+    assert quiet.pet_text.data["stage"] is None and quiet.pet_text.value == ""
+
+
 def test_reset_parks_the_xp_float(controller):
     controller.build_view()
     asyncio.run(controller._on_run(None))

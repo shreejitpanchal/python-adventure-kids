@@ -45,6 +45,66 @@ def _answer_all_right(controller) -> None:
         controller._on_next(None)
 
 
+def _complete_world(state, world) -> None:
+    for category in world.categories:
+        for lesson in state.lesson_engine.lessons_in_category(category):
+            state.progress.complete_lesson(lesson.id, 3)
+
+
+def test_boss_mode_starts_straight_away_with_the_worlds_questions(state):
+    from app.engine.boss import BOSS_QUESTION_COUNT, boss_tags, world_by_id
+    from app.ui.quiz_screen_flet import build_quiz_view
+    from tests.flet_testing import one
+
+    world = world_by_id("number_kingdom")
+    page = FakePage()
+    view = build_quiz_view(page, state, boss_world_id="number_kingdom")
+    assert view.route == "/boss/number_kingdom"
+    assert one(view, "hero_header").data["title"] == "⚔️ Boss: Number Kingdom"
+    assert one(view, "skyline").data["world"] == "number_kingdom"
+    assert view.bottom_appbar.data["active"] == "map"
+    assert view.bgcolor != state.theme.bg, "the boss fight wears the World's skin"
+
+    controller = _QuizController(page, state, boss=world)
+    controller.build_view()
+    assert controller.setup_card.visible is False and controller.question_card.visible is True
+    assert controller.total == BOSS_QUESTION_COUNT
+    tags = boss_tags(state.lesson_engine, world)
+    assert all(set(question.concept_tags) & tags for question in controller.questions)
+
+
+def test_unknown_boss_world_falls_back_to_the_plain_quiz(state):
+    from app.ui.quiz_screen_flet import build_quiz_view
+
+    view = build_quiz_view(FakePage(), state, boss_world_id="nowhere")
+    assert view.route == "/quiz"
+
+
+def test_winning_the_boss_awards_its_badge_once_and_a_loss_does_not(state):
+    from app.engine.boss import boss_badge_id, world_by_id
+
+    world = world_by_id("word_valley")
+    _complete_world(state, world)
+    controller = _QuizController(FakePage(), state, boss=world)
+    controller.build_view()
+    _answer_all_right(controller)
+    assert controller.boss_won is True
+    assert boss_badge_id(world) in state.progress.get_badge_ids()
+    assert controller.confetti.data["fired"] is True
+    assert "defeated" in controller.results_text.value
+
+    loss = _QuizController(FakePage(), state, boss=world)
+    loss.build_view()
+    _answer_all_wrong(loss)
+    assert loss.boss_won is False
+    assert "shrugged" in loss.results_text.value
+    assert loss.confetti.data["fired"] is False
+
+    # A rematch restarts the fight without a setup card.
+    loss._on_play_again(None)
+    assert loss.setup_card.visible is False and loss.question_card.visible is True and loss.index == 0
+
+
 def test_a_strong_score_fires_confetti_and_a_weak_one_does_not(state):
     strong = _QuizController(FakePage(), state)
     strong.build_view()

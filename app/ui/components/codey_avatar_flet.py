@@ -24,6 +24,7 @@ import flet as ft
 from app.ui.color_utils import with_alpha
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import accent_gradient, lip_shadow, soft_shadow
+from app.ui.components.codey_face_flet import FaceHandle, blink_now, build_codey_face, expression_for_emoji, look
 from app.ui.theme_flet import scaled
 
 
@@ -58,6 +59,27 @@ class CodeyHandle:
     face_container: Optional[ft.Container] = None
     """The disc around the face -- what codey_performance_flet animates
     (bounce/spin/wobble) when Codey acts out a run's output."""
+    face: Optional[FaceHandle] = None
+    """The drawn face (codey_face_flet); face_text is now the semantic
+    state (tests read it) and a small corner badge for non-robot emoji."""
+    show_face: Optional[Callable[[str], None]] = None
+    """show_face(emoji): set face_text and sync the drawn expression + badge."""
+
+
+ROBOT_FACE = "🤖"
+
+
+def _wire_drawn_face(face_text: ft.Text, face: FaceHandle) -> Callable[[str], None]:
+    """face_text is the semantic face. The drawn face mirrors it through
+    EMOJI_EXPRESSIONS; any emoji that isn't the plain robot also shows as
+    the corner badge (face_text itself), so performances keep their flair."""
+
+    def show_face(emoji: str) -> None:
+        face_text.value = emoji
+        face.set_expression(expression_for_emoji(emoji))
+        face_text.visible = emoji != ROBOT_FACE
+
+    return show_face
 
 
 def build_codey_avatar(theme, scale: float = 1.0, *, page: Optional[object] = None) -> CodeyHandle:
@@ -65,17 +87,20 @@ def build_codey_avatar(theme, scale: float = 1.0, *, page: Optional[object] = No
     looks around while the child types (idle(), bounded)."""
     fs = lambda base: scaled(base, scale)  # noqa: E731
     idle_face, idle_caption = _EXPRESSIONS[CodeyState.IDLE]
-    face_text = ft.Text(idle_face, size=fs(28))
+    face_text = ft.Text(idle_face, size=fs(16), visible=False, right=-2, bottom=-2)
     caption_text = ft.Text(idle_caption, size=fs(12), color=theme.text_muted, italic=True)
 
+    face = build_codey_face(theme, size=44)
     face_container = ft.Container(
-        content=face_text, bgcolor=theme.bg, border_radius=50, width=48, height=48,
+        content=ft.Stack([face.control, face_text], width=44, height=44),
+        bgcolor=theme.bg, border_radius=50, width=48, height=48,
         alignment=ft.alignment.Alignment.CENTER,
         offset=ft.Offset(0, 0), rotate=0.0, scale=1.0,
         animate_offset=ft.Animation(220, ft.AnimationCurve.EASE_IN_OUT),
         animate_rotation=ft.Animation(600, ft.AnimationCurve.EASE_IN_OUT),
         animate_scale=ft.Animation(220, ft.AnimationCurve.EASE_IN_OUT),
     )
+    show_face = _wire_drawn_face(face_text, face)
 
     control = ft.Row(
         [
@@ -93,15 +118,15 @@ def build_codey_avatar(theme, scale: float = 1.0, *, page: Optional[object] = No
 
     def set_state(state: str) -> None:
         emoji, caption = _EXPRESSIONS.get(state, _EXPRESSIONS[CodeyState.IDLE])
-        face_text.value = emoji
+        show_face(emoji)
         caption_text.value = caption
 
     if page is not None:
-        idle(page, face_container)
+        idle(page, face_container, face)
 
     return CodeyHandle(
         control=control, face_text=face_text, caption_text=caption_text, set_state=set_state,
-        face_container=face_container,
+        face_container=face_container, face=face, show_face=show_face,
     )
 
 
@@ -122,6 +147,8 @@ class CompanionHandle:
     wave: Optional[Callable[[object], bool]] = None
     """wave(page): Codey's reaction to being tapped -- a wobble, a 👋 and
     a hello line that gives way to the original line a beat later."""
+    face: Optional[FaceHandle] = None
+    """The drawn face (codey_face_flet) inside the disc."""
 
 
 # What Codey says when tapped, cycling so a second tap gets a new line.
@@ -138,27 +165,33 @@ IDLE_GAPS: tuple[float, ...] = (3.0, 2.2, 3.6, 2.8, 3.2, 2.4, 3.4)
 WAVE_LINE_SECONDS = 2.6
 
 
-async def _idle(page, disc: ft.Container) -> None:
+async def _idle(page, disc: ft.Container, face: Optional[FaceHandle] = None) -> None:
     for cycle in range(IDLE_CYCLES):
         await asyncio.sleep(IDLE_GAPS[cycle % len(IDLE_GAPS)])
-        await motion._blink(page, disc)
+        if face is not None:
+            await blink_now(page, face)  # eyelids on the drawn face
+        else:
+            await motion._blink(page, disc)
         if cycle % 2 == 1:
-            # Look around: a small tilt each way, then straight ahead.
+            # Look around: a small tilt each way (and the pupils follow),
+            # then straight ahead.
             for angle in (0.08, -0.08, 0.0):
                 disc.rotate = angle
+                if face is not None:
+                    look(face, angle * 0.4)
                 page.update()
                 await asyncio.sleep(0.3)
 
 
-def idle(page, disc: ft.Container) -> bool:
+def idle(page, disc: ft.Container, face: Optional[FaceHandle] = None) -> bool:
     """Codey's idle life: blinks, and now and then a look around."""
-    return motion.schedule(page, _idle, page, disc)
+    return motion.schedule(page, _idle, page, disc, face)
 
 
-async def _wave(page, face_text: ft.Text, line_text: ft.Text, disc: ft.Container, previous_face: str, previous_line: str) -> None:
+async def _wave(page, show_face: Callable[[str], None], line_text: ft.Text, disc: ft.Container, previous_face: str, previous_line: str) -> None:
     await motion._wobble(page, disc, 6, 0.18)
     await asyncio.sleep(WAVE_LINE_SECONDS)
-    face_text.value = previous_face
+    show_face(previous_face)
     line_text.value = previous_line
     page.update()
 
@@ -175,10 +208,12 @@ def build_codey_companion(
     worn as a small badge on the disc -- Codey "evolves" with the player's
     level."""
     fs = lambda base: scaled(base, scale)  # noqa: E731
-    face_text = ft.Text(face, size=fs(34), text_align=ft.TextAlign.CENTER)
+    face_text = ft.Text(face, size=fs(18), text_align=ft.TextAlign.CENTER, right=-4, bottom=-4)
     accessory_text = ft.Text(accessory, size=fs(16), text_align=ft.TextAlign.CENTER)
+    drawn_face = build_codey_face(theme, size=60)
     disc = ft.Container(
-        content=face_text, width=64, height=64, border_radius=32,
+        content=ft.Stack([drawn_face.control, face_text], width=60, height=60),
+        width=64, height=64, border_radius=32,
         gradient=accent_gradient(theme.primary),
         shadow=lip_shadow(theme.primary, depth=4),
         alignment=ft.alignment.Alignment.CENTER,
@@ -186,6 +221,8 @@ def build_codey_companion(
         data={"kind": "codey_disc"},
     )
     motion.prepare_blink(disc)
+    show_face = _wire_drawn_face(face_text, drawn_face)
+    show_face(face)
     accessory_badge = ft.Container(
         content=accessory_text, width=28, height=28, border_radius=14,
         bgcolor=theme.card, alignment=ft.alignment.Alignment.CENTER,
@@ -219,7 +256,7 @@ def build_codey_companion(
         line_text.value = text
 
     def cheer(target_page) -> bool:
-        face_text.value = _EXPRESSIONS[CodeyState.SUCCESS][0]
+        show_face(_EXPRESSIONS[CodeyState.SUCCESS][0])
         motion.prepare_pulse(face_disc)
         return motion.pulse(target_page, face_disc, times=2, big=1.15)
 
@@ -230,21 +267,21 @@ def build_codey_companion(
         previous_face, previous_line = face_text.value, line_text.value
         if previous_face == WAVE_FACE:
             return False  # mid-wave already; don't stack swap-backs
-        face_text.value = WAVE_FACE
+        show_face(WAVE_FACE)
         line_text.value = WAVE_LINES[wave_count["value"] % len(WAVE_LINES)]
         wave_count["value"] += 1
         motion.prepare_wobble(disc)
-        scheduled = motion.schedule(target_page, _wave, target_page, face_text, line_text, disc, previous_face, previous_line)
+        scheduled = motion.schedule(target_page, _wave, target_page, show_face, line_text, disc, previous_face, previous_line)
         target_page.update()
         return scheduled
 
     if page is not None:
         motion.bob(page, face_disc)
-        idle(page, disc)
+        idle(page, disc, drawn_face)
         disc.on_click = lambda _e: wave(page)
         disc.ink = True
 
     return CompanionHandle(
         control=control, face_disc=face_disc, face_text=face_text, line_text=line_text,
-        set_line=set_line, cheer=cheer, inner_disc=disc, wave=wave,
+        set_line=set_line, cheer=cheer, inner_disc=disc, wave=wave, face=drawn_face,
     )

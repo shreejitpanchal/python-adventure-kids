@@ -264,6 +264,15 @@ def test_haptics_are_wired_lazily_and_the_theme_carries_the_route_swoosh(tmp_pat
         assert getattr(page.theme, "page_transitions", None) == transitions
 
 
+def test_cards_and_boss_routes_build_their_views(page):
+    page.go("/cards")
+    assert page.views[-1].route == "/cards"
+    page.go("/boss/logic_peaks")
+    assert page.views[-1].route == "/boss/logic_peaks"
+    page.go("/boss/nowhere")
+    assert page.views[-1].route == "/quiz", "an unknown boss world is just the quiz"
+
+
 def test_page_transitions_degrade_to_none_without_the_flet_classes(monkeypatch):
     from app.ui import app_window_flet
 

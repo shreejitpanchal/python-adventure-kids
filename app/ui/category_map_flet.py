@@ -16,6 +16,7 @@ from __future__ import annotations
 import flet as ft
 import flet.canvas as cv
 
+from app.engine.boss import boss_beaten
 from app.engine.categories import get_category_meta
 from app.engine.worlds import World, garden_stage, world_status, worlds_in_order
 from app.ui.adventure_map_layout import NODE_LIP, NODE_SIZE, total_path_height, zigzag_positions
@@ -24,11 +25,14 @@ from app.ui.color_utils import contrasting_text_color, lighten
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import (
     Layout, emoji_badge, hero_card, hero_header, layout_for, pill_button, play_power_bar, power_bar,
-    scene_view, spacer,
+    scene_view, spacer, stat_chip,
 )
 from app.ui.components.ambience_flet import build_sky_backdrop, build_world_ambience, sky_moment
 from app.ui.components.codey_avatar_flet import build_codey_companion
+from app.ui.components.game_button_flet import build_game_button
 from app.ui.components.map_path_flet import build_map_node, build_you_are_here, node_disc, road_shapes
+from app.ui.components.nav_bar_flet import build_nav_bar
+from app.ui.components.scenery_flet import build_scenery
 from app.ui.theme_flet import scaled
 
 _CAPTION_WIDTH = 160.0
@@ -69,9 +73,10 @@ def build_category_map_view(
     sections: list[ft.Control] = [_build_quiz_tile(page, state)]
     next_title = None
     next_world_title = None
+    badge_ids = set(state.progress.get_badge_ids())
     for world, world_categories in worlds_in_order(categories):
         status = world_status(engine, world, completed_ids, world_categories)
-        sections.append(_build_world_header(page, theme, world, status, scale))
+        sections.append(_build_world_header(page, state, world, status, scale, badge_ids))
         sections.append(
             _build_world_road(
                 page, state, world, world_categories, completed_ids, current_category, scale, layout,
@@ -98,12 +103,15 @@ def build_category_map_view(
         controls.append(spacer(12))
         controls.append(section)
 
-    view = scene_view("/categories", theme, controls, page=page)
+    view = scene_view(
+        "/categories", theme, controls, page=page, nav_bar=build_nav_bar(page, theme, "map", scale=scale, state=state),
+    )
     motion.play_entrance(page, sections)
     return view
 
 
-def _build_world_header(page, theme, world: World, status, scale: float) -> ft.Control:
+def _build_world_header(page, state: AppState, world: World, status, scale: float, badge_ids: set[str] | None = None) -> ft.Control:
+    theme = state.theme
     fs = lambda base: scaled(base, scale)  # noqa: E731
     text_color = contrasting_text_color(world.color)
     ratio = status.done / status.total if status.total else 0.0
@@ -115,29 +123,45 @@ def _build_world_header(page, theme, world: World, status, scale: float) -> ft.C
     garden = emoji_badge(stage, size=52, bgcolor=lighten(world.color, 0.5), scale=scale, lip=False)
     garden.tooltip = "Your garden grows as you finish levels here!"
     garden.data = {"kind": "world_garden", "stage": stage}
+    children: list[ft.Control] = [
+        ft.Row(
+            [
+                emoji_badge(world.icon, size=52, bgcolor=lighten(world.color, 0.3), scale=scale),
+                ft.Column(
+                    [
+                        ft.Text(world.title, size=fs(20), weight=ft.FontWeight.BOLD, color=text_color),
+                        ft.Text(caption, size=fs(12), color=text_color),
+                        bar,
+                    ],
+                    spacing=4, expand=True,
+                ),
+                garden,
+            ],
+            spacing=12, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+    ]
+    # The boss battle (app/engine/boss.py): locked until the world is
+    # complete, a chunky button once it is, a "defeated" chip after a win.
+    beaten = boss_beaten(world, badge_ids or ())
+    if status.complete and not beaten:
+        boss_button = build_game_button(
+            "⚔️ Boss Battle", lambda _e, world_id=world.id: page.go(f"/boss/{world_id}"), page,
+            bgcolor=theme.danger, height=48, size=15, chunky=True,
+        )
+        motion.pulse(page, boss_button.content, times=3, big=1.04)
+        children.append(ft.Row([boss_button], alignment=ft.MainAxisAlignment.CENTER))
+    elif beaten:
+        children.append(ft.Row([stat_chip(theme, "👑", "Boss defeated!", scale, accent=theme.star, kind="boss_chip")]))
+    else:
+        children.append(ft.Text("⚔️ Finish every level to challenge the boss", size=fs(11), color=text_color, data={"kind": "boss_locked"}))
     return hero_card(
         theme, accent=world.color,
-        children=[
-            ft.Row(
-                [
-                    emoji_badge(world.icon, size=52, bgcolor=lighten(world.color, 0.3), scale=scale),
-                    ft.Column(
-                        [
-                            ft.Text(world.title, size=fs(20), weight=ft.FontWeight.BOLD, color=text_color),
-                            ft.Text(caption, size=fs(12), color=text_color),
-                            bar,
-                        ],
-                        spacing=4, expand=True,
-                    ),
-                    garden,
-                ],
-                spacing=12, vertical_alignment=ft.CrossAxisAlignment.CENTER,
-            ),
-        ],
+        children=children,
         padding=16,
         data={
             "kind": "world_header", "world": world.id, "title": world.title,
             "done": status.done, "total": status.total, "complete": status.complete, "garden": stage,
+            "boss": "beaten" if beaten else ("ready" if status.complete else "locked"),
         },
     )
 
@@ -159,7 +183,10 @@ def _build_world_road(
     segment_done = [done_flags[i] and done_flags[i + 1] for i in range(len(categories) - 1)]
 
     stack_children: list[ft.Control] = [
-        ft.Container(content=cv.Canvas(shapes=road_shapes(positions, segment_done, theme)), width=layout.map_width, height=path_height),
+        # Drawn scenery (scenery_flet: horizon silhouette + motifs) sits
+        # under everything; the road canvas is drawn over it.
+        build_scenery(world.id, layout.map_width, path_height, world.color),
+        ft.Container(content=cv.Canvas(shapes=road_shapes(positions, segment_done, theme)), width=layout.map_width, height=path_height, data={"kind": "road"}),
         # The world's weather (snow, leaves, glints...) drifts over the road
         # and under the nodes -- see ambience_flet.WORLD_AMBIENCE.
         *build_world_ambience(world.id, layout.map_width, path_height, scale=scale, page=page),

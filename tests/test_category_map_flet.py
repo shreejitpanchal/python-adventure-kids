@@ -44,7 +44,7 @@ def test_each_world_road_has_two_strokes_per_segment(state):
     stacks = all_of(view, "map_stack")
     assert len(stacks) == len(grouped)
     for stack, (_world, world_categories) in zip(stacks, grouped):
-        canvas = stack.controls[0].content
+        canvas = one(stack, "road").content
         assert len(canvas.shapes) == 2 * (len(world_categories) - 1)
 
 
@@ -193,6 +193,46 @@ def test_each_world_road_carries_its_own_weather_behind_the_nodes(state):
         assert all(stack.controls.index(p) < first_node for p in particles), "weather sits under the nodes"
     worlds_seen = {all_of(stack, "world_ambience")[0].data["world"] for stack in all_of(view, "map_stack")}
     assert worlds_seen == {header.data["world"] for header in all_of(view, "world_header")}
+
+
+def test_each_world_road_is_drawn_on_its_own_scenery_under_the_road(state):
+    from app.ui.components.scenery_flet import scene_for_world
+
+    view = build_category_map_view(FakePage(), state)
+    for stack in all_of(view, "map_stack"):
+        scenery = stack.controls[0]
+        assert scenery.data["kind"] == "scenery"
+        assert scenery.data["scene"] == scene_for_world(scenery.data["world"])
+        assert scenery.content.shapes
+        assert stack.controls[1].data == {"kind": "road"}
+    assert view.bottom_appbar.data["active"] == "map"
+
+
+def test_world_header_offers_the_boss_only_once_the_world_is_complete(state):
+    from app.engine.boss import boss_badge_id
+    from app.engine.worlds import world_for_category
+
+    first_category = state.lesson_engine.categories()[0]
+    world = world_for_category(first_category)
+
+    locked = next(h for h in all_of(build_category_map_view(FakePage(), state), "world_header") if h.data["world"] == world.id)
+    assert locked.data["boss"] == "locked" and all_of(locked, "game_button") == []
+    assert len(all_of(locked, "boss_locked")) == 1
+
+    for category in world.categories:
+        _complete_category(state, category)
+    page = FakePage()
+    ready = next(h for h in all_of(build_category_map_view(page, state), "world_header") if h.data["world"] == world.id)
+    assert ready.data["boss"] == "ready"
+    (button,) = all_of(ready, "game_button")
+    assert "Boss" in button.data["text"]
+    gesture = next(c for c in ready.content.controls[-1].controls)
+    gesture.on_tap(None)
+    assert page.routes_visited == [f"/boss/{world.id}"]
+
+    state.progress.award_badge(boss_badge_id(world))
+    beaten = next(h for h in all_of(build_category_map_view(FakePage(), state), "world_header") if h.data["world"] == world.id)
+    assert beaten.data["boss"] == "beaten" and len(all_of(beaten, "boss_chip")) == 1
 
 
 def test_map_sky_is_pinned_by_hour(state):

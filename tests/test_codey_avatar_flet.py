@@ -118,8 +118,11 @@ def test_idle_loop_blinks_and_looks_around_then_rests(monkeypatch):
     async def no_sleep(_s):
         return None
 
+    from app.ui.components import codey_face_flet as face_module
+
     monkeypatch.setattr(codey.asyncio, "sleep", no_sleep)
     monkeypatch.setattr(motion.asyncio, "sleep", no_sleep)
+    monkeypatch.setattr(face_module.asyncio, "sleep", no_sleep)
     page = FakePage()
     handle = build_codey_companion(get_preset("sunny_light"), 1.0, "hi", page=page)
     ((args, _k),) = page.scheduled(codey._idle)
@@ -160,6 +163,24 @@ def test_wave_says_hello_wobbles_and_schedules_the_swap_back(monkeypatch):
     quiet = build_codey_companion(get_preset("sunny_light"), 1.0, "hi")
     assert quiet.wave(NoTaskPage()) is False
     assert quiet.face_text.value == codey.WAVE_FACE
+
+
+def test_drawn_face_mirrors_the_semantic_face_and_badges_non_robot_emoji():
+    handle = build_codey_companion(get_preset("sunny_light"), 1.0, "hi")
+    assert handle.face.expression == "idle"
+    assert handle.face_text.visible is False, "the plain robot is drawn, not shown as emoji"
+
+    handle.cheer(FakePage())
+    assert handle.face_text.value == "🎉" and handle.face_text.visible is True
+    assert handle.face.expression == "happy"
+
+    avatar = build_codey_avatar(get_preset("sunny_light"))
+    avatar.set_state(CodeyState.ERROR)
+    assert avatar.face.expression == "dizzy" and avatar.face_text.visible is True
+    avatar.set_state(CodeyState.IDLE)
+    assert avatar.face.expression == "idle" and avatar.face_text.visible is False
+    avatar.show_face("🎲")
+    assert avatar.face_text.value == "🎲" and avatar.face.expression == "surprised"
 
 
 def test_lesson_avatar_idles_only_when_given_a_page():

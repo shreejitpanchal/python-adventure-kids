@@ -29,6 +29,7 @@ from app.ui.components.adventure_kit_flet import (
 from app.ui.components.ambience_flet import build_sky_backdrop, sky_moment
 from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.components.game_button_flet import build_game_button
+from app.ui.components.nav_bar_flet import build_nav_bar
 from app.ui.theme_flet import scaled
 
 
@@ -80,7 +81,10 @@ def build_dashboard_view(page: ft.Page, state: AppState, *, hour: int | None = N
         controls.append(spacer(12))
         controls.append(section)
 
-    view = scene_view("/dashboard", theme, controls, page=page)
+    view = scene_view(
+        "/dashboard", theme, controls, page=page,
+        nav_bar=build_nav_bar(page, theme, "mission", scale=scale, state=state),
+    )
     motion.play_entrance(page, sections)
     return view
 

@@ -25,14 +25,16 @@ import flet as ft
 import flet.canvas as cv
 
 from app.audio.player import success_sound_for
+from app.engine.cards import card_meta, newly_collected_tags
 from app.engine.categories import get_category_meta
 from app.engine.course_status import next_topic_item
+from app.engine.pet import newly_reached_stage
 from app.engine.courses import find_course_for_category
 from app.engine.lesson import Lesson
 from app.engine.scoring import combo_label, combo_multiplier, improvement_hint, stars_for_attempt
 from app.engine.titles import level_title
 from app.engine.validator import validate_ast_contains, validate_output
-from app.engine.worlds import newly_completed_world, world_badge_id
+from app.engine.worlds import newly_completed_world, world_badge_id, world_for_category
 from app.games.game_canvas_flet import GameCanvas
 from app.sandbox.errors import extract_error_line_number, translate_error
 from app.sandbox.inprocess_runner import ExecutionResult, RunHandle, run_code
@@ -52,6 +54,7 @@ from app.ui.components.codey_performance_flet import (
 )
 from app.ui.components.game_button_flet import build_game_button
 from app.ui.components.macro_toolbar_flet import build_macro_toolbar
+from app.ui.components.world_skin_flet import skinned_theme
 from app.ui.theme_flet import scaled
 
 _REWARD_CARD_COLOR = "#FFF3D0"
@@ -82,7 +85,10 @@ class _LessonController:
         self.page = page
         self.state = state
         self.lesson = lesson
-        self.theme = state.theme
+        # A lesson wears its World's skin (world_skin_flet): bg, card and
+        # primary follow the World; text/success/warning stay the preset's.
+        self.world = world_for_category(lesson.category)
+        self.theme = skinned_theme(state.theme, self.world)
         self.scale = state.font_scale
 
         self._running = False
@@ -368,6 +374,10 @@ class _LessonController:
             "", size=self._fs(20), weight=ft.FontWeight.BOLD, color=reward_text_color, text_align=ft.TextAlign.CENTER,
         )
         self.badge_text = ft.Text("", size=self._fs(15), color=reward_text_color, text_align=ft.TextAlign.CENTER)
+        # Concept cards unlocked by this pass (app/engine/cards.py) and the
+        # buddy stage reached (app/engine/pet.py) -- empty when neither.
+        self.card_text = ft.Text("", size=self._fs(14), color=reward_text_color, text_align=ft.TextAlign.CENTER, data={"kind": "card_unlock", "tags": []})
+        self.pet_text = ft.Text("", size=self._fs(14), color=reward_text_color, text_align=ft.TextAlign.CENTER, data={"kind": "pet_grow", "stage": None})
         # How to earn the missing star(s) next time (app/engine/scoring.py's
         # improvement_hint) -- empty when the pass earned the maximum.
         self.improve_text = ft.Text(
@@ -464,6 +474,8 @@ class _LessonController:
                     self.reward_text,
                     self.improve_text,
                     self.badge_text,
+                    self.card_text,
+                    self.pet_text,
                     buttons_section,
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10,
@@ -827,7 +839,19 @@ class _LessonController:
 
         xp_before = progress.get_player_level().total_xp
         progress.complete_lesson(self.lesson.id, earned_stars, xp_multiplier=multiplier)
-        xp_gained = progress.get_player_level().total_xp - xp_before
+        xp_after = progress.get_player_level().total_xp
+        xp_gained = xp_after - xp_before
+        # Collectibles: concept cards this pass unlocked, and a buddy that
+        # may just have grown.
+        new_tags = newly_collected_tags(engine, self.lesson, completed_before)
+        self.card_text.value = (
+            "🃏 New card" + ("s" if len(new_tags) > 1 else "") + ": " + ", ".join(card_meta(tag).title for tag in new_tags) + "!"
+            if new_tags else ""
+        )
+        self.card_text.data = {"kind": "card_unlock", "tags": new_tags}
+        grown = newly_reached_stage(xp_before, xp_after)
+        self.pet_text.value = f"{grown.emoji} Your buddy grew into a {grown.name}!" if grown else ""
+        self.pet_text.data = {"kind": "pet_grow", "stage": grown.id if grown else None}
         badge_newly_awarded = False
         if self.lesson.badge:
             badge_newly_awarded = progress.award_badge(self.lesson.badge)

@@ -38,6 +38,8 @@ from app.ui.components.adventure_kit_flet import (
 )
 from app.ui.components.ambience_flet import build_sky_backdrop, sky_moment
 from app.ui.components.codey_avatar_flet import build_codey_companion
+from app.ui.components.nav_bar_flet import build_nav_bar
+from app.ui.components.pet_flet import build_pet_card
 from app.ui.components.quest_board_flet import build_quest_board
 from app.ui.components.streak_flame_flet import (
     build_shield_chip, build_streak_chip, build_welcome_banner, welcome_message,
@@ -210,12 +212,15 @@ def build_learning_hub_view(page: ft.Page, state: AppState, *, hour: int | None 
 
     chest = build_daily_chest(page, state, scale=scale, on_opened=on_chest_opened)
     quest_board = build_quest_board(page, state, scale=scale, on_bonus_claimed=on_bonus_claimed)
+    # Codey's buddy (app/engine/pet.py) -- taps through to the Codey tab.
+    pet_card = build_pet_card(page, state, scale=scale, on_click=lambda _e: page.go("/closet"))
 
     sections: list[ft.Control] = []
     if message is not None:
         sections.append(build_welcome_banner(theme, message, scale, page=page))
     sections.append(stats)
     sections.append(chest)
+    sections.append(pet_card)
     sections.append(quest_board)
     if state.settings.league_enabled:
         sections.append(_build_league_card(page, state, name))
@@ -237,7 +242,9 @@ def build_learning_hub_view(page: ft.Page, state: AppState, *, hour: int | None 
         controls.append(spacer(12))
         controls.append(section)
 
-    view = scene_view("/hub", theme, controls, page=page)
+    view = scene_view(
+        "/hub", theme, controls, page=page, nav_bar=build_nav_bar(page, theme, "home", scale=scale, state=state),
+    )
     motion.play_entrance(page, sections)
     return view
 

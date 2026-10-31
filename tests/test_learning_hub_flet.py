@@ -332,6 +332,18 @@ def test_league_card_has_a_podium_of_the_top_three_with_the_child_marked(state):
     assert sum(1 for step in steps if step.data["is_child"]) == sum(1 for row in rows[:3] if row.data["is_child"])
 
 
+def test_hub_has_the_buddy_card_and_the_home_tab_lit(state):
+    page = FakePage()
+    view = build_learning_hub_view(page, state)
+    pet = one(view, "pet_card")
+    assert pet.data["stage"] == "egg"
+    pet.on_click(None)
+    assert page.routes_visited == ["/closet"]
+    assert view.bottom_appbar.data["active"] == "home"
+    tabs = all_of(view.bottom_appbar, "nav_tab")
+    assert [tab.data["tab"] for tab in tabs] == ["home", "map", "mission", "trophies", "codey"]
+
+
 def test_hub_tiles_resume_banner_and_codey_are_pressable(state):
     state.settings.last_learning_route = "guided"
     page = FakePage()

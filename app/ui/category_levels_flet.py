@@ -25,6 +25,9 @@ from app.ui.components.adventure_kit_flet import (
 from app.ui.components.ambience_flet import build_sky_backdrop, build_world_ambience, sky_moment
 from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.components.map_path_flet import build_map_node, build_you_are_here, node_disc, road_shapes
+from app.ui.components.nav_bar_flet import build_nav_bar
+from app.ui.components.scenery_flet import build_scenery, build_skyline
+from app.ui.components.world_skin_flet import skinned_theme
 from app.ui.theme_flet import scaled
 
 _CAPTION_WIDTH = 160.0
@@ -44,13 +47,14 @@ def codey_levels_line(category_title: str, done: int, total: int, next_title: st
 
 def build_category_levels_view(page: ft.Page, state: AppState, category: str, *, hour: int | None = None) -> ft.View:
     """`hour` pins the sky's time of day (ambience_flet.sky_moment)."""
-    theme = state.theme
     scale = state.font_scale
     fs = lambda base: scaled(base, scale)  # noqa: E731
     layout = layout_for(page)
     engine = state.lesson_engine
     meta = get_category_meta(category)
     world = world_for_category(category)
+    # Entering a World re-skins the screen in its colors (world_skin_flet).
+    theme = skinned_theme(state.theme, world)
     completed_ids = set(state.progress.get_completed_lesson_ids())
     stars_by_lesson = state.progress.get_stars_by_lesson()
     lessons = engine.lessons_in_category(category)
@@ -64,13 +68,14 @@ def build_category_levels_view(page: ft.Page, state: AppState, category: str, *,
 
     connector_canvas = cv.Canvas(shapes=road_shapes(positions, segment_done, theme))
     stack_children: list[ft.Control] = [
-        ft.Container(content=connector_canvas, width=layout.map_width, height=path_height),
+        build_scenery(world.id, layout.map_width, path_height, world.color),
+        ft.Container(content=connector_canvas, width=layout.map_width, height=path_height, data={"kind": "road"}),
         # Same weather as this category's world on the Adventure Map.
         *build_world_ambience(world.id, layout.map_width, path_height, scale=scale, page=page),
     ]
     for index, (lesson, position, lesson_state) in enumerate(zip(lessons, positions, states)):
         node, caption = _build_node(
-            page, state, meta, lesson, position, lesson_state, stars_by_lesson, scale, layout.map_width,
+            page, state, theme, meta, lesson, position, lesson_state, stars_by_lesson, scale, layout.map_width,
             highlight=index == current_index,
         )
         stack_children.extend([node, caption])
@@ -84,11 +89,15 @@ def build_category_levels_view(page: ft.Page, state: AppState, category: str, *,
     companion = build_codey_companion(
         theme, scale, codey_levels_line(meta.title, done_count, len(lessons), next_title), page=page,
     )
+    backdrop = build_sky_backdrop(theme, moment=sky_moment(hour), scale=scale, page=page)
+    # The World's skyline along the bottom of the sky band, behind the
+    # decorations (after the tint, if any).
+    backdrop.controls.insert(1 if backdrop.controls and backdrop.controls[0].data.get("kind") == "sky_tint" else 0, build_skyline(world.id, world.color))
     header = hero_header(
         theme, title=f"{meta.icon} {meta.title}", scale=scale, title_color=meta.color,
         buttons=[pill_button("🗺️ Categories", lambda _e: page.go("/categories"), bgcolor=theme.text_muted, color="#FFFFFF")],
         companion=companion.control,
-        backdrop=build_sky_backdrop(theme, moment=sky_moment(hour), scale=scale, page=page),
+        backdrop=backdrop,
     )
 
     ratio = done_count / len(lessons) if lessons else 0.0
@@ -114,6 +123,7 @@ def build_category_levels_view(page: ft.Page, state: AppState, category: str, *,
 
     view = scene_view(
         f"/categories/{category}", theme, [header, spacer(12), progress_card, spacer(12), map_row], page=page,
+        nav_bar=build_nav_bar(page, theme, "map", scale=scale, state=state),
     )
     motion.play_entrance(page, sections)
     return view
@@ -128,11 +138,10 @@ def _lesson_state(lesson, completed_ids, engine) -> str:
 
 
 def _build_node(
-    page, state: AppState, meta, lesson, position, lesson_state: str, stars_by_lesson, scale: float, path_width: float,
+    page, state: AppState, theme, meta, lesson, position, lesson_state: str, stars_by_lesson, scale: float, path_width: float,
     *, highlight: bool,
 ) -> tuple[ft.Control, ft.Control]:
     fs = lambda base: scaled(base, scale)  # noqa: E731
-    theme = state.theme
     stars = stars_by_lesson.get(lesson.id, 0)
     enabled = lesson_state != LOCKED
 

@@ -622,6 +622,63 @@ The "juice" layer (added 2026-10-16), all on the same bounded-motion rules:
   `xp_float_text`); a miss shakes the output card. A combo climb pops the
   combo chip.
 
+The second "more interesting" round (2026-10-31) moved past emoji and
+added structure:
+
+- **Drawn scenery** (`scenery_flet.py`): vector art on `flet.canvas`
+  instead of emoji -- a horizon silhouette per World (`WORLD_SCENES`:
+  castle towers, snowy peaks, rolling hills, island waves, swamp reeds,
+  the scholar's tower, an observatory dome) plus scattered motifs
+  (trees, palms, mushrooms, gems, stars, planets) under every map road
+  (`build_scenery`, the first child of each road Stack, before the road
+  canvas tagged `road`), and the same horizon as a `build_skyline` strip
+  along the bottom of the Category Levels and boss-fight headers. Scenes
+  are seeded by world id; a World without an entry gets the meadow.
+- **Vector Codey** (`codey_face_flet.py`): the companion disc and the
+  in-lesson avatar now draw Codey -- rounded head, antenna, eyes whose
+  pupils look around, eyelids that blink (`blink_now`, used by the idle
+  loop), and a mouth per expression (`EXPRESSIONS`). `face_text` stays
+  the semantic face the rest of the app and the tests read; non-robot
+  emoji (🎉, performances) map onto an expression through
+  `EMOJI_EXPRESSIONS` and also show as a small corner badge. Set the face
+  through `CodeyHandle.show_face()` so the drawing stays in sync.
+- **Bottom tab navigation** (`nav_bar_flet.py`): Home, Map, Mission,
+  Trophies, Codey as chunky pressable tabs in a `BottomAppBar`, mounted by
+  `scene_view(nav_bar=...)` as the View's bottom app bar -- outside both
+  the scroll and `View.controls`, so screens' control order (which some
+  tests index) is unchanged. `tab_for_route()` says which tab a route
+  lights; lessons, Settings and the Parent Area have no bar.
+- **Per-World skins** (`world_skin_flet.py`): the Category Levels screen,
+  every lesson and a boss fight wear their World's colors --
+  `skinned_theme(preset, world)` is a derived `ThemePreset` (key
+  `<skin>+<world>`) with the World's bg/card/primary and a sky registered
+  through `theme_flet.register_sky()`; dark presets keep their deep
+  bg/card and take only the hue. Text, success, warning and star colors
+  are always the preset's own.
+- **Codey's buddy** (`app/engine/pet.py`, `pet_flet.py`): a creature
+  derived from total XP (egg → hatchling → sprout → scamp → guardian →
+  legend, `PET_STAGES`), drawn on canvas with one feature added per
+  stage, shown as a card on the Hub (taps through to the Codey tab) and
+  in the Closet; the lesson reward card announces a stage crossed.
+- **Concept cards** (`app/engine/cards.py`, `app/ui/card_album_flet.py`,
+  route `/cards`, linked from the Trophy Room): one collectible per
+  `concept_tags` entry, derived from completed lessons (nothing stored),
+  leveled by every further lesson with the tag, rarity from how many
+  lessons teach it. `CARD_META` decorates known tags; unknown tags still
+  become generic cards. The reward card names the cards a pass unlocked
+  (`newly_collected_tags`).
+- **World boss battles** (`app/engine/boss.py`, `quiz_screen_flet.py`
+  with `boss_world_id`, route `/boss/<world_id>`): once every level in a
+  World is complete its map header offers a "Boss Battle" --
+  `BOSS_QUESTION_COUNT` questions drawn from the World's concept tags
+  (`QuizEngine.start_session_for_tags`), won at `BOSS_PASS_PERCENT`, worth
+  a `boss_<world>` badge (registered in `badges.py`) with the badge-unlock
+  moment. A beaten boss shows a "defeated" chip; rematches are free.
+- **Treasure wheel** (`treasure_chest_flet.build_treasure_wheel`): opening
+  the chest spins a drawn wheel with one wedge per possible base XP
+  (`WHEEL_VALUES`) and lands on the reward the store already chose
+  (`wheel_angle_for`).
+
 Every Flet screen now uses the kit -- Settings, Parent Area (deliberately
 calm: header and cards only, no Codey or celebrations), the standalone and
 course quizzes (confetti on a pass or a 70%+ score), the course map and

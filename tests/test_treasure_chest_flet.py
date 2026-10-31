@@ -58,6 +58,31 @@ class _FakeHaptics:
         return True
 
 
+def test_opening_spins_the_treasure_wheel_to_the_reward(state):
+    import math
+
+    from app.ui.components.treasure_chest_flet import WHEEL_SPINS, WHEEL_VALUES, wheel_angle_for
+
+    rewards = []
+    card = build_daily_chest(FakePage(), state, scale=1.0, on_opened=rewards.append)
+    from tests.flet_testing import one
+
+    slot = one(card, "wheel_slot")
+    wheel = one(card, "treasure_wheel")
+    assert slot.visible is False and wheel.rotate == 0.0
+    assert wheel.data["values"] == list(WHEEL_VALUES)
+
+    card.on_click(None)
+    assert slot.visible is True
+    assert rewards[0].xp in WHEEL_VALUES
+    assert wheel.rotate == wheel_angle_for(rewards[0].xp)
+    assert wheel.rotate > WHEEL_SPINS * 2 * math.pi - 2 * math.pi, "a few full turns for the show"
+    # Distinct rewards land on distinct angles, and unknown values land on the first wedge.
+    angles = {wheel_angle_for(value) for value in WHEEL_VALUES}
+    assert len(angles) == len(WHEEL_VALUES)
+    assert wheel_angle_for(999) == wheel_angle_for(WHEEL_VALUES[0])
+
+
 def test_opening_buzzes_the_haptics_once(state):
     state.haptics = _FakeHaptics()
     card = build_daily_chest(FakePage(), state, scale=1.0)

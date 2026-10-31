@@ -134,10 +134,23 @@ SKY_COLORS: dict[str, tuple[str, str]] = {
 }
 
 
+# Skies registered at runtime for *derived* presets -- a preset re-skinned
+# for one map World (app/ui/components/world_skin_flet.py) keeps its own
+# key here rather than growing SKY_COLORS, which stays the per-skin table
+# the Settings screen and tests enumerate.
+_REGISTERED_SKIES: dict[str, tuple[str, str]] = {}
+
+
+def register_sky(key: str, top: str, bottom: str) -> None:
+    _REGISTERED_SKIES[key] = (top, bottom)
+
+
 def sky_colors(theme: ThemePreset) -> tuple[str, str]:
     """(top, bottom) sky colors for a preset; a preset with no entry in
     SKY_COLORS (e.g. one added later) falls back to a flat band of its own
     card color fading into its bg, so nothing renders unstyled."""
+    if theme.key in _REGISTERED_SKIES:
+        return _REGISTERED_SKIES[theme.key]
     return SKY_COLORS.get(theme.key, (theme.card, theme.bg))
 
 

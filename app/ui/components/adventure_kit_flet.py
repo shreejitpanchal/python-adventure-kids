@@ -116,11 +116,15 @@ def lip_shadow(color: str, *, depth: float = 5) -> ft.BoxShadow:
 
 
 # -- layout wrappers -----------------------------------------------------------------
-def scene_view(route: str, theme: ThemePreset, controls: list[ft.Control], *, page=None) -> ft.View:
+def scene_view(
+    route: str, theme: ThemePreset, controls: list[ft.Control], *, page=None, nav_bar: Optional[ft.Control] = None,
+) -> ft.View:
     """The standard scrolling screen: flat theme bg, phone-friendly side
     padding, extra bottom clearance for Android's navigation bar. In a
     wide window (see layout_for) the content is capped at
-    MAX_CONTENT_WIDTH and centered instead of stretching edge to edge."""
+    MAX_CONTENT_WIDTH and centered instead of stretching edge to edge.
+    `nav_bar` (nav_bar_flet.build_nav_bar) mounts as the View's bottom app
+    bar, outside both the scroll and `controls`."""
     layout = layout_for(page)
     body: list[ft.Control] = controls
     if layout.wide:
@@ -130,7 +134,7 @@ def scene_view(route: str, theme: ThemePreset, controls: list[ft.Control], *, pa
                 alignment=ft.MainAxisAlignment.CENTER,
             )
         ]
-    return ft.View(
+    view = ft.View(
         route=route,
         bgcolor=theme.bg,
         scroll=ft.ScrollMode.AUTO,
@@ -139,6 +143,9 @@ def scene_view(route: str, theme: ThemePreset, controls: list[ft.Control], *, pa
         ),
         controls=body,
     )
+    if nav_bar is not None:
+        view.bottom_appbar = nav_bar
+    return view
 
 
 def hero_header(

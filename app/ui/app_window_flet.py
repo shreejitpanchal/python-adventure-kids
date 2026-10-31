@@ -33,6 +33,7 @@ import flet as ft
 from app.engine.categories import PROJECT_CATEGORIES
 from app.engine.courses import AI_ML_COURSE
 from app.ui.app_state_flet import AppState
+from app.ui.card_album_flet import build_card_album_view
 from app.ui.components.adventure_kit_flet import layout_for
 from app.ui.components.haptics_flet import HapticsFlet
 from app.ui.components.sound_player_flet import SoundPlayerFlet
@@ -215,6 +216,11 @@ def main(page: ft.Page) -> None:
             page.views.append(build_closet_view(page, state))
         elif route == "/trophy-room":
             page.views.append(build_trophy_room_view(page, state))
+        elif route == "/cards":
+            page.views.append(build_card_album_view(page, state))
+        elif route.startswith("/boss/"):
+            world_id = route.removeprefix("/boss/")
+            page.views.append(build_quiz_view(page, state, boss_world_id=world_id))
         elif route.startswith("/lesson/"):
             lesson_id = route.removeprefix("/lesson/")
             page.views.append(build_lesson_view(page, state, lesson_id))
