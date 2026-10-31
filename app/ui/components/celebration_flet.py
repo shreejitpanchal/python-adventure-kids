@@ -265,6 +265,54 @@ def show_level_up(page, banner: ft.Container, level: int, title: Optional[str] =
     motion.play_pop(page, banner)
 
 
+# -- success flash + floating XP toast ---------------------------------------------------
+def build_success_flash(theme: ThemePreset) -> ft.Container:
+    """A positioned-fill wash in the success color for a Stack over the
+    whole lesson view; hidden until play_success_flash() fires it (it's
+    also hit-testable while visible, which is why it hides again)."""
+    flash = ft.Container(
+        left=0, top=0, right=0, bottom=0, bgcolor=theme.success,
+        data={"kind": "success_flash"},
+    )
+    motion.prepare_flash(flash)
+    return flash
+
+
+def play_success_flash(page, flash: ft.Container) -> bool:
+    """Shows the wash for a frame and fades it; no-op without a schedulable
+    page (a flash that could never fade would hide the lesson)."""
+    return motion.flash(page, flash)
+
+
+def build_xp_float(theme: ThemePreset, scale: float) -> ft.Container:
+    """"+30 XP ✨" that rises out of the trophy and fades (motion.float_up).
+    Starts invisible; play_xp_float() sets the text and launches it."""
+    toast = ft.Container(
+        content=ft.Text("", size=scaled(20, scale), weight=ft.FontWeight.BOLD, color=contrasting_text_color(theme.star)),
+        bgcolor=theme.star, border_radius=20,
+        padding=ft.padding.Padding.symmetric(horizontal=14, vertical=6),
+        shadow=lip_shadow(theme.star, depth=3),
+        data={"kind": "xp_float", "text": ""},
+    )
+    motion.prepare_float_up(toast)
+    return toast
+
+
+def xp_float_text(xp_gained: int, combo_multiplier: int) -> str:
+    if xp_gained <= 0:
+        return "Replayed! ⭐"
+    text = f"+{xp_gained} XP ✨"
+    if combo_multiplier > 1:
+        text += f"  🔥×{combo_multiplier}"
+    return text
+
+
+def play_xp_float(page, toast: ft.Container, text: str) -> bool:
+    toast.content.value = text
+    toast.data = {**toast.data, "text": text}
+    return motion.float_up(page, toast)
+
+
 def hide_level_up(banner: ft.Container) -> None:
     banner.visible = False
     banner.scale = 0.6

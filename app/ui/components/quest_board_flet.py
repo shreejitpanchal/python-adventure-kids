@@ -14,7 +14,7 @@ from app.engine.quests import QUEST_BONUS_XP, all_quests_done, daily_quests, que
 from app.progress.store import PlayerLevel, today_iso
 from app.ui.app_state_flet import AppState
 from app.ui.components import motion_flet as motion
-from app.ui.components.adventure_kit_flet import RADIUS_PILL, plain_card, soft_shadow
+from app.ui.components.adventure_kit_flet import RADIUS_PILL, plain_card, play_power_bar, power_bar, soft_shadow
 from app.ui.components.game_button_flet import build_game_button
 from app.ui.theme_flet import scaled
 
@@ -37,21 +37,37 @@ def build_quest_board(
     claimed = everything_done and not progress.can_claim_quest_bonus()
 
     rows: list[ft.Control] = []
+    done_checks: list[ft.Control] = []
     for status in statuses:
         quest = status.quest
         check = "✅" if status.done else f"{status.shown_progress}/{quest.target}"
         title_color = theme.text_muted if status.done else theme.text
+        # Each quest gets its own little power bar that fills on arrival,
+        # so progress reads as a meter and not just "1/3".
+        ratio = min(status.shown_progress / quest.target, 1.0) if quest.target else 0.0
+        bar = power_bar(theme, ratio, color=theme.success if status.done else theme.primary, width=140, height=8)
+        play_power_bar(page, bar)
+        check_pill = ft.Container(
+            content=ft.Text(check, size=fs(12), weight=ft.FontWeight.BOLD, color=theme.text),
+            bgcolor=theme.bg, border_radius=RADIUS_PILL,
+            padding=ft.padding.Padding.symmetric(horizontal=10, vertical=4),
+        )
+        if status.done:
+            motion.prepare_pop(check_pill)
+            done_checks.append(check_pill)
         rows.append(
             ft.Container(
                 content=ft.Row(
                     [
                         ft.Text(quest.icon, size=fs(20)),
-                        ft.Text(quest.title, size=fs(14), weight=ft.FontWeight.BOLD, color=title_color, expand=True),
-                        ft.Container(
-                            content=ft.Text(check, size=fs(12), weight=ft.FontWeight.BOLD, color=theme.text),
-                            bgcolor=theme.bg, border_radius=RADIUS_PILL,
-                            padding=ft.padding.Padding.symmetric(horizontal=10, vertical=4),
+                        ft.Column(
+                            [
+                                ft.Text(quest.title, size=fs(14), weight=ft.FontWeight.BOLD, color=title_color),
+                                bar,
+                            ],
+                            spacing=4, expand=True,
                         ),
+                        check_pill,
                     ],
                     spacing=10, vertical_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
@@ -61,6 +77,9 @@ def build_quest_board(
                 },
             )
         )
+    # Finished quests' check marks pop in one after another.
+    for check_pill in done_checks:
+        motion.play_pop(page, check_pill)
 
     footer_text = ft.Text("", size=fs(13), color=theme.text_muted)
     footer_slot = ft.Container(content=footer_text, data={"kind": "quest_footer"})
@@ -93,6 +112,8 @@ def build_quest_board(
         motion.pulse(page, board, times=1, big=1.03)
         if level is not None and state.sound_player is not None:
             state.sound_player.play("badge_unlock", state.settings)
+        if level is not None and state.haptics is not None:
+            state.haptics.reward(state.settings)
         if level is not None and on_bonus_claimed is not None:
             on_bonus_claimed(level)
 

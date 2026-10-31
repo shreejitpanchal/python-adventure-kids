@@ -81,3 +81,115 @@ def test_pulse_and_bob_return_false_without_a_page():
     assert motion.pulse(NoTaskPage(), box) is False
     assert motion.bob(NoTaskPage(), box) is False
     assert motion.wobble(NoTaskPage(), box) is False
+
+
+# -- ambient loops --------------------------------------------------------------------
+def test_drift_and_twinkle_are_bounded_and_return_to_rest(monkeypatch):
+    monkeypatch.setattr(motion.asyncio, "sleep", _no_sleep)
+    page = FakePage()
+    box = _box()
+    motion.prepare_drift(box, seconds=2.0)
+    assert box.animate_offset.duration == 2000
+    assert motion.drift(page, box, times=2, dx=1.0, dy=-0.5, seconds=2.0) is True
+    ((args, _k),) = page.scheduled(motion._drift)
+    asyncio.run(motion._drift(*args))
+    assert box.offset.x == 0 and box.offset.y == 0
+    assert page.update_count == 4  # out and back, twice
+
+    star = _box()
+    motion.prepare_twinkle(star)
+    assert motion.twinkle(page, star, times=1, low=0.2) is True
+    ((args, _k),) = page.scheduled(motion._twinkle)
+    asyncio.run(motion._twinkle(*args))
+    assert star.opacity == 1.0
+
+    assert motion.drift(NoTaskPage(), box) is False
+    assert motion.twinkle(NoTaskPage(), star) is False
+
+
+def test_rattle_wobbles_in_bursts_and_ends_upright(monkeypatch):
+    monkeypatch.setattr(motion.asyncio, "sleep", _no_sleep)
+    page = FakePage()
+    chest = _box()
+    motion.prepare_wobble(chest)
+    assert motion.rattle(page, chest, bursts=2, gap=0.0) is True
+    ((args, _k),) = page.scheduled(motion._rattle)
+    asyncio.run(motion._rattle(*args))
+    assert chest.rotate == 0.0
+    assert page.update_count == 2 * 7  # six tilts + reset, per burst
+    assert motion.rattle(NoTaskPage(), chest) is False
+
+
+def test_blink_squeezes_vertically_then_restores(monkeypatch):
+    monkeypatch.setattr(motion.asyncio, "sleep", _no_sleep)
+    page = FakePage()
+    face = _box()
+    motion.prepare_blink(face)
+    assert face.scale.scale_y == 1.0
+    assert motion.blink(page, face) is True
+    ((args, _k),) = page.scheduled(motion._blink)
+    asyncio.run(motion._blink(*args))
+    assert face.scale.scale_y == 1.0 and face.scale.scale_x == 1.0
+    assert page.update_count == 2
+    assert motion.blink(NoTaskPage(), face) is False
+
+
+# -- press / flash / float-up -----------------------------------------------------------
+def test_press_squashes_now_and_springs_back_later(monkeypatch):
+    monkeypatch.setattr(motion.asyncio, "sleep", _no_sleep)
+    page = FakePage()
+    card = _box()
+    motion.prepare_press(card)
+    assert card.scale == 1.0 and card.animate_scale.duration == motion.PRESS_MS
+    assert motion.press(page, card) is True
+    assert card.scale == motion.PRESS_SCALE and page.update_count == 1
+    ((args, _k),) = page.scheduled(motion._spring_back)
+    asyncio.run(motion._spring_back(*args))
+    assert card.scale == 1.0
+
+
+def test_press_never_leaves_a_control_squashed_when_it_cannot_spring_back():
+    card = _box()
+    motion.prepare_press(card)
+    assert motion.press(NoTaskPage(), card) is False
+    assert card.scale == 1.0
+
+
+def test_prepare_press_keeps_an_existing_scale_animation():
+    capsule = _box()
+    motion.prepare_pulse(capsule)
+    motion.prepare_press(capsule)
+    assert capsule.animate_scale.duration == motion.PULSE_MS
+
+
+def test_flash_shows_fades_and_hides_again(monkeypatch):
+    monkeypatch.setattr(motion.asyncio, "sleep", _no_sleep)
+    page = FakePage()
+    wash = _box()
+    motion.prepare_flash(wash)
+    assert wash.visible is False and wash.opacity == 0.0
+    assert motion.flash(page, wash, peak=0.5) is True
+    ((args, _k),) = page.scheduled(motion._flash)
+    asyncio.run(motion._flash(*args))
+    assert wash.visible is False and wash.opacity == 0.0
+    assert page.update_count == 3
+    assert motion.flash(NoTaskPage(), wash) is False and wash.visible is False
+
+
+def test_float_up_rises_fades_and_parks_back(monkeypatch):
+    monkeypatch.setattr(motion.asyncio, "sleep", _no_sleep)
+    page = FakePage()
+    toast = _box()
+    motion.prepare_float_up(toast)
+    assert toast.opacity == 0.0
+    assert motion.float_up(page, toast, dy=2.0) is True
+    ((args, _k),) = page.scheduled(motion._float_up)
+    asyncio.run(motion._float_up(*args))
+    assert toast.opacity == 0.0 and toast.offset.y == 0
+    assert page.update_count == 4
+    assert motion.float_up(NoTaskPage(), toast) is False
+
+
+async def _no_sleep(_seconds: float) -> None:
+    """Stands in for asyncio.sleep so the bounded loops run instantly."""
+    return None

@@ -177,3 +177,50 @@ def test_codey_map_line():
     assert codey_map_line("Numbers") == "Next stop: Numbers. Tap it to explore!"
     assert codey_map_line("Numbers", "Number Kingdom") == "Next stop: Numbers, in the Number Kingdom. Tap it to explore!"
     assert "Legendary" in codey_map_line(None)
+
+
+# -- the living map: weather per world, sky, bouncing marker, press feel --------------------
+def test_each_world_road_carries_its_own_weather_behind_the_nodes(state):
+    from app.ui.components.ambience_flet import world_ambience_emoji
+
+    view = build_category_map_view(FakePage(), state)
+    for stack in all_of(view, "map_stack"):
+        particles = [c for c in stack.controls if isinstance(c.data, dict) and c.data.get("kind") == "world_ambience"]
+        assert particles, "every road has weather"
+        world_id = particles[0].data["world"]
+        assert {p.data["emoji"] for p in particles} <= set(world_ambience_emoji(world_id))
+        first_node = next(i for i, c in enumerate(stack.controls) if isinstance(c.data, dict) and c.data.get("kind") == "map_node")
+        assert all(stack.controls.index(p) < first_node for p in particles), "weather sits under the nodes"
+    worlds_seen = {all_of(stack, "world_ambience")[0].data["world"] for stack in all_of(view, "map_stack")}
+    assert worlds_seen == {header.data["world"] for header in all_of(view, "world_header")}
+
+
+def test_map_sky_is_pinned_by_hour(state):
+    dusk = build_category_map_view(FakePage(), state, hour=18)
+    backdrop = one(dusk, "sky_backdrop")
+    assert backdrop.data["moment"] == "dusk" and backdrop.data["sparkles"] is False
+
+
+def test_marker_bounces_higher_and_longer_than_an_idle_float(state):
+    from app.ui.components import motion_flet as motion
+    from app.ui.components.map_path_flet import MARKER_BOUNCE_DY, MARKER_BOUNCES
+
+    page = FakePage()
+    view = build_category_map_view(page, state)
+    marker = one(view, "you_are_here")
+    bounce = next(args for args, _k in page.scheduled(motion._bob) if args[1] is marker)
+    assert bounce[2] == MARKER_BOUNCES and bounce[3] == MARKER_BOUNCE_DY
+    assert MARKER_BOUNCES > 6 and MARKER_BOUNCE_DY > 0.15
+
+
+def test_nodes_and_quiz_tile_squash_under_the_finger(state):
+    from app.ui.components import motion_flet as motion
+
+    page = FakePage()
+    view = build_category_map_view(page, state)
+    node = all_of(view, "map_node")[0]
+    assert node.on_tap_down is not None
+    node.on_tap_down(None)
+    assert node.scale == motion.PRESS_SCALE
+    assert len(page.scheduled(motion._spring_back)) == 1
+    assert one(view, "quiz_tile").on_tap_down is not None

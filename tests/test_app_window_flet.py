@@ -231,3 +231,42 @@ def test_setup_route_is_never_pushed_to_history(page):
     fake_view = _trigger_back(page)
 
     assert fake_view.confirm_pop_calls == [True]
+
+
+def test_haptics_are_wired_lazily_and_the_theme_carries_the_route_swoosh(tmp_path, monkeypatch):
+    import flet as ft
+
+    import app.config.settings as settings_module
+    from app.ui import app_window_flet
+    from app.ui.components.haptics_flet import HapticsFlet
+
+    monkeypatch.setattr(settings_module, "resolve_platform_data_dir", lambda: tmp_path)
+    page = FakePage()
+    captured = {}
+    original_app_state = app_window_flet.AppState
+
+    class RecordingState(original_app_state):
+        def __init__(self) -> None:
+            super().__init__()
+            captured["state"] = self
+
+    monkeypatch.setattr(app_window_flet, "AppState", RecordingState)
+    main(page)
+    state = captured["state"]
+    assert isinstance(state.haptics, HapticsFlet)
+    assert state.haptics._service is None, "created on first use, never up front"
+    assert page.overlay == []
+
+    assert isinstance(page.theme, ft.Theme) and isinstance(page.dark_theme, ft.Theme)
+    assert page.theme.font_family == state.font_family
+    transitions = app_window_flet.page_transitions()
+    if transitions is not None:
+        assert getattr(page.theme, "page_transitions", None) == transitions
+
+
+def test_page_transitions_degrade_to_none_without_the_flet_classes(monkeypatch):
+    from app.ui import app_window_flet
+
+    monkeypatch.delattr(app_window_flet.ft, "PageTransitionsTheme", raising=False)
+    assert app_window_flet.page_transitions() is None
+    assert app_window_flet.build_app_theme("Baloo 2").font_family == "Baloo 2"

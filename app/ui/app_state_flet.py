@@ -26,6 +26,10 @@ class AppState:
         # directly, so sound-playing call sites must guard for that (see
         # app/ui/lesson_screen_flet.py's _play_success_sounds()).
         self.sound_player = None
+        # Haptics (app/ui/components/haptics_flet.py), same lifecycle as
+        # sound_player: set by app_window_flet.main(), None in tests, so
+        # every call site guards `if state.haptics is not None`.
+        self.haptics = None
         # The result of this launch's ProgressStore.record_play_today(),
         # set by app_window_flet.main() so the streak is advanced the
         # moment the app opens (not only when the Dashboard is visited).

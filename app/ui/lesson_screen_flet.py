@@ -42,13 +42,15 @@ from app.ui.color_utils import contrasting_text_color
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import accent_gradient, lip_shadow, soft_shadow, stat_chip
 from app.ui.components.celebration_flet import (
-    build_confetti, build_level_up_banner, build_star_row, hide_level_up, play_confetti, reset_confetti,
-    reset_star_row, reveal_stars, show_badge_unlock, show_level_up,
+    build_confetti, build_level_up_banner, build_star_row, build_success_flash, build_xp_float, hide_level_up,
+    play_confetti, play_success_flash, play_xp_float, reset_confetti, reset_star_row, reveal_stars,
+    show_badge_unlock, show_level_up, xp_float_text,
 )
 from app.ui.components.codey_avatar_flet import CodeyState, build_codey_avatar
 from app.ui.components.codey_performance_flet import (
     error_performance, graphical_performance, perform, performance_for,
 )
+from app.ui.components.game_button_flet import build_game_button
 from app.ui.components.macro_toolbar_flet import build_macro_toolbar
 from app.ui.theme_flet import scaled
 
@@ -157,21 +159,42 @@ class _LessonController:
         controls.append(output_card)
         controls.append(self.reward_card)
 
+        # The cards slide in one after another (motion_flet), like every
+        # other game-world screen. The reward card is left out: it starts
+        # hidden and has its own celebration.
+        self._entrance_sections = [explanation_card, example_card, challenge_card, code_card]
+        if game_panel is not None:
+            self._entrance_sections.append(game_panel)
+        self._entrance_sections.append(output_card)
+        for section in self._entrance_sections:
+            motion.prepare_entrance(section)
+
         self._content_column = ft.Column(controls, scroll=ft.ScrollMode.AUTO, spacing=10, expand=True)
         content = ft.Container(
             content=self._content_column,
             # Extra bottom clearance so the reward card isn't hidden behind
             # Android's gesture/navigation bar -- see learning_hub_flet.py's
             # build_learning_hub_view() for the full rationale.
-            padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80), expand=True,
+            padding=ft.padding.Padding.only(left=24, top=24, right=24, bottom=80),
+            # Positioned-fill inside the Stack below (not expand=True, which
+            # is a Flex-parent concept), so the scrolling column keeps the
+            # bounded height it had as the View's only child.
+            left=0, top=0, right=0, bottom=0,
         )
+        # The success flash (celebration_flet) is a hidden wash over the
+        # whole screen; a Stack with only positioned children takes the
+        # View's full size, so the lesson layout itself is unchanged.
+        self.success_flash = build_success_flash(theme)
+        layered = ft.Stack([content, self.success_flash], expand=True)
 
-        return ft.View(
+        view = ft.View(
             route=f"/lesson/{lesson.id}",
             bgcolor=theme.bg,
             padding=0,
-            controls=[content],
+            controls=[layered],
         )
+        motion.play_entrance(self.page, self._entrance_sections)
+        return view
 
     def _card(self, title: str, children: list[ft.Control]) -> ft.Control:
         return ft.Container(
@@ -186,7 +209,7 @@ class _LessonController:
         theme = self.theme
         lesson = self.lesson
 
-        self._codey = build_codey_avatar(theme)
+        self._codey = build_codey_avatar(theme, page=self.page)
 
         self.editor = make_code_editor(lesson.starter_code.strip(), scale=self.scale)
         self.macro_toolbar = build_macro_toolbar(self.editor, self.page, theme)
@@ -206,9 +229,11 @@ class _LessonController:
                 )
             )
 
-        self.run_button = ft.Button(
-            "▶ RUN", on_click=self._on_run, height=52,
-            style=ft.ButtonStyle(bgcolor=theme.success, color="#FFFFFF"),
+        # The chunky game button (squashes under the finger) -- the one
+        # control the child taps most, so it gets the most feel. It's a
+        # GestureDetector; _set_run_enabled() dims it while a run is going.
+        self.run_button = build_game_button(
+            "▶ RUN", self._on_run, self.page, bgcolor=theme.success, height=56, size=18, chunky=True,
         )
         reset_button = ft.Button(
             "↺ Reset", on_click=self._on_reset, height=48,
@@ -254,6 +279,7 @@ class _LessonController:
             content=self.details_text, bgcolor="#1E1E2E", border_radius=8, padding=12, visible=False,
         )
         self.practice_quest_row = ft.Row([], spacing=8, wrap=True)
+        self.output_card: ft.Container | None = None
         self.practice_quest_container = ft.Container(
             content=ft.Column(
                 [
@@ -269,10 +295,15 @@ class _LessonController:
             bgcolor=theme.card, border=ft.border.Border.all(2, theme.warning), border_radius=8, padding=12,
             visible=False,
         )
-        return self._card(
+        self.output_card = self._card(
             "💻 What Python Says",
             [self.output_text, self.details_button, self.details_container, self.practice_quest_container],
         )
+        self.output_card.data = {"kind": "output_card"}
+        # Armed for the run reactions: a pop on success, a shake on a miss.
+        motion.prepare_pulse(self.output_card)
+        motion.prepare_wobble(self.output_card)
+        return self.output_card
 
     def _build_game_panel(self) -> ft.Control:
         self._game_title_text = ft.Text(self.lesson.title, size=self._fs(16), weight=ft.FontWeight.BOLD, color="#FFFFFF")
@@ -412,6 +443,7 @@ class _LessonController:
         self.confetti = build_confetti()
         self.star_row = build_star_row(theme, self.lesson.reward_stars, self.scale)
         self.level_up_banner = build_level_up_banner(theme, self.scale)
+        self.xp_float = build_xp_float(theme, self.scale)
         self.trophy_disc = ft.Container(
             content=ft.Text("🏆", size=self._fs(44), text_align=ft.TextAlign.CENTER),
             width=92, height=92, border_radius=46,
@@ -425,6 +457,7 @@ class _LessonController:
                 [
                     self.confetti,
                     self.trophy_disc,
+                    self.xp_float,
                     self.level_up_banner,
                     self.world_banner,
                     self.star_row,
@@ -450,11 +483,12 @@ class _LessonController:
             return
 
         self._running = True
-        self.run_button.disabled = True
+        self._set_run_enabled(False)
         self._hide_details()
         self.output_text.value = "⏳ Running your code..."
         self.output_text.color = self.theme.text_muted
         self._codey.set_state(CodeyState.RUNNING)
+        self._codey_thinking()
         self.page.update()
 
         code = self.editor.value or ""
@@ -468,14 +502,43 @@ class _LessonController:
         result = await asyncio.to_thread(run_code, code, handle=handle, stdin_text=stdin_text)
         self._on_run_complete(result, handle)
 
+    def _set_run_enabled(self, enabled: bool) -> None:
+        self.run_button.disabled = not enabled
+        self.run_button.content.opacity = 1.0 if enabled else 0.55
+
+    def _codey_thinking(self) -> None:
+        """Codey's live reaction to RUN being pressed: a quick hop."""
+        disc = self._codey.face_container
+        if disc is not None:
+            motion.pulse(self.page, disc, times=1, big=1.12)
+
+    def _react_to_miss(self) -> None:
+        """A run that didn't pass: the output card shakes and the phone
+        bumps (haptics_flet). Codey's own wobble is scheduled separately
+        by the caller where an error performance applies."""
+        if self.output_card is not None:
+            motion.wobble(self.page, self.output_card, times=4, angle=0.02)
+        if self.state.haptics is not None:
+            self.state.haptics.error(self.state.settings)
+
+    def _react_to_pass(self) -> None:
+        """A run that passed: the screen flashes the success color, the
+        output card pops and the phone thumps."""
+        play_success_flash(self.page, self.success_flash)
+        if self.output_card is not None:
+            motion.pulse(self.page, self.output_card, times=1, big=1.03)
+        if self.state.haptics is not None:
+            self.state.haptics.success(self.state.settings)
+
     def _on_run_complete(self, result: ExecutionResult, handle: RunHandle) -> None:
         self._running = False
-        self.run_button.disabled = False
+        self._set_run_enabled(True)
 
         if result.blocked:
             self._show_output(f"🚫 {result.blocked_message}", self.theme.danger)
             self._codey.set_state(CodeyState.BLOCKED)
             self.state.progress.log_event(self.lesson.id, "attempt_blocked", result.blocked_message)
+            self._react_to_miss()
             self.page.update()
             return
 
@@ -491,6 +554,7 @@ class _LessonController:
                 self._codey.set_state(CodeyState.WARNING)
                 self.state.progress.log_event(self.lesson.id, "attempt_timeout")
                 self._register_failure()
+                self._react_to_miss()
                 self._maybe_show_practice_quest()
             self.page.update()
             return
@@ -504,6 +568,7 @@ class _LessonController:
             self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
             self._register_failure()
+            self._react_to_miss()
             perform(self._codey, self.page, error_performance())
             self._maybe_show_practice_quest()
             self.page.update()
@@ -523,6 +588,7 @@ class _LessonController:
             self._hide_practice_quest()
             self._show_output(result.stdout or "(no output)", self.theme.success)
             self._codey.set_state(CodeyState.SUCCESS)
+            self._react_to_pass()
             self._on_lesson_success()
             # A beat later Codey acts out what the program printed
             # (app/ui/components/codey_performance_flet.py).
@@ -536,6 +602,7 @@ class _LessonController:
             )
             self._codey.set_state(CodeyState.WARNING)
             self._register_failure()
+            self._react_to_miss()
         else:
             self._show_output(
                 f"Python said:\n{result.stdout or '(no output)'}\n\n"
@@ -545,6 +612,7 @@ class _LessonController:
             self._codey.set_state(CodeyState.WARNING)
             self.state.progress.log_event(self.lesson.id, "attempt_wrong_output", result.stdout[-200:])
             self._register_failure()
+            self._react_to_miss()
             self._maybe_show_practice_quest()
         self.page.update()
 
@@ -563,6 +631,7 @@ class _LessonController:
 
         self._hide_details()
         self._codey.set_state(CodeyState.RUNNING)
+        self._codey_thinking()
         code = self.editor.value or ""
 
         result = run_code(code, game=self.game_canvas, disallow_while=True)
@@ -571,6 +640,7 @@ class _LessonController:
             self._show_output(f"🚫 {result.blocked_message}", self.theme.danger)
             self._codey.set_state(CodeyState.BLOCKED)
             self.state.progress.log_event(self.lesson.id, "attempt_blocked", result.blocked_message)
+            self._react_to_miss()
             self.page.update()
             return
 
@@ -583,6 +653,7 @@ class _LessonController:
             self._codey.set_state(CodeyState.ERROR)
             self.state.progress.log_event(self.lesson.id, "attempt_error", result.stderr[-200:])
             self._register_failure()
+            self._react_to_miss()
             perform(self._codey, self.page, error_performance())
             self.page.update()
             return
@@ -597,6 +668,7 @@ class _LessonController:
             )
             self._codey.set_state(CodeyState.WARNING)
             self._register_failure()
+            self._react_to_miss()
             self.page.update()
             return
 
@@ -610,11 +682,13 @@ class _LessonController:
             )
             self._codey.set_state(CodeyState.WARNING)
             self._register_failure()
+            self._react_to_miss()
             self.page.update()
             return
 
         self._show_output("🎮 Your game is running! Check it out above.", self.theme.success)
         self._codey.set_state(CodeyState.SUCCESS)
+        self._react_to_pass()
         self._on_lesson_success()
         perform(self._codey, self.page, graphical_performance())
         self.page.update()
@@ -637,6 +711,7 @@ class _LessonController:
         reset_confetti(self.confetti)
         reset_star_row(self.star_row)
         self.trophy_disc.scale = 0.6
+        self.xp_float.opacity = 0.0
         # Without this, _on_lesson_success()'s "only run once" guard
         # (self._lesson_passed) stayed True forever after the first
         # correct answer, so Reset -> a fresh correct run would silently
@@ -745,8 +820,14 @@ class _LessonController:
         self.state.combo += 1
         multiplier = combo_multiplier(self.state.combo)
         self._refresh_combo_badge()
+        if multiplier > 1:
+            # Combo burst: the chip pops back in bigger each time it climbs.
+            motion.prepare_pop(self.combo_badge)
+            motion.play_pop(self.page, self.combo_badge)
 
+        xp_before = progress.get_player_level().total_xp
         progress.complete_lesson(self.lesson.id, earned_stars, xp_multiplier=multiplier)
+        xp_gained = progress.get_player_level().total_xp - xp_before
         badge_newly_awarded = False
         if self.lesson.badge:
             badge_newly_awarded = progress.award_badge(self.lesson.badge)
@@ -778,6 +859,8 @@ class _LessonController:
         if self.state.sound_player is not None:
             for sound_name in success_sound_for(leveled_up=leveled_up, badge_earned=badge_newly_awarded):
                 self.state.sound_player.play(sound_name, self.state.settings)
+        if self.state.haptics is not None and (leveled_up or badge_newly_awarded or world_badge_new):
+            self.state.haptics.reward(self.state.settings)
 
         next_lesson = self.state.lesson_engine.next_after(self.lesson.id)
         if next_lesson:
@@ -836,6 +919,7 @@ class _LessonController:
         # below is visible on the client.
         play_confetti(self.page, self.confetti)
         motion.play_pop(self.page, self.trophy_disc)
+        play_xp_float(self.page, self.xp_float, xp_float_text(xp_gained, multiplier))
         # Flush the reward card's new visibility to the client BEFORE
         # asking it to scroll there -- scroll_to() targets the client's
         # current layout, so scrolling first and updating after (or relying

@@ -15,7 +15,7 @@ import flet.canvas as cv
 from app.ui.adventure_map_layout import MARKER_SIZE, NODE_LIP, NODE_SIZE, NodePosition, curve_control_points, marker_position
 from app.ui.color_utils import contrasting_text_color, darken, lighten, with_alpha
 from app.ui.components import motion_flet as motion
-from app.ui.components.adventure_kit_flet import accent_gradient, lip_shadow, soft_shadow
+from app.ui.components.adventure_kit_flet import accent_gradient, lip_shadow, pressable, soft_shadow
 from app.ui.theme_flet import ThemePreset, scaled
 
 ROAD_OUTER_WIDTH = 16
@@ -53,10 +53,13 @@ def build_map_node(
     *, position: NodePosition, face: str, color: str, scale: float,
     on_click: Optional[Callable] = None, data: Optional[dict] = None,
     dim: bool = False, face_size: int = 28, highlight: bool = False,
+    page=None, state=None,
 ) -> ft.Container:
     """A chunky disc on the path. `dim` renders a flat, lip-less locked
     look; `highlight` adds a bright rim for the node the child should tap
-    next. Positioned with left/top for the parent Stack."""
+    next. Positioned with left/top for the parent Stack. A tappable node
+    given `page` squashes under the finger (adventure_kit_flet.pressable)
+    and ticks the haptics from `state`."""
     text_color = contrasting_text_color(color)
     disc = ft.Container(
         content=ft.Text(face, size=scaled(face_size, scale), weight=ft.FontWeight.BOLD, color=text_color, text_align=ft.TextAlign.CENTER),
@@ -74,6 +77,8 @@ def build_map_node(
         on_click=on_click, ink=on_click is not None,
         data=data,
     )
+    if on_click is not None and page is not None:
+        pressable(node, page, state=state)
     return node
 
 
@@ -81,8 +86,14 @@ def node_disc(node: ft.Container) -> ft.Container:
     return node.content
 
 
+MARKER_BOUNCES = 10
+MARKER_BOUNCE_DY = 0.22
+
+
 def build_you_are_here(position: NodePosition, theme: ThemePreset, scale: float, *, page=None) -> ft.Container:
-    """Codey hovering above the node to play next, floating up and down."""
+    """Codey hovering above the node to play next, bouncing up and down
+    (bigger and longer than the companion's idle float -- it's the "tap
+    here" beacon of the whole map)."""
     left, top = marker_position(position)
     marker = ft.Container(
         content=ft.Text("🤖", size=scaled(22, scale), text_align=ft.TextAlign.CENTER),
@@ -94,5 +105,5 @@ def build_you_are_here(position: NodePosition, theme: ThemePreset, scale: float,
     )
     motion.prepare_bob(marker)
     if page is not None:
-        motion.bob(page, marker, times=6, dy=0.15)
+        motion.bob(page, marker, times=MARKER_BOUNCES, dy=MARKER_BOUNCE_DY)
     return marker

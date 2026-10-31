@@ -34,6 +34,7 @@ from app.engine.categories import PROJECT_CATEGORIES
 from app.engine.courses import AI_ML_COURSE
 from app.ui.app_state_flet import AppState
 from app.ui.components.adventure_kit_flet import layout_for
+from app.ui.components.haptics_flet import HapticsFlet
 from app.ui.components.sound_player_flet import SoundPlayerFlet
 from app.ui.category_levels_flet import build_category_levels_view
 from app.ui.category_map_flet import build_category_map_view
@@ -65,6 +66,36 @@ def sound_wiring_enabled() -> bool:
     return os.environ.get(SOUND_ENV_VAR, "0").strip().lower() in ("1", "true", "on", "yes")
 
 
+def page_transitions():
+    """Route-change animation for every platform: the new screen slides
+    up over the old one (OPEN_UPWARDS) instead of popping into place.
+    page.views is replaced wholesale on each route change, which Flutter's
+    Navigator still animates as a page replacement. Guarded with getattr
+    so a Flet build without PageTransitionsTheme falls back to the
+    default transition instead of failing at startup."""
+    transitions_theme = getattr(ft, "PageTransitionsTheme", None)
+    transition = getattr(ft, "PageTransitionTheme", None)
+    if transitions_theme is None or transition is None:
+        return None
+    swoosh = getattr(transition, "OPEN_UPWARDS", None)
+    if swoosh is None:
+        return None
+    try:
+        return transitions_theme(android=swoosh, ios=swoosh, windows=swoosh, macos=swoosh, linux=swoosh)
+    except TypeError:
+        return None
+
+
+def build_app_theme(font_family: str) -> ft.Theme:
+    transitions = page_transitions()
+    if transitions is not None:
+        try:
+            return ft.Theme(font_family=font_family, page_transitions=transitions)
+        except TypeError:
+            pass  # a Theme without page_transitions: keep the default transition
+    return ft.Theme(font_family=font_family)
+
+
 def main(page: ft.Page) -> None:
     page.title = "Python Adventure"
     page.window.width = 1000
@@ -88,6 +119,11 @@ def main(page: ft.Page) -> None:
     # (Settings.sound_enabled) is the child's own control on top of that.
     if sound_wiring_enabled():
         state.sound_player = SoundPlayerFlet(page)
+    # Haptics need no opt-in: ft.HapticFeedback is a core Flet service (no
+    # extension package to bundle, nothing visual to paint as "Unknown
+    # control") and it is created lazily on first use, inside a running
+    # session -- see haptics_flet.py. A desktop client just ignores it.
+    state.haptics = HapticsFlet(page)
 
     # Unlike sound_player, there's no state.file_picker built here: an
     # earlier version of this code built one ft.FilePicker up front and
@@ -197,8 +233,8 @@ def main(page: ft.Page) -> None:
 
         page.bgcolor = state.theme.bg
         page.theme_mode = ft.ThemeMode.DARK if state.theme.is_dark else ft.ThemeMode.LIGHT
-        page.theme = ft.Theme(font_family=state.font_family)
-        page.dark_theme = ft.Theme(font_family=state.font_family)
+        page.theme = build_app_theme(state.font_family)
+        page.dark_theme = build_app_theme(state.font_family)
         page.update()
 
     page.on_route_change = route_change

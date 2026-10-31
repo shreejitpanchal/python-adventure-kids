@@ -255,11 +255,21 @@ def _build_sound_card(page: ft.Page, state: AppState) -> ft.Control:
         state.settings.sound_enabled = e.control.value
         state.save_settings()
 
+    def on_toggle_haptics(e: ft.ControlEvent) -> None:
+        state.settings.haptics_enabled = e.control.value
+        state.save_settings()
+        # A confirming buzz when switching it on, so the child feels the
+        # effect of the toggle right away.
+        if e.control.value and state.haptics is not None:
+            state.haptics.success(state.settings)
+
     # Not expand=True + MainAxisAlignment.SPACE_BETWEEN to push the switch
     # to the far edge -- see dashboard_flet.py's module docstring and the
     # parent dashboard's summary-row code for why both of those layout
     # tricks are unreliable in this Flet version; a plain spaced Row is
     # the pattern already proven to work everywhere else in this app.
+    # Vibration shares this card (not a card of its own) so the screen's
+    # control order -- which tests index into -- stays unchanged.
     return plain_card(
         theme,
         [
@@ -270,6 +280,17 @@ def _build_sound_card(page: ft.Page, state: AppState) -> ft.Control:
                 ],
                 spacing=16,
             ),
+            ft.Row(
+                [
+                    ft.Text("📳 Vibration", size=fs(20), weight=ft.FontWeight.BOLD, color=theme.text),
+                    ft.Switch(
+                        value=state.settings.haptics_enabled, on_change=on_toggle_haptics, active_color=theme.primary,
+                        data={"kind": "haptics_switch"},
+                    ),
+                ],
+                spacing=16,
+            ),
+            ft.Text("Vibration works on phones and tablets.", size=fs(12), color=theme.text_muted),
         ],
         padding=22, data={"kind": "sound_card"},
     )

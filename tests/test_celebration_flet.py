@@ -120,3 +120,36 @@ def test_level_up_banner_shows_the_level_and_hides_again():
 
     celebration.hide_level_up(banner)
     assert banner.visible is False and banner.data["level"] is None
+
+
+# -- success flash + XP float ---------------------------------------------------------------
+def test_success_flash_is_a_hidden_positioned_fill_wash_that_fires_on_a_page():
+    theme = get_preset("sunny_light")
+    flash = celebration.build_success_flash(theme)
+    assert flash.data == {"kind": "success_flash"}
+    assert (flash.left, flash.top, flash.right, flash.bottom) == (0, 0, 0, 0)
+    assert flash.bgcolor == theme.success
+    assert flash.visible is False and flash.opacity == 0.0
+
+    page = FakePage()
+    assert celebration.play_success_flash(page, flash) is True
+    assert len(page.scheduled(motion._flash)) == 1
+    assert celebration.play_success_flash(NoTaskPage(), flash) is False
+    assert flash.visible is False, "never left covering the lesson"
+
+
+def test_xp_float_text():
+    assert celebration.xp_float_text(30, 1) == "+30 XP ✨"
+    assert celebration.xp_float_text(60, 2) == "+60 XP ✨  🔥×2"
+    assert celebration.xp_float_text(0, 1) == "Replayed! ⭐"
+
+
+def test_xp_float_sets_its_text_and_launches():
+    theme = get_preset("sunny_light")
+    toast = celebration.build_xp_float(theme, 1.0)
+    assert toast.opacity == 0.0 and toast.data == {"kind": "xp_float", "text": ""}
+
+    page = FakePage()
+    assert celebration.play_xp_float(page, toast, "+30 XP ✨") is True
+    assert toast.content.value == "+30 XP ✨" and toast.data["text"] == "+30 XP ✨"
+    assert len(page.scheduled(motion._float_up)) == 1

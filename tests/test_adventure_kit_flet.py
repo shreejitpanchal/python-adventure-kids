@@ -154,3 +154,72 @@ def test_plain_card_and_find_by_kind_walk_nested_content_and_controls():
     assert find_by_kind(card, "needle") == [inner]
     assert find_by_kind(card, "card") == [card]
     assert find_by_kind(card, "missing") == []
+
+
+# -- press feel + living sky ---------------------------------------------------------------
+class _FakeHaptics:
+    def __init__(self) -> None:
+        self.taps = 0
+
+    def tap(self, _settings) -> bool:
+        self.taps += 1
+        return True
+
+
+class _FakeState:
+    def __init__(self, haptics) -> None:
+        self.haptics = haptics
+        self.settings = object()
+
+
+def test_pressable_keeps_on_click_and_adds_a_squash_with_a_haptic_tick():
+    from app.ui.components import motion_flet as motion
+    from app.ui.components.adventure_kit_flet import pressable
+
+    clicks = []
+    page = FakePage()
+    haptics = _FakeHaptics()
+    card = ft.Container(on_click=lambda e: clicks.append(e))
+    assert pressable(card, page, state=_FakeState(haptics)) is card
+
+    card.on_tap_down(None)
+    assert card.scale == motion.PRESS_SCALE
+    assert len(page.scheduled(motion._spring_back)) == 1
+    assert haptics.taps == 1
+    card.on_click("evt")
+    assert clicks == ["evt"], "the tap itself is untouched"
+
+
+def test_pressable_without_state_or_haptics_just_squashes():
+    from app.ui.components.adventure_kit_flet import pressable
+
+    page = FakePage()
+    card = pressable(ft.Container(on_click=lambda e: None), page)
+    card.on_tap_down(None)
+    assert card.scale < 1.0
+    card = pressable(ft.Container(on_click=lambda e: None), page, state=_FakeState(None))
+    card.on_tap_down(None)
+    assert card.scale < 1.0
+
+
+def test_hero_card_squashes_only_when_tappable_and_given_a_page():
+    page = FakePage()
+    tappable = hero_card(THEME, accent="#4F8FF7", children=[ft.Text("x")], on_click=lambda e: None, page=page)
+    assert tappable.on_tap_down is not None and tappable.scale == 1.0
+    static = hero_card(THEME, accent="#4F8FF7", children=[ft.Text("x")], page=page)
+    assert static.on_tap_down is None
+    no_page = hero_card(THEME, accent="#4F8FF7", children=[ft.Text("x")], on_click=lambda e: None)
+    assert no_page.on_tap_down is None
+
+
+def test_hero_header_paints_a_backdrop_behind_its_content_and_clips_to_the_band():
+    backdrop = ft.Stack([], left=0, top=0, right=0, bottom=0, data={"kind": "sky_stub"})
+    header = hero_header(THEME, title="Sky", scale=1.0, backdrop=backdrop)
+    assert isinstance(header.content, ft.Stack)
+    assert header.content.controls[0] is backdrop, "backdrop first, so it sits behind"
+    assert isinstance(header.content.controls[1], ft.Column)
+    assert header.clip_behavior == ft.ClipBehavior.ANTI_ALIAS
+    assert one(header, "sky_stub") is backdrop
+
+    plain = hero_header(THEME, title="Flat", scale=1.0)
+    assert isinstance(plain.content, ft.Column) and plain.clip_behavior is None

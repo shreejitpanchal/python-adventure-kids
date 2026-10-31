@@ -569,6 +569,59 @@ Later additions, same pattern:
   of gap. Fully offline. `Settings.league_enabled` (Parent Area switch)
   hides it.
 
+The "juice" layer (added 2026-10-16), all on the same bounded-motion rules:
+
+- **Press feel everywhere** (`adventure_kit_flet.pressable()`,
+  `motion_flet.press`). Any tappable Container -- Hub tiles, resume
+  banner, chest, quiz tiles, map nodes, category chips -- squashes on
+  tap-down and springs back a beat later (Containers only report
+  tap-down, so the release is timed). `hero_card(..., page=, state=)` and
+  `map_path_flet.build_map_node(..., page=, state=)` opt in; the
+  container's own `on_click` is untouched, so tests keep calling it.
+- **Haptics** (`haptics_flet.HapticsFlet`, `AppState.haptics`, wired
+  unconditionally in `app_window_flet.main()`): a light tick on every
+  press, a bump on a failed run, a thump on a pass, a buzz on a chest,
+  quest bonus, badge or level-up. `ft.HapticFeedback` is a core Flet
+  service created lazily on first use (never via `page.overlay`, which
+  is what broke FilePicker on Android), every call is wrapped so a client
+  without it is a silent no-op, and the child's `Settings.haptics_enabled`
+  ("📳 Vibration", in the Settings sound card) switches it off.
+- **Route swoosh**: `app_window_flet.build_app_theme()` sets Flutter's
+  OPEN_UPWARDS page transition on `page.theme` (guarded with getattr so
+  an older Flet just keeps its default transition).
+- **Living sky** (`ambience_flet.build_sky_backdrop`, passed as
+  `hero_header(backdrop=...)` on the Hub, Dashboard, Adventure Map and
+  Category Levels): `sky_moment(hour)` picks dawn / day / dusk / night
+  from the local clock (every view builder takes `hour=` so tests can pin
+  it), tints the sky band, and scatters drifting clouds, a bobbing sun or
+  moon and twinkling stars behind the header content; the Hub adds rising
+  XP sparkles. Decorations alternate left/right anchors so they cover any
+  header width, and positions are seeded by the moment name.
+- **World weather** (`ambience_flet.WORLD_AMBIENCE`,
+  `build_world_ambience`): each World's road on the map (and its levels
+  screen) gets translucent emoji weather between the road canvas and the
+  nodes -- snow falls in Logic Peaks, leaves drift through Word Valley,
+  gems glint in the Number Kingdom -- seeded by the world id. The "you
+  are here" Codey marker bounces higher and longer (`MARKER_BOUNCES`).
+- **Codey is alive** (`codey_avatar_flet.idle`, `CompanionHandle.wave`):
+  every companion (and the in-lesson avatar) blinks -- a `ft.Scale`
+  scale_y squeeze -- and looks around on a bounded idle loop; tapping the
+  Hub/Map companion's disc makes him wobble, hug-face and say hello
+  (`WAVE_LINES`, cycling), then return to his line.
+- **Hub as a home base**: the closed chest rattles (`motion_flet.rattle`)
+  instead of pulsing, each daily quest has its own fill-on-arrival power
+  bar and finished quests' check marks pop in, and the league card opens
+  with a podium of the top three (`_build_podium`, 2nd-1st-3rd, the child's
+  block lit).
+- **Lesson moments**: RUN is a chunky `build_game_button` that dims while
+  a run is in flight (`_set_run_enabled`), the cards slide in on arrival,
+  Codey hops when RUN is pressed, a pass washes the whole screen in the
+  success color (`celebration_flet.build_success_flash`, a positioned-fill
+  layer in a Stack over the lesson content), pops the output card and
+  floats a "+30 XP ✨ 🔥×2" toast out of the trophy (`build_xp_float`,
+  `xp_float_text`); a miss shakes the output card. A combo climb pops the
+  combo chip.
+
 Every Flet screen now uses the kit -- Settings, Parent Area (deliberately
 calm: header and cards only, no Codey or celebrations), the standalone and
 course quizzes (confetti on a pass or a 70%+ score), the course map and

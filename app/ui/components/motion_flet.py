@@ -158,3 +158,180 @@ async def _bob(page, control, times: int, dy: float) -> None:
 def bob(page, control, *, times: int = 4, dy: float = 0.08) -> bool:
     """An idle up-and-down float, `times` cycles, then rest."""
     return schedule(page, _bob, page, control, times, dy)
+
+
+# -- ambient loops: drift / twinkle / rattle (bounded) ----------------------------------
+DRIFT_SECONDS = 4.0
+TWINKLE_SECONDS = 0.9
+RATTLE_GAP_SECONDS = 2.6
+
+
+def prepare_drift(control, *, seconds: float = DRIFT_SECONDS) -> None:
+    """Arms a slow offset tween -- clouds crossing a sky, leaves floating,
+    snow falling (see ambience_flet.py). Pair with drift()."""
+    control.offset = ft.Offset(0, 0)
+    control.animate_offset = ft.Animation(round(seconds * 1000), ft.AnimationCurve.EASE_IN_OUT)
+
+
+async def _drift(page, control, times: int, dx: float, dy: float, seconds: float) -> None:
+    await asyncio.sleep(0.2)
+    for _ in range(times):
+        control.offset = ft.Offset(dx, dy)
+        page.update()
+        await asyncio.sleep(seconds)
+        control.offset = ft.Offset(0, 0)
+        page.update()
+        await asyncio.sleep(seconds)
+
+
+def drift(page, control, *, times: int = 3, dx: float = 1.5, dy: float = 0.0, seconds: float = DRIFT_SECONDS) -> bool:
+    """Glides `control` to (dx, dy) -- fractions of its own size -- and back,
+    `times` round trips, then rests where it started."""
+    return schedule(page, _drift, page, control, times, dx, dy, seconds)
+
+
+def prepare_twinkle(control, *, seconds: float = TWINKLE_SECONDS) -> None:
+    control.opacity = 1.0
+    control.animate_opacity = ft.Animation(round(seconds * 1000), ft.AnimationCurve.EASE_IN_OUT)
+
+
+async def _twinkle(page, control, times: int, low: float, seconds: float) -> None:
+    await asyncio.sleep(0.3)
+    for _ in range(times):
+        control.opacity = low
+        page.update()
+        await asyncio.sleep(seconds)
+        control.opacity = 1.0
+        page.update()
+        await asyncio.sleep(seconds)
+
+
+def twinkle(page, control, *, times: int = 4, low: float = 0.25, seconds: float = TWINKLE_SECONDS) -> bool:
+    """Fades `control` down to `low` opacity and back, `times` cycles --
+    a star twinkling, a sparkle glinting."""
+    return schedule(page, _twinkle, page, control, times, low, seconds)
+
+
+async def _rattle(page, control, bursts: int, gap: float, angle: float) -> None:
+    await asyncio.sleep(0.6)
+    for _ in range(bursts):
+        await _wobble(page, control, 6, angle)
+        await asyncio.sleep(gap)
+
+
+def rattle(page, control, *, bursts: int = 4, gap: float = RATTLE_GAP_SECONDS, angle: float = 0.1) -> bool:
+    """A locked chest shaking to be opened: `bursts` short wobbles with a
+    pause in between (uses prepare_wobble's tween), then still."""
+    return schedule(page, _rattle, page, control, bursts, gap, angle)
+
+
+# -- blink (a scale_y squeeze) ------------------------------------------------------------
+BLINK_MS = 110
+
+
+def prepare_blink(control) -> None:
+    control.scale = ft.Scale(scale_x=1.0, scale_y=1.0)
+    control.animate_scale = ft.Animation(BLINK_MS, ft.AnimationCurve.EASE_IN_OUT)
+
+
+async def _blink(page, control) -> None:
+    control.scale = ft.Scale(scale_x=1.0, scale_y=0.15)
+    page.update()
+    await asyncio.sleep(BLINK_MS / 1000)
+    control.scale = ft.Scale(scale_x=1.0, scale_y=1.0)
+    page.update()
+
+
+def blink(page, control) -> bool:
+    """One quick vertical squeeze -- Codey blinking (see codey_avatar_flet)."""
+    return schedule(page, _blink, page, control)
+
+
+# -- press feedback (tap squash with a spring-back) ------------------------------------
+PRESS_SCALE = 0.95
+PRESS_MS = 120
+PRESS_HOLD_SECONDS = 0.16
+
+
+def prepare_press(control) -> None:
+    """Arms the squash tween without touching a control that already has
+    its own scale animation (a pulsing capsule keeps its slower tween)."""
+    if getattr(control, "animate_scale", None) is None:
+        control.animate_scale = ft.Animation(PRESS_MS, ft.AnimationCurve.EASE_OUT)
+    if getattr(control, "scale", None) is None:
+        control.scale = 1.0
+
+
+async def _spring_back(page, control) -> None:
+    await asyncio.sleep(PRESS_HOLD_SECONDS)
+    control.scale = 1.0
+    page.update()
+
+
+def press(page, control) -> bool:
+    """Squashes `control` and springs it back a beat later. Containers only
+    report tap-down (no tap-up), so the release is timed rather than
+    event-driven; without a schedulable page nothing moves (a squash that
+    could never spring back would leave the control shrunken)."""
+    if not schedule(page, _spring_back, page, control):
+        return False
+    control.scale = PRESS_SCALE
+    page.update()
+    return True
+
+
+# -- flash / float-up (one-shot) -----------------------------------------------------------
+FLASH_MS = 450
+FLOAT_MS = 1100
+
+
+def prepare_flash(control) -> None:
+    """A full-bleed overlay that starts hidden; flash() shows it for a
+    frame and fades it out -- the screen-wide success wash."""
+    control.visible = False
+    control.opacity = 0.0
+    control.animate_opacity = ft.Animation(FLASH_MS, ft.AnimationCurve.EASE_OUT)
+
+
+async def _flash(page, control, peak: float) -> None:
+    control.visible = True
+    control.opacity = peak
+    page.update()
+    await asyncio.sleep(0.08)
+    control.opacity = 0.0
+    page.update()
+    await asyncio.sleep(FLASH_MS / 1000 + 0.05)
+    control.visible = False
+    page.update()
+
+
+def flash(page, control, *, peak: float = 0.42) -> bool:
+    return schedule(page, _flash, page, control, peak)
+
+
+def prepare_float_up(control) -> None:
+    control.opacity = 0.0
+    control.offset = ft.Offset(0, 0)
+    control.animate_opacity = ft.Animation(FLOAT_MS // 2, ft.AnimationCurve.EASE_OUT)
+    control.animate_offset = ft.Animation(FLOAT_MS, ft.AnimationCurve.EASE_OUT)
+
+
+async def _float_up(page, control, dy: float) -> None:
+    control.offset = ft.Offset(0, 0)
+    control.opacity = 1.0
+    page.update()
+    await asyncio.sleep(0.05)
+    control.offset = ft.Offset(0, -dy)
+    page.update()
+    await asyncio.sleep(FLOAT_MS / 1000 * 0.6)
+    control.opacity = 0.0
+    page.update()
+    await asyncio.sleep(FLOAT_MS / 1000 * 0.5)
+    control.offset = ft.Offset(0, 0)
+    page.update()
+
+
+def float_up(page, control, *, dy: float = 1.6) -> bool:
+    """"+30 XP"-style toast: appears, rises `dy` of its own height, fades,
+    then parks back at rest (hidden) for the next time."""
+    return schedule(page, _float_up, page, control, dy)

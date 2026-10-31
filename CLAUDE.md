@@ -73,9 +73,10 @@ Fully offline, no network/cloud/accounts. `settings.json` + `progress.sqlite3` (
 ```
 app/
   ui/        # CTk screens (plain names) + Flet screens (*_flet.py) — see "Two UI codebases" above
-  ui/components/  # Flet-only shared widgets: adventure_kit (game-world look: sky headers, chunky cards, power bars),
-                  # motion (bounded implicit animations), codey_avatar (mascot), streak_flame, treasure_chest,
-                  # celebration (confetti/level-up), map_path (Adventure Map road/nodes), game_button, macro_toolbar, sound_player
+  ui/components/  # Flet-only shared widgets: adventure_kit (game-world look: sky headers, chunky cards, power bars, pressable),
+                  # motion (bounded implicit animations), codey_avatar (mascot, idle/wave), streak_flame, treasure_chest,
+                  # celebration (confetti/level-up/success flash/XP float), map_path (Adventure Map road/nodes), game_button,
+                  # macro_toolbar, sound_player, haptics (vibration via ft.HapticFeedback), ambience (time-of-day sky + per-World weather)
   engine/    # Lesson dataclass, YAML loader, category logic, output validator; game rules: worlds (map regions + world
              # badges), quests (daily goals derived from activity_log), scoring (skill stars + session combo), titles
   sandbox/   # AST safety + shared restricted environment (allowed_builtins) + subprocess engine (runner/worker) + in-process engine (inprocess_runner/watchdog)

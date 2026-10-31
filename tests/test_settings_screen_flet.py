@@ -317,3 +317,38 @@ def test_import_unreadable_file_shows_error(state, fake_picker):
 
     assert page.dialogs == []
     assert "couldn't read" in _status_text(view).value.lower()
+
+
+# -- vibration toggle (shares the sound card) ---------------------------------------------
+class _FakeHaptics:
+    def __init__(self) -> None:
+        self.calls: list[str] = []
+
+    def success(self, _settings) -> bool:
+        self.calls.append("success")
+        return True
+
+
+class _SwitchEvent:
+    def __init__(self, value: bool) -> None:
+        self.control = type("Ctl", (), {"value": value})()
+
+
+def test_vibration_switch_saves_the_setting_and_buzzes_when_switched_on(state):
+    from app.config.settings import load_settings
+    from tests.flet_testing import one
+
+    state.haptics = _FakeHaptics()
+    view = build_settings_view(FakePage(), state)
+    switch = one(view, "haptics_switch")
+    assert switch.value is True
+    assert view.controls[1].data == {"kind": "sound_card"}, "lives in the sound card, control order unchanged"
+
+    switch.on_change(_SwitchEvent(False))
+    assert state.settings.haptics_enabled is False
+    assert load_settings().haptics_enabled is False
+    assert state.haptics.calls == [], "no buzz when turning it off"
+
+    switch.on_change(_SwitchEvent(True))
+    assert state.settings.haptics_enabled is True
+    assert state.haptics.calls == ["success"]

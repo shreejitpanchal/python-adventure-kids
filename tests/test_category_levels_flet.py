@@ -107,3 +107,25 @@ def test_codey_levels_line():
     assert codey_levels_line("Numbers", 20, 20, None) == "Numbers conquered! Every level done ⭐"
     assert codey_levels_line("Numbers", 0, 20, "Counting") == "Up next: Counting. Let's go!"
     assert codey_levels_line("Numbers", 0, 0, None) == "Welcome to Numbers!"
+
+
+def test_levels_road_shares_its_worlds_weather_and_sky(state):
+    from app.engine.worlds import world_for_category
+    from app.ui.components.ambience_flet import world_ambience_emoji
+
+    category = state.lesson_engine.categories()[0]
+    view = build_category_levels_view(FakePage(), state, category, hour=3)
+    weather = all_of(view, "world_ambience")
+    world = world_for_category(category)
+    assert weather and all(p.data["world"] == world.id for p in weather)
+    assert {p.data["emoji"] for p in weather} <= set(world_ambience_emoji(world.id))
+    assert one(view, "sky_backdrop").data["moment"] == "night"
+
+
+def test_only_playable_level_nodes_squash_under_the_finger(state):
+    category = state.lesson_engine.categories()[0]
+    view = build_category_levels_view(FakePage(), state, category)
+    nodes = all_of(view, "map_node")
+    assert nodes[0].data["state"] == UNLOCKED and nodes[0].on_tap_down is not None
+    locked = [node for node in nodes if node.data["state"] == LOCKED]
+    assert locked and all(node.on_tap_down is None for node in locked)

@@ -1,8 +1,9 @@
 """The Daily Treasure chest on the Learning Hub: one tap per (UTC) day
 grants a small XP bonus (ProgressStore.open_daily_chest -- base XP plus a
-streak bonus), with a shake-then-pop animation and the reward revealed in
-place. Already opened today -> a calm 'come back tomorrow' state, so the
-card doubles as the daily come-back nudge.
+streak bonus), with a shake-then-pop animation (plus a haptic buzz) and
+the reward revealed in place. While closed it rattles every few seconds
+(motion_flet.rattle). Already opened today -> a calm 'come back tomorrow'
+state, so the card doubles as the daily come-back nudge.
 
 All the rules (once a day, XP amounts, streak bonus) live in the store;
 this component only renders and animates. Flet only.
@@ -17,7 +18,7 @@ from app.progress.store import ChestReward
 from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color
 from app.ui.components import motion_flet as motion
-from app.ui.components.adventure_kit_flet import RADIUS_CARD, accent_gradient, lip_shadow, soft_shadow
+from app.ui.components.adventure_kit_flet import RADIUS_CARD, accent_gradient, lip_shadow, pressable, soft_shadow
 from app.ui.theme_flet import scaled
 
 CLOSED_EMOJI = "🎁"
@@ -102,6 +103,8 @@ def build_daily_chest(
         motion.pulse(page, emoji_disc, times=1, big=1.25)
         if reward is not None and state.sound_player is not None:
             state.sound_player.play("level_up" if reward.leveled_up else "success_chime", state.settings)
+        if reward is not None and state.haptics is not None:
+            state.haptics.reward(state.settings)
         if reward is not None and on_opened is not None:
             on_opened(reward)
 
@@ -109,6 +112,8 @@ def build_daily_chest(
         card.on_click = open_chest
         card.ink = True
         if page is not None:
-            motion.pulse(page, emoji_disc, times=3, big=1.1)
+            # A closed chest rattles now and then -- it wants opening.
+            motion.rattle(page, emoji_disc)
+            pressable(card, page, state=state)
 
     return card

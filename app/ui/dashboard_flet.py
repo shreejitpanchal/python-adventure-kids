@@ -24,8 +24,9 @@ from app.ui.color_utils import contrasting_text_color, lighten
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import (
     RADIUS_PILL, accent_gradient, emoji_badge, hero_card, hero_header, lip_shadow, pill_button, plain_card,
-    play_power_bar, power_bar, scene_view, spacer,
+    play_power_bar, power_bar, pressable, scene_view, spacer,
 )
+from app.ui.components.ambience_flet import build_sky_backdrop, sky_moment
 from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.components.game_button_flet import build_game_button
 from app.ui.theme_flet import scaled
@@ -37,7 +38,8 @@ def codey_mission_line(lesson_title: str, already_completed: bool) -> str:
     return f"Today's mission: {lesson_title}. You've got this!"
 
 
-def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
+def build_dashboard_view(page: ft.Page, state: AppState, *, hour: int | None = None) -> ft.View:
+    """`hour` pins the sky's time of day (ambience_flet.sky_moment)."""
     theme = state.theme
     scale = state.font_scale
     fs = lambda base: scaled(base, scale)  # noqa: E731
@@ -59,6 +61,7 @@ def build_dashboard_view(page: ft.Page, state: AppState) -> ft.View:
             pill_button("🏆 Trophy Room", lambda _e: page.go("/trophy-room"), bgcolor=theme.text_muted, color="#FFFFFF"),
         ],
         companion=companion.control,
+        backdrop=build_sky_backdrop(theme, moment=sky_moment(hour), scale=scale, page=page),
     )
 
     xp_hud = _build_xp_hud(page, state)
@@ -260,7 +263,7 @@ def _build_quiz_card(page: ft.Page, state: AppState) -> ft.Control:
                 spacing=12, vertical_alignment=ft.CrossAxisAlignment.CENTER,
             ),
         ],
-        on_click=lambda _e: page.go("/quiz"), padding=16,
+        on_click=lambda _e: page.go("/quiz"), padding=16, page=page, state=state,
         data={"kind": "quiz_card", "status": status},
     )
 
@@ -290,21 +293,20 @@ def _build_missions_sidebar(page: ft.Page, state: AppState) -> ft.Control:
             meta = get_category_meta(category)
             text_color = contrasting_text_color(meta.color)
             status = "✅ All levels complete!" if done == total else f"{done}/{total} completed"
-            chips.append(
-                ft.Container(
-                    content=ft.Column(
-                        [
-                            ft.Text(f"{meta.icon} {meta.title}", size=fs(13), weight=ft.FontWeight.BOLD, color=text_color),
-                            ft.Text(status, size=fs(12), color=text_color),
-                        ],
-                        spacing=2,
-                    ),
-                    bgcolor=meta.color, border_radius=RADIUS_PILL,
-                    padding=ft.padding.Padding.symmetric(horizontal=14, vertical=10),
-                    on_click=lambda _e, cat=category: page.go(f"/categories/{cat}"), ink=True,
-                    data={"kind": "category_chip", "category": category, "status": status},
-                )
+            chip = ft.Container(
+                content=ft.Column(
+                    [
+                        ft.Text(f"{meta.icon} {meta.title}", size=fs(13), weight=ft.FontWeight.BOLD, color=text_color),
+                        ft.Text(status, size=fs(12), color=text_color),
+                    ],
+                    spacing=2,
+                ),
+                bgcolor=meta.color, border_radius=RADIUS_PILL,
+                padding=ft.padding.Padding.symmetric(horizontal=14, vertical=10),
+                on_click=lambda _e, cat=category: page.go(f"/categories/{cat}"), ink=True,
+                data={"kind": "category_chip", "category": category, "status": status},
             )
+            chips.append(pressable(chip, page, state=state))
         items.append(ft.Row(chips, wrap=True, spacing=8, run_spacing=8))
 
     return plain_card(theme, items, data={"kind": "missions_sidebar", "started": len(started_categories)})

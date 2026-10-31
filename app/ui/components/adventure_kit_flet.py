@@ -25,6 +25,7 @@ from dataclasses import dataclass
 
 from app.ui.adventure_map_layout import PATH_WIDTH, WIDE_PATH_WIDTH
 from app.ui.color_utils import contrasting_text_color, darken, lighten, with_alpha
+from app.ui.components import motion_flet as motion
 from app.ui.theme_flet import ThemePreset, scaled, sky_colors
 
 RADIUS_CARD = 24
@@ -144,9 +145,12 @@ def hero_header(
     theme: ThemePreset, *, title: str, scale: float,
     buttons: Iterable[ft.Control] = (), companion: Optional[ft.Control] = None,
     icon_src: Optional[str] = "main-icon.png", title_color: Optional[str] = None,
+    backdrop: Optional[ft.Control] = None,
 ) -> ft.Container:
     """The sky band at the top of a screen: app icon + title, a wrapping row
-    of pill buttons, and (optionally) Codey with a speech bubble."""
+    of pill buttons, and (optionally) Codey with a speech bubble. `backdrop`
+    (ambience_flet.build_sky_backdrop) is a positioned-fill layer painted
+    behind the content -- the living sky -- clipped to the band's corners."""
     fs = lambda base: scaled(base, scale)  # noqa: E731
     title_row_children: list[ft.Control] = []
     if icon_src:
@@ -162,12 +166,17 @@ def hero_header(
         children.append(ft.Row(buttons, spacing=8, run_spacing=8, wrap=True))
     if companion is not None:
         children.append(companion)
+    column = ft.Column(children, spacing=14)
+    # The column is the Stack's only non-positioned child, so it alone
+    # sizes the band; the backdrop fills whatever that turns out to be.
+    content: ft.Control = column if backdrop is None else ft.Stack([backdrop, column])
     return ft.Container(
-        content=ft.Column(children, spacing=14),
+        content=content,
         gradient=sky_gradient(theme),
         padding=ft.padding.Padding.only(left=SCREEN_PADDING, top=20, right=SCREEN_PADDING, bottom=22),
         border_radius=RADIUS_CARD + 4,
         shadow=soft_shadow(opacity=0.14, blur=16, dy=6),
+        clip_behavior=ft.ClipBehavior.ANTI_ALIAS if backdrop is not None else None,
         data={"kind": "hero_header", "title": title},
     )
 
@@ -274,12 +283,14 @@ def play_power_bar(page, bar: ft.Container) -> bool:
 def hero_card(
     theme: ThemePreset, *, accent: str, children: list[ft.Control],
     on_click: Optional[Callable] = None, data: Optional[dict] = None, padding: int = 20,
-    featured: bool = False, width: Optional[int] = None,
+    featured: bool = False, width: Optional[int] = None, page=None, state=None,
 ) -> ft.Container:
     """A gradient 'world tile': the big colorful card every mode/mission
     lives on. Featured tiles get a bright rim so the one to tap is obvious.
-    `width` fixes the tile's width for a wrapping grid on wide screens."""
-    return ft.Container(
+    `width` fixes the tile's width for a wrapping grid on wide screens.
+    A tappable tile given `page` (and `state`, for haptics) squashes under
+    the finger -- see pressable()."""
+    card = ft.Container(
         content=ft.Column(children, spacing=8),
         gradient=accent_gradient(accent),
         border_radius=RADIUS_CARD, padding=padding, width=width,
@@ -288,6 +299,29 @@ def hero_card(
         on_click=on_click, ink=on_click is not None,
         data=data,
     )
+    if on_click is not None and page is not None:
+        pressable(card, page, state=state)
+    return card
+
+
+def pressable(container: ft.Container, page, *, state=None) -> ft.Container:
+    """Makes any tappable Container feel physical: a tap-down squashes it
+    (motion_flet.press, which springs it back a beat later) and ticks the
+    haptics when `state` carries a HapticsFlet (AppState.haptics -- None in
+    tests and before app_window_flet.main() wires it). The container's own
+    on_click is untouched, so the tap still does what it did; only the
+    feel changes. Returns the same container for chaining."""
+    motion.prepare_press(container)
+
+    def on_tap_down(_e) -> None:
+        motion.press(page, container)
+        haptics = getattr(state, "haptics", None)
+        settings = getattr(state, "settings", None)
+        if haptics is not None and settings is not None:
+            haptics.tap(settings)
+
+    container.on_tap_down = on_tap_down
+    return container
 
 
 def plain_card(

@@ -15,6 +15,7 @@ CTk-parity decision.
 """
 from __future__ import annotations
 
+import asyncio
 from dataclasses import dataclass
 from typing import Callable, Optional
 
@@ -59,7 +60,9 @@ class CodeyHandle:
     (bounce/spin/wobble) when Codey acts out a run's output."""
 
 
-def build_codey_avatar(theme, scale: float = 1.0) -> CodeyHandle:
+def build_codey_avatar(theme, scale: float = 1.0, *, page: Optional[object] = None) -> CodeyHandle:
+    """The in-lesson reaction strip. With `page`, Codey also blinks and
+    looks around while the child types (idle(), bounded)."""
     fs = lambda base: scaled(base, scale)  # noqa: E731
     idle_face, idle_caption = _EXPRESSIONS[CodeyState.IDLE]
     face_text = ft.Text(idle_face, size=fs(28))
@@ -93,6 +96,9 @@ def build_codey_avatar(theme, scale: float = 1.0) -> CodeyHandle:
         face_text.value = emoji
         caption_text.value = caption
 
+    if page is not None:
+        idle(page, face_container)
+
     return CodeyHandle(
         control=control, face_text=face_text, caption_text=caption_text, set_state=set_state,
         face_container=face_container,
@@ -111,6 +117,50 @@ class CompanionHandle:
     cheer: Callable[[object], bool]
     """cheer(page): switch to the celebrating face + a quick pulse. Returns
     whether the pulse could be scheduled (see motion_flet.schedule)."""
+    inner_disc: Optional[ft.Container] = None
+    """The face disc itself (inside face_disc) -- what blinks and waves."""
+    wave: Optional[Callable[[object], bool]] = None
+    """wave(page): Codey's reaction to being tapped -- a wobble, a 👋 and
+    a hello line that gives way to the original line a beat later."""
+
+
+# What Codey says when tapped, cycling so a second tap gets a new line.
+WAVE_LINES: tuple[str, ...] = (
+    "Hi! 👋 Ready to code?",
+    "Beep boop! You found my ticklish spot 🤖",
+    "Let's go earn some stars ⭐",
+)
+WAVE_FACE = "🤗"
+# Idle loop timing: a blink every few seconds, a look-around on every
+# other cycle. Bounded (IDLE_CYCLES) like every motion helper.
+IDLE_CYCLES = 7
+IDLE_GAPS: tuple[float, ...] = (3.0, 2.2, 3.6, 2.8, 3.2, 2.4, 3.4)
+WAVE_LINE_SECONDS = 2.6
+
+
+async def _idle(page, disc: ft.Container) -> None:
+    for cycle in range(IDLE_CYCLES):
+        await asyncio.sleep(IDLE_GAPS[cycle % len(IDLE_GAPS)])
+        await motion._blink(page, disc)
+        if cycle % 2 == 1:
+            # Look around: a small tilt each way, then straight ahead.
+            for angle in (0.08, -0.08, 0.0):
+                disc.rotate = angle
+                page.update()
+                await asyncio.sleep(0.3)
+
+
+def idle(page, disc: ft.Container) -> bool:
+    """Codey's idle life: blinks, and now and then a look around."""
+    return motion.schedule(page, _idle, page, disc)
+
+
+async def _wave(page, face_text: ft.Text, line_text: ft.Text, disc: ft.Container, previous_face: str, previous_line: str) -> None:
+    await motion._wobble(page, disc, 6, 0.18)
+    await asyncio.sleep(WAVE_LINE_SECONDS)
+    face_text.value = previous_face
+    line_text.value = previous_line
+    page.update()
 
 
 def build_codey_companion(
@@ -118,8 +168,9 @@ def build_codey_companion(
     accessory: str = "",
 ) -> CompanionHandle:
     """Codey as a guide: big face disc on the left, speech bubble on the
-    right. Pass `page` to start the idle float straight away (bounded --
-    see motion_flet); without it (tests) the companion is static.
+    right. Pass `page` to start the idle float, blinks and look-arounds
+    straight away (bounded -- see motion_flet) and to make the disc
+    tappable (wave); without it (tests) the companion is static.
     `accessory` (see app/engine/titles.py's LevelTitle.codey_accessory) is
     worn as a small badge on the disc -- Codey "evolves" with the player's
     level."""
@@ -131,7 +182,10 @@ def build_codey_companion(
         gradient=accent_gradient(theme.primary),
         shadow=lip_shadow(theme.primary, depth=4),
         alignment=ft.alignment.Alignment.CENTER,
+        rotate=0.0, animate_rotation=ft.Animation(300, ft.AnimationCurve.EASE_IN_OUT),
+        data={"kind": "codey_disc"},
     )
+    motion.prepare_blink(disc)
     accessory_badge = ft.Container(
         content=accessory_text, width=28, height=28, border_radius=14,
         bgcolor=theme.card, alignment=ft.alignment.Alignment.CENTER,
@@ -141,6 +195,7 @@ def build_codey_companion(
     )
     face_disc = ft.Stack([disc, accessory_badge], width=64, height=64)
     motion.prepare_bob(face_disc)
+    wave_count = {"value": 0}
 
     line_text = ft.Text(line, size=fs(14), weight=ft.FontWeight.BOLD, color=theme.text)
     bubble = ft.Container(
@@ -168,10 +223,28 @@ def build_codey_companion(
         motion.prepare_pulse(face_disc)
         return motion.pulse(target_page, face_disc, times=2, big=1.15)
 
+    def wave(target_page) -> bool:
+        """Tapped: a hug face, a wobble, and a hello that yields to the
+        original line a beat later. The swap-back is scheduled, so a page
+        that can't run tasks just keeps the hello (and stays consistent)."""
+        previous_face, previous_line = face_text.value, line_text.value
+        if previous_face == WAVE_FACE:
+            return False  # mid-wave already; don't stack swap-backs
+        face_text.value = WAVE_FACE
+        line_text.value = WAVE_LINES[wave_count["value"] % len(WAVE_LINES)]
+        wave_count["value"] += 1
+        motion.prepare_wobble(disc)
+        scheduled = motion.schedule(target_page, _wave, target_page, face_text, line_text, disc, previous_face, previous_line)
+        target_page.update()
+        return scheduled
+
     if page is not None:
         motion.bob(page, face_disc)
+        idle(page, disc)
+        disc.on_click = lambda _e: wave(page)
+        disc.ink = True
 
     return CompanionHandle(
         control=control, face_disc=face_disc, face_text=face_text, line_text=line_text,
-        set_line=set_line, cheer=cheer,
+        set_line=set_line, cheer=cheer, inner_disc=disc, wave=wave,
     )

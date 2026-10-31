@@ -320,7 +320,9 @@ def test_wrong_answer_does_not_auto_scroll(state):
     controller.build_view()
     asyncio.run(controller._on_run(None))  # unedited starter prints 5, not the challenge's 7
 
-    assert controller.page.run_task_calls == []
+    handlers = [handler for handler, _args, _kwargs in controller.page.run_task_calls]
+    assert controller._content_column.scroll_to not in handlers
+    assert controller.reward_card.visible is False
 
 
 # -- inline reward card: Onward / Next Lesson (no popup) --------------------
@@ -1008,3 +1010,142 @@ def test_codey_shows_blocked_on_a_graphical_disallowed_construct(graphical_contr
     graphical_controller.editor.value = "while True:\n    pass"
     asyncio.run(graphical_controller._on_run(None))
     assert graphical_controller._codey.caption_text.value == "Can't do that one yet!"
+
+
+# -- lesson moments: run-button feel, success flash, XP float, miss shake, haptics -----------
+class FakeHaptics:
+    def __init__(self) -> None:
+        self.calls: list[str] = []
+
+    def tap(self, _settings) -> bool:
+        self.calls.append("tap")
+        return True
+
+    def error(self, _settings) -> bool:
+        self.calls.append("error")
+        return True
+
+    def success(self, _settings) -> bool:
+        self.calls.append("success")
+        return True
+
+    def reward(self, _settings) -> bool:
+        self.calls.append("reward")
+        return True
+
+
+def _handlers(controller) -> list:
+    return [handler for handler, _args, _kwargs in controller.page.run_task_calls]
+
+
+def test_run_button_is_a_chunky_game_button_that_dims_while_running(controller):
+    from app.ui.components import motion_flet as motion
+
+    controller.build_view()
+    button = controller.run_button
+    assert isinstance(button, ft.GestureDetector)
+    assert button.content.data == {"kind": "game_button", "text": "▶ RUN"}
+    assert button.content.gradient is not None, "chunky"
+
+    controller._set_run_enabled(False)
+    assert button.disabled is True and button.content.opacity < 1.0
+    controller._set_run_enabled(True)
+    assert button.disabled is False and button.content.opacity == 1.0
+
+    # The view's cards slide in like every other game-world screen.
+    assert motion._reveal_staggered in _handlers(controller)
+    assert all(section.opacity == 0.0 for section in controller._entrance_sections)
+    assert controller.reward_card not in controller._entrance_sections
+
+
+def test_the_lesson_view_layers_a_hidden_success_flash_over_the_content(controller):
+    view = controller.build_view()
+    layered = view.controls[0]
+    assert isinstance(layered, ft.Stack) and layered.expand is True
+    content, flash = layered.controls
+    assert (content.left, content.top, content.right, content.bottom) == (0, 0, 0, 0)
+    assert flash is controller.success_flash and flash.visible is False
+
+
+def test_a_pass_flashes_the_screen_pops_the_output_floats_xp_and_thumps(controller, state):
+    from app.ui.components import motion_flet as motion
+
+    state.haptics = FakeHaptics()
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+
+    handlers = _handlers(controller)
+    assert motion._flash in handlers
+    assert motion._float_up in handlers
+    assert controller.xp_float.data["text"] == "+30 XP ✨"  # 3 stars x 10 XP, first time
+    pulses = [args[1] for handler, args, _k in controller.page.run_task_calls if handler is motion._pulse]
+    assert controller.output_card in pulses
+    assert controller._codey.face_container in pulses, "Codey hops when RUN is pressed"
+    # lesson_01 also awards the first_program badge -> the reward buzz too.
+    assert state.haptics.calls == ["success", "reward"]
+    assert motion._wobble not in handlers
+
+
+def test_a_plain_pass_thumps_without_the_reward_buzz(state):
+    # A replay of lesson_01: its badge is already held and no XP is gained,
+    # so there is nothing to buzz about beyond the success thump.
+    state.haptics = FakeHaptics()
+    lesson = state.lesson_engine.get("lesson_01")
+    state.progress.complete_lesson(lesson.id, 3)
+    state.progress.award_badge(lesson.badge)
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    assert controller.reward_card.visible is True
+    assert state.haptics.calls == ["success"]
+
+
+def test_a_replay_floats_a_replayed_toast_instead_of_xp(state):
+    lesson = state.lesson_engine.get("lesson_01")
+    state.progress.complete_lesson(lesson.id, 3)
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    assert controller.xp_float.data["text"] == "Replayed! ⭐"
+
+
+def test_a_combo_pops_the_combo_chip_and_names_the_multiplier(controller, state):
+    from app.ui.components import motion_flet as motion
+
+    state.combo = 2  # this pass makes three in a row -> 2x XP
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    assert controller.xp_float.data["text"] == "+60 XP ✨  🔥×2"
+    popped = [args[1] for handler, args, _k in controller.page.run_task_calls if handler is motion._pop]
+    assert controller.combo_badge in popped
+
+
+def test_a_miss_shakes_the_output_card_and_bumps_without_a_flash(state):
+    from app.ui.components import motion_flet as motion
+
+    state.haptics = FakeHaptics()
+    lesson = state.lesson_engine.get("lesson_02")
+    controller = _LessonController(FakePage(), state, lesson)
+    controller.build_view()
+    asyncio.run(controller._on_run(None))  # wrong output
+
+    wobbled = [args[1] for handler, args, _k in controller.page.run_task_calls if handler is motion._wobble]
+    assert controller.output_card in wobbled
+    assert motion._flash not in _handlers(controller)
+    assert state.haptics.calls == ["error"]
+
+    broken = _LessonController(FakePage(), state, lesson)
+    broken.build_view()
+    broken.editor.value = "print(1 / 0)"
+    asyncio.run(broken._on_run(None))
+    wobbled = [args[1] for handler, args, _k in broken.page.run_task_calls if handler is motion._wobble]
+    assert broken.output_card in wobbled
+    assert state.haptics.calls == ["error", "error"]
+
+
+def test_reset_parks_the_xp_float(controller):
+    controller.build_view()
+    asyncio.run(controller._on_run(None))
+    controller.xp_float.opacity = 1.0
+    controller._on_reset(None)
+    assert controller.xp_float.opacity == 0.0

@@ -64,6 +64,9 @@ def get_settings_path() -> Path:
 class Settings:
     child_name: str = ""
     sound_enabled: bool = True
+    haptics_enabled: bool = True
+    """Vibration feedback on taps/rewards (Flet on Android only; a no-op
+    everywhere else -- see app/ui/components/haptics_flet.py)."""
     animations_enabled: bool = True
     reduced_motion: bool = False
     theme: str = "forest_adventure"

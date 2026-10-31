@@ -33,9 +33,10 @@ from app.ui.app_state_flet import AppState
 from app.ui.color_utils import contrasting_text_color, lighten, with_alpha
 from app.ui.components import motion_flet as motion
 from app.ui.components.adventure_kit_flet import (
-    RADIUS_PILL, emoji_badge, hero_card, hero_header, layout_for, pill_button, plain_card, scene_view,
-    section_title, spacer, stat_chip,
+    RADIUS_PILL, accent_gradient, emoji_badge, hero_card, hero_header, layout_for, lip_shadow, pill_button,
+    plain_card, pressable, scene_view, section_title, spacer, stat_chip,
 )
+from app.ui.components.ambience_flet import build_sky_backdrop, sky_moment
 from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.components.quest_board_flet import build_quest_board
 from app.ui.components.streak_flame_flet import (
@@ -140,7 +141,9 @@ def level_chip_label(level: int) -> str:
     return f"Lv {level} · {level_title(level).title}"
 
 
-def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
+def build_learning_hub_view(page: ft.Page, state: AppState, *, hour: int | None = None) -> ft.View:
+    """`hour` pins the sky's time of day (ambience_flet.sky_moment); None
+    reads the clock."""
     theme = state.theme
     scale = state.font_scale
     layout = layout_for(page)
@@ -171,6 +174,9 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
             pill_button("👋 Parent Area", lambda _e: page.go("/parent"), bgcolor=theme.text_muted, color="#FFFFFF"),
         ],
         companion=companion.control,
+        # The base camp's living sky: time-of-day tint and decorations plus
+        # XP sparkles drifting up (ambience_flet).
+        backdrop=build_sky_backdrop(theme, moment=sky_moment(hour), scale=scale, sparkles=True, page=page),
     )
 
     level_chip = stat_chip(theme, "🏅", level_chip_label(player.level), scale, kind="level_chip")
@@ -212,7 +218,7 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
     sections.append(chest)
     sections.append(quest_board)
     if state.settings.league_enabled:
-        sections.append(_build_league_card(state, name))
+        sections.append(_build_league_card(page, state, name))
     if hub_status.resume_label is not None:
         sections.append(_build_resume_banner(page, state, hub_status.resume_label))
     sections.append(ft.Container(content=section_title(theme, "🗺️ Choose your adventure", scale)))
@@ -236,17 +242,59 @@ def build_learning_hub_view(page: ft.Page, state: AppState) -> ft.View:
     return view
 
 
-def _build_league_card(state: AppState, name: str) -> ft.Control:
+PODIUM_HEIGHTS = (64, 46, 34)
+"""Block heights for 1st, 2nd and 3rd place on the league podium."""
+
+
+def _build_podium(page, theme, standings, scale: float) -> ft.Control:
+    """The top three on a podium -- 2nd, 1st, 3rd left to right like a real
+    one -- each standing on a block sized by place; the child's block is
+    lit in the primary color and the winner's bounces in."""
+    fs = lambda base: scaled(base, scale)  # noqa: E731
+    top = standings[:3]
+    order = [1, 0, 2] if len(top) == 3 else list(range(len(top)))
+    columns: list[ft.Control] = []
+    for place in order:
+        standing = top[place]
+        block_color = theme.primary if standing.is_child else lighten(theme.text_muted, 0.35)
+        avatar = ft.Text(standing.emoji, size=fs(26), text_align=ft.TextAlign.CENTER)
+        block = ft.Container(
+            content=ft.Text(MEDALS[place] if place < len(MEDALS) else f"{place + 1}.", size=fs(16), text_align=ft.TextAlign.CENTER),
+            width=64, height=PODIUM_HEIGHTS[place], border_radius=10,
+            gradient=accent_gradient(block_color), shadow=lip_shadow(block_color, depth=4),
+            alignment=ft.alignment.Alignment.TOP_CENTER, padding=ft.padding.Padding.only(top=4),
+        )
+        column = ft.Column(
+            [
+                avatar,
+                ft.Text(standing.name, size=fs(11), weight=ft.FontWeight.BOLD, color=theme.text, text_align=ft.TextAlign.CENTER, max_lines=1),
+                block,
+            ],
+            spacing=2, horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            data={"kind": "podium_step", "place": place + 1, "name": standing.name, "is_child": standing.is_child},
+        )
+        motion.prepare_pop(column)
+        columns.append(column)
+    podium = ft.Row(
+        columns, spacing=6, alignment=ft.MainAxisAlignment.CENTER, vertical_alignment=ft.CrossAxisAlignment.END,
+        data={"kind": "league_podium", "names": [standing.name for standing in top]},
+    )
+    for column in columns:
+        motion.play_pop(page, column)
+    return podium
+
+
+def _build_league_card(page, state: AppState, name: str) -> ft.Control:
     """This week's league table (app/engine/league.py): Codey's friends'
-    generated scores around the child's real weekly XP, the child's row
-    highlighted, and a nudge line underneath."""
+    generated scores around the child's real weekly XP, the top three on
+    a podium, the child's row highlighted, and a nudge line underneath."""
     theme = state.theme
     fs = lambda base: scaled(base, state.font_scale)  # noqa: E731
     child_xp = weekly_xp_from_events(state.progress.get_week_activity())
     standings = league_standings(name, child_xp, week_key())
     rank = child_rank(standings)
 
-    rows: list[ft.Control] = []
+    rows: list[ft.Control] = [_build_podium(page, theme, standings, state.font_scale)]
     for index, standing in enumerate(standings):
         medal = MEDALS[index] if index < len(MEDALS) else f"{index + 1}."
         row_color = theme.primary if standing.is_child else theme.card
@@ -295,7 +343,7 @@ def _build_resume_banner(page: ft.Page, state: AppState, resume_label: str) -> f
     def on_click(_e: ft.ControlEvent) -> None:
         page.go(target_route)
 
-    return ft.Container(
+    banner = ft.Container(
         content=ft.Text(
             f"↩ {resume_label}", size=fs(14), weight=ft.FontWeight.BOLD,
             color=contrasting_text_color(theme.primary),
@@ -305,6 +353,7 @@ def _build_resume_banner(page: ft.Page, state: AppState, resume_label: str) -> f
         on_click=on_click, ink=True,
         data={"kind": "resume_banner", "route": target_route, "label": resume_label},
     )
+    return pressable(banner, page, state=state)
 
 
 def _build_cards(page: ft.Page, state: AppState, hub_status, card_width: int | None) -> list[ft.Control]:
@@ -364,6 +413,6 @@ def _build_card(
 
     return hero_card(
         theme, accent=accent, children=children, on_click=on_click, featured=featured,
-        padding=22 if featured else 16, width=card_width,
+        padding=22 if featured else 16, width=card_width, page=page, state=state,
         data={"kind": "hub_card", "key": key, "title": title, "status": status, "route": route, "featured": featured},
     )

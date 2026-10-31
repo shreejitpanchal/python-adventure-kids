@@ -93,3 +93,81 @@ def test_companion_cheer_switches_face_and_pulses():
     assert handle.face_text.value == "🎉"
     assert len(page.scheduled(motion._pulse)) == 1
     assert handle.cheer(NoTaskPage()) is False
+
+
+# -- idle life + tap to wave ------------------------------------------------------------
+def test_companion_with_a_page_idles_and_is_tappable():
+    from app.ui.components import codey_avatar_flet as codey
+
+    page = FakePage()
+    handle = build_codey_companion(get_preset("sunny_light"), 1.0, "hi", page=page)
+    assert len(page.scheduled(codey._idle)) == 1
+    assert handle.inner_disc is one(handle.control, "codey_disc")
+    assert handle.inner_disc.on_click is not None and handle.inner_disc.ink is True
+    assert handle.inner_disc.scale.scale_y == 1.0, "blink tween armed"
+
+    static = build_codey_companion(get_preset("sunny_light"), 1.0, "hi")
+    assert static.inner_disc.on_click is None
+
+
+def test_idle_loop_blinks_and_looks_around_then_rests(monkeypatch):
+    import asyncio
+
+    from app.ui.components import codey_avatar_flet as codey
+
+    async def no_sleep(_s):
+        return None
+
+    monkeypatch.setattr(codey.asyncio, "sleep", no_sleep)
+    monkeypatch.setattr(motion.asyncio, "sleep", no_sleep)
+    page = FakePage()
+    handle = build_codey_companion(get_preset("sunny_light"), 1.0, "hi", page=page)
+    ((args, _k),) = page.scheduled(codey._idle)
+    asyncio.run(codey._idle(*args))
+    disc = handle.inner_disc
+    assert disc.rotate == 0.0 and disc.scale.scale_y == 1.0
+    assert page.update_count == codey.IDLE_CYCLES * 2 + (codey.IDLE_CYCLES // 2) * 3
+
+
+def test_wave_says_hello_wobbles_and_schedules_the_swap_back(monkeypatch):
+    import asyncio
+
+    from app.ui.components import codey_avatar_flet as codey
+
+    async def no_sleep(_s):
+        return None
+
+    monkeypatch.setattr(codey.asyncio, "sleep", no_sleep)
+    monkeypatch.setattr(motion.asyncio, "sleep", no_sleep)
+    page = FakePage()
+    handle = build_codey_companion(get_preset("sunny_light"), 1.0, "Original line", page=page)
+
+    assert handle.wave(page) is True
+    assert handle.face_text.value == codey.WAVE_FACE
+    assert handle.line_text.value == codey.WAVE_LINES[0]
+    assert handle.wave(page) is False, "no stacked waves while one is playing"
+
+    ((args, _k),) = page.scheduled(codey._wave)
+    asyncio.run(codey._wave(*args))
+    assert handle.face_text.value == "🤖" and handle.line_text.value == "Original line"
+    assert handle.inner_disc.rotate == 0.0
+
+    # A second wave later cycles to the next line.
+    handle.wave(page)
+    assert handle.line_text.value == codey.WAVE_LINES[1]
+
+    # Without a schedulable page the hello simply stays.
+    quiet = build_codey_companion(get_preset("sunny_light"), 1.0, "hi")
+    assert quiet.wave(NoTaskPage()) is False
+    assert quiet.face_text.value == codey.WAVE_FACE
+
+
+def test_lesson_avatar_idles_only_when_given_a_page():
+    from app.ui.components import codey_avatar_flet as codey
+
+    page = FakePage()
+    build_codey_avatar(get_preset("sunny_light"), page=page)
+    assert len(page.scheduled(codey._idle)) == 1
+    quiet = FakePage()
+    build_codey_avatar(get_preset("sunny_light"))
+    assert quiet.run_task_calls == []

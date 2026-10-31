@@ -188,6 +188,7 @@ classDiagram
     class Settings {
         +str child_name
         +bool sound_enabled
+        +bool haptics_enabled
         +bool animations_enabled
         +bool reduced_motion
         +str theme
@@ -531,7 +532,7 @@ erDiagram
 ```
 
 `settings.json` (separate file, not SQLite — small, human-editable key/value
-config) holds `child_name`, `sound_enabled`, `theme`, `font_family`,
+config) holds `child_name`, `sound_enabled`, `haptics_enabled`, `theme`, `font_family`,
 `font_size`, `parent_pin_salt`/`parent_pin_hash` (PIN is salted SHA-256,
 never stored in plaintext — schema and model methods exist and are
 tested, but no screen currently sets or checks a PIN, see Section 5.4),

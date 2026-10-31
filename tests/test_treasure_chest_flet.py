@@ -33,13 +33,37 @@ def test_reward_lines():
     assert "Level 2" in reward_lines(ChestReward(xp=20, streak_bonus_xp=0, level=_level(2), leveled_up=True))[1]
 
 
-def test_closed_chest_renders_tap_prompt_and_pulses(state):
+def test_closed_chest_renders_tap_prompt_rattles_and_squashes_under_the_finger(state):
     page = FakePage()
     card = build_daily_chest(page, state, scale=1.0)
     assert card.data == {"kind": "daily_chest", "opened": False}
     assert CLOSED_TITLE in texts(card) and CLOSED_SUBTITLE in texts(card)
     assert card.on_click is not None and card.ink is True
-    assert len(page.scheduled(motion._pulse)) == 1
+    assert len(page.scheduled(motion._rattle)) == 1
+    assert card.on_tap_down is not None, "pressable"
+    card.on_tap_down(None)
+    assert card.scale == motion.PRESS_SCALE
+
+
+class _FakeHaptics:
+    def __init__(self) -> None:
+        self.calls: list[str] = []
+
+    def tap(self, _settings) -> bool:
+        self.calls.append("tap")
+        return True
+
+    def reward(self, _settings) -> bool:
+        self.calls.append("reward")
+        return True
+
+
+def test_opening_buzzes_the_haptics_once(state):
+    state.haptics = _FakeHaptics()
+    card = build_daily_chest(FakePage(), state, scale=1.0)
+    card.on_tap_down(None)
+    card.on_click(None)
+    assert state.haptics.calls == ["tap", "reward"]
 
 
 def test_opening_grants_xp_updates_the_card_and_notifies(state):

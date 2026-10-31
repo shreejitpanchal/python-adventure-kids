@@ -26,6 +26,7 @@ from app.ui.components.adventure_kit_flet import (
     Layout, emoji_badge, hero_card, hero_header, layout_for, pill_button, play_power_bar, power_bar,
     scene_view, spacer,
 )
+from app.ui.components.ambience_flet import build_sky_backdrop, build_world_ambience, sky_moment
 from app.ui.components.codey_avatar_flet import build_codey_companion
 from app.ui.components.map_path_flet import build_map_node, build_you_are_here, node_disc, road_shapes
 from app.ui.theme_flet import scaled
@@ -44,8 +45,10 @@ def codey_map_line(next_title: str | None, world_title: str | None = None) -> st
 
 def build_category_map_view(
     page: ft.Page, state: AppState,
-    category_filter: list[str] | None = None, heading: str | None = None,
+    category_filter: list[str] | None = None, heading: str | None = None, hour: int | None = None,
 ) -> ft.View:
+    """`hour` pins the sky's time of day (ambience_flet.sky_moment); None
+    reads the clock."""
     theme = state.theme
     scale = state.font_scale
     layout = layout_for(page)
@@ -70,7 +73,9 @@ def build_category_map_view(
         status = world_status(engine, world, completed_ids, world_categories)
         sections.append(_build_world_header(page, theme, world, status, scale))
         sections.append(
-            _build_world_road(page, theme, engine, world_categories, completed_ids, current_category, scale, layout)
+            _build_world_road(
+                page, state, world, world_categories, completed_ids, current_category, scale, layout,
+            )
         )
         if current_category in world_categories:
             next_title = get_category_meta(current_category).title
@@ -83,6 +88,7 @@ def build_category_map_view(
         theme, title=heading or DEFAULT_HEADING, scale=scale,
         buttons=[pill_button("🏠 Menu", lambda _e: page.go("/hub"), bgcolor=theme.text_muted, color="#FFFFFF")],
         companion=companion.control,
+        backdrop=build_sky_backdrop(theme, moment=sky_moment(hour), scale=scale, page=page),
     )
 
     for section in sections:
@@ -137,9 +143,11 @@ def _build_world_header(page, theme, world: World, status, scale: float) -> ft.C
 
 
 def _build_world_road(
-    page, theme, engine, categories: list[str], completed_ids: set[str], current_category: str | None,
-    scale: float, layout: Layout,
+    page, state: AppState, world: World, categories: list[str], completed_ids: set[str],
+    current_category: str | None, scale: float, layout: Layout,
 ) -> ft.Control:
+    theme = state.theme
+    engine = state.lesson_engine
     positions = zigzag_positions(len(categories), lanes=layout.map_lanes, path_width=layout.map_width)
     path_height = total_path_height(len(categories))
 
@@ -152,12 +160,15 @@ def _build_world_road(
 
     stack_children: list[ft.Control] = [
         ft.Container(content=cv.Canvas(shapes=road_shapes(positions, segment_done, theme)), width=layout.map_width, height=path_height),
+        # The world's weather (snow, leaves, glints...) drifts over the road
+        # and under the nodes -- see ambience_flet.WORLD_AMBIENCE.
+        *build_world_ambience(world.id, layout.map_width, path_height, scale=scale, page=page),
     ]
     current_index = None
     for index, (category, position) in enumerate(zip(categories, positions)):
         is_current = category == current_category
         node, caption = _build_node(
-            page, theme, category, position, engine, completed_ids, scale, layout.map_width, highlight=is_current,
+            page, state, category, position, completed_ids, scale, layout.map_width, highlight=is_current,
         )
         stack_children.extend([node, caption])
         if is_current:
@@ -173,9 +184,11 @@ def _build_world_road(
 
 
 def _build_node(
-    page, theme, category, position, engine, completed_ids, scale: float, path_width: float, *, highlight: bool,
+    page, state: AppState, category, position, completed_ids, scale: float, path_width: float, *, highlight: bool,
 ) -> tuple[ft.Control, ft.Control]:
     fs = lambda base: scaled(base, scale)  # noqa: E731
+    theme = state.theme
+    engine = state.lesson_engine
     meta = get_category_meta(category)
     lessons = engine.lessons_in_category(category)
     completed_count = sum(1 for lesson in lessons if lesson.id in completed_ids)
@@ -187,7 +200,7 @@ def _build_node(
 
     node = build_map_node(
         position=position, face=meta.icon, color=meta.color, scale=scale,
-        on_click=go_to_category, highlight=highlight,
+        on_click=go_to_category, highlight=highlight, page=page, state=state,
         data={
             "kind": "map_node", "category": category, "icon": meta.icon, "color": meta.color,
             "completed": completed_count, "total": total, "all_done": all_done,
@@ -247,6 +260,6 @@ def _build_quiz_tile(page: ft.Page, state: AppState) -> ft.Control:
                 spacing=12, vertical_alignment=ft.CrossAxisAlignment.CENTER,
             ),
         ],
-        on_click=lambda _e: page.go("/quiz"), padding=16,
+        on_click=lambda _e: page.go("/quiz"), padding=16, page=page, state=state,
         data={"kind": "quiz_tile", "status": status},
     )

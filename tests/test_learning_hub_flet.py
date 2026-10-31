@@ -307,3 +307,40 @@ def test_sections_are_revealed_immediately_when_the_page_cannot_animate(state):
     view = build_learning_hub_view(NoTaskPage(), state)
     assert all(c.opacity == 1.0 for c in _cards(view))
     assert one(view, "daily_chest").opacity == 1.0
+
+
+# -- home base: living sky, podium, press feel --------------------------------------------
+def test_hub_sky_follows_the_hour_and_sparkles(state):
+    night = build_learning_hub_view(FakePage(), state, hour=22)
+    backdrop = one(night, "sky_backdrop")
+    assert backdrop.data["moment"] == "night" and backdrop.data["sparkles"] is True
+    assert len(all_of(night, "sky_tint")) == 1
+    assert all_of(night, "sky_sparkle"), "XP sparkles float over the base camp"
+
+    noon = build_learning_hub_view(FakePage(), state, hour=12)
+    assert one(noon, "sky_backdrop").data["moment"] == "day"
+    assert all_of(noon, "sky_tint") == []
+
+
+def test_league_card_has_a_podium_of_the_top_three_with_the_child_marked(state):
+    view = build_learning_hub_view(FakePage(), state)
+    podium = one(view, "league_podium")
+    steps = all_of(podium, "podium_step")
+    assert [step.data["place"] for step in steps] == [2, 1, 3], "2nd, 1st, 3rd like a real podium"
+    rows = all_of(view, "league_row")
+    assert podium.data["names"] == [row.data["name"] for row in rows[:3]]
+    assert sum(1 for step in steps if step.data["is_child"]) == sum(1 for row in rows[:3] if row.data["is_child"])
+
+
+def test_hub_tiles_resume_banner_and_codey_are_pressable(state):
+    state.settings.last_learning_route = "guided"
+    page = FakePage()
+    view = build_learning_hub_view(page, state)
+    for card in _cards(view):
+        assert card.on_tap_down is not None
+    assert one(view, "resume_banner").on_tap_down is not None
+    assert one(view, "codey_disc").on_click is not None
+
+    card = _cards(view)[0]
+    card.on_tap_down(None)
+    assert card.scale == motion.PRESS_SCALE

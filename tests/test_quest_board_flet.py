@@ -68,3 +68,26 @@ def test_already_claimed_board_shows_the_claimed_state(state):
     assert board.data["claimed"] is True and board.data["claimable"] is False
     assert CLAIMED_TEXT in texts(board)
     assert all_of(board, "game_button") == []
+
+
+def test_each_quest_has_a_power_bar_that_fills_on_arrival(state):
+    page = FakePage()
+    board = build_quest_board(page, state, scale=1.0)
+    rows = all_of(board, "quest_row")
+    bars = all_of(board, "power_bar")
+    assert len(bars) == len(rows) == 3
+    for row, bar in zip(rows, bars):
+        expected = min(row.data["progress"] / row.data["target"], 1.0)
+        assert bar.data["ratio"] == expected
+    # Done quests' check marks pop in; a fresh day has none.
+    assert page.scheduled(motion._pop) == []
+
+
+def test_finished_quests_pop_their_check_marks(state):
+    _do_everything(state)
+    page = FakePage()
+    board = build_quest_board(page, state, scale=1.0)
+    rows = all_of(board, "quest_row")
+    assert all(row.data["done"] for row in rows)
+    assert len(page.scheduled(motion._pop)) == len(rows)
+    assert all(bar.data["ratio"] == 1.0 for bar in all_of(board, "power_bar"))
